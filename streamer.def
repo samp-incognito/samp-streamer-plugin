@@ -1,0 +1,9 @@
+LIBRARY	"streamer"
+
+EXPORTS
+	Supports
+	Load
+	Unload
+	AmxLoad
+	AmxUnload
+	ProcessTick

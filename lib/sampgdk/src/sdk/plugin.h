@@ -1,0 +1,1 @@
+#include <sampgdk/plugin.h>
