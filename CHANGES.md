@@ -1,13 +1,13 @@
-SA-MP Streamer Plugin v2.6.2
-============================
+SA-MP Streamer Plugin
+=====================
 
-v2.6.2:
--------
+v2.6.2
+------
 
 - Nothing yet
 
-v2.6.1:
--------
+v2.6.1
+------
 
 - Added AttachCameraToDynamicObject
 - Added AttachDynamicObjectToVehicle
@@ -20,8 +20,8 @@ v2.6.1:
 - Allowed NPCs to trigger area and checkpoint callbacks
 - Fixed IsPlayerInDynamicRaceCP
 
-v2.6:
------
+v2.6
+----
 
 - Adjusted algorithm for searching cells that contain visible items,
   improving performance for players moving around the map frequently
@@ -61,14 +61,14 @@ v2.6:
 - Added AttachDynamicAreaToObject
 - Added GetDynamic3DTextLabelText
 
-v2.5.2:
--------
+v2.5.2
+------
 
 - Fixed some minor bugs
 - Added support for map icon styles in 0.3c
 
-v2.5.1:
--------
+v2.5.1
+------
 
 - Made cell boundaries contiguous
 - Improved speed of spatial queries
@@ -80,15 +80,15 @@ v2.5.1:
   and 3D text labels stream out when their positions cannot be
   retrieved
 
-v2.5:
------
+v2.5
+----
 
 - Added grid system for partitioning the game world into cells
 - Added hash tables for numerous performance improvements
 - Improved object streaming algorithm
 
-v2.3.8:
--------
+v2.3.8
+------
 
 - Optimized a lot of streaming code
 - Improved checkpoint handling
@@ -97,16 +97,16 @@ v2.3.8:
 - Added Streamer_IsItemVisible, Streamer_DestroyAllVisibleItems,
   Streamer_CountVisibleItems, and Streamer_GetUpperBound
 
-v2.3.7:
--------
+v2.3.7
+------
 
 - Fixed 3D text label crash
 - Optimized more streaming code
 - Resolved some checkpoint problems
 - Added area detection natives and callbacks
 
-v2.3.6:
--------
+v2.3.6
+------
 
 - Optimized some streaming code
 - Fixed crash that may have occurred when destroying objects under
@@ -121,14 +121,14 @@ v2.3.6:
 - Consolidated all of the settings natives (with the exception of
   Streamer_TickRate) into Streamer_MaxItems and Streamer_VisibleItems
 
-v2.3.5:
--------
+v2.3.5
+------
 
 - Added data manipulation natives: Streamer_GetFloatData,
   Streamer_GetIntData, Streamer_SetFloatData, and Streamer_SetIntData
 
-v2.3.4:
--------
+v2.3.4
+------
 
 - Fixed bug with OnPlayerPickUpDynamicPickup that resulted in it
   being called too many times when multiple scripts were loaded
@@ -139,42 +139,42 @@ v2.3.4:
 - Consolidated all of the update natives into Streamer_Update
 - Added Streamer_UpdateEx for loading items in a specified area
 
-v2.3.3:
--------
+v2.3.3
+------
 
 - Cleaned up and reorganized code
 - Made the plugin automatically destroy all items created in a script
   when it is unloaded
 
-v2.3.2:
--------
+v2.3.2
+------
 
 - Added natives for toggling all dynamic checkpoints and race
   checkpoints
 - Made a check to prevent too many objects, pickups, or 3D text
   labels from being created
 
-v2.3.1:
--------
+v2.3.1
+------
 
 - Fixed 3D text label attachment bug
 - Fixed internal map icon ID assignment bug
 - Rewrote PAWN invoke function
 
-v2.3:
------
+v2.3
+----
 - Fixed PAWN invoke bug in Linux (thanks pod)
 
-v2.2:
------
+v2.2
+----
 
 - Fixed item ID assignment bug
 - Corrected another typo in the include file
 - Improved moving objects slightly
 - Made a few adjustments to the default streaming distances
 
-v2.1:
------
+v2.1
+----
 
 - Made all streaming distances customizable via an extra optional
   parameter
@@ -185,8 +185,8 @@ v2.1:
 - Renamed the custom pickup callback to OnPlayerPickUpDynamicPickup
   (note the capitalization)
 
-v2.0:
------
+v2.0
+----
 - Numerous bug fixes and optimizations
 - Added support for pickups, checkpoints, race checkpoints,
   map icons, and 3D text labels
@@ -195,8 +195,8 @@ v2.0:
 - Added more natives and callbacks for the new items
 - Renamed and reorganized several natives
 
-v1.1:
------
+v1.1
+----
 
 - Heavily modified dynamic moving objects so that they now are
   tracked in the plugin and synchronized with all players
@@ -208,7 +208,7 @@ v1.1:
 - Optimized some streaming code and fixed a few bugs in the automatic
   setup system
 
-v1.0:
------
+v1.0
+----
 
 - Initial release
