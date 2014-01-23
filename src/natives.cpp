@@ -2237,10 +2237,19 @@ cell AMX_NATIVE_CALL Natives::IsPlayerInDynamicArea(AMX *amx, cell *params)
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
-		boost::unordered_set<int>::iterator i = p->second.internalAreas.find(static_cast<int>(params[2]));
-		if (i != p->second.internalAreas.end())
+		bool recheck = static_cast<int>(params[3]) != 0;
+		if (!recheck)
 		{
-			return 1;
+			boost::unordered_set<int>::iterator i = p->second.internalAreas.find(static_cast<int>(params[2]));
+			if (i != p->second.internalAreas.end())
+			{
+				return 1;
+			}
+		}
+		else
+		{
+			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[2]));
+			return static_cast<cell>(Utility::isPointInArea(p->second.position, a->second)) != 0;
 		}
 	}
 	return 0;
