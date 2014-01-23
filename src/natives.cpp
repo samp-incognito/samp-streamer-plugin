@@ -376,7 +376,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetUpperBound(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(6, "Streamer_GetDistanceToItem");
+	CHECK_PARAMS(7, "Streamer_GetDistanceToItem");
+	int dimensions = static_cast<int>(params[7]);
+	Eigen::Vector3f position = Eigen::Vector3f::Zero();
 	switch (static_cast<int>(params[4]))
 	{
 		case STREAMER_TYPE_OBJECT:
@@ -384,9 +386,8 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 			boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[5]));
 			if (o != core->getData()->objects.end())
 			{
-				float distance = static_cast<float>(boost::geometry::distance(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), o->second->position));
-				Utility::storeFloatInNative(amx, params[6], distance);
-				return 1;
+				position = o->second->position;
+				break;
 			}
 			return 0;
 		}
@@ -395,9 +396,8 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 			boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[5]));
 			if (p != core->getData()->pickups.end())
 			{
-				float distance = static_cast<float>(boost::geometry::distance(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), p->second->position));
-				Utility::storeFloatInNative(amx, params[6], distance);
-				return 1;
+				position = p->second->position;
+				break;
 			}
 			return 0;
 		}
@@ -406,9 +406,8 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[5]));
 			if (c != core->getData()->checkpoints.end())
 			{
-				float distance = static_cast<float>(boost::geometry::distance(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), c->second->position));
-				Utility::storeFloatInNative(amx, params[6], distance);
-				return 1;
+				position = c->second->position;
+				break;
 			}
 			return 0;
 		}
@@ -417,9 +416,8 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[5]));
 			if (r != core->getData()->raceCheckpoints.end())
 			{
-				float distance = static_cast<float>(boost::geometry::distance(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), r->second->position));
-				Utility::storeFloatInNative(amx, params[6], distance);
-				return 1;
+				position = r->second->position;
+				break;
 			}
 			return 0;
 		}
@@ -428,9 +426,8 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 			boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[5]));
 			if (m != core->getData()->mapIcons.end())
 			{
-				float distance = static_cast<float>(boost::geometry::distance(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), m->second->position));
-				Utility::storeFloatInNative(amx, params[6], distance);
-				return 1;
+				position = m->second->position;
+				break;
 			}
 			return 0;
 		}
@@ -442,14 +439,13 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 				float distance = 0.0f;
 				if (t->second->attach)
 				{
-					distance = static_cast<float>(boost::geometry::distance(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), t->second->attach->position));
+					position = t->second->attach->position;
 				}
 				else
 				{
-					distance = static_cast<float>(boost::geometry::distance(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), t->second->position));
+					position = t->second->position;
 				}
-				Utility::storeFloatInNative(amx, params[6], distance);
-				return 1;
+				break;
 			}
 			return 0;
 		}
@@ -483,17 +479,15 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 					}
 					case STREAMER_AREA_TYPE_SPHERE:
 					{
-						float distance = 0.0f;
 						if (a->second->attach)
 						{
-							distance = static_cast<float>(boost::geometry::distance(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), a->second->attach->position));
+							position = a->second->attach->position;
 						}
 						else
 						{
-							distance = static_cast<float>(boost::geometry::distance(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), boost::get<Eigen::Vector3f>(a->second->position)));
+							position = boost::get<Eigen::Vector3f>(a->second->position);
 						}
-						Utility::storeFloatInNative(amx, params[6], distance);
-						return 1;
+						break;
 					}
 					case STREAMER_AREA_TYPE_CUBE:
 					{
@@ -504,14 +498,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 					}
 					case STREAMER_AREA_TYPE_POLYGON:
 					{
-						if (amx_ctof(params[3]) >= boost::get<Polygon2D>(a->second->position).get<1>()[0] && amx_ctof(params[3]) <= boost::get<Polygon2D>(a->second->position).get<1>()[1])
-						{
-							Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2D>(a->second->position).get<0>());
-							float distance = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), centroid));
-							Utility::storeFloatInNative(amx, params[6], distance);
-							return 1;
-						}
-						return 0;
+						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2D>(a->second->position).get<0>());
+						float distance = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), centroid));
+						Utility::storeFloatInNative(amx, params[6], distance);
+						return 1;
 					}
 				}
 			}
@@ -520,6 +510,26 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 		default:
 		{
 			logprintf("*** Streamer_GetDistanceToItem: Invalid type specified");
+			return 0;
+		}
+	}
+	switch (dimensions)
+	{
+		case 2:
+		{
+			float distance = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), Eigen::Vector2f(position[0], position[1])));
+			Utility::storeFloatInNative(amx, params[6], distance);
+			return 1;
+		}
+		case 3:
+		{
+			float distance = static_cast<float>(boost::geometry::distance(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), position));
+			Utility::storeFloatInNative(amx, params[6], distance);
+			return 1;
+		}
+		default:
+		{
+			logprintf("*** Streamer_GetDistanceToItem: Invalid number of dimensions specified (outside range of 2-3)");
 			return 0;
 		}
 	}
