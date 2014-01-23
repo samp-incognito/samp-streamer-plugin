@@ -1,10 +1,24 @@
 SA-MP Streamer Plugin
 =====================
 
-v2.6.2
-------
+v2.7
+----
 
-- Nothing yet
+- Added OnPlayerShootDynamicObject for 0.3z
+- Added Streamer_GetTickRate, Streamer_GetMaxItems,
+  Streamer_GetVisibleItems, Streamer_GetCellDistance,
+  Streamer_GetCellSize, Streamer_IsToggleIdleUpdate,
+  Streamer_IsToggleItemUpdate, Streamer_DestroyAllItems,
+  and Streamer_CountItems
+- Renamed Streamer_TickRate, Streamer_VisibleItems,
+  Streamer_CellDistance, and Streamer_CellSize (all natives begin
+  with Streamer_Set* now, but old natives are still usable)
+- Deprecated DestroyAllDynamic* and CountDynamic* natives (new
+  natives Streamer_DestroyAllItems and Streamer_CountItems are
+  preferred now, but old natives are still usable)
+- Added a new parameter called "serverwide" to the destroy and count
+  natives that makes them work either across all scripts or only
+  the calling script
 
 v2.6.1
 ------
