@@ -54,6 +54,14 @@ bool Events::OnPlayerEnterCheckpoint(int playerid)
 	{
 		if (p->second.activeCheckpoint != p->second.visibleCheckpoint)
 		{
+			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(p->second.activeCheckpoint);
+			if (c != core->getData()->checkpoints.end())
+			{
+				if (c->second->amx != interface)
+				{
+					return true;
+				}
+			}
 			int checkpointid = p->second.visibleCheckpoint;
 			p->second.activeCheckpoint = checkpointid;
 			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
@@ -78,6 +86,14 @@ bool Events::OnPlayerLeaveCheckpoint(int playerid)
 	{
 		if (p->second.activeCheckpoint == p->second.visibleCheckpoint)
 		{
+			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(p->second.activeCheckpoint);
+			if (c != core->getData()->checkpoints.end())
+			{
+				if (c->second->amx != interface)
+				{
+					return true;
+				}
+			}
 			int checkpointid = p->second.activeCheckpoint;
 			p->second.activeCheckpoint = 0;
 			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
@@ -102,6 +118,14 @@ bool Events::OnPlayerEnterRaceCheckpoint(int playerid)
 	{
 		if (p->second.activeRaceCheckpoint != p->second.visibleRaceCheckpoint)
 		{
+			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(p->second.activeRaceCheckpoint);
+			if (r != core->getData()->raceCheckpoints.end())
+			{
+				if (r->second->amx != interface)
+				{
+					return true;
+				}
+			}
 			int checkpointid = p->second.visibleRaceCheckpoint;
 			p->second.activeRaceCheckpoint = checkpointid;
 			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
@@ -126,6 +150,14 @@ bool Events::OnPlayerLeaveRaceCheckpoint(int playerid)
 	{
 		if (p->second.activeRaceCheckpoint == p->second.visibleRaceCheckpoint)
 		{
+			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(p->second.activeRaceCheckpoint);
+			if (r != core->getData()->raceCheckpoints.end())
+			{
+				if (r->second->amx != interface)
+				{
+					return true;
+				}
+			}
 			int checkpointid = p->second.activeRaceCheckpoint;
 			p->second.activeRaceCheckpoint = 0;
 			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
@@ -183,6 +215,14 @@ bool Events::OnPlayerEditObject(int playerid, int playerobject, int objectid, in
 		{
 			if (i->second == objectid)
 			{
+				boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(i->first);
+				if (o != core->getData()->objects.end())
+				{
+					if (o->second->amx != interface)
+					{
+						break;
+					}
+				}
 				int objectid = i->first;
 				for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
 				{
@@ -217,6 +257,14 @@ bool Events::OnPlayerSelectObject(int playerid, int type, int objectid, int mode
 		{
 			if (i->second == objectid)
 			{
+				boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(i->first);
+				if (o != core->getData()->objects.end())
+				{
+					if (o->second->amx != interface)
+					{
+						break;
+					}
+				}
 				int objectid = i->first;
 				for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
 				{
@@ -248,6 +296,14 @@ bool Events::OnPlayerWeaponShot(int playerid, int weaponid, int hittype, int hit
 		{
 			if (i->second == hitid)
 			{
+				boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(i->first);
+				if (o != core->getData()->objects.end())
+				{
+					if (o->second->amx != interface)
+					{
+						break;
+					}
+				}
 				int objectid = i->first;
 				for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
 				{
