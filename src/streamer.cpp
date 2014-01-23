@@ -57,16 +57,6 @@ Streamer::Streamer()
 	visibleTextLabels = 1024;
 }
 
-bool Streamer::setTickRate(std::size_t value)
-{
-	if (value > 0)
-	{
-		tickRate = value;
-		return true;
-	}
-	return false;
-}
-
 std::size_t Streamer::getVisibleItems(int type)
 {
 	switch (type)

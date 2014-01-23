@@ -33,22 +33,32 @@
 #define CHECK_PARAMS(m, n) \
 	if (params[0] != (m * 4)) \
 	{ \
-	logprintf("*** %s: Expecting %d parameter(s), but found %d", n, m, params[0] / 4); \
-	return 0; \
+		logprintf("*** %s: Expecting %d parameter(s), but found %d", n, m, params[0] / sizeof(cell)); \
+		return 0; \
 	}
 
 namespace Natives
 {
-	cell AMX_NATIVE_CALL Streamer_TickRate(AMX *amx, cell *params);
-	cell AMX_NATIVE_CALL Streamer_MaxItems(AMX *amx, cell *params);
-	cell AMX_NATIVE_CALL Streamer_VisibleItems(AMX *amx, cell *params);
-	cell AMX_NATIVE_CALL Streamer_CellDistance(AMX *amx, cell *params);
-	cell AMX_NATIVE_CALL Streamer_CellSize(AMX *amx, cell *params);
+	// Settings
+	cell AMX_NATIVE_CALL Streamer_GetTickRate(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_SetTickRate(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_GetMaxItems(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_SetMaxItems(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_GetVisibleItems(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_SetVisibleItems(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_GetCellDistance(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_SetCellDistance(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_GetCellSize(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_SetCellSize(AMX *amx, cell *params);
+	// Updates
 	cell AMX_NATIVE_CALL Streamer_ProcessActiveItems(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_ToggleIdleUpdate(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_IsToggleIdleUpdate(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_ToggleItemUpdate(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_IsToggleItemUpdate(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_Update(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_UpdateEx(AMX *amx, cell *params);
+	// Data Manipulation
 	cell AMX_NATIVE_CALL Streamer_GetFloatData(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_SetFloatData(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_GetIntData(AMX *amx, cell *params);
@@ -59,10 +69,14 @@ namespace Natives
 	cell AMX_NATIVE_CALL Streamer_AppendArrayData(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_RemoveArrayData(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_GetUpperBound(AMX *amx, cell *params);
+	// Miscellaneous
 	cell AMX_NATIVE_CALL Streamer_GetDistanceToItem(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_IsItemVisible(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_DestroyAllVisibleItems(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_CountVisibleItems(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_DestroyAllItems(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_CountItems(AMX *amx, cell *params);
+	// Objects
 	cell AMX_NATIVE_CALL CreateDynamicObject(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL DestroyDynamicObject(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL IsValidDynamicObject(AMX *amx, cell *params);
@@ -80,13 +94,11 @@ namespace Natives
 	cell AMX_NATIVE_CALL SetDynamicObjectMaterial(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL GetDynamicObjectMaterialText(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL SetDynamicObjectMaterialText(AMX *amx, cell *params);
-	cell AMX_NATIVE_CALL DestroyAllDynamicObjects(AMX *amx, cell *params);
-	cell AMX_NATIVE_CALL CountDynamicObjects(AMX *amx, cell *params);
+	// Pickups
 	cell AMX_NATIVE_CALL CreateDynamicPickup(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL DestroyDynamicPickup(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL IsValidDynamicPickup(AMX *amx, cell *params);
-	cell AMX_NATIVE_CALL DestroyAllDynamicPickups(AMX *amx, cell *params);
-	cell AMX_NATIVE_CALL CountDynamicPickups(AMX *amx, cell *params);
+	// Checkpoints
 	cell AMX_NATIVE_CALL CreateDynamicCP(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL IsValidDynamicCP(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL DestroyDynamicCP(AMX *amx, cell *params);
@@ -94,8 +106,7 @@ namespace Natives
 	cell AMX_NATIVE_CALL TogglePlayerAllDynamicCPs(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL IsPlayerInDynamicCP(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL GetPlayerVisibleDynamicCP(AMX *amx, cell *params);
-	cell AMX_NATIVE_CALL DestroyAllDynamicCPs(AMX *amx, cell *params);
-	cell AMX_NATIVE_CALL CountDynamicCPs(AMX *amx, cell *params);
+	// Race Checkpoints
 	cell AMX_NATIVE_CALL CreateDynamicRaceCP(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL DestroyDynamicRaceCP(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL IsValidDynamicRaceCP(AMX *amx, cell *params);
@@ -103,20 +114,17 @@ namespace Natives
 	cell AMX_NATIVE_CALL TogglePlayerAllDynamicRaceCPs(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL IsPlayerInDynamicRaceCP(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL GetPlayerVisibleDynamicRaceCP(AMX *amx, cell *params);
-	cell AMX_NATIVE_CALL DestroyAllDynamicRaceCPs(AMX *amx, cell *params);
-	cell AMX_NATIVE_CALL CountDynamicRaceCPs(AMX *amx, cell *params);
+	// Map Icons
 	cell AMX_NATIVE_CALL CreateDynamicMapIcon(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL DestroyDynamicMapIcon(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL IsValidDynamicMapIcon(AMX *amx, cell *params);
-	cell AMX_NATIVE_CALL DestroyAllDynamicMapIcons(AMX *amx, cell *params);
-	cell AMX_NATIVE_CALL CountDynamicMapIcons(AMX *amx, cell *params);
+	// 3D Text Labels
 	cell AMX_NATIVE_CALL CreateDynamic3DTextLabel(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL DestroyDynamic3DTextLabel(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL IsValidDynamic3DTextLabel(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL GetDynamic3DTextLabelText(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL UpdateDynamic3DTextLabelText(AMX *amx, cell *params);
-	cell AMX_NATIVE_CALL DestroyAllDynamic3DTextLabels(AMX *amx, cell *params);
-	cell AMX_NATIVE_CALL CountDynamic3DTextLabels(AMX *amx, cell *params);
+	// Areas
 	cell AMX_NATIVE_CALL CreateDynamicCircle(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL CreateDynamicRectangle(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL CreateDynamicSphere(AMX *amx, cell *params);
@@ -133,8 +141,7 @@ namespace Natives
 	cell AMX_NATIVE_CALL AttachDynamicAreaToObject(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL AttachDynamicAreaToPlayer(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL AttachDynamicAreaToVehicle(AMX *amx, cell *params);
-	cell AMX_NATIVE_CALL DestroyAllDynamicAreas(AMX *amx, cell *params);
-	cell AMX_NATIVE_CALL CountDynamicAreas(AMX *amx, cell *params);
+	// Extended
 	cell AMX_NATIVE_CALL CreateDynamicObjectEx(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL CreateDynamicPickupEx(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL CreateDynamicCPEx(AMX *amx, cell *params);
@@ -146,7 +153,23 @@ namespace Natives
 	cell AMX_NATIVE_CALL CreateDynamicSphereEx(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL CreateDynamicCubeEx(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL CreateDynamicPolygonEx(AMX *amx, cell *params);
+	// Internal
 	cell AMX_NATIVE_CALL Streamer_CallbackHook(AMX *amx, cell *params);
+	// Deprecated
+	cell AMX_NATIVE_CALL DestroyAllDynamicObjects(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL CountDynamicObjects(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL DestroyAllDynamicPickups(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL CountDynamicPickups(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL DestroyAllDynamicCPs(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL CountDynamicCPs(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL DestroyAllDynamicRaceCPs(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL CountDynamicRaceCPs(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL DestroyAllDynamicMapIcons(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL CountDynamicMapIcons(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL DestroyAllDynamic3DTextLabels(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL CountDynamic3DTextLabels(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL DestroyAllDynamicAreas(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL CountDynamicAreas(AMX *amx, cell *params);
 }
 
 #endif

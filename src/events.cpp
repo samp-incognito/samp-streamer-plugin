@@ -257,7 +257,7 @@ bool Events::OnPlayerWeaponShot(int playerid, int weaponid, int hittype, int hit
 						amx_Push(*a, amx_ftoc(z));
 						amx_Push(*a, amx_ftoc(y));
 						amx_Push(*a, amx_ftoc(x));
-						amx_Push(*a, static_cast<cell>(hitid));
+						amx_Push(*a, static_cast<cell>(objectid));
 						amx_Push(*a, static_cast<cell>(weaponid));
 						amx_Push(*a, static_cast<cell>(playerid));
 						amx_Exec(*a, NULL, amxIndex);

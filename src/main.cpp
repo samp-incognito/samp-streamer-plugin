@@ -51,16 +51,26 @@ PLUGIN_EXPORT void PLUGIN_CALL Unload()
 
 AMX_NATIVE_INFO natives[] =
 {
-	{ "Streamer_TickRate", Natives::Streamer_TickRate },
-	{ "Streamer_MaxItems", Natives::Streamer_MaxItems },
-	{ "Streamer_VisibleItems", Natives::Streamer_VisibleItems },
-	{ "Streamer_CellDistance", Natives::Streamer_CellDistance },
-	{ "Streamer_CellSize", Natives::Streamer_CellSize },
+	// Settings
+	{ "Streamer_GetTickRate", Natives::Streamer_GetTickRate },
+	{ "Streamer_SetTickRate", Natives::Streamer_SetTickRate },
+	{ "Streamer_SetMaxItems", Natives::Streamer_GetMaxItems },
+	{ "Streamer_SetMaxItems", Natives::Streamer_SetMaxItems },
+	{ "Streamer_SetVisibleItems", Natives::Streamer_GetVisibleItems },
+	{ "Streamer_SetVisibleItems", Natives::Streamer_SetVisibleItems },
+	{ "Streamer_SetCellDistance", Natives::Streamer_GetCellDistance },
+	{ "Streamer_SetCellDistance", Natives::Streamer_SetCellDistance },
+	{ "Streamer_SetCellSize", Natives::Streamer_GetCellSize },
+	{ "Streamer_GetCellSize", Natives::Streamer_SetCellSize },
+	// Updates
 	{ "Streamer_ProcessActiveItems", Natives::Streamer_ProcessActiveItems },
 	{ "Streamer_ToggleIdleUpdate", Natives::Streamer_ToggleIdleUpdate },
+	{ "Streamer_IsToggleIdleUpdate", Natives::Streamer_IsToggleIdleUpdate },
 	{ "Streamer_ToggleItemUpdate", Natives::Streamer_ToggleItemUpdate },
+	{ "Streamer_IsToggleItemUpdate", Natives::Streamer_IsToggleItemUpdate },
 	{ "Streamer_Update", Natives::Streamer_Update },
 	{ "Streamer_UpdateEx", Natives::Streamer_UpdateEx },
+	// Data Manipulation
 	{ "Streamer_GetFloatData", Natives::Streamer_GetFloatData },
 	{ "Streamer_SetFloatData", Natives::Streamer_SetFloatData },
 	{ "Streamer_GetIntData", Natives::Streamer_GetIntData },
@@ -71,10 +81,14 @@ AMX_NATIVE_INFO natives[] =
 	{ "Streamer_AppendArrayData", Natives::Streamer_AppendArrayData },
 	{ "Streamer_RemoveArrayData", Natives::Streamer_RemoveArrayData },
 	{ "Streamer_GetUpperBound", Natives::Streamer_GetUpperBound },
+	// Miscellaneous
 	{ "Streamer_GetDistanceToItem", Natives::Streamer_GetDistanceToItem },
 	{ "Streamer_IsItemVisible", Natives::Streamer_IsItemVisible },
-	{ "Streamer_CountVisibleItems", Natives::Streamer_CountVisibleItems },
 	{ "Streamer_DestroyAllVisibleItems", Natives::Streamer_DestroyAllVisibleItems },
+	{ "Streamer_CountVisibleItems", Natives::Streamer_CountVisibleItems },
+	{ "Streamer_DestroyAllItems", Natives::Streamer_DestroyAllItems },
+	{ "Streamer_CountItems", Natives::Streamer_CountItems },
+	// Objects
 	{ "CreateDynamicObject", Natives::CreateDynamicObject },
 	{ "DestroyDynamicObject", Natives::DestroyDynamicObject },
 	{ "IsValidDynamicObject", Natives::IsValidDynamicObject },
@@ -92,13 +106,11 @@ AMX_NATIVE_INFO natives[] =
 	{ "SetDynamicObjectMaterial", Natives::SetDynamicObjectMaterial },
 	{ "GetDynamicObjectMaterialText", Natives::GetDynamicObjectMaterialText },
 	{ "SetDynamicObjectMaterialText", Natives::SetDynamicObjectMaterialText },
-	{ "DestroyAllDynamicObjects", Natives::DestroyAllDynamicObjects },
-	{ "CountDynamicObjects", Natives::CountDynamicObjects },
+	// Pickups
 	{ "CreateDynamicPickup", Natives::CreateDynamicPickup },
 	{ "DestroyDynamicPickup", Natives::DestroyDynamicPickup },
 	{ "IsValidDynamicPickup", Natives::IsValidDynamicPickup },
-	{ "DestroyAllDynamicPickups", Natives::DestroyAllDynamicPickups },
-	{ "CountDynamicPickups", Natives::CountDynamicPickups },
+	// Checkpoints
 	{ "CreateDynamicCP", Natives::CreateDynamicCP },
 	{ "DestroyDynamicCP", Natives::DestroyDynamicCP },
 	{ "IsValidDynamicCP", Natives::IsValidDynamicCP },
@@ -106,8 +118,7 @@ AMX_NATIVE_INFO natives[] =
 	{ "TogglePlayerAllDynamicCPs", Natives::TogglePlayerAllDynamicCPs },
 	{ "IsPlayerInDynamicCP", Natives::IsPlayerInDynamicCP },
 	{ "GetPlayerVisibleDynamicCP", Natives::GetPlayerVisibleDynamicCP },
-	{ "DestroyAllDynamicCPs", Natives::DestroyAllDynamicCPs },
-	{ "CountDynamicCPs", Natives::CountDynamicCPs },
+	// Race Checkpoints
 	{ "CreateDynamicRaceCP", Natives::CreateDynamicRaceCP },
 	{ "DestroyDynamicRaceCP", Natives::DestroyDynamicRaceCP },
 	{ "IsValidDynamicRaceCP", Natives::IsValidDynamicRaceCP },
@@ -115,20 +126,17 @@ AMX_NATIVE_INFO natives[] =
 	{ "TogglePlayerAllDynamicRaceCPs", Natives::TogglePlayerAllDynamicRaceCPs },
 	{ "IsPlayerInDynamicRaceCP", Natives::IsPlayerInDynamicRaceCP },
 	{ "GetPlayerVisibleDynamicRaceCP", Natives::GetPlayerVisibleDynamicRaceCP },
-	{ "DestroyAllDynamicRaceCPs", Natives::DestroyAllDynamicRaceCPs },
-	{ "CountDynamicRaceCPs", Natives::CountDynamicRaceCPs },
+	// Map Icons
 	{ "CreateDynamicMapIcon", Natives::CreateDynamicMapIcon },
 	{ "DestroyDynamicMapIcon", Natives::DestroyDynamicMapIcon },
 	{ "IsValidDynamicMapIcon", Natives::IsValidDynamicMapIcon },
-	{ "DestroyAllDynamicMapIcons", Natives::DestroyAllDynamicMapIcons },
-	{ "CountDynamicMapIcons", Natives::CountDynamicMapIcons },
+	// 3D Text Labels
 	{ "CreateDynamic3DTextLabel", Natives::CreateDynamic3DTextLabel },
 	{ "DestroyDynamic3DTextLabel", Natives::DestroyDynamic3DTextLabel },
 	{ "IsValidDynamic3DTextLabel", Natives::IsValidDynamic3DTextLabel },
 	{ "GetDynamic3DTextLabelText", Natives::GetDynamic3DTextLabelText },
 	{ "UpdateDynamic3DTextLabelText", Natives::UpdateDynamic3DTextLabelText },
-	{ "DestroyAllDynamic3DTextLabels", Natives::DestroyAllDynamic3DTextLabels },
-	{ "CountDynamic3DTextLabels", Natives::CountDynamic3DTextLabels },
+	// Areas
 	{ "CreateDynamicCircle", Natives::CreateDynamicCircle },
 	{ "CreateDynamicRectangle", Natives::CreateDynamicRectangle },
 	{ "CreateDynamicSphere", Natives::CreateDynamicSphere },
@@ -145,8 +153,7 @@ AMX_NATIVE_INFO natives[] =
 	{ "AttachDynamicAreaToObject", Natives::AttachDynamicAreaToObject },
 	{ "AttachDynamicAreaToPlayer", Natives::AttachDynamicAreaToPlayer },
 	{ "AttachDynamicAreaToVehicle", Natives::AttachDynamicAreaToVehicle },
-	{ "DestroyAllDynamicAreas", Natives::DestroyAllDynamicAreas },
-	{ "CountDynamicAreas", Natives::CountDynamicAreas },
+	// Extended
 	{ "CreateDynamicObjectEx", Natives::CreateDynamicObjectEx },
 	{ "CreateDynamicPickupEx", Natives::CreateDynamicPickupEx },
 	{ "CreateDynamicCPEx", Natives::CreateDynamicCPEx },
@@ -158,7 +165,28 @@ AMX_NATIVE_INFO natives[] =
 	{ "CreateDynamicSphereEx", Natives::CreateDynamicSphereEx },
 	{ "CreateDynamicCubeEx", Natives::CreateDynamicCubeEx },
 	{ "CreateDynamicPolygonEx", Natives::CreateDynamicPolygonEx },
+	// Internal
 	{ "Streamer_CallbackHook", Natives::Streamer_CallbackHook },
+	// Deprecated
+	{ "Streamer_TickRate", Natives::Streamer_SetTickRate },
+	{ "Streamer_MaxItems", Natives::Streamer_SetMaxItems },
+	{ "Streamer_VisibleItems", Natives::Streamer_SetVisibleItems },
+	{ "Streamer_CellDistance", Natives::Streamer_SetCellDistance },
+	{ "Streamer_CellSize", Natives::Streamer_SetCellSize },
+	{ "DestroyAllDynamicObjects", Natives::DestroyAllDynamicObjects },
+	{ "CountDynamicObjects", Natives::CountDynamicObjects },
+	{ "DestroyAllDynamicPickups", Natives::DestroyAllDynamicPickups },
+	{ "CountDynamicPickups", Natives::CountDynamicPickups },
+	{ "DestroyAllDynamicCPs", Natives::DestroyAllDynamicCPs },
+	{ "CountDynamicCPs", Natives::CountDynamicCPs },
+	{ "DestroyAllDynamicRaceCPs", Natives::DestroyAllDynamicRaceCPs },
+	{ "CountDynamicRaceCPs", Natives::CountDynamicRaceCPs },
+	{ "DestroyAllDynamicMapIcons", Natives::DestroyAllDynamicMapIcons },
+	{ "CountDynamicMapIcons", Natives::CountDynamicMapIcons },
+	{ "DestroyAllDynamic3DTextLabels", Natives::DestroyAllDynamic3DTextLabels },
+	{ "CountDynamic3DTextLabels", Natives::CountDynamic3DTextLabels },
+	{ "DestroyAllDynamicAreas", Natives::DestroyAllDynamicAreas },
+	{ "CountDynamicAreas", Natives::CountDynamicAreas },
 	{ 0, 0 }
 };
 

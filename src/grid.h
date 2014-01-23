@@ -23,6 +23,7 @@
 #include <boost/unordered_map.hpp>
 #include <boost/unordered_set.hpp>
 
+#include <cmath>
 #include <vector>
 
 class Grid
@@ -38,8 +39,27 @@ public:
 	void addRaceCheckpoint(const Item::SharedRaceCheckpoint &raceCheckpoint);
 	void addTextLabel(const Item::SharedTextLabel &textLabel);
 
+	inline float getCellSize()
+	{
+		return cellSize;
+	}
+
+	inline float getCellDistance()
+	{
+		return sqrt(cellDistance);
+	}
+
+	inline void setCellSize(float size)
+	{
+		cellSize = size;
+	}
+
+	inline void setCellDistance(float distance)
+	{
+		cellDistance = distance * distance;
+	}
+
 	void rebuildGrid();
-	void removeAllItems(int type);
 
 	void removeArea(const Item::SharedArea &area, bool reassign = false);
 	void removeCheckpoint(const Item::SharedCheckpoint &checkpoint, bool reassign = false);
@@ -51,10 +71,9 @@ public:
 
 	void findAllCells(Player &player, std::vector<SharedCell> &playerCells);
 	void findMinimalCells(Player &player, std::vector<SharedCell> &playerCells);
-
+private:
 	float cellDistance;
 	float cellSize;
-private:
 	SharedCell globalCell;
 	Eigen::Matrix<float, 2, 9> translationMatrix;
 

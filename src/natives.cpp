@@ -42,54 +42,81 @@
 #include <limits>
 #include <string>
 
-cell AMX_NATIVE_CALL Natives::Streamer_TickRate(AMX *amx, cell *params)
+// Settings
+
+cell AMX_NATIVE_CALL Natives::Streamer_GetTickRate(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "Streamer_TickRate");
-	if (!core->getStreamer()->setTickRate(static_cast<int>(params[1])))
+	return static_cast<cell>(core->getStreamer()->getTickRate());
+}
+
+cell AMX_NATIVE_CALL Natives::Streamer_SetTickRate(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "Streamer_SetTickRate");
+	if (static_cast<std::size_t>(params[1]) > 0)
 	{
-		logprintf("*** Streamer_TickRate: Invalid tick rate specified");
-		return 0;
+		core->getStreamer()->setTickRate(static_cast<std::size_t>(params[1]));
+		return 1;
 	}
+	return 0;
+}
+
+cell AMX_NATIVE_CALL Natives::Streamer_GetMaxItems(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "Streamer_GetMaxItems");
+	return static_cast<cell>(core->getData()->getMaxItems(static_cast<std::size_t>(params[1])));
+}
+
+cell AMX_NATIVE_CALL Natives::Streamer_SetMaxItems(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "Streamer_SetMaxItems");
+	return static_cast<cell>(core->getData()->setMaxItems(static_cast<int>(params[1]), static_cast<int>(params[2])) != 0);
+}
+
+cell AMX_NATIVE_CALL Natives::Streamer_GetVisibleItems(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "Streamer_GetVisibleItems");
+	return static_cast<cell>(core->getStreamer()->getVisibleItems(static_cast<std::size_t>(params[1])));
+}
+
+cell AMX_NATIVE_CALL Natives::Streamer_SetVisibleItems(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "Streamer_SetVisibleItems");
+	return static_cast<cell>(core->getStreamer()->setVisibleItems(static_cast<int>(params[1]), static_cast<int>(params[2])) != 0);
+}
+
+cell AMX_NATIVE_CALL Natives::Streamer_GetCellDistance(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "Streamer_GetCellDistance");
+	float cellDistance = core->getGrid()->getCellDistance();
+	Utility::storeFloatInNative(amx, params[2], cellDistance);
 	return 1;
 }
 
-cell AMX_NATIVE_CALL Natives::Streamer_MaxItems(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL Natives::Streamer_SetCellDistance(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "Streamer_MaxItems");
-	if (!core->getData()->setMaxItems(static_cast<int>(params[1]), static_cast<int>(params[2])))
-	{
-		logprintf("*** Streamer_MaxItems: Invalid type specified");
-		return 0;
-	}
-	return 1;
-}
-
-cell AMX_NATIVE_CALL Natives::Streamer_VisibleItems(AMX *amx, cell *params)
-{
-	CHECK_PARAMS(2, "Streamer_VisibleItems");
-	if (!core->getStreamer()->setVisibleItems(static_cast<int>(params[1]), static_cast<int>(params[2])))
-	{
-		logprintf("*** Streamer_VisibleItems: Invalid type specified");
-		return 0;
-	}
-	return 1;
-}
-
-cell AMX_NATIVE_CALL Natives::Streamer_CellDistance(AMX *amx, cell *params)
-{
-	CHECK_PARAMS(1, "Streamer_CellDistance");
-	core->getGrid()->cellDistance = amx_ctof(params[1]) * amx_ctof(params[1]);
+	CHECK_PARAMS(1, "Streamer_SetCellDistance");
+	core->getGrid()->setCellDistance(amx_ctof(params[1]) * amx_ctof(params[1]));
 	core->getGrid()->rebuildGrid();
 	return 1;
 }
 
-cell AMX_NATIVE_CALL Natives::Streamer_CellSize(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL Natives::Streamer_GetCellSize(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "Streamer_CellSize");
-	core->getGrid()->cellSize = amx_ctof(params[1]);
+	CHECK_PARAMS(2, "Streamer_GetCellSize");
+	float cellSize = core->getGrid()->getCellSize();
+	Utility::storeFloatInNative(amx, params[2], cellSize);
+	return 1;
+}
+
+cell AMX_NATIVE_CALL Natives::Streamer_SetCellSize(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "Streamer_SetCellSize");
+	core->getGrid()->setCellSize(amx_ctof(params[1]));
 	core->getGrid()->rebuildGrid();
 	return 1;
 }
+
+// Updates
 
 cell AMX_NATIVE_CALL Natives::Streamer_ProcessActiveItems(AMX *amx, cell *params)
 {
@@ -109,6 +136,17 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleIdleUpdate(AMX *amx, cell *params)
 	return 0;
 }
 
+cell AMX_NATIVE_CALL Natives::Streamer_IsToggleIdleUpdate(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "Streamer_IsToggleIdleUpdate");
+	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
+	if (p != core->getData()->players.end())
+	{
+		return static_cast<cell>(p->second.updateWhenIdle != 0);
+	}
+	return 0;
+}
+
 cell AMX_NATIVE_CALL Natives::Streamer_ToggleItemUpdate(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(3, "Streamer_ToggleItemUpdate");
@@ -119,6 +157,20 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleItemUpdate(AMX *amx, cell *params)
 		{
 			p->second.enabledItems.set(static_cast<size_t>(params[2]), static_cast<int>(params[3]) != 0);
 			return 1;
+		}
+	}
+	return 0;
+}
+
+cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItemUpdate(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "Streamer_IsToggleItemUpdate");
+	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
+	if (p != core->getData()->players.end())
+	{
+		if (static_cast<size_t>(params[2]) >= 0 && static_cast<size_t>(params[2]) < STREAMER_MAX_TYPES)
+		{
+			return static_cast<cell>(p->second.enabledItems.test(params[2]) != 0);
 		}
 	}
 	return 0;
@@ -164,6 +216,8 @@ cell AMX_NATIVE_CALL Natives::Streamer_UpdateEx(AMX *amx, cell *params)
 	}
 	return 0;
 }
+
+// Data Manipulation
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetFloatData(AMX *amx, cell *params)
 {
@@ -317,6 +371,8 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetUpperBound(AMX *amx, cell *params)
 	}
 	return 0;
 }
+
+// Miscellaneous
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 {
@@ -550,14 +606,24 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsItemVisible(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "Streamer_DestroyAllVisibleItems");
+	CHECK_PARAMS(3, "Streamer_DestroyAllVisibleItems");
+	bool serverWide = static_cast<int>(params[3]) != 0;
 	if (static_cast<int>(params[2]) == STREAMER_TYPE_PICKUP)
 	{
-		for (boost::unordered_map<int, int>::iterator q = core->getStreamer()->internalPickups.begin(); q != core->getStreamer()->internalPickups.end(); ++q)
+		boost::unordered_map<int, int>::iterator p = core->getStreamer()->internalPickups.begin();
+		while (p != core->getStreamer()->internalPickups.end())
 		{
-			DestroyPickup(q->second);
+			boost::unordered_map<int, Item::SharedPickup>::iterator q = core->getData()->pickups.find(q->first);
+			if (serverWide || (q != core->getData()->pickups.end() && q->second->amx == amx))
+			{
+				DestroyPickup(p->second);
+				p = core->getStreamer()->internalPickups.erase(p);
+			}
+			else
+			{
+				++p;
+			}
 		}
-		core->getStreamer()->internalPickups.clear();
 		return 1;
 	}
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
@@ -567,54 +633,103 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 		{
 			case STREAMER_TYPE_OBJECT:
 			{
-				for (boost::unordered_map<int, int>::iterator o = p->second.internalObjects.begin(); o != p->second.internalObjects.end(); ++o)
+				boost::unordered_map<int, int>::iterator o = p->second.internalObjects.begin();
+				while (o != p->second.internalObjects.end())
 				{
-					DestroyPlayerObject(p->first, o->second);
+					boost::unordered_map<int, Item::SharedObject>::iterator q = core->getData()->objects.find(o->first);
+					if (serverWide || (q != core->getData()->objects.end() && q->second->amx == amx))
+					{
+						DestroyPlayerObject(p->first, o->second);
+						o = p->second.internalObjects.erase(o);
+					}
+					else
+					{
+						++o;
+					}
 				}
-				p->second.internalObjects.clear();
 				return 1;
 			}
 			case STREAMER_TYPE_CP:
 			{
 				if (p->second.visibleCheckpoint)
 				{
-					DisablePlayerCheckpoint(p->first);
-					p->second.activeCheckpoint = 0;
-					p->second.visibleCheckpoint = 0;
+					boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(p->second.visibleCheckpoint);
+					if (serverWide || (c != core->getData()->checkpoints.end() && c->second->amx == amx))
+					{
+						DisablePlayerCheckpoint(p->first);
+						p->second.activeCheckpoint = 0;
+						p->second.visibleCheckpoint = 0;
+						return 1;
+					}
 				}
-				return 1;
+				return 0;
 			}
 			case STREAMER_TYPE_RACE_CP:
 			{
 				if (p->second.visibleRaceCheckpoint)
 				{
-					DisablePlayerRaceCheckpoint(p->first);
-					p->second.activeRaceCheckpoint = 0;
-					p->second.visibleRaceCheckpoint = 0;
+					boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(p->second.visibleRaceCheckpoint);
+					if (serverWide || (r != core->getData()->raceCheckpoints.end() && r->second->amx == amx))
+					{
+						DisablePlayerRaceCheckpoint(p->first);
+						p->second.activeRaceCheckpoint = 0;
+						p->second.visibleRaceCheckpoint = 0;
+						return 1;
+					}
 				}
-				return 1;
+				return 0;
 			}
 			case STREAMER_TYPE_MAP_ICON:
 			{
-				for (boost::unordered_map<int, int>::iterator m = p->second.internalMapIcons.begin(); m != p->second.internalMapIcons.end(); ++m)
+				boost::unordered_map<int, int>::iterator m = p->second.internalMapIcons.begin();
+				while (m != p->second.internalMapIcons.end())
 				{
-					RemovePlayerMapIcon(p->first, m->second);
+					boost::unordered_map<int, Item::SharedMapIcon>::iterator n = core->getData()->mapIcons.find(m->first);
+					if (serverWide || (n != core->getData()->mapIcons.end() && n->second->amx == amx))
+					{
+						RemovePlayerMapIcon(p->first, m->second);
+						m = p->second.internalMapIcons.erase(m);
+					}
+					else
+					{
+						++m;
+					}
 				}
-				p->second.internalMapIcons.clear();
 				return 1;
 			}
 			case STREAMER_TYPE_3D_TEXT_LABEL:
 			{
-				for (boost::unordered_map<int, int>::iterator t = p->second.internalTextLabels.begin(); t != p->second.internalTextLabels.end(); ++t)
+				boost::unordered_map<int, int>::iterator t = p->second.internalTextLabels.begin();
+				while (t != p->second.internalMapIcons.end())
 				{
-					DeletePlayer3DTextLabel(p->first, t->second);
+					boost::unordered_map<int, Item::SharedTextLabel>::iterator u = core->getData()->textLabels.find(t->first);
+					if (serverWide || (u != core->getData()->textLabels.end() && u->second->amx == amx))
+					{
+						DeletePlayer3DTextLabel(p->first, t->second);
+						t = p->second.internalTextLabels.erase(t);
+					}
+					else
+					{
+						++t;
+					}
 				}
-				p->second.internalTextLabels.clear();
 				return 1;
 			}
 			case STREAMER_TYPE_AREA:
 			{
-				p->second.internalAreas.clear();
+				boost::unordered_set<int>::iterator a = p->second.internalAreas.begin();
+				while (a != p->second.internalAreas.end())
+				{
+					boost::unordered_map<int, Item::SharedArea>::iterator b = core->getData()->areas.find(*a);
+					if (serverWide || (b != core->getData()->areas.end() && b->second->amx == amx))
+					{
+						a = p->second.internalAreas.erase(a);
+					}
+					else
+					{
+						++a;
+					}
+				}
 				return 1;
 			}
 			default:
@@ -629,7 +744,8 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 
 cell AMX_NATIVE_CALL Natives::Streamer_CountVisibleItems(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "Streamer_CountVisibleItems");
+	CHECK_PARAMS(3, "Streamer_CountVisibleItems");
+	bool serverWide = static_cast<int>(params[3]) != 0;
 	if (static_cast<int>(params[2]) == STREAMER_TYPE_PICKUP)
 	{
 		return static_cast<cell>(core->getStreamer()->internalPickups.size());
@@ -641,35 +757,107 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountVisibleItems(AMX *amx, cell *params)
 		{
 			case STREAMER_TYPE_OBJECT:
 			{
-				return static_cast<cell>(p->second.internalObjects.size());
+				if (serverWide)
+				{
+					return static_cast<cell>(p->second.internalObjects.size());
+				}
+				else
+				{
+					int count = 0;
+					for (boost::unordered_map<int, int>::iterator o = p->second.internalObjects.begin(); o != p->second.internalObjects.end(); ++o)
+					{
+						boost::unordered_map<int, Item::SharedObject>::iterator q = core->getData()->objects.find(o->first);
+						if (q != core->getData()->objects.end() && q->second->amx == amx)
+						{
+							++count;
+						}
+					}
+					return static_cast<cell>(count);
+				}
 			}
 			case STREAMER_TYPE_CP:
 			{
 				if (p->second.visibleCheckpoint)
 				{
-					return 1;
+					boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(p->second.visibleCheckpoint);
+					if (serverWide || (c != core->getData()->checkpoints.end() && c->second->amx == amx))
+					{
+						return 1;
+					}
+					return 0;
 				}
-				return 0;
 			}
 			case STREAMER_TYPE_RACE_CP:
 			{
 				if (p->second.visibleRaceCheckpoint)
 				{
-					return 1;
+					boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(p->second.visibleRaceCheckpoint);
+					if (serverWide || (r != core->getData()->raceCheckpoints.end() && r->second->amx == amx))
+					{
+						return 1;
+					}
 				}
 				return 0;
 			}
 			case STREAMER_TYPE_MAP_ICON:
 			{
-				return static_cast<cell>(p->second.internalMapIcons.size());
+				if (serverWide)
+				{
+					return static_cast<cell>(p->second.internalMapIcons.size());
+				}
+				else
+				{
+					int count = 0;
+					for (boost::unordered_map<int, int>::iterator m = p->second.internalMapIcons.begin(); m != p->second.internalObjects.end(); ++m)
+					{
+						boost::unordered_map<int, Item::SharedMapIcon>::iterator n = core->getData()->mapIcons.find(m->first);
+						if (n != core->getData()->mapIcons.end() && n->second->amx == amx)
+						{
+							++count;
+						}
+					}
+					return static_cast<cell>(count);
+				}
 			}
 			case STREAMER_TYPE_3D_TEXT_LABEL:
 			{
-				return static_cast<cell>(p->second.internalTextLabels.size());
+				if (serverWide)
+				{
+					return static_cast<cell>(p->second.internalTextLabels.size());
+				}
+				else
+				{
+					int count = 0;
+					for (boost::unordered_map<int, int>::iterator t = p->second.internalTextLabels.begin(); t != p->second.internalTextLabels.end(); ++t)
+					{
+						boost::unordered_map<int, Item::SharedTextLabel>::iterator u = core->getData()->textLabels.find(t->first);
+						if (u != core->getData()->textLabels.end() && u->second->amx == amx)
+						{
+							++count;
+						}
+					}
+					return static_cast<cell>(count);
+				}
 			}
 			case STREAMER_TYPE_AREA:
 			{
-				return static_cast<cell>(p->second.internalAreas.size());
+				if (serverWide)
+				{
+					return static_cast<cell>(p->second.internalAreas.size());
+				}
+				else
+				{
+					int count = 0;
+					for (boost::unordered_set<int>::iterator a = p->second.internalAreas.begin(); a != p->second.internalAreas.end(); ++a)
+					{
+						boost::unordered_map<int, Item::SharedArea>::iterator b = core->getData()->areas.find(*a);
+						if (b != core->getData()->areas.end() && b->second->amx == amx)
+						{
+							++count;
+						}
+					}
+					return static_cast<cell>(count);
+				}
 			}
 			default:
 			{
@@ -680,6 +868,283 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountVisibleItems(AMX *amx, cell *params)
 	}
 	return 0;
 }
+
+cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllItems(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "Streamer_DestroyAllItems");
+	bool serverWide = static_cast<int>(params[2]) != 0;
+	switch (static_cast<int>(params[1]))
+	{
+		case STREAMER_TYPE_OBJECT:
+		{
+			boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.begin();
+			while (o != core->getData()->objects.end())
+			{
+				if (serverWide || o->second->amx == amx)
+				{
+					o = Utility::destroyObject(o);
+				}
+				else
+				{
+					++o;
+				}
+			}
+			return 1;
+		}
+		case STREAMER_TYPE_PICKUP:
+		{
+			boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.begin();
+			while (p != core->getData()->pickups.end())
+			{
+				if (serverWide || p->second->amx == amx)
+				{
+					p = Utility::destroyPickup(p);
+				}
+				else
+				{
+					++p;
+				}
+			}
+			return 1;
+		}
+		case STREAMER_TYPE_CP:
+		{
+			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.begin();
+			while (c != core->getData()->checkpoints.end())
+			{
+				if (serverWide || c->second->amx == amx)
+				{
+					c = Utility::destroyCheckpoint(c);
+				}
+				else
+				{
+					++c;
+				}
+			}
+			return 1;
+		}
+		case STREAMER_TYPE_RACE_CP:
+		{
+			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.begin();
+			while (r != core->getData()->raceCheckpoints.end())
+			{
+				if (serverWide || r->second->amx == amx)
+				{
+					r = Utility::destroyRaceCheckpoint(r);
+				}
+				else
+				{
+					++r;
+				}
+			}
+			return 1;
+		}
+		case STREAMER_TYPE_MAP_ICON:
+		{
+			boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.begin();
+			while (m != core->getData()->mapIcons.end())
+			{
+				if (serverWide || m->second->amx == amx)
+				{
+					m = Utility::destroyMapIcon(m);
+				}
+				else
+				{
+					++m;
+				}
+			}
+			return 1;
+		}
+		case STREAMER_TYPE_3D_TEXT_LABEL:
+		{
+			boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.begin();
+			while (t != core->getData()->textLabels.end())
+			{
+				if (serverWide || t->second->amx == amx)
+				{
+					t = Utility::destroyTextLabel(t);
+				}
+				else
+				{
+					++t;
+				}
+			}
+			return 1;
+		}
+		case STREAMER_TYPE_AREA:
+		{
+			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.begin();
+			while (a != core->getData()->areas.end())
+			{
+				if (serverWide || a->second->amx == amx)
+				{
+					a = Utility::destroyArea(a);
+				}
+				else
+				{
+					++a;
+				}
+			}
+			return 1;
+		}
+		default:
+		{
+			logprintf("*** Streamer_DestroyAllItems: Invalid type specified");
+			return 0;
+		}
+	}
+	return 0;
+}
+
+cell AMX_NATIVE_CALL Natives::Streamer_CountItems(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "Streamer_CountItems");
+	bool serverWide = static_cast<int>(params[2]) != 0;
+	switch (static_cast<int>(params[1]))
+	{
+		case STREAMER_TYPE_OBJECT:
+		{
+			if (serverWide)
+			{
+				return static_cast<cell>(core->getData()->objects.size());
+			}
+			else
+			{
+				int count = 0;
+				for (boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.begin(); o != core->getData()->objects.end(); ++o)
+				{
+					if (o->second->amx == amx)
+					{
+						++count;
+					}
+				}
+				return static_cast<cell>(count);
+			}
+		}
+		case STREAMER_TYPE_PICKUP:
+		{
+			if (serverWide)
+			{
+				return static_cast<cell>(core->getData()->pickups.size());
+			}
+			else
+			{
+				int count = 0;
+				for (boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.begin(); p != core->getData()->pickups.end(); ++p)
+				{
+					if (p->second->amx == amx)
+					{
+						++count;
+					}
+				}
+				return static_cast<cell>(count);
+			}
+		}
+		case STREAMER_TYPE_CP:
+		{
+			if (serverWide)
+			{
+				return static_cast<cell>(core->getData()->checkpoints.size());
+			}
+			else
+			{
+				int count = 0;
+				for (boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.begin(); c != core->getData()->checkpoints.end(); ++c)
+				{
+					if (c->second->amx == amx)
+					{
+						++count;
+					}
+				}
+				return static_cast<cell>(count);
+			}
+		}
+		case STREAMER_TYPE_RACE_CP:
+		{
+			if (serverWide)
+			{
+				return static_cast<cell>(core->getData()->raceCheckpoints.size());
+			}
+			else
+			{
+				int count = 0;
+				for (boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.begin(); r != core->getData()->raceCheckpoints.end(); ++r)
+				{
+					if (r->second->amx == amx)
+					{
+						++count;
+					}
+				}
+				return static_cast<cell>(count);
+			}
+		}
+		case STREAMER_TYPE_MAP_ICON:
+		{
+			if (serverWide)
+			{
+				return static_cast<cell>(core->getData()->mapIcons.size());
+			}
+			else
+			{
+				int count = 0;
+				for (boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.begin(); m != core->getData()->mapIcons.end(); ++m)
+				{
+					if (m->second->amx == amx)
+					{
+						++count;
+					}
+				}
+				return static_cast<cell>(count);
+			}
+		}
+		case STREAMER_TYPE_3D_TEXT_LABEL:
+		{
+			if (serverWide)
+			{
+				return static_cast<cell>(core->getData()->textLabels.size());
+			}
+			else
+			{
+				int count = 0;
+				for (boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.begin(); t != core->getData()->textLabels.end(); ++t)
+				{
+					if (t->second->amx == amx)
+					{
+						++count;
+					}
+				}
+				return static_cast<cell>(count);
+			}
+		}
+		case STREAMER_TYPE_AREA:
+		{
+			if (serverWide)
+			{
+				return static_cast<cell>(core->getData()->areas.size());
+			}
+			else
+			{
+				int count = 0;
+				for (boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.begin(); a != core->getData()->areas.end(); ++a)
+				{
+					if (a->second->amx == amx)
+					{
+						++count;
+					}
+				}
+				return static_cast<cell>(count);
+			}
+		}
+		default:
+		{
+			logprintf("*** Streamer_CountItems: Invalid type specified");
+			return 0;
+		}
+	}
+	return 0;
+}
+
+// Objects
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicObject(AMX *amx, cell *params)
 {
@@ -1098,28 +1563,7 @@ cell AMX_NATIVE_CALL Natives::SetDynamicObjectMaterialText(AMX *amx, cell *param
 	return 0;
 }
 
-cell AMX_NATIVE_CALL Natives::DestroyAllDynamicObjects(AMX *amx, cell *params)
-{
-	Item::Object::identifier.reset();
-	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
-	{
-		for (boost::unordered_map<int, int>::iterator o = p->second.internalObjects.begin(); o != p->second.internalObjects.end(); ++o)
-		{
-			DestroyPlayerObject(p->first, o->second);
-		}
-		p->second.internalObjects.clear();
-	}
-	core->getGrid()->removeAllItems(STREAMER_TYPE_OBJECT);
-	core->getStreamer()->attachedObjects.clear();
-	core->getStreamer()->movingObjects.clear();
-	core->getData()->objects.clear();
-	return 1;
-}
-
-cell AMX_NATIVE_CALL Natives::CountDynamicObjects(AMX *amx, cell *params)
-{
-	return static_cast<cell>(core->getData()->objects.size());
-}
+// Pickups
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicPickup(AMX *amx, cell *params)
 {
@@ -1169,23 +1613,7 @@ cell AMX_NATIVE_CALL Natives::IsValidDynamicPickup(AMX *amx, cell *params)
 	return 0;
 }
 
-cell AMX_NATIVE_CALL Natives::DestroyAllDynamicPickups(AMX *amx, cell *params)
-{
-	Item::Pickup::identifier.reset();
-	for (boost::unordered_map<int, int>::iterator p = core->getStreamer()->internalPickups.begin(); p != core->getStreamer()->internalPickups.end(); ++p)
-	{
-		DestroyPickup(p->second);
-	}
-	core->getGrid()->removeAllItems(STREAMER_TYPE_PICKUP);
-	core->getStreamer()->internalPickups.clear();
-	core->getData()->pickups.clear();
-	return 1;
-}
-
-cell AMX_NATIVE_CALL Natives::CountDynamicPickups(AMX *amx, cell *params)
-{
-	return static_cast<cell>(core->getData()->pickups.size());
-}
+// Checkpoints
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicCP(AMX *amx, cell *params)
 {
@@ -1316,28 +1744,7 @@ cell AMX_NATIVE_CALL Natives::GetPlayerVisibleDynamicCP(AMX *amx, cell *params)
 	return 0;
 }
 
-cell AMX_NATIVE_CALL Natives::DestroyAllDynamicCPs(AMX *amx, cell *params)
-{
-	Item::Checkpoint::identifier.reset();
-	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
-	{
-		p->second.disabledCheckpoints.clear();
-		if (p->second.visibleCheckpoint != 0)
-		{
-			DisablePlayerCheckpoint(p->first);
-			p->second.activeCheckpoint = 0;
-			p->second.visibleCheckpoint = 0;
-		}
-	}
-	core->getGrid()->removeAllItems(STREAMER_TYPE_CP);
-	core->getData()->checkpoints.clear();
-	return 1;
-}
-
-cell AMX_NATIVE_CALL Natives::CountDynamicCPs(AMX *amx, cell *params)
-{
-	return static_cast<cell>(core->getData()->checkpoints.size());
-}
+// Race Checkpoints
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicRaceCP(AMX *amx, cell *params)
 {
@@ -1470,28 +1877,7 @@ cell AMX_NATIVE_CALL Natives::GetPlayerVisibleDynamicRaceCP(AMX *amx, cell *para
 	return 0;
 }
 
-cell AMX_NATIVE_CALL Natives::DestroyAllDynamicRaceCPs(AMX *amx, cell *params)
-{
-	Item::RaceCheckpoint::identifier.reset();
-	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
-	{
-		p->second.disabledRaceCheckpoints.clear();
-		if (p->second.visibleRaceCheckpoint != 0)
-		{
-			DisablePlayerRaceCheckpoint(p->first);
-			p->second.activeRaceCheckpoint = 0;
-			p->second.visibleRaceCheckpoint = 0;
-		}
-	}
-	core->getGrid()->removeAllItems(STREAMER_TYPE_RACE_CP);
-	core->getData()->raceCheckpoints.clear();
-	return 1;
-}
-
-cell AMX_NATIVE_CALL Natives::CountDynamicRaceCPs(AMX *amx, cell *params)
-{
-	return static_cast<cell>(core->getData()->raceCheckpoints.size());
-}
+// Map Icons
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicMapIcon(AMX *amx, cell *params)
 {
@@ -1541,27 +1927,7 @@ cell AMX_NATIVE_CALL Natives::IsValidDynamicMapIcon(AMX *amx, cell *params)
 	return 0;
 }
 
-cell AMX_NATIVE_CALL Natives::DestroyAllDynamicMapIcons(AMX *amx, cell *params)
-{
-	Item::MapIcon::identifier.reset();
-	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
-	{
-		for (boost::unordered_map<int, int>::iterator m = p->second.internalMapIcons.begin(); m != p->second.internalMapIcons.end(); ++m)
-		{
-			RemovePlayerMapIcon(p->first, m->second);
-		}
-		p->second.mapIconIdentifier.reset();
-		p->second.internalMapIcons.clear();
-	}
-	core->getGrid()->removeAllItems(STREAMER_TYPE_MAP_ICON);
-	core->getData()->mapIcons.clear();
-	return 1;
-}
-
-cell AMX_NATIVE_CALL Natives::CountDynamicMapIcons(AMX *amx, cell *params)
-{
-	return static_cast<cell>(core->getData()->mapIcons.size());
-}
+// 3D Text Labels
 
 cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabel(AMX *amx, cell *params)
 {
@@ -1658,27 +2024,7 @@ cell AMX_NATIVE_CALL Natives::UpdateDynamic3DTextLabelText(AMX *amx, cell *param
 	return 0;
 }
 
-cell AMX_NATIVE_CALL Natives::DestroyAllDynamic3DTextLabels(AMX *amx, cell *params)
-{
-	Item::TextLabel::identifier.reset();
-	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
-	{
-		for (boost::unordered_map<int, int>::iterator t = p->second.internalTextLabels.begin(); t != p->second.internalTextLabels.end(); ++t)
-		{
-			DeletePlayer3DTextLabel(p->first, t->second);
-		}
-		p->second.internalTextLabels.clear();
-	}
-	core->getGrid()->removeAllItems(STREAMER_TYPE_3D_TEXT_LABEL);
-	core->getStreamer()->attachedTextLabels.clear();
-	core->getData()->textLabels.clear();
-	return 1;
-}
-
-cell AMX_NATIVE_CALL Natives::CountDynamic3DTextLabels(AMX *amx, cell *params)
-{
-	return static_cast<cell>(core->getData()->textLabels.size());
-}
+// Areas
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicCircle(AMX *amx, cell *params)
 {
@@ -2036,24 +2382,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToVehicle(AMX *amx, cell *params)
 	return 0;
 }
 
-cell AMX_NATIVE_CALL Natives::DestroyAllDynamicAreas(AMX *amx, cell *params)
-{
-	Item::Area::identifier.reset();
-	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
-	{
-		p->second.disabledAreas.clear();
-		p->second.internalAreas.clear();
-	}
-	core->getGrid()->removeAllItems(STREAMER_TYPE_AREA);
-	core->getStreamer()->attachedAreas.clear();
-	core->getData()->areas.clear();
-	return 1;
-}
-
-cell AMX_NATIVE_CALL Natives::CountDynamicAreas(AMX *amx, cell *params)
-{
-	return static_cast<cell>(core->getData()->areas.size());
-}
+// Extended
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicObjectEx(AMX *amx, cell *params)
 {
@@ -2338,6 +2667,8 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPolygonEx(AMX *amx, cell *params)
 	return static_cast<cell>(areaID);
 }
 
+// Internal
+
 cell AMX_NATIVE_CALL Natives::Streamer_CallbackHook(AMX *amx, cell *params)
 {
 	core->getEvents()->setInterface(amx);
@@ -2438,4 +2769,90 @@ cell AMX_NATIVE_CALL Natives::Streamer_CallbackHook(AMX *amx, cell *params)
 		}
 	}
 	return 0;
+}
+
+// Deprecated
+
+cell AMX_NATIVE_CALL Natives::DestroyAllDynamicObjects(AMX *amx, cell *params)
+{
+	cell newParams[3] = { sizeof(cell) * 2, STREAMER_TYPE_OBJECT, 1 };
+	return Natives::Streamer_DestroyAllItems(amx, newParams);
+}
+
+cell AMX_NATIVE_CALL Natives::CountDynamicObjects(AMX *amx, cell *params)
+{
+	cell newParams[3] = { sizeof(cell) * 2, STREAMER_TYPE_OBJECT, 1 };
+	return Natives::Streamer_CountItems(amx, newParams);
+}
+
+cell AMX_NATIVE_CALL Natives::DestroyAllDynamicPickups(AMX *amx, cell *params)
+{
+	cell newParams[3] = { sizeof(cell) * 2, STREAMER_TYPE_PICKUP, 1 };
+	return Natives::Streamer_DestroyAllItems(amx, newParams);
+}
+
+cell AMX_NATIVE_CALL Natives::CountDynamicPickups(AMX *amx, cell *params)
+{
+	cell newParams[3] = { sizeof(cell) * 2, STREAMER_TYPE_PICKUP, 1 };
+	return Natives::Streamer_CountItems(amx, newParams);
+}
+
+cell AMX_NATIVE_CALL Natives::DestroyAllDynamicCPs(AMX *amx, cell *params)
+{
+	cell newParams[3] = { sizeof(cell) * 2, STREAMER_TYPE_CP, 1 };
+	return Natives::Streamer_DestroyAllItems(amx, newParams);
+}
+
+cell AMX_NATIVE_CALL Natives::CountDynamicCPs(AMX *amx, cell *params)
+{
+	cell newParams[3] = { sizeof(cell) * 2, STREAMER_TYPE_CP, 1 };
+	return Natives::Streamer_CountItems(amx, newParams);
+}
+
+cell AMX_NATIVE_CALL Natives::DestroyAllDynamicRaceCPs(AMX *amx, cell *params)
+{
+	cell newParams[3] = { sizeof(cell) * 2, STREAMER_TYPE_RACE_CP, 1 };
+	return Natives::Streamer_DestroyAllItems(amx, newParams);
+}
+
+cell AMX_NATIVE_CALL Natives::CountDynamicRaceCPs(AMX *amx, cell *params)
+{
+	cell newParams[3] = { sizeof(cell) * 2, STREAMER_TYPE_RACE_CP, 1 };
+	return Natives::Streamer_CountItems(amx, newParams);
+}
+
+cell AMX_NATIVE_CALL Natives::DestroyAllDynamicMapIcons(AMX *amx, cell *params)
+{
+	cell newParams[3] = { sizeof(cell) * 2, STREAMER_TYPE_MAP_ICON, 1 };
+	return Natives::Streamer_DestroyAllItems(amx, newParams);
+}
+
+cell AMX_NATIVE_CALL Natives::CountDynamicMapIcons(AMX *amx, cell *params)
+{
+	cell newParams[3] = { sizeof(cell) * 2, STREAMER_TYPE_MAP_ICON, 1 };
+	return Natives::Streamer_CountItems(amx, newParams);
+}
+
+cell AMX_NATIVE_CALL Natives::DestroyAllDynamic3DTextLabels(AMX *amx, cell *params)
+{
+	cell newParams[3] = { sizeof(cell) * 2, STREAMER_TYPE_3D_TEXT_LABEL, 1 };
+	return Natives::Streamer_DestroyAllItems(amx, newParams);
+}
+
+cell AMX_NATIVE_CALL Natives::CountDynamic3DTextLabels(AMX *amx, cell *params)
+{
+	cell newParams[3] = { sizeof(cell) * 2, STREAMER_TYPE_3D_TEXT_LABEL, 1 };
+	return Natives::Streamer_CountItems(amx, newParams);
+}
+
+cell AMX_NATIVE_CALL Natives::DestroyAllDynamicAreas(AMX *amx, cell *params)
+{
+	cell newParams[3] = { sizeof(cell) * 2, STREAMER_TYPE_AREA, 1 };
+	return Natives::Streamer_DestroyAllItems(amx, newParams);
+}
+
+cell AMX_NATIVE_CALL Natives::CountDynamicAreas(AMX *amx, cell *params)
+{
+	cell newParams[3] = { sizeof(cell) * 2, STREAMER_TYPE_AREA, 1 };
+	return Natives::Streamer_CountItems(amx, newParams);
 }

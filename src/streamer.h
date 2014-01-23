@@ -36,7 +36,15 @@ class Streamer
 public:
 	Streamer();
 
-	bool setTickRate(std::size_t value);
+	inline std::size_t getTickRate()
+	{
+		return tickRate;
+	}
+
+	inline void setTickRate(std::size_t value)
+	{
+		tickRate = value;
+	}
 
 	std::size_t getVisibleItems(int type);
 	bool setVisibleItems(int type, std::size_t value);

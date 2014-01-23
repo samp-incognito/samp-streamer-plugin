@@ -17,8 +17,8 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#define INCLUDE_FILE_VERSION (0x26201)
-#define PLUGIN_VERSION "2.6.2"
+#define INCLUDE_FILE_VERSION (0x27001)
+#define PLUGIN_VERSION "2.7"
 
 #include <sampgdk/plugin.h>
 
