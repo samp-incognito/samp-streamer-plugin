@@ -24,13 +24,14 @@ class Events
 public:
 	bool OnPlayerConnect(int playerid);
 	bool OnPlayerDisconnect(int playerid, int reason);
-	bool OnPlayerEditObject(int playerid, int playerobject, int objectid, int response, float x, float y, float z, float rx, float ry, float rz);
-	bool OnPlayerSelectObject(int playerid, int type, int objectid, int modelid, float x, float y, float z);
-	bool OnPlayerPickUpPickup(int playerid, int pickupid);
 	bool OnPlayerEnterCheckpoint(int playerid);
 	bool OnPlayerLeaveCheckpoint(int playerid);
 	bool OnPlayerEnterRaceCheckpoint(int playerid);
 	bool OnPlayerLeaveRaceCheckpoint(int playerid);
+	bool OnPlayerPickUpPickup(int playerid, int pickupid);
+	bool OnPlayerEditObject(int playerid, int playerobject, int objectid, int response, float x, float y, float z, float rx, float ry, float rz);
+	bool OnPlayerSelectObject(int playerid, int type, int objectid, int modelid, float x, float y, float z);
+	bool OnPlayerWeaponShot(int playerid, int weaponid, int hittype, int hitid, float x, float y, float z);
 
 	inline void setInterface(AMX *amx)
 	{

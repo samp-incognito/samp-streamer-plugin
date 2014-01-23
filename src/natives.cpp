@@ -2423,6 +2423,19 @@ cell AMX_NATIVE_CALL Natives::Streamer_CallbackHook(AMX *amx, cell *params)
 			amx_GetAddr(amx, params[2], &playerid);
 			return static_cast<cell>(core->getEvents()->OnPlayerLeaveRaceCheckpoint(static_cast<int>(*playerid)));
 		}
+		case STREAMER_OPWS:
+		{
+			CHECK_PARAMS(8, "Streamer_CallbackHook");
+			cell *playerid = NULL, *weaponid = NULL, *hittype = NULL, *hitid = NULL, *x = NULL, *y = NULL, *z = NULL;
+			amx_GetAddr(amx, params[2], &playerid);
+			amx_GetAddr(amx, params[3], &weaponid);
+			amx_GetAddr(amx, params[4], &hittype);
+			amx_GetAddr(amx, params[5], &hitid);
+			amx_GetAddr(amx, params[6], &x);
+			amx_GetAddr(amx, params[7], &y);
+			amx_GetAddr(amx, params[8], &z);
+			return static_cast<cell>(core->getEvents()->OnPlayerWeaponShot(static_cast<int>(*playerid), static_cast<int>(*weaponid), static_cast<int>(*hittype), static_cast<int>(*hitid), amx_ctof(*x), amx_ctof(*y), amx_ctof(*z)));
+		}
 	}
 	return 0;
 }

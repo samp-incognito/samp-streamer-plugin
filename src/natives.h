@@ -26,6 +26,7 @@
 #define STREAMER_OPLC (6)
 #define STREAMER_OPERC (7)
 #define STREAMER_OPLRC (8)
+#define STREAMER_OPWS (9)
 
 #include <sampgdk/plugin.h>
 
