@@ -1158,7 +1158,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountItems(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicObject(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(11, "CreateDynamicObject");
+	CHECK_PARAMS(12, "CreateDynamicObject");
 	if (core->getData()->getMaxItems(STREAMER_TYPE_OBJECT) == core->getData()->objects.size())
 	{
 		return 0;
@@ -1166,7 +1166,6 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicObject(AMX *amx, cell *params)
 	int objectID = Item::Object::identifier.get();
 	Item::SharedObject object(new Item::Object);
 	object->amx = amx;
-	object->drawDistance = 0.0f;
 	object->extraID = 0;
 	object->objectID = objectID;
 	object->modelID = static_cast<int>(params[1]);
@@ -1176,6 +1175,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicObject(AMX *amx, cell *params)
 	Utility::addToContainer(object->interiors, static_cast<int>(params[9]));
 	Utility::addToContainer(object->players, static_cast<int>(params[10]));
 	object->streamDistance = amx_ctof(params[11]) * amx_ctof(params[11]);
+	object->drawDistance = amx_ctof(params[12]);
 	core->getGrid()->addObject(object);
 	core->getData()->objects.insert(std::make_pair(objectID, object));
 	return static_cast<cell>(objectID);
@@ -1891,7 +1891,7 @@ cell AMX_NATIVE_CALL Natives::GetPlayerVisibleDynamicRaceCP(AMX *amx, cell *para
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicMapIcon(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(9, "CreateDynamicMapIcon");
+	CHECK_PARAMS(10, "CreateDynamicMapIcon");
 	if (core->getData()->getMaxItems(STREAMER_TYPE_MAP_ICON) == core->getData()->mapIcons.size())
 	{
 		return 0;
@@ -1901,7 +1901,6 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicMapIcon(AMX *amx, cell *params)
 	mapIcon->amx = amx;
 	mapIcon->extraID = 0;
 	mapIcon->mapIconID = mapIconID;
-	mapIcon->style = 0;
 	mapIcon->position = Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]));
 	mapIcon->type = static_cast<int>(params[4]);
 	mapIcon->color = static_cast<int>(params[5]);
@@ -1909,6 +1908,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicMapIcon(AMX *amx, cell *params)
 	Utility::addToContainer(mapIcon->interiors, static_cast<int>(params[7]));
 	Utility::addToContainer(mapIcon->players, static_cast<int>(params[8]));
 	mapIcon->streamDistance = amx_ctof(params[9]) * amx_ctof(params[9]);
+	mapIcon->style = static_cast<int>(params[10]);
 	core->getGrid()->addMapIcon(mapIcon);
 	core->getData()->mapIcons.insert(std::make_pair(mapIconID, mapIcon));
 	return static_cast<cell>(mapIconID);
