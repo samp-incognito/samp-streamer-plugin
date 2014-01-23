@@ -2307,6 +2307,28 @@ cell AMX_NATIVE_CALL Natives::IsPointInAnyDynamicArea(AMX *amx, cell *params)
 	return 0;
 }
 
+cell AMX_NATIVE_CALL Natives::GetPlayerDynamicAreas(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(3, "GetPlayerDynamicAreas");
+	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
+	if (p != core->getData()->players.end())
+	{
+		return static_cast<cell>(Utility::convertContainerToArray(amx, params[2], params[3], p->second.internalAreas) != 0);
+	}
+	return 0;
+}
+
+cell AMX_NATIVE_CALL Natives::GetPlayerNumberDynamicAreas(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "GetPlayerNumberDynamicAreas");
+	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
+	if (p != core->getData()->players.end())
+	{
+		return static_cast<cell>(p->second.internalAreas.size());
+	}
+	return 0;
+}
+
 cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToObject(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(4, "AttachDynamicAreaToObject");
