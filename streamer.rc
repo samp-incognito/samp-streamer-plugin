@@ -9,7 +9,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 		BLOCK "04090025"
 		{
 			VALUE "FileDescription", "SA-MP Streamer Plugin"
-			VALUE "LegalCopyright", "Copyright © 2012 Incognito"
+			VALUE "LegalCopyright", "Copyright © 2014 Incognito"
 			VALUE "OriginalFilename", "streamer.dll"
 			VALUE "ProductName", "SA-MP Streamer Plugin"
 			VALUE "ProductVersion", "v2.7"
