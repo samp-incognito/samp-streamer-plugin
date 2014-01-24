@@ -49,6 +49,48 @@
     <ClCompile Include="lib\sampgdk\src\version.cpp">
       <Filter>lib\sampgdk\src</Filter>
     </ClCompile>
+    <ClCompile Include="src\natives\areas.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\natives\checkpoints.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\natives\data-manipulation.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\natives\deprecated.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\natives\extended.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\natives\internal.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\natives\map-icons.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\natives\miscellaneous.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\natives\objects.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\natives\pickups.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\natives\race-checkpoints.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\natives\settings.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\natives\text-labels.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\natives\updates.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
     <ClCompile Include="src\cell.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -74,9 +116,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\manipulation.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\natives.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\player.cpp">
@@ -181,6 +220,9 @@
     </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{af2c85cd-fa73-4cf1-b4c7-e19cb691e308}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\natives">
+      <UniqueIdentifier>{439395d8-cb53-41c9-9279-3dbc1a51d20a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -78,18 +78,32 @@ OBJECTS := \
 	$(OBJDIR)/a_players.o \
 	$(OBJDIR)/a_samp.o \
 	$(OBJDIR)/a_vehicles.o \
-	$(OBJDIR)/core-linux.o \
-	$(OBJDIR)/core1.o \
+	$(OBJDIR)/sampgdk-core-linux.o \
+	$(OBJDIR)/sampgdk-core.o \
 	$(OBJDIR)/fakeamx.o \
 	$(OBJDIR)/hook-linux.o \
 	$(OBJDIR)/hook.o \
-	$(OBJDIR)/natives1.o \
+	$(OBJDIR)/natives.o \
 	$(OBJDIR)/timers-linux.o \
 	$(OBJDIR)/timers.o \
 	$(OBJDIR)/version.o \
 	$(OBJDIR)/plugin.o \
+	$(OBJDIR)/areas.o \
+	$(OBJDIR)/checkpoints.o \
+	$(OBJDIR)/data-manipulation.o \
+	$(OBJDIR)/deprecated.o \
+	$(OBJDIR)/extended.o \
+	$(OBJDIR)/internal.o \
+	$(OBJDIR)/map-icons.o \
+	$(OBJDIR)/miscellaneous.o \
+	$(OBJDIR)/objects.o \
+	$(OBJDIR)/pickups.o \
+	$(OBJDIR)/race-checkpoints.o \
+	$(OBJDIR)/settings.o \
+	$(OBJDIR)/text-labels.o \
+	$(OBJDIR)/updates.o \
 	$(OBJDIR)/cell.o \
-	$(OBJDIR)/core2.o \
+	$(OBJDIR)/core.o \
 	$(OBJDIR)/data.o \
 	$(OBJDIR)/events.o \
 	$(OBJDIR)/grid.o \
@@ -97,7 +111,6 @@ OBJECTS := \
 	$(OBJDIR)/item.o \
 	$(OBJDIR)/main.o \
 	$(OBJDIR)/manipulation.o \
-	$(OBJDIR)/natives2.o \
 	$(OBJDIR)/player.o \
 	$(OBJDIR)/streamer.o \
 	$(OBJDIR)/utility.o \
@@ -183,10 +196,10 @@ $(OBJDIR)/a_samp.o: lib/sampgdk/src/a_samp.cpp
 $(OBJDIR)/a_vehicles.o: lib/sampgdk/src/a_vehicles.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/core-linux.o: lib/sampgdk/src/core-linux.cpp
+$(OBJDIR)/sampgdk-core-linux.o: lib/sampgdk/src/core-linux.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/core1.o: lib/sampgdk/src/core.cpp
+$(OBJDIR)/sampgdk-core.o: lib/sampgdk/src/core.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 $(OBJDIR)/fakeamx.o: lib/sampgdk/src/fakeamx.cpp
@@ -198,7 +211,7 @@ $(OBJDIR)/hook-linux.o: lib/sampgdk/src/hook-linux.cpp
 $(OBJDIR)/hook.o: lib/sampgdk/src/hook.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/natives1.o: lib/sampgdk/src/natives.cpp
+$(OBJDIR)/natives.o: lib/sampgdk/src/natives.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 $(OBJDIR)/timers-linux.o: lib/sampgdk/src/timers-linux.cpp
@@ -213,10 +226,52 @@ $(OBJDIR)/version.o: lib/sampgdk/src/version.cpp
 $(OBJDIR)/plugin.o: lib/sampgdk/src/sdk/plugin.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+$(OBJDIR)/areas.o: src/natives/areas.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+$(OBJDIR)/checkpoints.o: src/natives/checkpoints.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+$(OBJDIR)/data-manipulation.o: src/natives/data-manipulation.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+$(OBJDIR)/deprecated.o: src/natives/deprecated.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+$(OBJDIR)/extended.o: src/natives/extended.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+$(OBJDIR)/internal.o: src/natives/internal.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+$(OBJDIR)/map-icons.o: src/natives/map-icons.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+$(OBJDIR)/miscellaneous.o: src/natives/miscellaneous.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+$(OBJDIR)/objects.o: src/natives/objects.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+$(OBJDIR)/pickups.o: src/natives/pickups.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+$(OBJDIR)/race-checkpoints.o: src/natives/race-checkpoints.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+$(OBJDIR)/settings.o: src/natives/settings.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+$(OBJDIR)/text-labels.o: src/natives/text-labels.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+$(OBJDIR)/updates.o: src/natives/updates.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 $(OBJDIR)/cell.o: src/cell.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/core2.o: src/core.cpp
+$(OBJDIR)/core.o: src/core.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 $(OBJDIR)/data.o: src/data.cpp
@@ -238,9 +293,6 @@ $(OBJDIR)/main.o: src/main.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 $(OBJDIR)/manipulation.o: src/manipulation.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/natives2.o: src/natives.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 $(OBJDIR)/player.o: src/player.cpp

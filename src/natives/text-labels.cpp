@@ -1,0 +1,129 @@
+/*
+ * Copyright (C) 2014 Incognito
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#include "../natives.h"
+
+#include "../core.h"
+#include "../main.h"
+#include "../utility.h"
+
+#include <boost/geometry.hpp>
+#include <boost/geometry/geometries/geometries.hpp>
+#include <boost/intrusive_ptr.hpp>
+#include <boost/scoped_ptr.hpp>
+#include <boost/unordered_map.hpp>
+#include <boost/unordered_set.hpp>
+
+#include <Eigen/Core>
+
+#include <sampgdk/a_samp.h>
+
+#include <string>
+
+cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabel(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(13, "CreateDynamic3DTextLabel");
+	if (core->getData()->getMaxItems(STREAMER_TYPE_3D_TEXT_LABEL) == core->getData()->textLabels.size())
+	{
+		return 0;
+	}
+	int textLabelID = Item::TextLabel::identifier.get();
+	Item::SharedTextLabel textLabel(new Item::TextLabel);
+	textLabel->amx = amx;
+	textLabel->extraID = 0;
+	textLabel->textLabelID = textLabelID;
+	textLabel->text = Utility::convertNativeStringToString(amx, params[1]);
+	textLabel->color = static_cast<int>(params[2]);
+	textLabel->position = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
+	textLabel->drawDistance = amx_ctof(params[6]);
+	if (static_cast<int>(params[7]) != INVALID_GENERIC_ID || static_cast<int>(params[8]) != INVALID_GENERIC_ID)
+	{
+		textLabel->attach = boost::intrusive_ptr<Item::TextLabel::Attach>(new Item::TextLabel::Attach);
+		textLabel->attach->player = static_cast<int>(params[7]);
+		textLabel->attach->vehicle = static_cast<int>(params[8]);
+		if (textLabel->position.cwiseAbs().maxCoeff() > 50.0f)
+		{
+			textLabel->position.setZero();
+		}
+		core->getStreamer()->attachedTextLabels.insert(textLabel);
+	}
+	textLabel->testLOS = static_cast<int>(params[9]) != 0;
+	Utility::addToContainer(textLabel->worlds, static_cast<int>(params[10]));
+	Utility::addToContainer(textLabel->interiors, static_cast<int>(params[11]));
+	Utility::addToContainer(textLabel->players, static_cast<int>(params[12]));
+	textLabel->streamDistance = amx_ctof(params[13]) * amx_ctof(params[13]);
+	core->getGrid()->addTextLabel(textLabel);
+	core->getData()->textLabels.insert(std::make_pair(textLabelID, textLabel));
+	return static_cast<cell>(textLabelID);
+}
+
+cell AMX_NATIVE_CALL Natives::DestroyDynamic3DTextLabel(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "DestroyDynamic3DTextLabel");
+	boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[1]));
+	if (t != core->getData()->textLabels.end())
+	{
+		Utility::destroyTextLabel(t);
+		return 1;
+	}
+	return 0;
+}
+
+cell AMX_NATIVE_CALL Natives::IsValidDynamic3DTextLabel(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "IsValidDynamic3DTextLabel");
+	boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[1]));
+	if (t != core->getData()->textLabels.end())
+	{
+		return 1;
+	}
+	return 0;
+}
+
+cell AMX_NATIVE_CALL Natives::GetDynamic3DTextLabelText(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(3, "GetDynamic3DTextLabelText");
+	boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[1]));
+	if (t != core->getData()->textLabels.end())
+	{
+		cell *text = NULL;
+		amx_GetAddr(amx, params[2], &text);
+		amx_SetString(text, t->second->text.c_str(), 0, 0, static_cast<size_t>(params[3]));
+		return 1;
+	}
+	return 0;
+}
+
+cell AMX_NATIVE_CALL Natives::UpdateDynamic3DTextLabelText(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(3, "UpdateDynamic3DTextLabelText");
+	boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[1]));
+	if (t != core->getData()->textLabels.end())
+	{
+		t->second->color = static_cast<int>(params[2]);
+		t->second->text = Utility::convertNativeStringToString(amx, params[3]);
+		for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+		{
+			boost::unordered_map<int, int>::iterator i = p->second.internalTextLabels.find(t->first);
+			if (i != p->second.internalTextLabels.end())
+			{
+				UpdatePlayer3DTextLabelText(p->first, i->second, t->second->color, t->second->text.c_str());
+			}
+		}
+		return 1;
+	}
+	return 0;
+}
