@@ -5,11 +5,15 @@ v2.7
 ----
 
 - Added OnPlayerShootDynamicObject for 0.3z
+- Added Streamer_GetItemInternalID and Streamer_GetItemStreamerID for
+  getting SA-MP IDs from streamer IDs and vice versa
 - Added Streamer_GetTickRate, Streamer_GetMaxItems,
   Streamer_GetVisibleItems, Streamer_GetCellDistance,
   Streamer_GetCellSize, Streamer_IsToggleIdleUpdate,
   Streamer_IsToggleItemUpdate, Streamer_DestroyAllItems,
-  and Streamer_CountItems
+  Streamer_CountItems, GetDynamicPolygonPoints,
+  GetDynamicPolygonNumberPoints, GetPlayerDynamicAreas,
+  and GetPlayerNumberDynamicAreas
 - Renamed Streamer_TickRate, Streamer_VisibleItems,
   Streamer_CellDistance, and Streamer_CellSize (all natives begin
   with Streamer_Set* now, but old natives are still usable)
@@ -18,7 +22,15 @@ v2.7
   preferred now, but old natives are still usable)
 - Added a new parameter called "serverwide" to the destroy and count
   natives that makes them work either across all scripts or only
-  the calling script
+  within the calling script
+- Added a new parameter called "recheck" to IsPlayerInDynamicArea
+  and IsPlayerInAnyDynamicArea which allows an area check to occur
+  without issuing a full update for the player
+- Added a "dimensions" parameter to Streamer_GetDistanceToItem which
+  allows the script to specify whether a 2D or 3D distance check
+  should be performed
+- Added "drawdistance" to the end of CreateDynamicObject and "style"
+  to the end of CreateDynamicMapIcon
 
 v2.6.1
 ------
