@@ -378,6 +378,23 @@ void Utility::convertArrayToPolygon(AMX *amx, cell input, cell size, Polygon2D &
 	boost::geometry::correct(polygon.get<0>());
 }
 
+bool Utility::convertPolygonToArray(AMX *amx, cell output, cell size, Polygon2D &polygon)
+{
+	cell *array = NULL;
+	std::size_t i = 0;
+	amx_GetAddr(amx, output, &array);
+	for (std::vector<Eigen::Vector2f>::iterator p = polygon.get<0>().outer().begin(); p != polygon.get<0>().outer().end(); ++p)
+	{
+		if ((i + 1) >= static_cast<std::size_t>(size))
+		{
+			return false;
+		}
+		array[i++] = amx_ftoc(p->data()[0]);
+		array[i++] = amx_ftoc(p->data()[1]);
+	}
+	return true;
+}
+
 std::string Utility::convertNativeStringToString(AMX *amx, cell input)
 {
 	char *string = NULL;

@@ -2183,6 +2183,28 @@ cell AMX_NATIVE_CALL Natives::IsValidDynamicArea(AMX *amx, cell *params)
 	return 0;
 }
 
+cell AMX_NATIVE_CALL Natives::GetDynamicPolygonPoints(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(3, "GetDynamicPolygonPoints");
+	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
+	if (a != core->getData()->areas.end())
+	{
+		return static_cast<cell>(Utility::convertPolygonToArray(amx, params[2], params[3], boost::get<Polygon2D>(a->second->position)) != 0);
+	}
+	return 0;
+}
+
+cell AMX_NATIVE_CALL Natives::GetDynamicPolygonNumberPoints(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "GetDynamicPolygonNumberPoints");
+	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
+	if (a != core->getData()->areas.end())
+	{
+		return static_cast<cell>(boost::get<Polygon2D>(a->second->position).get<0>().outer().size());
+	}
+	return 0;
+}
+
 cell AMX_NATIVE_CALL Natives::TogglePlayerDynamicArea(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(3, "TogglePlayerDynamicArea");

@@ -132,6 +132,8 @@ namespace Natives
 	cell AMX_NATIVE_CALL CreateDynamicPolygon(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL DestroyDynamicArea(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL IsValidDynamicArea(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetDynamicPolygonPoints(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetDynamicPolygonNumberPoints(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL TogglePlayerDynamicArea(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL TogglePlayerAllDynamicAreas(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL IsPlayerInDynamicArea(AMX *amx, cell *params);
