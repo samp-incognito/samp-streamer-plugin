@@ -536,6 +536,171 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 	return 0;
 }
 
+cell AMX_NATIVE_CALL Natives::Streamer_GetItemInternalID(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(3, "Streamer_GetItemInternalID");
+	if (static_cast<int>(params[2]) == STREAMER_TYPE_PICKUP)
+	{
+		boost::unordered_map<int, int>::iterator i = core->getStreamer()->internalPickups.find(static_cast<int>(params[3]));
+		if (i != core->getStreamer()->internalPickups.end())
+		{
+			return static_cast<cell>(i->second);
+		}
+		return 0;
+	}
+	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
+	if (p != core->getData()->players.end())
+	{
+		switch (static_cast<int>(params[2]))
+		{
+			case STREAMER_TYPE_OBJECT:
+			{
+				boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(static_cast<int>(params[3]));
+				if (i != p->second.internalObjects.end())
+				{
+					return static_cast<cell>(i->second);
+				}
+				return 0;
+			}
+			case STREAMER_TYPE_CP:
+			{
+				if (p->second.visibleCheckpoint == static_cast<int>(params[3]))
+				{
+					return 1;
+				}
+				return 0;
+			}
+			case STREAMER_TYPE_RACE_CP:
+			{
+				if (p->second.visibleRaceCheckpoint == static_cast<int>(params[3]))
+				{
+					return 1;
+				}
+				return 0;
+			}
+			case STREAMER_TYPE_MAP_ICON:
+			{
+				boost::unordered_map<int, int>::iterator i = p->second.internalMapIcons.find(static_cast<int>(params[3]));
+				if (i != p->second.internalMapIcons.end())
+				{
+					return static_cast<cell>(i->second);
+				}
+				return 0;
+			}
+			case STREAMER_TYPE_3D_TEXT_LABEL:
+			{
+				boost::unordered_map<int, int>::iterator i = p->second.internalTextLabels.find(static_cast<int>(params[3]));
+				if (i != p->second.internalTextLabels.end())
+				{
+					return static_cast<cell>(i->second);
+				}
+			}
+			case STREAMER_TYPE_AREA:
+			{
+				boost::unordered_set<int>::iterator i = p->second.internalAreas.find(static_cast<int>(params[3]));
+				if (i != p->second.internalAreas.end())
+				{
+					return *i;
+				}
+				return 0;
+			}
+			default:
+			{
+				logprintf("*** Streamer_GetItemInternalID: Invalid type specified");
+				return 0;
+			}
+		}
+	}
+	return 0;
+}
+
+cell AMX_NATIVE_CALL Natives::Streamer_GetItemStreamerID(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(3, "Streamer_GetItemStreamerID");
+	if (static_cast<int>(params[2]) == STREAMER_TYPE_PICKUP)
+	{
+		for (boost::unordered_map<int, int>::iterator i = core->getStreamer()->internalPickups.begin(); i != core->getStreamer()->internalPickups.end(); ++i)
+		{
+			if (i->second == static_cast<int>(params[3]))
+			{
+				return i->first;
+			}
+		}
+		return 0;
+	}
+	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
+	if (p != core->getData()->players.end())
+	{
+		switch (static_cast<int>(params[2]))
+		{
+			case STREAMER_TYPE_OBJECT:
+			{
+				for (boost::unordered_map<int, int>::iterator i = p->second.internalObjects.begin(); i != p->second.internalObjects.end(); ++i)
+				{
+					if (i->second == static_cast<int>(params[3]))
+					{
+						return i->first;
+					}
+				}
+				return 0;
+			}
+			case STREAMER_TYPE_CP:
+			{
+				if (p->second.visibleCheckpoint == static_cast<int>(params[3]))
+				{
+					return 1;
+				}
+				return 0;
+			}
+			case STREAMER_TYPE_RACE_CP:
+			{
+				if (p->second.visibleRaceCheckpoint == static_cast<int>(params[3]))
+				{
+					return 1;
+				}
+				return 0;
+			}
+			case STREAMER_TYPE_MAP_ICON:
+			{
+				for (boost::unordered_map<int, int>::iterator i = p->second.internalMapIcons.begin(); i != p->second.internalMapIcons.end(); ++i)
+				{
+					if (i->second == static_cast<int>(params[3]))
+					{
+						return i->first;
+					}
+				}
+				return 0;
+			}
+			case STREAMER_TYPE_3D_TEXT_LABEL:
+			{
+				for (boost::unordered_map<int, int>::iterator i = p->second.internalTextLabels.begin(); i != p->second.internalTextLabels.end(); ++i)
+				{
+					if (i->second == static_cast<int>(params[3]))
+					{
+						return i->first;
+					}
+				}
+				return 0;
+			}
+			case STREAMER_TYPE_AREA:
+			{
+				boost::unordered_set<int>::iterator i = p->second.internalAreas.find(static_cast<int>(params[3]));
+				if (i != p->second.internalAreas.end())
+				{
+					return *i;
+				}
+				return 0;
+			}
+			default:
+			{
+				logprintf("*** Streamer_GetItemStreamerID: Invalid type specified");
+				return 0;
+			}
+		}
+	}
+	return 0;
+}
+
 cell AMX_NATIVE_CALL Natives::Streamer_IsItemVisible(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(3, "Streamer_IsItemVisible");

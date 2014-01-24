@@ -71,6 +71,8 @@ namespace Natives
 	cell AMX_NATIVE_CALL Streamer_GetUpperBound(AMX *amx, cell *params);
 	// Miscellaneous
 	cell AMX_NATIVE_CALL Streamer_GetDistanceToItem(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_GetItemInternalID(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_GetItemStreamerID(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_IsItemVisible(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_DestroyAllVisibleItems(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_CountVisibleItems(AMX *amx, cell *params);
