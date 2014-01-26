@@ -215,14 +215,6 @@ bool Events::OnPlayerEditObject(int playerid, int playerobject, int objectid, in
 		{
 			if (i->second == objectid)
 			{
-				boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(i->first);
-				if (o != core->getData()->objects.end())
-				{
-					if (o->second->amx != interface)
-					{
-						break;
-					}
-				}
 				int objectid = i->first;
 				for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
 				{
@@ -257,14 +249,6 @@ bool Events::OnPlayerSelectObject(int playerid, int type, int objectid, int mode
 		{
 			if (i->second == objectid)
 			{
-				boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(i->first);
-				if (o != core->getData()->objects.end())
-				{
-					if (o->second->amx != interface)
-					{
-						break;
-					}
-				}
 				int objectid = i->first;
 				for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
 				{
