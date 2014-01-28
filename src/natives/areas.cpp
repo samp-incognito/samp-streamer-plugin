@@ -300,6 +300,56 @@ cell AMX_NATIVE_CALL Natives::IsPlayerInAnyDynamicArea(AMX *amx, cell *params)
 	return 0;
 }
 
+cell AMX_NATIVE_CALL Natives::IsAnyPlayerInDynamicArea(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "IsAnyPlayerInDynamicArea");
+	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+	{
+		bool recheck = static_cast<int>(params[2]) != 0;
+		if (!recheck)
+		{
+			boost::unordered_set<int>::iterator i = p->second.internalAreas.find(static_cast<int>(params[1]));
+			if (i != p->second.internalAreas.end())
+			{
+				return 1;
+			}
+		}
+		else
+		{
+			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
+			return static_cast<cell>(Utility::isPointInArea(p->second.position, a->second)) != 0;
+		}
+	}
+	return 0;
+}
+
+cell AMX_NATIVE_CALL Natives::IsAnyPlayerInAnyDynamicArea(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "IsAnyPlayerInAnyDynamicArea");
+	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+	{
+		bool recheck = static_cast<int>(params[1]) != 0;
+		if (!recheck)
+		{
+			if (!p->second.internalAreas.empty())
+			{
+				return 1;
+			}
+		}
+		else
+		{
+			for (boost::unordered_map<int, Item::SharedArea>::const_iterator a = core->getData()->areas.begin(); a != core->getData()->areas.end(); ++a)
+			{
+				if (Utility::isPointInArea(p->second.position, a->second))
+				{
+					return 1;
+				}
+			}
+		}
+	}
+	return 0;
+}
+
 cell AMX_NATIVE_CALL Natives::IsPointInDynamicArea(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(4, "IsPointInDynamicArea");

@@ -12,8 +12,9 @@ v2.7
   Streamer_GetCellSize, Streamer_IsToggleIdleUpdate,
   Streamer_IsToggleItemUpdate, Streamer_DestroyAllItems,
   Streamer_CountItems, GetDynamicPolygonPoints,
-  GetDynamicPolygonNumberPoints, GetPlayerDynamicAreas,
-  and GetPlayerNumberDynamicAreas
+  GetDynamicPolygonNumberPoints, IsAnyPlayerInDynamicArea,
+  IsAnyPlayerInAnyDynamicArea, GetPlayerDynamicAreas, and
+  GetPlayerNumberDynamicAreas
 - Renamed Streamer_TickRate, Streamer_VisibleItems,
   Streamer_CellDistance, and Streamer_CellSize (all natives begin
   with Streamer_Set* now, but old natives are still usable)
@@ -23,8 +24,8 @@ v2.7
 - Added a new parameter called "serverwide" to the destroy and count
   natives that makes them work either across all scripts or only
   within the calling script
-- Added a new parameter called "recheck" to IsPlayerInDynamicArea
-  and IsPlayerInAnyDynamicArea which allows an area check to occur
+- Added a new parameter called "recheck" to
+  Is(Any)PlayerIn(Any)DynamicArea which allows an area check to occur
   without issuing a full update for the player
 - Added a "dimensions" parameter to Streamer_GetDistanceToItem which
   allows the script to specify whether a 2D or 3D distance check

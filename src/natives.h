@@ -140,6 +140,8 @@ namespace Natives
 	cell AMX_NATIVE_CALL TogglePlayerAllDynamicAreas(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL IsPlayerInDynamicArea(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL IsPlayerInAnyDynamicArea(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL IsAnyPlayerInDynamicArea(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL IsAnyPlayerInAnyDynamicArea(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL IsPointInDynamicArea(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL IsPointInAnyDynamicArea(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL GetPlayerDynamicAreas(AMX *amx, cell *params);

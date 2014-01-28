@@ -152,6 +152,8 @@ AMX_NATIVE_INFO natives[] =
 	{ "TogglePlayerAllDynamicAreas", Natives::TogglePlayerAllDynamicAreas },
 	{ "IsPlayerInDynamicArea", Natives::IsPlayerInDynamicArea },
 	{ "IsPlayerInAnyDynamicArea", Natives::IsPlayerInAnyDynamicArea },
+	{ "IsAnyPlayerInDynamicArea", Natives::IsAnyPlayerInDynamicArea },
+	{ "IsAnyPlayerInAnyDynamicArea", Natives::IsAnyPlayerInAnyDynamicArea },
 	{ "IsPointInDynamicArea", Natives::IsPointInDynamicArea },
 	{ "IsPointInAnyDynamicArea", Natives::IsPointInAnyDynamicArea },
 	{ "GetPlayerDynamicAreas", Natives::GetPlayerDynamicAreas },
