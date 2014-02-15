@@ -64,9 +64,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetVisibleItems(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetCellDistance(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "Streamer_GetCellDistance");
+	CHECK_PARAMS(1, "Streamer_GetCellDistance");
 	float cellDistance = core->getGrid()->getCellDistance();
-	Utility::storeFloatInNative(amx, params[2], cellDistance);
+	Utility::storeFloatInNative(amx, params[1], cellDistance);
 	return 1;
 }
 
@@ -80,9 +80,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetCellDistance(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetCellSize(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "Streamer_GetCellSize");
+	CHECK_PARAMS(1, "Streamer_GetCellSize");
 	float cellSize = core->getGrid()->getCellSize();
-	Utility::storeFloatInNative(amx, params[2], cellSize);
+	Utility::storeFloatInNative(amx, params[1], cellSize);
 	return 1;
 }
 
