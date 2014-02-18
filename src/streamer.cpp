@@ -257,22 +257,23 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 		{
 			player.position = position;
 		}
+		executeCallbacks();
 	}
 }
 
-void Streamer::executeCallbacks(const std::multimap<bool, boost::tuple<int, int> > &areaCallbacks)
+void Streamer::executeCallbacks()
 {
-	for (std::multimap<bool, boost::tuple<int, int> >::const_iterator c = areaCallbacks.begin(); c != areaCallbacks.end(); ++c)
+	for (std::vector<boost::tuple<bool, int, int> >::const_iterator c = areaCallbacks.begin(); c != areaCallbacks.end(); ++c)
 	{
-		if (c->first)
+		if (c->get<0>())
 		{
 			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
 			{
 				int amxIndex = 0;
 				if (!amx_FindPublic(*a, "OnPlayerEnterDynamicArea", &amxIndex))
 				{
-					amx_Push(*a, static_cast<cell>(c->second.get<0>()));
-					amx_Push(*a, static_cast<cell>(c->second.get<1>()));
+					amx_Push(*a, static_cast<cell>(c->get<1>()));
+					amx_Push(*a, static_cast<cell>(c->get<2>()));
 					amx_Exec(*a, NULL, amxIndex);
 				}
 			}
@@ -284,17 +285,14 @@ void Streamer::executeCallbacks(const std::multimap<bool, boost::tuple<int, int>
 				int amxIndex = 0;
 				if (!amx_FindPublic(*a, "OnPlayerLeaveDynamicArea", &amxIndex))
 				{
-					amx_Push(*a, static_cast<cell>(c->second.get<0>()));
-					amx_Push(*a, static_cast<cell>(c->second.get<1>()));
+					amx_Push(*a, static_cast<cell>(c->get<1>()));
+					amx_Push(*a, static_cast<cell>(c->get<2>()));
 					amx_Exec(*a, NULL, amxIndex);
 				}
 			}
 		}
 	}
-}
-
-void Streamer::executeCallbacks(const std::vector<int> &objectCallbacks)
-{
+	areaCallbacks.clear();
 	for (std::vector<int>::const_iterator c = objectCallbacks.begin(); c != objectCallbacks.end(); ++c)
 	{
 		for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
@@ -307,11 +305,11 @@ void Streamer::executeCallbacks(const std::vector<int> &objectCallbacks)
 			}
 		}
 	}
+	objectCallbacks.clear();
 }
 
 void Streamer::processAreas(Player &player, const std::vector<SharedCell> &cells)
 {
-	std::multimap<bool, boost::tuple<int, int> > areaCallbacks;
 	for (std::vector<SharedCell>::const_iterator c = cells.begin(); c != cells.end(); ++c)
 	{
 		for (boost::unordered_map<int, Item::SharedArea>::const_iterator a = (*c)->areas.begin(); a != (*c)->areas.end(); ++a)
@@ -331,7 +329,7 @@ void Streamer::processAreas(Player &player, const std::vector<SharedCell> &cells
 				if (i == player.internalAreas.end())
 				{
 					player.internalAreas.insert(a->first);
-					areaCallbacks.insert(std::make_pair(in, boost::make_tuple(a->first, player.playerID)));
+					areaCallbacks.push_back(boost::make_tuple(in, a->first, player.playerID));
 				}
 				if (a->second->cell)
 				{
@@ -343,14 +341,10 @@ void Streamer::processAreas(Player &player, const std::vector<SharedCell> &cells
 				if (i != player.internalAreas.end())
 				{
 					player.internalAreas.quick_erase(i);
-					areaCallbacks.insert(std::make_pair(in, boost::make_tuple(a->first, player.playerID)));
+					areaCallbacks.push_back(boost::make_tuple(in, a->first, player.playerID));
 				}
 			}
 		}
-	}
-	if (!areaCallbacks.empty())
-	{
-		executeCallbacks(areaCallbacks);
 	}
 }
 
@@ -807,7 +801,6 @@ void Streamer::processActiveItems()
 
 void Streamer::processMovingObjects()
 {
-	std::vector<int> objectCallbacks;
 	boost::chrono::steady_clock::time_point currentTime = boost::chrono::steady_clock::now();
 	boost::unordered_set<Item::SharedObject>::iterator o = movingObjects.begin();
 	while (o != movingObjects.end())
@@ -848,10 +841,6 @@ void Streamer::processMovingObjects()
 		{
 			++o;
 		}
-	}
-	if (!objectCallbacks.empty())
-	{
-		executeCallbacks(objectCallbacks);
 	}
 }
 

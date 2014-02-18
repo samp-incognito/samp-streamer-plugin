@@ -64,9 +64,7 @@ private:
 	void calculateAverageUpdateTime();
 
 	void performPlayerUpdate(Player &player, bool automatic);
-
-	void executeCallbacks(const std::multimap<bool, boost::tuple<int, int> > &areaCallbacks);
-	void executeCallbacks(const std::vector<int> &objectCallbacks);
+	void executeCallbacks();
 
 	void processAreas(Player &player, const std::vector<SharedCell> &cells);
 	void processCheckpoints(Player &player, const std::vector<SharedCell> &cells);
@@ -93,6 +91,9 @@ private:
 
 	float averageUpdateTime;
 	bool processingFinalPlayer;
+
+	std::vector<boost::tuple<bool, int, int> > areaCallbacks;
+	std::vector<int> objectCallbacks;
 
 	template<std::size_t N, typename T>
 	inline bool checkPlayer(const std::bitset<N> &a, const T &b, const boost::unordered_set<T> &c, const T &d, const boost::unordered_set<T> &e, const T &f)
