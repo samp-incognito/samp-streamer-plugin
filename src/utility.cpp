@@ -33,7 +33,7 @@
 #include <sampgdk/a_objects.h>
 #include <sampgdk/a_players.h>
 #include <sampgdk/a_samp.h>
-#include <sampgdk/plugin.h>
+#include <sampgdk/core.h>
 
 #include <set>
 #include <sstream>
@@ -64,7 +64,7 @@ int Utility::checkInterfaceAndRegisterNatives(AMX *amx, AMX_NATIVE_INFO *amxNati
 			foundNatives = true;
 			if (!amxNativeTable[i].address)
 			{
-				logprintf("*** Streamer Plugin: Warning: Obsolete or invalid native \"%s\" found (script might need to be recompiled with the latest include file)", name);
+				sampgdk_logprintf("*** Streamer Plugin: Warning: Obsolete or invalid native \"%s\" found (script might need to be recompiled with the latest include file)", name);
 				amxNativeTable[i].address = reinterpret_cast<cell>(hookedNative);
 				hookedNatives = true;
 			}
@@ -93,7 +93,7 @@ int Utility::checkInterfaceAndRegisterNatives(AMX *amx, AMX_NATIVE_INFO *amxNati
 			{
 				includeFileVersion << std::hex << std::showbase << includeFileValue;
 			}
-			logprintf("*** Streamer Plugin: Warning: Include file version (%s) does not match plugin version (%#x) (script might need to be recompiled with the latest include file)", includeFileVersion.str().c_str(), INCLUDE_FILE_VERSION);
+			sampgdk_logprintf("*** Streamer Plugin: Warning: Include file version (%s) does not match plugin version (%#x) (script might need to be recompiled with the latest include file)", includeFileVersion.str().c_str(), INCLUDE_FILE_VERSION);
 		}
 	}
 	if (hookedNatives)

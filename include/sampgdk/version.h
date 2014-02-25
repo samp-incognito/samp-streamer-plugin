@@ -1,4 +1,4 @@
-/* Copyright (C) 2011-2012, Zeex
+/* Copyright (C) 2011-2014 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,19 +15,61 @@
 
 #ifndef SAMPGDK_VERSION_H
 #define SAMPGDK_VERSION_H
-#pragma once
 
-#define SAMPGDK_VERSION_MAJOR  3
-#define SAMPGDK_VERSION_MINOR  0
-#define SAMPGDK_VERSION_PATCH  2
-#define SAMPGDK_VERSION_TWEAK  0
-#define SAMPGDK_VERSION_ID     ((SAMPGDK_VERSION_MAJOR << 24) |\
-                                (SAMPGDK_VERSION_MINOR << 16) |\
-                                (SAMPGDK_VERSION_PATCH << 8) |\
-                                (SAMPGDK_VERSION_TWEAK))
-#define SAMPGDK_VERSION_STRING "3.0.2"
+#include <sampgdk/export.h>
 
-SAMPGDK_EXPORT int SAMPGDK_CALL sampgdk_version_id();
-SAMPGDK_EXPORT const char *SAMPGDK_CALL sampgdk_version_string();
+/**
+ * \addtogroup version
+ * @{
+ */
+
+/**
+ * \brief Major version.
+ */
+#define SAMPGDK_VERSION_MAJOR 3
+
+/**
+ * \brief Minor version.
+ */
+#define SAMPGDK_VERSION_MINOR 99
+
+/**
+ * \brief Patch version.
+ */
+#define SAMPGDK_VERSION_PATCH 0
+
+/**
+ * \brief Library version in the form of \c 0xAABBCC00 where \c AA, \c BB
+ * and \c CC are the major, minor and patch numbers.
+ */
+#define SAMPGDK_VERSION_ID 56819712
+
+/**
+ * \brief Library version string.
+ */
+#define SAMPGDK_VERSION_STRING "3.99.0"
+
+/**
+ * \brief Gets library version number.
+ *
+ * \returns The version number in the form of \c 0xAABBCCDD where \c AA, 
+ * c BB and \c CC are the major, minor and patch numbers.
+ *
+ * \see SAMPGDK_VERSION_ID
+ * \see sampgdk_get_version_string()
+ */
+SAMPGDK_API(int, sampgdk_GetVersion(void));
+
+/**
+ * \brief Gets library version string.
+ *
+ * \returns The version string in the form of \c x.y.z
+ *
+ * \see SAMPGDK_VERSION_STRING
+ * \see sampgdk_get_version().
+ */
+SAMPGDK_API(const char *, sampgdk_GetVersionString(void));
+
+/** @} */
 
 #endif /* !SAMPGDK_VERSION_H */

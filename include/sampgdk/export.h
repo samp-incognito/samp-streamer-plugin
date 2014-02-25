@@ -1,4 +1,4 @@
-/* Copyright (C) 2011-2012, Zeex
+/* Copyright (C) 2011-2014 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,62 @@
 
 #ifndef SAMPGDK_EXPORT_H
 #define SAMPGDK_EXPORT_H
-#pragma once
+
+#include <sampgdk/platform.h>
+#include <sampgdk/sdk.h>
 
 #undef SAMPGDK_EXPORT
 #undef SAMPGDK_CALL
 
-#include <sampgdk/config.h>
+#ifdef __cplusplus
+  #define SAMPGDK_EXTERN_C extern "C"
+#else
+  #define SAMPGDK_EXTERN_C
+#endif
 
-#define SAMPGDK_CALL
-#define SAMPGDK_EXPORT
+#if defined SAMPGDK_STATIC
+  #define SAMPGDK_CALL
+#else
+  #define SAMPGDK_CALL SAMPGDK_CDECL
+#endif
 
-#define SAMPGDK_NATIVE(ret_type, native) \
-	SAMPGDK_EXPORT ret_type SAMPGDK_CALL sampgdk_##native
+#if defined SAMPGDK_STATIC
+  #define SAMPGDK_EXPORT SAMPGDK_EXTERN_C
+#else
+  #if SAMPGDK_LINUX
+    #if defined IN_SAMPGDK
+      #define SAMPGDK_EXPORT SAMPGDK_EXTERN_C __attribute__((visibility("default")))
+    #else
+      #define SAMPGDK_EXPORT SAMPGDK_EXTERN_C
+    #endif
+  #elif SAMPGDK_WINDOWS
+    #if defined IN_SAMPGDK
+      #define SAMPGDK_EXPORT SAMPGDK_EXTERN_C __declspec(dllexport)
+    #else
+      #define SAMPGDK_EXPORT SAMPGDK_EXTERN_C __declspec(dllimport)
+    #endif
+  #else
+    #error Usupported operating system
+  #endif
+#endif
 
-#endif /* SAMPGDK_EXPORT_H */
+#define SAMPGDK_API(return_type, rest) \
+  SAMPGDK_EXPORT return_type SAMPGDK_CALL rest
+
+#undef SAMPGDK_NATIVE_EXPORT
+#undef SAMPGDK_NATIVE_CALL
+
+#define SAMPGDK_NATIVE_EXPORT SAMPGDK_EXPORT
+#define SAMPGDK_NATIVE_CALL SAMPGDK_CALL
+#define SAMPGDK_NATIVE(return_type, rest) \
+  SAMPGDK_NATIVE_EXPORT return_type SAMPGDK_NATIVE_CALL rest
+
+#undef SAMPGDK_CALLBACK_EXPORT
+#undef SAMPGDK_CALLBACK_CALL
+
+#define SAMPGDK_CALLBACK_EXPORT PLUGIN_EXPORT
+#define SAMPGDK_CALLBACK_CALL PLUGIN_CALL
+#define SAMPGDK_CALLBACK(return_type, rest) \
+  SAMPGDK_CALLBACK_EXPORT return_type SAMPGDK_CALLBACK_CALL rest
+
+#endif /* !SAMPGDK_EXPORT_H */

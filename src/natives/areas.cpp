@@ -31,6 +31,8 @@
 
 #include <Eigen/Core>
 
+#include <sampgdk/core.h>
+
 cell AMX_NATIVE_CALL Natives::CreateDynamicCircle(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(6, "CreateDynamicCircle");
@@ -134,7 +136,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPolygon(AMX *amx, cell *params)
 	}
 	if (static_cast<int>(params[4] >= 2 && static_cast<int>(params[4]) % 2))
 	{
-		logprintf("*** CreateDynamicPolygon: Number of points must be divisible by two");
+		sampgdk_logprintf("*** CreateDynamicPolygon: Number of points must be divisible by two");
 		return 0;
 	}
 	int areaID = Item::Area::identifier.get();
@@ -404,7 +406,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToObject(AMX *amx, cell *params)
 	{
 		if (a->second->type != STREAMER_AREA_TYPE_CIRCLE && a->second->type != STREAMER_AREA_TYPE_SPHERE)
 		{
-			logprintf("*** AttachDynamicAreaToObject: Only circles and spheres may be attached to objects");
+			sampgdk_logprintf("*** AttachDynamicAreaToObject: Only circles and spheres may be attached to objects");
 			return 0;
 		}
 		if (static_cast<int>(params[2]) != INVALID_GENERIC_ID)
@@ -440,7 +442,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToPlayer(AMX *amx, cell *params)
 	{
 		if (a->second->type != STREAMER_AREA_TYPE_CIRCLE && a->second->type != STREAMER_AREA_TYPE_SPHERE)
 		{
-			logprintf("*** AttachDynamicAreaToPlayer: Only circles and spheres may be attached to players");
+			sampgdk_logprintf("*** AttachDynamicAreaToPlayer: Only circles and spheres may be attached to players");
 			return 0;
 		}
 		if (static_cast<int>(params[2]) != INVALID_GENERIC_ID)
@@ -476,7 +478,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToVehicle(AMX *amx, cell *params)
 	{
 		if (a->second->type != STREAMER_AREA_TYPE_CIRCLE && a->second->type != STREAMER_AREA_TYPE_SPHERE)
 		{
-			logprintf("*** AttachDynamicAreaToVehicle: Only circles and spheres may be attached to vehicles");
+			sampgdk_logprintf("*** AttachDynamicAreaToVehicle: Only circles and spheres may be attached to vehicles");
 			return 0;
 		}
 		if (static_cast<int>(params[2]) != INVALID_GENERIC_ID)

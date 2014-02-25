@@ -25,7 +25,7 @@
 
 #include <Eigen/Core>
 
-#include <sampgdk/plugin.h>
+#include <sampgdk/sdk.h>
 
 #include <bitset>
 #include <string>

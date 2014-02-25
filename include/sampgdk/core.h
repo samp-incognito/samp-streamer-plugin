@@ -1,4 +1,4 @@
-/* Copyright (C) 2011-2012, Zeex
+/* Copyright (C) 2011-2014 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,36 +15,113 @@
 
 #ifndef SAMPGDK_CORE_H
 #define SAMPGDK_CORE_H
-#pragma once
 
-#include <sampgdk/config.h>
-#include <sampgdk/amx.h>
+#include <stdarg.h>
+
+#include <sampgdk/bool.h>
 #include <sampgdk/export.h>
-#include <sampgdk/version.h>
+#include <sampgdk/sdk.h>
 
-#define AMX_EXEC_GDK (-10)
+/**
+ * \defgroup core      Core
+ * \defgroup interop   Interop
+ * \defgroup version   Version
+ * \defgroup sdk       SA-MP SDK
+ * \defgroup natives   SA-MP Natives
+ * \defgroup callbacks SA-MP Callbacks
+ */
 
-SAMPGDK_EXPORT void SAMPGDK_CALL sampgdk_initialize(void **ppPluginData);
-SAMPGDK_EXPORT void **SAMPGDK_CALL sampgdk_get_plugin_data();
-SAMPGDK_EXPORT void SAMPGDK_CALL sampgdk_finalize();
+/**
+ * \addtogroup core
+ * @{
+ */
 
-SAMPGDK_EXPORT void SAMPGDK_CALL sampgdk_register_plugin(void *plugin);
-SAMPGDK_EXPORT void SAMPGDK_CALL sampgdk_unregister_plugin(void *plugin);
-SAMPGDK_EXPORT void *SAMPGDK_CALL sampgdk_get_plugin_handle(void *symbol);
-SAMPGDK_EXPORT void *SAMPGDK_CALL sampgdk_get_plugin_symbol(void *plugin, const char *name);
+/**
+ * \brief Returns supported SDK version.
+ *
+ * This function is intended to be used in Supports(). For example:
+ *
+ * \code
+ * PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports() {
+ *   return sampgdk_Supports() | SUPPORTS_PROCESS_TICK;
+ * }
+ * \endcode
+ *
+ * \returns SUPPORTS_VERSION.
+ */
+SAMPGDK_API(unsigned int, sampgdk_Supports(void));
 
-/* Must be called in Load() */
-#define sampgdk_initialize_plugin(ppData)\
-	do {\
-		sampgdk_initialize(ppData);\
-		sampgdk_register_plugin(sampgdk_get_plugin_handle((void*)Load));\
-	} while (false);
+/**
+ * \brief Initializes the library.
+ * 
+ * When called for the first time, sets up internal global state and
+ * registers the calling plugin for receiving events. All subsequent
+ * calls are ignored until sampgdk_Unload() is called.
+ *
+ * This function is intended to be used in Load(). For example:
+ *
+ * \code
+ * PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData) {
+ *   ...
+ *   return sampgdk_Load(ppData);
+ * }
+ * \endcode
+ *
+ * \param ppData A pointer to the SA-MP plugin data passed to Load().
+ *
+ * \returns Returns \c true on success and \c false otherwise.
+ *
+ * \see sampgdk_Unload()
+ */
+SAMPGDK_API(bool, sampgdk_Load(void **ppData));
 
-SAMPGDK_EXPORT void SAMPGDK_CALL sampgdk_process_timers();
-SAMPGDK_EXPORT void SAMPGDK_CALL sampgdk_process_plugin_timers(void *plugin);
+/**
+ * \brief Performs the final cleanup.
+ *
+ * This function is intended to be using in Unload(). For example:
+ *
+ * \code
+ * PLUGIN_EXPORT void PLUGIN_CALL Unload() {
+ *   ...
+ *   sampgdk_Unload();
+ * }
+ * \endcode
+ *
+ * \see sampgdk_Load()
+ */
+SAMPGDK_API(void, sampgdk_Unload(void));
 
-SAMPGDK_EXPORT const AMX_NATIVE_INFO *SAMPGDK_CALL sampgdk_get_natives();
+/**
+ * \brief Processes timers created by the calling plugin.
+ *
+ * \see sampgdk_process_plugin_timers()
+ */
+SAMPGDK_API(void, sampgdk_ProcessTick(void));
 
-typedef void (*sampgdk_logprintf_t)(const char *format, ...);
+/**
+ * \brief Prints a message to the server log.
+ *
+ * \note The resulting message cannot be longer than 1024 characters.
+ *
+ * \param format A printf-like format string.
+ * \param ... Further arguments to logprintf().
+ *
+ * \see sampgdk_vlogprintf()
+ */
+SAMPGDK_API(void, sampgdk_logprintf(const char *format, ...));
+
+/**
+ * \brief Prints a message to the server log.
+ *
+ * This is a \c va_list version of sampgdk_logprintf().
+ *
+ * \param format A printf-like format string.
+ * \param args Further arguments to logprintf().
+ *
+ * \see sampgdk_logprintf()
+ */
+SAMPGDK_API(void, sampgdk_vlogprintf(const char *format, va_list args));
+
+/** @} */
 
 #endif /* !SAMPGDK_CORE_H */

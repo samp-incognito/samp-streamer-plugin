@@ -32,6 +32,7 @@
 
 #include <sampgdk/a_objects.h>
 #include <sampgdk/a_players.h>
+#include <sampgdk/core.h>
 
 #include <limits>
 #include <string>
@@ -196,7 +197,7 @@ cell AMX_NATIVE_CALL Natives::MoveDynamicObject(AMX *amx, cell *params)
 	{
 		if (o->second->attach)
 		{
-			logprintf("MoveDynamicObject: Object is currently attached and cannot be moved");
+			sampgdk_logprintf("MoveDynamicObject: Object is currently attached and cannot be moved");
 			return 0;
 		}
 		Eigen::Vector3f position(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
@@ -291,7 +292,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToVehicle(AMX *amx, cell *param
 	{
 		if (o->second->move)
 		{
-			logprintf("AttachDynamicObjectToVehicle: Object is currently moving and cannot be attached");
+			sampgdk_logprintf("AttachDynamicObjectToVehicle: Object is currently moving and cannot be attached");
 			return 0;
 		}
 		o->second->attach = boost::intrusive_ptr<Item::Object::Attach>(new Item::Object::Attach);

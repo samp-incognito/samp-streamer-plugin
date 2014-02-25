@@ -22,7 +22,8 @@
 
 #include <boost/intrusive_ptr.hpp>
 #include <boost/unordered_map.hpp>
-#include <sampgdk/plugin.h>
+
+#include <sampgdk/sdk.h>
 
 #include <set>
 

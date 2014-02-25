@@ -23,30 +23,29 @@
 #include <boost/scoped_ptr.hpp>
 
 #include <sampgdk/core.h>
-#include <sampgdk/plugin.h>
 
 #include <set>
 
-logprintf_t logprintf;
+extern void *pAMXFunctions;
 
 PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports()
 {
-	return SUPPORTS_VERSION | SUPPORTS_AMX_NATIVES | SUPPORTS_PROCESS_TICK;
+	return sampgdk_Supports() | SUPPORTS_AMX_NATIVES | SUPPORTS_PROCESS_TICK;
 }
 
-PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppPluginData)
+PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 {
 	core.reset(new Core);
-	sampgdk_initialize_plugin(ppPluginData);
-	logprintf = (logprintf_t)ppPluginData[PLUGIN_DATA_LOGPRINTF];
-	logprintf("\n\n*** Streamer Plugin v%s by Incognito loaded ***\n", PLUGIN_VERSION);
-	return true;
+	pAMXFunctions = ppData[PLUGIN_DATA_AMX_EXPORTS];
+	sampgdk_logprintf("\n\n*** Streamer Plugin v%s by Incognito loaded ***\n", PLUGIN_VERSION);
+	return sampgdk_Load(ppData);
 }
 
 PLUGIN_EXPORT void PLUGIN_CALL Unload()
 {
 	core.reset();
-	logprintf("\n\n*** Streamer Plugin v%s by Incognito unloaded ***\n", PLUGIN_VERSION);
+	sampgdk_logprintf("\n\n*** Streamer Plugin v%s by Incognito unloaded ***\n", PLUGIN_VERSION);
+	sampgdk_Unload();
 }
 
 AMX_NATIVE_INFO natives[] =
@@ -173,8 +172,6 @@ AMX_NATIVE_INFO natives[] =
 	{ "CreateDynamicSphereEx", Natives::CreateDynamicSphereEx },
 	{ "CreateDynamicCubeEx", Natives::CreateDynamicCubeEx },
 	{ "CreateDynamicPolygonEx", Natives::CreateDynamicPolygonEx },
-	// Internal
-	{ "Streamer_CallbackHook", Natives::Streamer_CallbackHook },
 	// Deprecated
 	{ "Streamer_TickRate", Natives::Streamer_SetTickRate },
 	{ "Streamer_MaxItems", Natives::Streamer_SetMaxItems },

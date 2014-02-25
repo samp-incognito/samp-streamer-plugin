@@ -18,7 +18,6 @@
 #define CORE_H
 
 #include "data.h"
-#include "events.h"
 #include "grid.h"
 #include "streamer.h"
 
@@ -34,11 +33,6 @@ public:
 		return data.get();
 	}
 
-	inline Events *getEvents()
-	{
-		return events.get();
-	}
-
 	inline Grid *getGrid()
 	{
 		return grid.get();
@@ -50,7 +44,6 @@ public:
 	}
 private:
 	boost::scoped_ptr<Data> data;
-	boost::scoped_ptr<Events> events;
 	boost::scoped_ptr<Grid> grid;
 	boost::scoped_ptr<Streamer> streamer;
 };

@@ -4,50 +4,8 @@
     <ClCompile Include="lib\boost\system\src\error_code.cpp">
       <Filter>lib\boost\system\src</Filter>
     </ClCompile>
-    <ClCompile Include="lib\sampgdk\src\sdk\plugin.cpp">
-      <Filter>lib\sampgdk\src\sdk</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\sampgdk\src\a_objects.cpp">
-      <Filter>lib\sampgdk\src</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\sampgdk\src\a_players.cpp">
-      <Filter>lib\sampgdk\src</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\sampgdk\src\a_samp.cpp">
-      <Filter>lib\sampgdk\src</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\sampgdk\src\a_vehicles.cpp">
-      <Filter>lib\sampgdk\src</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\sampgdk\src\amxhooks.cpp">
-      <Filter>lib\sampgdk\src</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\sampgdk\src\core-win32.cpp">
-      <Filter>lib\sampgdk\src</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\sampgdk\src\core.cpp">
-      <Filter>lib\sampgdk\src</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\sampgdk\src\fakeamx.cpp">
-      <Filter>lib\sampgdk\src</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\sampgdk\src\hook-win32.cpp">
-      <Filter>lib\sampgdk\src</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\sampgdk\src\hook.cpp">
-      <Filter>lib\sampgdk\src</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\sampgdk\src\natives.cpp">
-      <Filter>lib\sampgdk\src</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\sampgdk\src\timers-win32.cpp">
-      <Filter>lib\sampgdk\src</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\sampgdk\src\timers.cpp">
-      <Filter>lib\sampgdk\src</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\sampgdk\src\version.cpp">
-      <Filter>lib\sampgdk\src</Filter>
+    <ClCompile Include="lib\sdk\src\plugin.cpp">
+      <Filter>lib\sdk\src</Filter>
     </ClCompile>
     <ClCompile Include="src\natives\areas.cpp">
       <Filter>src\natives</Filter>
@@ -62,9 +20,6 @@
       <Filter>src\natives</Filter>
     </ClCompile>
     <ClCompile Include="src\natives\extended.cpp">
-      <Filter>src\natives</Filter>
-    </ClCompile>
-    <ClCompile Include="src\natives\internal.cpp">
       <Filter>src\natives</Filter>
     </ClCompile>
     <ClCompile Include="src\natives\map-icons.cpp">
@@ -91,6 +46,9 @@
     <ClCompile Include="src\natives\updates.cpp">
       <Filter>src\natives</Filter>
     </ClCompile>
+    <ClCompile Include="src\callbacks.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="src\cell.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -98,9 +56,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\data.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\events.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\grid.cpp">
@@ -132,23 +87,8 @@
     <ClInclude Include="lib\boost\system\src\local_free_on_destruction.hpp">
       <Filter>lib\boost\system\src</Filter>
     </ClInclude>
-    <ClInclude Include="lib\sampgdk\src\sdk\plugin.h">
-      <Filter>lib\sampgdk\src\sdk</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\sampgdk\src\amxhooks.h">
-      <Filter>lib\sampgdk\src</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\sampgdk\src\fakeamx.h">
-      <Filter>lib\sampgdk\src</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\sampgdk\src\hook.h">
-      <Filter>lib\sampgdk\src</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\sampgdk\src\natives.h">
-      <Filter>lib\sampgdk\src</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\sampgdk\src\timers.h">
-      <Filter>lib\sampgdk\src</Filter>
+    <ClInclude Include="lib\sdk\src\plugin.h">
+      <Filter>lib\sdk\src</Filter>
     </ClInclude>
     <ClInclude Include="src\cell.h">
       <Filter>src</Filter>
@@ -160,9 +100,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\data.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\events.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\grid.h">
@@ -209,14 +146,11 @@
     <Filter Include="lib\boost\system\src">
       <UniqueIdentifier>{6d8e70a5-ca94-408c-966c-dcb5c93bdd07}</UniqueIdentifier>
     </Filter>
-    <Filter Include="lib\sampgdk">
-      <UniqueIdentifier>{c1fda53e-e7c5-430e-bff9-8583f050a85c}</UniqueIdentifier>
+    <Filter Include="lib\sdk">
+      <UniqueIdentifier>{64fa366e-b317-4cea-99bd-fbf0292d040a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="lib\sampgdk\src">
-      <UniqueIdentifier>{5e5c7a96-a174-4f8b-80e9-fcf1646f3d19}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="lib\sampgdk\src\sdk">
-      <UniqueIdentifier>{718d344f-afe6-47f3-9aba-153da67cda8a}</UniqueIdentifier>
+    <Filter Include="lib\sdk\src">
+      <UniqueIdentifier>{e968c847-f2a6-4e92-b6d8-49de001ae5f7}</UniqueIdentifier>
     </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{af2c85cd-fa73-4cf1-b4c7-e19cb691e308}</UniqueIdentifier>

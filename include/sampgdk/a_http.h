@@ -1,4 +1,4 @@
-/* Copyright (C) 2011-2014 Zeex
+/* Copyright (C) 2013-2014 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,13 @@
  * limitations under the License.
  */
 
-#ifndef SAMPGDK_A_PLAYERS_H
-#define SAMPGDK_A_PLAYERS_H
+#ifndef SAMPGDK_A_HTTP_H
+#define SAMPGDK_A_HTTP_H
 
-#include <sampgdk/a_samp.h>
 #include <sampgdk/bool.h>
+#include <sampgdk/core.h>
 #include <sampgdk/export.h>
 
-#include <sampgdk/a_players-decl.h>
+#include <sampgdk/a_http-decl.h>
 
-#endif /* !SAMPGDK_A_PLAYERS_H */
+#endif /* !SAMPGDK_A_HTTP_H */

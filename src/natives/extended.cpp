@@ -31,6 +31,8 @@
 
 #include <Eigen/Core>
 
+#include <sampgdk/core.h>
+
 cell AMX_NATIVE_CALL Natives::CreateDynamicObjectEx(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(15, "CreateDynamicObjectEx");
@@ -294,7 +296,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPolygonEx(AMX *amx, cell *params)
 	}
 	if (static_cast<int>(params[4] >= 2 && static_cast<int>(params[4]) % 2))
 	{
-		logprintf("*** CreateDynamicPolygonEx: Number of points must be divisible by two");
+		sampgdk_logprintf("*** CreateDynamicPolygonEx: Number of points must be divisible by two");
 	}
 	int areaID = Item::Area::identifier.get();
 	Item::SharedArea area(new Item::Area);

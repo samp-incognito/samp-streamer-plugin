@@ -47,7 +47,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;BOOST_CHRONO_HEADER_ONLY;_DEBUG</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;BOOST_CHRONO_HEADER_ONLY;_DEBUG;SAMPGDK_STATIC</PreprocessorDefinitions>
       <WarningLevel>Level3</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
       <ObjectFileName>$(IntDir)\%(RelativeDir)\</ObjectFileName>
@@ -55,13 +55,15 @@
     <Link>
       <ModuleDefinitionFile>streamer.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>lib/sampgdk/windows;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sampgdk3sd.lib;subhooksd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <AdditionalIncludeDirectories>include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;BOOST_CHRONO_HEADER_ONLY;NDEBUG</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;BOOST_CHRONO_HEADER_ONLY;NDEBUG;SAMPGDK_STATIC</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
@@ -76,31 +78,18 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <GenerateDebugInformation>false</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>lib/sampgdk/windows;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>sampgdk3s.lib;subhooks.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="lib\boost\system\src\error_code.cpp" />
-    <ClCompile Include="lib\sampgdk\src\amxhooks.cpp" />
-    <ClCompile Include="lib\sampgdk\src\a_objects.cpp" />
-    <ClCompile Include="lib\sampgdk\src\a_players.cpp" />
-    <ClCompile Include="lib\sampgdk\src\a_samp.cpp" />
-    <ClCompile Include="lib\sampgdk\src\a_vehicles.cpp" />
-    <ClCompile Include="lib\sampgdk\src\core-win32.cpp" />
-    <ClCompile Include="lib\sampgdk\src\core.cpp" />
-    <ClCompile Include="lib\sampgdk\src\fakeamx.cpp" />
-    <ClCompile Include="lib\sampgdk\src\hook-win32.cpp" />
-    <ClCompile Include="lib\sampgdk\src\hook.cpp" />
-    <ClCompile Include="lib\sampgdk\src\natives.cpp" />
-    <ClCompile Include="lib\sampgdk\src\sdk\plugin.cpp" />
-    <ClCompile Include="lib\sampgdk\src\timers-win32.cpp" />
-    <ClCompile Include="lib\sampgdk\src\timers.cpp" />
-    <ClCompile Include="lib\sampgdk\src\version.cpp" />
+    <ClCompile Include="lib\sdk\src\plugin.cpp" />
     <ClCompile Include="src\natives\areas.cpp" />
     <ClCompile Include="src\natives\checkpoints.cpp" />
     <ClCompile Include="src\natives\data-manipulation.cpp" />
     <ClCompile Include="src\natives\deprecated.cpp" />
     <ClCompile Include="src\natives\extended.cpp" />
-    <ClCompile Include="src\natives\internal.cpp" />
     <ClCompile Include="src\natives\map-icons.cpp" />
     <ClCompile Include="src\natives\miscellaneous.cpp" />
     <ClCompile Include="src\natives\objects.cpp" />
@@ -113,7 +102,7 @@
     <ClCompile Include="src\core.cpp" />
     <ClCompile Include="src\data.cpp" />
     <ClCompile Include="src\item.cpp" />
-    <ClCompile Include="src\events.cpp" />
+    <ClCompile Include="src\callbacks.cpp" />
     <ClCompile Include="src\grid.cpp" />
     <ClCompile Include="src\identifier.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -124,18 +113,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lib\boost\system\src\local_free_on_destruction.hpp" />
-    <ClInclude Include="lib\sampgdk\src\amxhooks.h" />
-    <ClInclude Include="lib\sampgdk\src\fakeamx.h" />
-    <ClInclude Include="lib\sampgdk\src\hook.h" />
-    <ClInclude Include="lib\sampgdk\src\natives.h" />
-    <ClInclude Include="lib\sampgdk\src\sdk\plugin.h" />
-    <ClInclude Include="lib\sampgdk\src\timers.h" />
+    <ClInclude Include="lib\sdk\src\plugin.h" />
     <ClInclude Include="src\cell.h" />
     <ClInclude Include="src\common.h" />
     <ClInclude Include="src\core.h" />
     <ClInclude Include="src\data.h" />
     <ClInclude Include="src\item.h" />
-    <ClInclude Include="src\events.h" />
     <ClInclude Include="src\grid.h" />
     <ClInclude Include="src\identifier.h" />
     <ClInclude Include="src\main.h" />

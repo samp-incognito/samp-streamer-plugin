@@ -24,6 +24,8 @@
 #include <boost/scoped_ptr.hpp>
 #include <boost/unordered_map.hpp>
 
+#include <sampgdk/core.h>
+
 cell AMX_NATIVE_CALL Natives::Streamer_GetFloatData(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(4, "Streamer_GetFloatData");
@@ -169,7 +171,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetUpperBound(AMX *amx, cell *params)
 		}
 		default:
 		{
-			logprintf("*** Streamer_GetUpperBound: Invalid type specified");
+			sampgdk_logprintf("*** Streamer_GetUpperBound: Invalid type specified");
 			return 0;
 		}
 	}

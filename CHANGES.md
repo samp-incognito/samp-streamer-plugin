@@ -1,6 +1,11 @@
 SA-MP Streamer Plugin
 =====================
 
+v2.7.1
+------
+- Fixed some minor bugs
+- Updated sampgdk version
+
 v2.7
 ----
 

@@ -31,13 +31,13 @@ ifeq ($(config),debug)
   OBJDIR     = obj/linux/Debug
   TARGETDIR  = bin/linux/Debug
   TARGET     = $(TARGETDIR)/streamer.so
-  DEFINES   += -DBOOST_CHRONO_HEADER_ONLY
+  DEFINES   += -DBOOST_CHRONO_HEADER_ONLY -DSAMPGDK_STATIC
   INCLUDES  += -Iinclude
   CPPFLAGS  += -MMD -MP $(DEFINES) $(INCLUDES)
   CFLAGS    += $(CPPFLAGS) $(ARCH) -g -O0 -Wall
   CXXFLAGS  += $(CFLAGS) 
-  LDFLAGS   += -rdynamic -shared
-  LIBS      += -lrt
+  LDFLAGS   += -rdynamic -shared -Llib/sampgdk/linux
+  LIBS      += -lrt -lsampgdkd -lsubhookd
   RESFLAGS  += $(DEFINES) $(INCLUDES) 
   LDDEPS    += 
   LINKCMD    = $(CXX) -o $(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(ARCH) $(LIBS)
@@ -53,13 +53,13 @@ ifeq ($(config),release)
   OBJDIR     = obj/linux/Release
   TARGETDIR  = bin/linux/Release
   TARGET     = $(TARGETDIR)/streamer.so
-  DEFINES   += -DBOOST_CHRONO_HEADER_ONLY -DNDEBUG
+  DEFINES   += -DBOOST_CHRONO_HEADER_ONLY -DNDEBUG -DSAMPGDK_STATIC
   INCLUDES  += -Iinclude
   CPPFLAGS  += -MMD -MP $(DEFINES) $(INCLUDES)
   CFLAGS    += $(CPPFLAGS) $(ARCH) -ffast-math -fmerge-all-constants -fno-strict-aliasing -fvisibility=hidden -fvisibility-inlines-hidden -O3 -Wall
   CXXFLAGS  += $(CFLAGS) 
-  LDFLAGS   += -s -shared
-  LIBS      += -lrt
+  LDFLAGS   += -s -shared -Llib/sampgdk/linux
+  LIBS      += -lrt -lsampgdk -lsubhook
   RESFLAGS  += $(DEFINES) $(INCLUDES) 
   LDDEPS    += 
   LINKCMD    = $(CXX) -o $(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(ARCH) $(LIBS)
@@ -73,27 +73,12 @@ endif
 
 OBJECTS := \
 	$(OBJDIR)/error_code.o \
-	$(OBJDIR)/amxhooks.o \
-	$(OBJDIR)/a_objects.o \
-	$(OBJDIR)/a_players.o \
-	$(OBJDIR)/a_samp.o \
-	$(OBJDIR)/a_vehicles.o \
-	$(OBJDIR)/sampgdk-core-linux.o \
-	$(OBJDIR)/sampgdk-core.o \
-	$(OBJDIR)/fakeamx.o \
-	$(OBJDIR)/hook-linux.o \
-	$(OBJDIR)/hook.o \
-	$(OBJDIR)/natives.o \
-	$(OBJDIR)/timers-linux.o \
-	$(OBJDIR)/timers.o \
-	$(OBJDIR)/version.o \
 	$(OBJDIR)/plugin.o \
 	$(OBJDIR)/areas.o \
 	$(OBJDIR)/checkpoints.o \
 	$(OBJDIR)/data-manipulation.o \
 	$(OBJDIR)/deprecated.o \
 	$(OBJDIR)/extended.o \
-	$(OBJDIR)/internal.o \
 	$(OBJDIR)/map-icons.o \
 	$(OBJDIR)/miscellaneous.o \
 	$(OBJDIR)/objects.o \
@@ -102,10 +87,10 @@ OBJECTS := \
 	$(OBJDIR)/settings.o \
 	$(OBJDIR)/text-labels.o \
 	$(OBJDIR)/updates.o \
+	$(OBJDIR)/callbacks.o \
 	$(OBJDIR)/cell.o \
 	$(OBJDIR)/core.o \
 	$(OBJDIR)/data.o \
-	$(OBJDIR)/events.o \
 	$(OBJDIR)/grid.o \
 	$(OBJDIR)/identifier.o \
 	$(OBJDIR)/item.o \
@@ -181,49 +166,7 @@ endif
 $(OBJDIR)/error_code.o: lib/boost/system/src/error_code.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/amxhooks.o: lib/sampgdk/src/amxhooks.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/a_objects.o: lib/sampgdk/src/a_objects.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/a_players.o: lib/sampgdk/src/a_players.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/a_samp.o: lib/sampgdk/src/a_samp.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/a_vehicles.o: lib/sampgdk/src/a_vehicles.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/sampgdk-core-linux.o: lib/sampgdk/src/core-linux.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/sampgdk-core.o: lib/sampgdk/src/core.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/fakeamx.o: lib/sampgdk/src/fakeamx.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/hook-linux.o: lib/sampgdk/src/hook-linux.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/hook.o: lib/sampgdk/src/hook.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/natives.o: lib/sampgdk/src/natives.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/timers-linux.o: lib/sampgdk/src/timers-linux.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/timers.o: lib/sampgdk/src/timers.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/version.o: lib/sampgdk/src/version.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/plugin.o: lib/sampgdk/src/sdk/plugin.cpp
+$(OBJDIR)/plugin.o: lib/sdk/src/plugin.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 $(OBJDIR)/areas.o: src/natives/areas.cpp
@@ -239,9 +182,6 @@ $(OBJDIR)/deprecated.o: src/natives/deprecated.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 $(OBJDIR)/extended.o: src/natives/extended.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/internal.o: src/natives/internal.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 $(OBJDIR)/map-icons.o: src/natives/map-icons.cpp
@@ -268,6 +208,9 @@ $(OBJDIR)/text-labels.o: src/natives/text-labels.cpp
 $(OBJDIR)/updates.o: src/natives/updates.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+$(OBJDIR)/callbacks.o: src/callbacks.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 $(OBJDIR)/cell.o: src/cell.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
@@ -275,9 +218,6 @@ $(OBJDIR)/core.o: src/core.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 $(OBJDIR)/data.o: src/data.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/events.o: src/events.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 $(OBJDIR)/grid.o: src/grid.cpp

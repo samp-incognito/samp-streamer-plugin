@@ -28,12 +28,12 @@
 #define STREAMER_OPLRC (8)
 #define STREAMER_OPWS (9)
 
-#include <sampgdk/plugin.h>
+#include <sampgdk/core.h>
 
 #define CHECK_PARAMS(m, n) \
 	if (params[0] != (m * 4)) \
 	{ \
-		logprintf("*** %s: Expecting %d parameter(s), but found %d", n, m, params[0] / sizeof(cell)); \
+		sampgdk_logprintf("*** %s: Expecting %d parameter(s), but found %d", n, m, params[0] / sizeof(cell)); \
 		return 0; \
 	}
 

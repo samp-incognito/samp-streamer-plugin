@@ -17,13 +17,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#define INCLUDE_FILE_VERSION (0x27002)
-#define PLUGIN_VERSION "2.7"
-
-#include <sampgdk/plugin.h>
-
-typedef void (*logprintf_t)(const char*, ...);
-
-extern logprintf_t logprintf;
+#define INCLUDE_FILE_VERSION (0x27100)
+#define PLUGIN_VERSION "2.7.1"
 
 #endif
