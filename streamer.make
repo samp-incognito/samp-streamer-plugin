@@ -79,6 +79,7 @@ OBJECTS := \
 	$(OBJDIR)/data-manipulation.o \
 	$(OBJDIR)/deprecated.o \
 	$(OBJDIR)/extended.o \
+	$(OBJDIR)/internal.o \
 	$(OBJDIR)/map-icons.o \
 	$(OBJDIR)/miscellaneous.o \
 	$(OBJDIR)/objects.o \
@@ -182,6 +183,9 @@ $(OBJDIR)/deprecated.o: src/natives/deprecated.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 $(OBJDIR)/extended.o: src/natives/extended.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+$(OBJDIR)/internal.o: src/natives/internal.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 $(OBJDIR)/map-icons.o: src/natives/map-icons.cpp

@@ -34,13 +34,13 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>bin\windows\$(Configuration)\</OutDir>
-    <IntDir>obj\windows\$(Configuration)\</IntDir>
+    <OutDir>bin\win32\$(Configuration)\</OutDir>
+    <IntDir>obj\win32\$(Configuration)\</IntDir>
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>bin\windows\$(Configuration)\</OutDir>
-    <IntDir>obj\windows\$(Configuration)\</IntDir>
+    <OutDir>bin\win32\$(Configuration)\</OutDir>
+    <IntDir>obj\win32\$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -55,7 +55,7 @@
     <Link>
       <ModuleDefinitionFile>streamer.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>lib/sampgdk/windows;lib/subhook/windows;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>lib/sampgdk/win32;lib/subhook/win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>sampgdk3sd.lib;subhookd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -78,7 +78,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>lib/sampgdk/windows;lib/subhook/windows;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>lib/sampgdk/win32;lib/subhook/win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>sampgdk3s.lib;subhook.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -90,6 +90,7 @@
     <ClCompile Include="src\natives\data-manipulation.cpp" />
     <ClCompile Include="src\natives\deprecated.cpp" />
     <ClCompile Include="src\natives\extended.cpp" />
+    <ClCompile Include="src\natives\internal.cpp" />
     <ClCompile Include="src\natives\map-icons.cpp" />
     <ClCompile Include="src\natives\miscellaneous.cpp" />
     <ClCompile Include="src\natives\objects.cpp" />
