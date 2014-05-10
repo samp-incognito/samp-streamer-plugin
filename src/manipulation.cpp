@@ -1598,11 +1598,23 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					}
 					case ExtraID:
 					{
-						return o->second->extraID;
+						return Utility::getFirstValueInContainer(o->second->extras);
+					}
+					case InteriorID:
+					{
+						return Utility::getFirstValueInContainer(o->second->interiors);
 					}
 					case ModelID:
 					{
 						return o->second->modelID;
+					}
+					case PlayerID:
+					{
+						return Utility::getFirstValueInContainer(o->second->players);
+					}
+					case WorldID:
+					{
+						return Utility::getFirstValueInContainer(o->second->worlds);
 					}
 					default:
 					{
@@ -1626,15 +1638,27 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 				{
 					case ExtraID:
 					{
-						return p->second->extraID;
+						return Utility::getFirstValueInContainer(p->second->extras);
+					}
+					case InteriorID:
+					{
+						return Utility::getFirstValueInContainer(p->second->interiors);
 					}
 					case ModelID:
 					{
 						return p->second->modelID;
 					}
+					case PlayerID:
+					{
+						return Utility::getFirstValueInContainer(p->second->players);
+					}
 					case Type:
 					{
 						return p->second->type;
+					}
+					case WorldID:
+					{
+						return Utility::getFirstValueInContainer(p->second->worlds);
 					}
 					default:
 					{
@@ -1658,7 +1682,19 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 				{
 					case ExtraID:
 					{
-						return c->second->extraID;
+						return Utility::getFirstValueInContainer(c->second->extras);
+					}
+					case InteriorID:
+					{
+						return Utility::getFirstValueInContainer(c->second->interiors);
+					}
+					case PlayerID:
+					{
+						return Utility::getFirstValueInContainer(c->second->players);
+					}
+					case WorldID:
+					{
+						return Utility::getFirstValueInContainer(c->second->worlds);
 					}
 					default:
 					{
@@ -1682,11 +1718,23 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 				{
 					case ExtraID:
 					{
-						return r->second->extraID;
+						return Utility::getFirstValueInContainer(r->second->extras);
+					}
+					case InteriorID:
+					{
+						return Utility::getFirstValueInContainer(r->second->interiors);
+					}
+					case PlayerID:
+					{
+						return Utility::getFirstValueInContainer(r->second->players);
 					}
 					case Type:
 					{
 						return r->second->type;
+					}
+					case WorldID:
+					{
+						return Utility::getFirstValueInContainer(r->second->worlds);
 					}
 					default:
 					{
@@ -1714,7 +1762,15 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					}
 					case ExtraID:
 					{
-						return m->second->extraID;
+						return Utility::getFirstValueInContainer(m->second->extras);
+					}
+					case InteriorID:
+					{
+						return Utility::getFirstValueInContainer(m->second->interiors);
+					}
+					case PlayerID:
+					{
+						return Utility::getFirstValueInContainer(m->second->players);
 					}
 					case Style:
 					{
@@ -1723,6 +1779,10 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					case Type:
 					{
 						return m->second->type;
+					}
+					case WorldID:
+					{
+						return Utility::getFirstValueInContainer(m->second->worlds);
 					}
 					default:
 					{
@@ -1766,11 +1826,23 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					}
 					case ExtraID:
 					{
-						return t->second->extraID;
+						return Utility::getFirstValueInContainer(t->second->extras);
+					}
+					case InteriorID:
+					{
+						return Utility::getFirstValueInContainer(t->second->interiors);
+					}
+					case PlayerID:
+					{
+						return Utility::getFirstValueInContainer(t->second->players);
 					}
 					case TestLOS:
 					{
 						return t->second->testLOS;
+					}
+					case WorldID:
+					{
+						return Utility::getFirstValueInContainer(t->second->worlds);
 					}
 					default:
 					{
@@ -1818,11 +1890,23 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					}
 					case ExtraID:
 					{
-						return a->second->extraID;
+						return Utility::getFirstValueInContainer(a->second->extras);
+					}
+					case InteriorID:
+					{
+						return Utility::getFirstValueInContainer(a->second->interiors);
+					}
+					case PlayerID:
+					{
+						return Utility::getFirstValueInContainer(a->second->players);
 					}
 					case Type:
 					{
 						return a->second->type;
+					}
+					case WorldID:
+					{
+						return Utility::getFirstValueInContainer(a->second->worlds);
 					}
 					default:
 					{
@@ -1905,14 +1989,25 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					}
 					case ExtraID:
 					{
-						o->second->extraID = static_cast<int>(params[4]);
-						return 1;
+						return Utility::setFirstValueInContainer(o->second->extras, static_cast<int>(params[4])) != 0;
+					}
+					case InteriorID:
+					{
+						return Utility::setFirstValueInContainer(o->second->interiors, static_cast<int>(params[4])) != 0;
 					}
 					case ModelID:
 					{
 						o->second->modelID = static_cast<int>(params[4]);
 						update = true;
 						break;
+					}
+					case PlayerID:
+					{
+						return Utility::setFirstValueInContainer(o->second->players, static_cast<int>(params[4])) != 0;
+					}
+					case WorldID:
+					{
+						return Utility::setFirstValueInContainer(o->second->worlds, static_cast<int>(params[4])) != 0;
 					}
 					default:
 					{
@@ -1971,8 +2066,11 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 				{
 					case ExtraID:
 					{
-						p->second->extraID = static_cast<int>(params[4]);
-						return 1;
+						return Utility::setFirstValueInContainer(p->second->extras, static_cast<int>(params[4])) != 0;
+					}
+					case InteriorID:
+					{
+						return Utility::setFirstValueInContainer(p->second->interiors, static_cast<int>(params[4])) != 0;
 					}
 					case ModelID:
 					{
@@ -1980,11 +2078,19 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 						update = true;
 						break;
 					}
+					case PlayerID:
+					{
+						return Utility::setFirstValueInContainer(p->second->players, static_cast<int>(params[4])) != 0;
+					}
 					case Type:
 					{
 						p->second->type = static_cast<int>(params[4]);
 						update = true;
 						break;
+					}
+					case WorldID:
+					{
+						return Utility::setFirstValueInContainer(p->second->worlds, static_cast<int>(params[4])) != 0;
 					}
 					default:
 					{
@@ -2021,8 +2127,21 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 				{
 					case ExtraID:
 					{
-						c->second->extraID = static_cast<int>(params[4]);
-						return 1;
+						return Utility::setFirstValueInContainer(c->second->extras, static_cast<int>(params[4])) != 0;
+					}
+					case InteriorID:
+					{
+						return Utility::setFirstValueInContainer(c->second->interiors, static_cast<int>(params[4])) != 0;
+						update = true;
+						break;
+					}
+					case PlayerID:
+					{
+						return Utility::setFirstValueInContainer(c->second->players, static_cast<int>(params[4])) != 0;
+					}
+					case WorldID:
+					{
+						return Utility::setFirstValueInContainer(c->second->worlds, static_cast<int>(params[4])) != 0;
 					}
 					default:
 					{
@@ -2046,14 +2165,25 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 				{
 					case ExtraID:
 					{
-						r->second->extraID = static_cast<int>(params[4]);
-						return 1;
+						return Utility::setFirstValueInContainer(r->second->extras, static_cast<int>(params[4])) != 0;
+					}
+					case InteriorID:
+					{
+						return Utility::setFirstValueInContainer(r->second->interiors, static_cast<int>(params[4])) != 0;
+					}
+					case PlayerID:
+					{
+						return Utility::setFirstValueInContainer(r->second->players, static_cast<int>(params[4])) != 0;
 					}
 					case Type:
 					{
 						r->second->type = static_cast<int>(params[4]);
 						update = true;
 						break;
+					}
+					case WorldID:
+					{
+						return Utility::setFirstValueInContainer(r->second->worlds, static_cast<int>(params[4])) != 0;
 					}
 					default:
 					{
@@ -2098,8 +2228,15 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					}
 					case ExtraID:
 					{
-						m->second->extraID = static_cast<int>(params[4]);
-						return 1;
+						return Utility::setFirstValueInContainer(m->second->extras, static_cast<int>(params[4])) != 0;
+					}
+					case InteriorID:
+					{
+						return Utility::setFirstValueInContainer(m->second->interiors, static_cast<int>(params[4])) != 0;
+					}
+					case PlayerID:
+					{
+						return Utility::setFirstValueInContainer(m->second->players, static_cast<int>(params[4])) != 0;
 					}
 					case Style:
 					{
@@ -2112,6 +2249,10 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 						m->second->type = static_cast<int>(params[4]);
 						update = true;
 						break;
+					}
+					case WorldID:
+					{
+						return Utility::setFirstValueInContainer(m->second->worlds, static_cast<int>(params[4])) != 0;
 					}
 					default:
 					{
@@ -2207,14 +2348,25 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					}
 					case ExtraID:
 					{
-						t->second->extraID = static_cast<int>(params[4]);
-						return 1;
+						return Utility::setFirstValueInContainer(t->second->extras, static_cast<int>(params[4])) != 0;
+					}
+					case InteriorID:
+					{
+						return Utility::setFirstValueInContainer(t->second->interiors, static_cast<int>(params[4])) != 0;
+					}
+					case PlayerID:
+					{
+						return Utility::setFirstValueInContainer(t->second->players, static_cast<int>(params[4])) != 0;
 					}
 					case TestLOS:
 					{
 						t->second->testLOS = static_cast<int>(params[4]) != 0;
 						update = true;
 						break;
+					}
+					case WorldID:
+					{
+						return Utility::setFirstValueInContainer(t->second->worlds, static_cast<int>(params[4])) != 0;
 					}
 					default:
 					{
@@ -2318,8 +2470,19 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					}
 					case ExtraID:
 					{
-						a->second->extraID = static_cast<int>(params[4]);
-						return 1;
+						return Utility::setFirstValueInContainer(a->second->extras, static_cast<int>(params[4])) != 0;
+					}
+					case InteriorID:
+					{
+						return Utility::setFirstValueInContainer(a->second->interiors, static_cast<int>(params[4])) != 0;
+					}
+					case PlayerID:
+					{
+						return Utility::setFirstValueInContainer(a->second->players, static_cast<int>(params[4])) != 0;
+					}
+					case WorldID:
+					{
+						return Utility::setFirstValueInContainer(a->second->worlds, static_cast<int>(params[4])) != 0;
 					}
 					default:
 					{

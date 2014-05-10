@@ -47,7 +47,6 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicObject(AMX *amx, cell *params)
 	int objectID = Item::Object::identifier.get();
 	Item::SharedObject object(new Item::Object);
 	object->amx = amx;
-	object->extraID = 0;
 	object->objectID = objectID;
 	object->modelID = static_cast<int>(params[1]);
 	object->position = Eigen::Vector3f(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));

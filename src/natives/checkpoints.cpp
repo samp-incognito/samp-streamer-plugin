@@ -42,7 +42,6 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCP(AMX *amx, cell *params)
 	Item::SharedCheckpoint checkpoint(new Item::Checkpoint);
 	checkpoint->amx = amx;
 	checkpoint->checkpointID = checkpointID;
-	checkpoint->extraID = 0;
 	checkpoint->position = Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]));
 	checkpoint->size = amx_ctof(params[4]);
 	Utility::addToContainer(checkpoint->worlds, static_cast<int>(params[5]));

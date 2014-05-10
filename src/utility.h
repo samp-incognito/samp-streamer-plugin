@@ -86,6 +86,58 @@ namespace Utility
 	}
 
 	template<typename T>
+	inline int getFirstValueInContainer(std::vector<T> &container)
+	{
+		if (!container.empty())
+		{
+			return container.front();
+		}
+		return -1;
+	}
+
+	template<typename T>
+	inline int getFirstValueInContainer(boost::unordered_set<T> &container)
+	{
+		boost::unordered_set<int>::iterator i = container.begin();
+		if (i != container.end())
+		{
+			return *i;
+		}
+		return -1;
+	}
+
+	template<std::size_t N>
+	inline int getFirstValueInContainer(std::bitset<N> &container)
+	{
+		if (container.test(0))
+		{
+			return container[0];
+		}
+		return -1;
+	}
+
+	template<typename T>
+	inline bool setFirstValueInContainer(std::vector<T> &container, T value)
+	{
+		container.clear();
+		return addToContainer(container, value);
+	}
+
+	template<typename T>
+	inline bool setFirstValueInContainer(boost::unordered_set<T> &container, T value)
+	{
+		container.clear();
+		return addToContainer(container, value);
+	}
+
+	template<std::size_t N, typename T>
+	inline bool setFirstValueInContainer(std::bitset<N> &container, T value)
+	{
+		container.reset();
+		return addToContainer(container, value);
+	}
+
+	template<typename T>
 	inline bool isInContainer(std::vector<T> &container, T value)
 	{
 		if (std::find(container.begin(), container.end(), value) != container.end())

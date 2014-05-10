@@ -38,7 +38,6 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPickup(AMX *amx, cell *params)
 	int pickupID = Item::Pickup::identifier.get();
 	Item::SharedPickup pickup(new Item::Pickup);
 	pickup->amx = amx;
-	pickup->extraID = 0;
 	pickup->pickupID = pickupID;
 	pickup->worldID = 0;
 	pickup->modelID = static_cast<int>(params[1]);

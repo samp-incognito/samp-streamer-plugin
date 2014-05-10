@@ -47,7 +47,6 @@ namespace Item
 		AMX *amx;
 		int areaID;
 		SharedCell cell;
-		int extraID;
 		int references;
 		float size;
 		int type;
@@ -82,7 +81,6 @@ namespace Item
 		AMX *amx;
 		SharedCell cell;
 		int checkpointID;
-		int extraID;
 		Eigen::Vector3f position;
 		int references;
 		float size;
@@ -103,7 +101,6 @@ namespace Item
 		AMX *amx;
 		SharedCell cell;
 		int color;
-		int extraID;
 		int mapIconID;
 		Eigen::Vector3f position;
 		int references;
@@ -126,7 +123,6 @@ namespace Item
 		AMX *amx;
 		SharedCell cell;
 		float drawDistance;
-		int extraID;
 		int modelID;
 		int objectID;
 		Eigen::Vector3f position;
@@ -210,7 +206,6 @@ namespace Item
 
 		AMX *amx;
 		SharedCell cell;
-		int extraID;
 		int modelID;
 		int pickupID;
 		Eigen::Vector3f position;
@@ -233,7 +228,6 @@ namespace Item
 
 		AMX *amx;
 		SharedCell cell;
-		int extraID;
 		Eigen::Vector3f next;
 		Eigen::Vector3f position;
 		int raceCheckpointID;
@@ -258,7 +252,6 @@ namespace Item
 		SharedCell cell;
 		int color;
 		float drawDistance;
-		int extraID;
 		Eigen::Vector3f position;
 		int references;
 		float streamDistance;

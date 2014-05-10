@@ -44,7 +44,6 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCircle(AMX *amx, cell *params)
 	Item::SharedArea area(new Item::Area);
 	area->amx = amx;
 	area->areaID = areaID;
-	area->extraID = 0;
 	area->type = STREAMER_AREA_TYPE_CIRCLE;
 	area->position = Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2]));
 	area->size = amx_ctof(params[3]) * amx_ctof(params[3]);
@@ -67,7 +66,6 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicRectangle(AMX *amx, cell *params)
 	Item::SharedArea area(new Item::Area);
 	area->amx = amx;
 	area->areaID = areaID;
-	area->extraID = 0;
 	area->type = STREAMER_AREA_TYPE_RECTANGLE;
 	area->position = Box2D(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), Eigen::Vector2f(amx_ctof(params[3]), amx_ctof(params[4])));
 	boost::geometry::correct(boost::get<Box2D>(area->position));
@@ -91,7 +89,6 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicSphere(AMX *amx, cell *params)
 	Item::SharedArea area(new Item::Area);
 	area->amx = amx;
 	area->areaID = areaID;
-	area->extraID = 0;
 	area->type = STREAMER_AREA_TYPE_SPHERE;
 	area->position = Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]));
 	area->size = amx_ctof(params[4]) * amx_ctof(params[4]);
@@ -114,7 +111,6 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCube(AMX *amx, cell *params)
 	Item::SharedArea area(new Item::Area);
 	area->amx = amx;
 	area->areaID = areaID;
-	area->extraID = 0;
 	area->type = STREAMER_AREA_TYPE_CUBE;
 	area->position = Box3D(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), Eigen::Vector3f(amx_ctof(params[4]), amx_ctof(params[5]), amx_ctof(params[6])));
 	boost::geometry::correct(boost::get<Box3D>(area->position));
@@ -143,7 +139,6 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPolygon(AMX *amx, cell *params)
 	Item::SharedArea area(new Item::Area);
 	area->amx = amx;
 	area->areaID = areaID;
-	area->extraID = 0;
 	area->type = STREAMER_AREA_TYPE_POLYGON;
 	Utility::convertArrayToPolygon(amx, params[1], params[4], boost::get<Polygon2D>(area->position));
 	Box2D box = boost::geometry::return_envelope<Box2D>(boost::get<Polygon2D>(area->position).get<0>());
