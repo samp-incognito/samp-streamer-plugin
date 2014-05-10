@@ -67,7 +67,7 @@ namespace Item
 
 		boost::intrusive_ptr<Attach> attach;
 
-		boost::unordered_set<int> extras;
+		std::vector<int> extras;
 		boost::unordered_set<int> interiors;
 		std::bitset<MAX_PLAYERS> players;
 		boost::unordered_set<int> worlds;
@@ -88,7 +88,7 @@ namespace Item
 		float size;
 		float streamDistance;
 
-		boost::unordered_set<int> extras;
+		std::vector<int> extras;
 		boost::unordered_set<int> interiors;
 		std::bitset<MAX_PLAYERS> players;
 		boost::unordered_set<int> worlds;
@@ -111,7 +111,7 @@ namespace Item
 		int style;
 		int type;
 
-		boost::unordered_set<int> extras;
+		std::vector<int> extras;
 		boost::unordered_set<int> interiors;
 		std::bitset<MAX_PLAYERS> players;
 		boost::unordered_set<int> worlds;
@@ -196,7 +196,7 @@ namespace Item
 
 		boost::intrusive_ptr<Move> move;
 
-		boost::unordered_set<int> extras;
+		std::vector<int> extras;
 		boost::unordered_set<int> interiors;
 		std::bitset<MAX_PLAYERS> players;
 		boost::unordered_set<int> worlds;
@@ -219,7 +219,7 @@ namespace Item
 		int type;
 		int worldID;
 
-		boost::unordered_set<int> extras;
+		std::vector<int> extras;
 		boost::unordered_set<int> interiors;
 		std::bitset<MAX_PLAYERS> players;
 		boost::unordered_set<int> worlds;
@@ -242,7 +242,7 @@ namespace Item
 		float streamDistance;
 		int type;
 
-		boost::unordered_set<int> extras;
+		std::vector<int> extras;
 		boost::unordered_set<int> interiors;
 		std::bitset<MAX_PLAYERS> players;
 		boost::unordered_set<int> worlds;
@@ -278,7 +278,7 @@ namespace Item
 
 		boost::intrusive_ptr<Attach> attach;
 
-		boost::unordered_set<int> extras;
+		std::vector<int> extras;
 		boost::unordered_set<int> interiors;
 		std::bitset<MAX_PLAYERS> players;
 		boost::unordered_set<int> worlds;
