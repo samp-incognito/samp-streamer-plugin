@@ -22,6 +22,9 @@
     <ClCompile Include="src\natives\extended.cpp">
       <Filter>src\natives</Filter>
     </ClCompile>
+    <ClCompile Include="src\natives\internal.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
     <ClCompile Include="src\natives\map-icons.cpp">
       <Filter>src\natives</Filter>
     </ClCompile>
