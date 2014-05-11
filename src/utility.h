@@ -109,9 +109,15 @@ namespace Utility
 	template<std::size_t N>
 	inline int getFirstValueInContainer(std::bitset<N> &container)
 	{
-		if (container.test(0))
+		if (container.any())
 		{
-			return container[0];
+			for (std::size_t i = 0; i < N; ++i)
+			{
+				if (container.test(i))
+				{
+					return i;
+				}
+			}
 		}
 		return -1;
 	}
