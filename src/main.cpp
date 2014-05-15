@@ -26,6 +26,8 @@
 
 #include <set>
 
+typedef void (*logprintf_t)(const char*, ...);
+
 extern void *pAMXFunctions;
 
 PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports()
@@ -37,7 +39,8 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 {
 	core.reset(new Core);
 	pAMXFunctions = ppData[PLUGIN_DATA_AMX_EXPORTS];
-	sampgdk::logprintf("\n\n*** Streamer Plugin v%s by Incognito loaded ***\n", PLUGIN_VERSION);
+	logprintf_t logprintf = (logprintf_t)ppData[PLUGIN_DATA_LOGPRINTF];
+	logprintf("\n\n*** Streamer Plugin v%s by Incognito loaded ***\n", PLUGIN_VERSION);
 	return sampgdk::Load(sampgdk::GetCurrentPluginHandle(), ppData);
 }
 
