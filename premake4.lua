@@ -10,7 +10,7 @@ solution "streamer"
 			libdirs { "lib/sampgdk/linux", "lib/subhook/linux" }
 			targetextension ".so"
 		elseif string.startswith(_ACTION, "vs") then
-			files { "**.cpp,", "**.def", "**.rc", "src/**.h" }
+			files { "**.cpp", "**.def", "**.rc", "src/**.h" }
 			libdirs { "lib/sampgdk/win32", "lib/subhook/win32" }
 			targetextension ".dll"
 		end

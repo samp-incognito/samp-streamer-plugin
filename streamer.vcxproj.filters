@@ -1,8 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="lib">
+      <UniqueIdentifier>{3C8C880B-A895-887C-3111-9F7C9D19947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\boost">
+      <UniqueIdentifier>{B26536EA-1ED0-EA60-670E-9C06D3B7C8B5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\boost\system">
+      <UniqueIdentifier>{A6D03907-92C9-5859-BBFB-3DDEA7533865}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\boost\system\src">
+      <UniqueIdentifier>{BD7179BB-A900-0385-521F-17803E8D132B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\sdk">
+      <UniqueIdentifier>{8D064879-F9E5-C614-02FE-51EB6E5C2D76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\sdk\src">
+      <UniqueIdentifier>{2443EE53-90F8-6649-19ED-602085A15D4D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="obj">
+      <UniqueIdentifier>{2098880B-8CA1-887C-151D-9F7C8125947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="obj\win32">
+      <UniqueIdentifier>{2278293B-8EE2-DDB1-D720-8F5743CABB06}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="obj\win32\Debug">
+      <UniqueIdentifier>{1894492E-841F-B7F2-8D30-3AE7F93A13F3}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\natives">
+      <UniqueIdentifier>{16CF320B-8284-AB00-0B79-A5D7772DA204}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -53,6 +83,95 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="lib\boost\system\src\error_code.cpp">
+      <Filter>lib\boost\system\src</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\sdk\src\plugin.cpp">
+      <Filter>lib\sdk\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\callbacks.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cell.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\data.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\grid.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\identifier.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\item.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\manipulation.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\natives\areas.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\natives\checkpoints.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\natives\data-manipulation.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\natives\deprecated.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\natives\extended.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\natives\internal.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\natives\map-icons.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\natives\miscellaneous.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\natives\objects.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\natives\pickups.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\natives\race-checkpoints.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\natives\settings.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\natives\text-labels.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\natives\updates.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\player.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\streamer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utility.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="obj\win32\Debug\streamer_manifest.rc">
+      <Filter>obj\win32\Debug</Filter>
+    </ResourceCompile>
     <ResourceCompile Include="streamer.rc" />
   </ItemGroup>
 </Project>

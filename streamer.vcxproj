@@ -123,9 +123,40 @@
     <ClInclude Include="src\utility.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="lib\boost\system\src\error_code.cpp" />
+    <ClCompile Include="lib\sdk\src\plugin.cpp" />
+    <ClCompile Include="src\callbacks.cpp" />
+    <ClCompile Include="src\cell.cpp" />
+    <ClCompile Include="src\core.cpp" />
+    <ClCompile Include="src\data.cpp" />
+    <ClCompile Include="src\grid.cpp" />
+    <ClCompile Include="src\identifier.cpp" />
+    <ClCompile Include="src\item.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\manipulation.cpp" />
+    <ClCompile Include="src\natives\areas.cpp" />
+    <ClCompile Include="src\natives\checkpoints.cpp" />
+    <ClCompile Include="src\natives\data-manipulation.cpp" />
+    <ClCompile Include="src\natives\deprecated.cpp" />
+    <ClCompile Include="src\natives\extended.cpp" />
+    <ClCompile Include="src\natives\internal.cpp" />
+    <ClCompile Include="src\natives\map-icons.cpp" />
+    <ClCompile Include="src\natives\miscellaneous.cpp" />
+    <ClCompile Include="src\natives\objects.cpp" />
+    <ClCompile Include="src\natives\pickups.cpp" />
+    <ClCompile Include="src\natives\race-checkpoints.cpp" />
+    <ClCompile Include="src\natives\settings.cpp" />
+    <ClCompile Include="src\natives\text-labels.cpp" />
+    <ClCompile Include="src\natives\updates.cpp" />
+    <ClCompile Include="src\player.cpp" />
+    <ClCompile Include="src\streamer.cpp" />
+    <ClCompile Include="src\utility.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="streamer.def" />
   </ItemGroup>
   <ItemGroup>
+    <ResourceCompile Include="obj\win32\Debug\streamer_manifest.rc" />
     <ResourceCompile Include="streamer.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
