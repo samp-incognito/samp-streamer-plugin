@@ -44,7 +44,6 @@ solution "streamer"
 		elseif string.startswith(_ACTION, "vs") then
 			defines { "BOOST_ALL_NO_LIB", "BOOST_CHRONO_HEADER_ONLY", "SAMPGDK_STATIC" }
 			flags { "FatalWarnings", "Symbols" }
-			linkoptions { "" }
 			links { "sampgdk3d", "subhookd" }
 			objdir "obj/win32/Debug"
 			targetdir "bin/win32/Debug"
