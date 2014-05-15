@@ -7,17 +7,9 @@ ifndef verbose
   SILENT = @
 endif
 
-ifndef CC
-  CC = gcc
-endif
-
-ifndef CXX
-  CXX = g++
-endif
-
-ifndef AR
-  AR = ar
-endif
+CC = gcc
+CXX = g++
+AR = ar
 
 ifndef RESCOMP
   ifdef WINDRES
@@ -27,20 +19,20 @@ ifndef RESCOMP
   endif
 endif
 
-ifeq ($(config),debug)
-  OBJDIR     = obj/linux/Debug
-  TARGETDIR  = bin/linux/Debug
+ifeq ($(config),release)
+  OBJDIR     = obj/linux/Release
+  TARGETDIR  = bin/linux/Release
   TARGET     = $(TARGETDIR)/streamer.so
-  DEFINES   += -DBOOST_CHRONO_HEADER_ONLY -DSAMPGDK_STATIC
+  DEFINES   += -DBOOST_CHRONO_HEADER_ONLY -DNDEBUG -DSAMPGDK_STATIC
   INCLUDES  += -Iinclude
-  CPPFLAGS  += -MMD -MP $(DEFINES) $(INCLUDES)
-  CFLAGS    += $(CPPFLAGS) $(ARCH) -g -O0 -Wall
-  CXXFLAGS  += $(CFLAGS) 
-  LDFLAGS   += -rdynamic -shared -Llib/sampgdk/linux -Llib/subhook/linux
-  LIBS      += -lrt -lsampgdkd -lsubhookd
-  RESFLAGS  += $(DEFINES) $(INCLUDES) 
-  LDDEPS    += 
-  LINKCMD    = $(CXX) -o $(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(ARCH) $(LIBS)
+  ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
+  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -ffast-math -fmerge-all-constants -fno-strict-aliasing -fvisibility=hidden -fvisibility-inlines-hidden -O3 -Wall
+  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)
+  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
+  ALL_LDFLAGS   += $(LDFLAGS) -Llib/sampgdk/linux -Llib/subhook/linux -L. -s -shared
+  LDDEPS    +=
+  LIBS      += $(LDDEPS) -lrt -lsampgdk -lsubhook
+  LINKCMD    = $(CXX) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
   endef
   define PRELINKCMDS
@@ -49,20 +41,20 @@ ifeq ($(config),debug)
   endef
 endif
 
-ifeq ($(config),release)
-  OBJDIR     = obj/linux/Release
-  TARGETDIR  = bin/linux/Release
+ifeq ($(config),debug)
+  OBJDIR     = obj/linux/Debug
+  TARGETDIR  = bin/linux/Debug
   TARGET     = $(TARGETDIR)/streamer.so
-  DEFINES   += -DBOOST_CHRONO_HEADER_ONLY -DNDEBUG -DSAMPGDK_STATIC
+  DEFINES   += -DBOOST_CHRONO_HEADER_ONLY -DSAMPGDK_STATIC
   INCLUDES  += -Iinclude
-  CPPFLAGS  += -MMD -MP $(DEFINES) $(INCLUDES)
-  CFLAGS    += $(CPPFLAGS) $(ARCH) -ffast-math -fmerge-all-constants -fno-strict-aliasing -fvisibility=hidden -fvisibility-inlines-hidden -O3 -Wall
-  CXXFLAGS  += $(CFLAGS) 
-  LDFLAGS   += -s -shared -Llib/sampgdk/linux -Llib/subhook/linux
-  LIBS      += -lrt -lsampgdk -lsubhook
-  RESFLAGS  += $(DEFINES) $(INCLUDES) 
-  LDDEPS    += 
-  LINKCMD    = $(CXX) -o $(TARGET) $(OBJECTS) $(LDFLAGS) $(RESOURCES) $(ARCH) $(LIBS)
+  ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
+  ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -g -O0 -Wall
+  ALL_CXXFLAGS  += $(CXXFLAGS) $(ALL_CFLAGS)
+  ALL_RESFLAGS  += $(RESFLAGS) $(DEFINES) $(INCLUDES)
+  ALL_LDFLAGS   += $(LDFLAGS) -Llib/sampgdk/linux -Llib/subhook/linux -L. -shared -rdynamic
+  LDDEPS    +=
+  LIBS      += $(LDDEPS) -lrt -lsampgdkd -lsubhookd
+  LINKCMD    = $(CXX) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
   endef
   define PRELINKCMDS
@@ -74,6 +66,18 @@ endif
 OBJECTS := \
 	$(OBJDIR)/error_code.o \
 	$(OBJDIR)/plugin.o \
+	$(OBJDIR)/callbacks.o \
+	$(OBJDIR)/cell.o \
+	$(OBJDIR)/core.o \
+	$(OBJDIR)/data.o \
+	$(OBJDIR)/grid.o \
+	$(OBJDIR)/identifier.o \
+	$(OBJDIR)/item.o \
+	$(OBJDIR)/main.o \
+	$(OBJDIR)/manipulation.o \
+	$(OBJDIR)/player.o \
+	$(OBJDIR)/streamer.o \
+	$(OBJDIR)/utility.o \
 	$(OBJDIR)/areas.o \
 	$(OBJDIR)/checkpoints.o \
 	$(OBJDIR)/data-manipulation.o \
@@ -88,18 +92,6 @@ OBJECTS := \
 	$(OBJDIR)/settings.o \
 	$(OBJDIR)/text-labels.o \
 	$(OBJDIR)/updates.o \
-	$(OBJDIR)/callbacks.o \
-	$(OBJDIR)/cell.o \
-	$(OBJDIR)/core.o \
-	$(OBJDIR)/data.o \
-	$(OBJDIR)/grid.o \
-	$(OBJDIR)/identifier.o \
-	$(OBJDIR)/item.o \
-	$(OBJDIR)/main.o \
-	$(OBJDIR)/manipulation.o \
-	$(OBJDIR)/player.o \
-	$(OBJDIR)/streamer.o \
-	$(OBJDIR)/utility.o \
 
 RESOURCES := \
 
@@ -156,97 +148,122 @@ prelink:
 ifneq (,$(PCH))
 $(GCH): $(PCH)
 	@echo $(notdir $<)
-ifeq (posix,$(SHELLTYPE))
-	-$(SILENT) cp $< $(OBJDIR)
-else
-	$(SILENT) xcopy /D /Y /Q "$(subst /,\,$<)" "$(subst /,\,$(OBJDIR))" 1>nul
-endif
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+	$(SILENT) $(CXX) -x c++-header $(ALL_CXXFLAGS) -MMD -MP $(DEFINES) $(INCLUDES) -o "$@" -MF "$(@:%.gch=%.d)" -c "$<"
 endif
 
 $(OBJDIR)/error_code.o: lib/boost/system/src/error_code.cpp
 	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
 $(OBJDIR)/plugin.o: lib/sdk/src/plugin.cpp
 	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/areas.o: src/natives/areas.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/checkpoints.o: src/natives/checkpoints.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/data-manipulation.o: src/natives/data-manipulation.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/deprecated.o: src/natives/deprecated.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/extended.o: src/natives/extended.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/internal.o: src/natives/internal.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/map-icons.o: src/natives/map-icons.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/miscellaneous.o: src/natives/miscellaneous.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/objects.o: src/natives/objects.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/pickups.o: src/natives/pickups.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/race-checkpoints.o: src/natives/race-checkpoints.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/settings.o: src/natives/settings.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/text-labels.o: src/natives/text-labels.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/updates.o: src/natives/updates.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
 $(OBJDIR)/callbacks.o: src/callbacks.cpp
 	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
 $(OBJDIR)/cell.o: src/cell.cpp
 	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
 $(OBJDIR)/core.o: src/core.cpp
 	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
 $(OBJDIR)/data.o: src/data.cpp
 	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
 $(OBJDIR)/grid.o: src/grid.cpp
 	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
 $(OBJDIR)/identifier.o: src/identifier.cpp
 	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
 $(OBJDIR)/item.o: src/item.cpp
 	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
 $(OBJDIR)/main.o: src/main.cpp
 	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
 $(OBJDIR)/manipulation.o: src/manipulation.cpp
 	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
 $(OBJDIR)/player.o: src/player.cpp
 	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
 $(OBJDIR)/streamer.o: src/streamer.cpp
 	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
 $(OBJDIR)/utility.o: src/utility.cpp
 	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(CXXFLAGS) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/areas.o: src/natives/areas.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/checkpoints.o: src/natives/checkpoints.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/data-manipulation.o: src/natives/data-manipulation.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/deprecated.o: src/natives/deprecated.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/extended.o: src/natives/extended.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/internal.o: src/natives/internal.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/map-icons.o: src/natives/map-icons.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/miscellaneous.o: src/natives/miscellaneous.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/objects.o: src/natives/objects.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/pickups.o: src/natives/pickups.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/race-checkpoints.o: src/natives/race-checkpoints.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/settings.o: src/natives/settings.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/text-labels.o: src/natives/text-labels.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+
+$(OBJDIR)/updates.o: src/natives/updates.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 
 -include $(OBJECTS:%.o=%.d)
+ifneq (,$(PCH))
+  -include $(OBJDIR)/$(notdir $(PCH)).d
+endif

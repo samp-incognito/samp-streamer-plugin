@@ -1,97 +1,16 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="lib\boost\system\src\error_code.cpp">
-      <Filter>lib\boost\system\src</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\sdk\src\plugin.cpp">
-      <Filter>lib\sdk\src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\natives\areas.cpp">
-      <Filter>src\natives</Filter>
-    </ClCompile>
-    <ClCompile Include="src\natives\checkpoints.cpp">
-      <Filter>src\natives</Filter>
-    </ClCompile>
-    <ClCompile Include="src\natives\data-manipulation.cpp">
-      <Filter>src\natives</Filter>
-    </ClCompile>
-    <ClCompile Include="src\natives\deprecated.cpp">
-      <Filter>src\natives</Filter>
-    </ClCompile>
-    <ClCompile Include="src\natives\extended.cpp">
-      <Filter>src\natives</Filter>
-    </ClCompile>
-    <ClCompile Include="src\natives\internal.cpp">
-      <Filter>src\natives</Filter>
-    </ClCompile>
-    <ClCompile Include="src\natives\map-icons.cpp">
-      <Filter>src\natives</Filter>
-    </ClCompile>
-    <ClCompile Include="src\natives\miscellaneous.cpp">
-      <Filter>src\natives</Filter>
-    </ClCompile>
-    <ClCompile Include="src\natives\objects.cpp">
-      <Filter>src\natives</Filter>
-    </ClCompile>
-    <ClCompile Include="src\natives\pickups.cpp">
-      <Filter>src\natives</Filter>
-    </ClCompile>
-    <ClCompile Include="src\natives\race-checkpoints.cpp">
-      <Filter>src\natives</Filter>
-    </ClCompile>
-    <ClCompile Include="src\natives\settings.cpp">
-      <Filter>src\natives</Filter>
-    </ClCompile>
-    <ClCompile Include="src\natives\text-labels.cpp">
-      <Filter>src\natives</Filter>
-    </ClCompile>
-    <ClCompile Include="src\natives\updates.cpp">
-      <Filter>src\natives</Filter>
-    </ClCompile>
-    <ClCompile Include="src\callbacks.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\cell.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\core.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\data.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\grid.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\identifier.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\item.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\main.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\manipulation.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\player.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\streamer.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\utility.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="lib\boost\system\src\local_free_on_destruction.hpp">
-      <Filter>lib\boost\system\src</Filter>
-    </ClInclude>
-    <ClInclude Include="lib\sdk\src\plugin.h">
-      <Filter>lib\sdk\src</Filter>
+    <None Include="streamer.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\callbacks.h">
+      <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\cell.h">
       <Filter>src</Filter>
@@ -135,31 +54,5 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="streamer.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="lib">
-      <UniqueIdentifier>{454ae49e-38e0-4462-96ae-60b168880e4d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="lib\boost">
-      <UniqueIdentifier>{70c941d8-854f-47dc-9426-2e8406a0e2b1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="lib\boost\system">
-      <UniqueIdentifier>{e7172e1c-6901-4bfc-bb1c-5cf54fa1441b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="lib\boost\system\src">
-      <UniqueIdentifier>{6d8e70a5-ca94-408c-966c-dcb5c93bdd07}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="lib\sdk">
-      <UniqueIdentifier>{64fa366e-b317-4cea-99bd-fbf0292d040a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="lib\sdk\src">
-      <UniqueIdentifier>{e968c847-f2a6-4e92-b6d8-49de001ae5f7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src">
-      <UniqueIdentifier>{af2c85cd-fa73-4cf1-b4c7-e19cb691e308}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\natives">
-      <UniqueIdentifier>{439395d8-cb53-41c9-9279-3dbc1a51d20a}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
 </Project>

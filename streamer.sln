@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "streamer", "streamer.vcxproj", "{98891499-D683-4622-9BCF-DCCEAD0A6674}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "streamer", "streamer.vcxproj", "{0843F08F-F40F-4B9B-1D29-394309558029}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +9,10 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{98891499-D683-4622-9BCF-DCCEAD0A6674}.Debug|Win32.ActiveCfg = Debug|Win32
-		{98891499-D683-4622-9BCF-DCCEAD0A6674}.Debug|Win32.Build.0 = Debug|Win32
-		{98891499-D683-4622-9BCF-DCCEAD0A6674}.Release|Win32.ActiveCfg = Release|Win32
-		{98891499-D683-4622-9BCF-DCCEAD0A6674}.Release|Win32.Build.0 = Release|Win32
+		{0843F08F-F40F-4B9B-1D29-394309558029}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0843F08F-F40F-4B9B-1D29-394309558029}.Debug|Win32.Build.0 = Debug|Win32
+		{0843F08F-F40F-4B9B-1D29-394309558029}.Release|Win32.ActiveCfg = Release|Win32
+		{0843F08F-F40F-4B9B-1D29-394309558029}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,133 +1,129 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|Win32">
-      <Configuration>Debug</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{98891499-D683-4622-9BCF-DCCEAD0A6674}</ProjectGuid>
-    <RootNamespace>streamer</RootNamespace>
+    <ProjectGuid>{0843F08F-F40F-4B9B-1D29-394309558029}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
+    <RootNamespace>streamer</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <WholeProgramOptimization>false</WholeProgramOptimization>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>bin\win32\$(Configuration)\</OutDir>
-    <IntDir>obj\win32\$(Configuration)\</IntDir>
-    <LinkIncremental>true</LinkIncremental>
-  </PropertyGroup>
+  <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>bin\win32\$(Configuration)\</OutDir>
-    <IntDir>obj\win32\$(Configuration)\</IntDir>
     <LinkIncremental>false</LinkIncremental>
+    <OutDir>bin\win32\Release\</OutDir>
+    <IntDir>obj\win32\Release\</IntDir>
+    <TargetName>streamer</TargetName>
+    <TargetExt>.dll</TargetExt>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ClCompile>
-      <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;BOOST_CHRONO_HEADER_ONLY;_DEBUG;SAMPGDK_STATIC</PreprocessorDefinitions>
-      <WarningLevel>Level3</WarningLevel>
-      <TreatWarningAsError>true</TreatWarningAsError>
-      <ObjectFileName>$(IntDir)\%(RelativeDir)\</ObjectFileName>
-    </ClCompile>
-    <Link>
-      <ModuleDefinitionFile>streamer.def</ModuleDefinitionFile>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>lib/sampgdk/win32;lib/subhook/win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sampgdk3sd.lib;subhookd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
-  </ItemDefinitionGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>bin\win32\Debug\</OutDir>
+    <IntDir>obj\win32\Debug\</IntDir>
+    <TargetName>streamer</TargetName>
+    <TargetExt>.dll</TargetExt>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <Optimization>MaxSpeed</Optimization>
-      <AdditionalIncludeDirectories>include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;BOOST_CHRONO_HEADER_ONLY;NDEBUG;SAMPGDK_STATIC</PreprocessorDefinitions>
-      <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <BufferSecurityCheck>false</BufferSecurityCheck>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <FloatingPointModel>Fast</FloatingPointModel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <ObjectFileName>$(IntDir)\%(RelativeDir)\</ObjectFileName>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;BOOST_CHRONO_HEADER_ONLY;NDEBUG;SAMPGDK_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;BOOST_CHRONO_HEADER_ONLY;NDEBUG;SAMPGDK_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
     <Link>
-      <ModuleDefinitionFile>streamer.def</ModuleDefinitionFile>
-      <OptimizeReferences>true</OptimizeReferences>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>false</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>lib/sampgdk/win32;lib/subhook/win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sampgdk3s.lib;subhook.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>sampgdk3.lib;subhook.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>lib\sampgdk\win32;lib\subhook\win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ImportLibrary>bin\win32\Release\streamer.lib</ImportLibrary>
+      <ModuleDefinitionFile>streamer.def</ModuleDefinitionFile>
+      <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;BOOST_CHRONO_HEADER_ONLY;SAMPGDK_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(OutDir)streamer.pdb</ProgramDataBaseFileName>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;BOOST_CHRONO_HEADER_ONLY;SAMPGDK_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>sampgdk3d.lib;subhookd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>lib\sampgdk\win32;lib\subhook\win32;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ImportLibrary>bin\win32\Debug\streamer.lib</ImportLibrary>
+      <ModuleDefinitionFile>streamer.def</ModuleDefinitionFile>
+      <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="lib\boost\system\src\error_code.cpp" />
-    <ClCompile Include="lib\sdk\src\plugin.cpp" />
-    <ClCompile Include="src\natives\areas.cpp" />
-    <ClCompile Include="src\natives\checkpoints.cpp" />
-    <ClCompile Include="src\natives\data-manipulation.cpp" />
-    <ClCompile Include="src\natives\deprecated.cpp" />
-    <ClCompile Include="src\natives\extended.cpp" />
-    <ClCompile Include="src\natives\internal.cpp" />
-    <ClCompile Include="src\natives\map-icons.cpp" />
-    <ClCompile Include="src\natives\miscellaneous.cpp" />
-    <ClCompile Include="src\natives\objects.cpp" />
-    <ClCompile Include="src\natives\pickups.cpp" />
-    <ClCompile Include="src\natives\race-checkpoints.cpp" />
-    <ClCompile Include="src\natives\settings.cpp" />
-    <ClCompile Include="src\natives\text-labels.cpp" />
-    <ClCompile Include="src\natives\updates.cpp" />
-    <ClCompile Include="src\cell.cpp" />
-    <ClCompile Include="src\core.cpp" />
-    <ClCompile Include="src\data.cpp" />
-    <ClCompile Include="src\item.cpp" />
-    <ClCompile Include="src\callbacks.cpp" />
-    <ClCompile Include="src\grid.cpp" />
-    <ClCompile Include="src\identifier.cpp" />
-    <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\manipulation.cpp" />
-    <ClCompile Include="src\player.cpp" />
-    <ClCompile Include="src\streamer.cpp" />
-    <ClCompile Include="src\utility.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="lib\boost\system\src\local_free_on_destruction.hpp" />
-    <ClInclude Include="lib\sdk\src\plugin.h" />
+    <ClInclude Include="src\callbacks.h" />
     <ClInclude Include="src\cell.h" />
     <ClInclude Include="src\common.h" />
     <ClInclude Include="src\core.h" />
     <ClInclude Include="src\data.h" />
-    <ClInclude Include="src\item.h" />
     <ClInclude Include="src\grid.h" />
     <ClInclude Include="src\identifier.h" />
+    <ClInclude Include="src\item.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\manipulation.h" />
     <ClInclude Include="src\natives.h" />
     <ClInclude Include="src\player.h" />
     <ClInclude Include="src\streamer.h" />
     <ClInclude Include="src\utility.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="streamer.def" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="streamer.rc" />
