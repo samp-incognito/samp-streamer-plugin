@@ -1,6 +1,14 @@
 SA-MP Streamer Plugin
 =====================
 
+v2.7.2
+------
+- Made E_STREAMER_EXTRA_ID data sequential and allowed multiple
+  amounts of the same value to be used
+- Allowed Streamer_(Get/Set)IntData to be used with
+  E_STREAMER_EXTRA_ID, E_STREAMER_INTERIOR_ID,
+  E_STREAMER_PLAYER_ID, and E_STREAMER_WORLD_ID
+
 v2.7.1
 ------
 - Fixed some minor bugs
