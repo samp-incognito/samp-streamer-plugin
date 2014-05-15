@@ -70,6 +70,24 @@ SAMPGDK_API(int, sampgdk_GetVersion(void));
  */
 SAMPGDK_API(const char *, sampgdk_GetVersionString(void));
 
+#ifdef __cplusplus
+
+namespace sampgdk {
+
+/// \brief C++ wrapper around sampgdk_GetVersion().
+inline int GetVersion() {
+  return sampgdk_GetVersion();
+}
+
+/// \brief C++ wrapper around sampgdk_GetVersionString().
+inline const char *GetVersionString() {
+  return sampgdk_GetVersionString();
+}
+
+} // namespace sampgdk
+
+#endif /* __cplusplus */
+
 /** @} */
 
 #endif /* !SAMPGDK_VERSION_H */

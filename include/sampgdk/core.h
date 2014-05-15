@@ -39,7 +39,7 @@
 /**
  * \brief Returns supported SDK version.
  *
- * This function is intended to be used in Supports(). For example:
+ * This function should be called from Supports():
  *
  * \code
  * PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports() {
@@ -52,51 +52,71 @@
 SAMPGDK_API(unsigned int, sampgdk_Supports(void));
 
 /**
- * \brief Initializes the library.
- * 
- * When called for the first time, sets up internal global state and
- * registers the calling plugin for receiving events. All subsequent
- * calls are ignored until sampgdk_Unload() is called.
+ * \brief Gets plugin handle by address.
  *
- * This function is intended to be used in Load(). For example:
+ * \returns The plugin handle or NULL if failed.
+ */
+SAMPGDK_API(void *, sampgdk_GetPluginHandle(void *address));
+
+/**
+ * \brief Initializes the library.
+ *
+ * This function should be called when the plugin is loaded,
+ * e.g. from Load():
  *
  * \code
  * PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData) {
  *   ...
- *   return sampgdk_Load(ppData);
+ *   return sampgdk_Load(plugin, ppData);
  * }
  * \endcode
  *
+ * \param plugin The plugin handle obtained with sampgdk_GetPluginHandle().
  * \param ppData A pointer to the SA-MP plugin data passed to Load().
  *
  * \returns Returns \c true on success and \c false otherwise.
  *
  * \see sampgdk_Unload()
+ * \see sampgdk_GetPluginHandle()
  */
-SAMPGDK_API(bool, sampgdk_Load(void **ppData));
+SAMPGDK_API(bool, sampgdk_Load(void *plugin, void **ppData));
 
 /**
  * \brief Performs the final cleanup.
  *
- * This function is intended to be using in Unload(). For example:
+ * This function should be called when the plugin is unloaded,
+ * e.g. from Unload():
  *
  * \code
  * PLUGIN_EXPORT void PLUGIN_CALL Unload() {
  *   ...
- *   sampgdk_Unload();
+ *   sampgdk_Unload(plugin);
  * }
  * \endcode
  *
+ * \param plugin The plugin handle obtained with sampgdk_GetPluginHandle().
+ *
  * \see sampgdk_Load()
+ * \see sampgdk_GetPluginHandle()
  */
-SAMPGDK_API(void, sampgdk_Unload(void));
+SAMPGDK_API(void, sampgdk_Unload(void *plugin));
 
 /**
- * \brief Processes timers created by the calling plugin.
+ * \brief Processes timers created by the specified plugin.
  *
- * \see sampgdk_process_plugin_timers()
+ * This function should be called from ProcessTick():
+ *
+ * \code
+ * PLUGIN_EXPORT void PLUGIN_CALL ProcessTick() {
+ *   sampgdk_ProcessTick(plugin);
+ * }
+ * \endcode
+ *
+ * \param plugin The plugin handle obtained with sampgdk_GetPluginHandle().
+ *
+ * \see sampgdk_GetPluginHandle()
  */
-SAMPGDK_API(void, sampgdk_ProcessTick(void));
+SAMPGDK_API(void, sampgdk_ProcessTick(void *plugin));
 
 /**
  * \brief Prints a message to the server log.
@@ -113,7 +133,8 @@ SAMPGDK_API(void, sampgdk_logprintf(const char *format, ...));
 /**
  * \brief Prints a message to the server log.
  *
- * This is a \c va_list version of sampgdk_logprintf().
+ * This function is identical to sampgdk_logprintf() but takes a
+ * \c va_list instead of a variable number of arguments.
  *
  * \param format A printf-like format string.
  * \param args Further arguments to logprintf().
@@ -123,5 +144,80 @@ SAMPGDK_API(void, sampgdk_logprintf(const char *format, ...));
 SAMPGDK_API(void, sampgdk_vlogprintf(const char *format, va_list args));
 
 /** @} */
+
+#ifdef __cplusplus
+
+/// \brief Main namespace.
+namespace sampgdk {
+
+/**
+ * \addtogroup core
+ * @{
+ */
+
+/// \brief C++ wrapper around sampgdk_Supports().
+inline unsigned int Supports() {
+  return sampgdk_Supports();
+}
+
+/// \brief C++ wrapper around sampgdk_GetPluginHandle().
+inline void *GetPluginHandle(void *address) {
+  return sampgdk_GetPluginHandle(address);
+}
+
+/// \brief Gets current plugin handle.
+inline void *GetCurrentPluginHandle() {
+  static void *handle = sampgdk_GetPluginHandle((void *)&::Load);
+  return handle;
+}
+
+/// \brief C++ wrapper around sampgdk_Load().
+inline bool Load(void *plugin, void **ppData) {
+  return sampgdk_Load(plugin, ppData);
+}
+
+/// \brief C++ wrapper around sampgdk_Load().
+inline bool Load(void **ppData) {
+  return sampgdk_Load(GetCurrentPluginHandle(), ppData);
+}
+
+/// \brief C++ wrapper around sampgdk_Unload().
+inline void Unload(void *plugin) {
+  sampgdk_Unload(plugin);
+}
+
+/// \brief C++ wrapper around sampgdk_Unload().
+inline void Unload() {
+  sampgdk_Unload(GetCurrentPluginHandle());
+}
+
+/// \brief C++ wrapper around sampgdk_ProcessTick().
+inline void ProcessTick(void *plugin) {
+  sampgdk_ProcessTick(plugin);
+}
+
+/// \brief C++ wrapper around sampgdk_ProcessTick().
+inline void ProcessTick() {
+  sampgdk_ProcessTick(GetCurrentPluginHandle());
+}
+
+/// \brief C++ wrapper around sampgdk_logprintf().
+inline void logprintf(const char *format, ...) {
+  va_list args;
+  va_start(args, format);
+  sampgdk_vlogprintf(format, args);
+  va_end(args);
+}
+
+/// \brief C++ wrapper around sampgdk_vlogprintf().
+inline void vlogprintf(const char *format, va_list args) {
+  sampgdk_vlogprintf(format, args);
+}
+
+/** @} */
+
+} // namespace sampgdk
+
+#endif /* __cplusplus */
 
 #endif /* !SAMPGDK_CORE_H */

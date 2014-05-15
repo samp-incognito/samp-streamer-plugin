@@ -286,7 +286,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPolygonEx(AMX *amx, cell *params)
 	}
 	if (static_cast<int>(params[4] >= 2 && static_cast<int>(params[4]) % 2))
 	{
-		sampgdk_logprintf("*** CreateDynamicPolygonEx: Number of points must be divisible by two");
+		sampgdk::logprintf("*** CreateDynamicPolygonEx: Number of points must be divisible by two");
 	}
 	int areaID = Item::Area::identifier.get();
 	Item::SharedArea area(new Item::Area);

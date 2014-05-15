@@ -37,14 +37,15 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 {
 	core.reset(new Core);
 	pAMXFunctions = ppData[PLUGIN_DATA_AMX_EXPORTS];
-	sampgdk_logprintf("\n\n*** Streamer Plugin v%s by Incognito loaded ***\n", PLUGIN_VERSION);
-	return sampgdk_Load(ppData);
+	sampgdk::logprintf("\n\n*** Streamer Plugin v%s by Incognito loaded ***\n", PLUGIN_VERSION);
+	return sampgdk::Load(sampgdk::GetCurrentPluginHandle(), ppData);
 }
 
 PLUGIN_EXPORT void PLUGIN_CALL Unload()
 {
 	core.reset();
-	sampgdk_logprintf("\n\n*** Streamer Plugin v%s by Incognito unloaded ***\n", PLUGIN_VERSION);
+	sampgdk::logprintf("\n\n*** Streamer Plugin v%s by Incognito unloaded ***\n", PLUGIN_VERSION);
+	sampgdk::Unload(sampgdk::GetCurrentPluginHandle());
 }
 
 AMX_NATIVE_INFO natives[] =

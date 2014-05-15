@@ -293,6 +293,8 @@
 #define StartRecordingPlayerData sampgdk_StartRecordingPlayerData
 #undef  StopRecordingPlayerData
 #define StopRecordingPlayerData sampgdk_StopRecordingPlayerData
+#undef  CreateExplosionForPlayer
+#define CreateExplosionForPlayer sampgdk_CreateExplosionForPlayer
 #endif
 
 
@@ -1030,6 +1032,11 @@ SAMPGDK_NATIVE(bool, StartRecordingPlayerData(int playerid, int recordtype, cons
  * \ingroup natives
  * \see <a href="http://wiki.sa-mp.com/wiki/StopRecordingPlayerData">StopRecordingPlayerData on SA-MP Wiki</a> */
 SAMPGDK_NATIVE(bool, StopRecordingPlayerData(int playerid));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/CreateExplosionForPlayer">CreateExplosionForPlayer on SA-MP Wiki</a> */
+SAMPGDK_NATIVE(bool, CreateExplosionForPlayer(int playerid, float X, float Y, float Z, int type, float Radius));
 
 #define SPECIAL_ACTION_NONE (0)
 #define SPECIAL_ACTION_DUCK (1)

@@ -33,7 +33,7 @@
 #define CHECK_PARAMS(m, n) \
 	if (params[0] != (m * 4)) \
 	{ \
-		sampgdk_logprintf("*** %s: Expecting %d parameter(s), but found %d", n, m, params[0] / sizeof(cell)); \
+		sampgdk::logprintf("*** %s: Expecting %d parameter(s), but found %d", n, m, params[0] / sizeof(cell)); \
 		return 0; \
 	}
 

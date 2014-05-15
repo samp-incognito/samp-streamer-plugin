@@ -9,6 +9,8 @@
 #define SendPlayerMessageToAll sampgdk_SendPlayerMessageToAll
 #undef  SendDeathMessage
 #define SendDeathMessage sampgdk_SendDeathMessage
+#undef  SendDeathMessageToPlayer
+#define SendDeathMessageToPlayer sampgdk_SendDeathMessageToPlayer
 #undef  GameTextForAll
 #define GameTextForAll sampgdk_GameTextForAll
 #undef  GameTextForPlayer
@@ -103,6 +105,10 @@
 #define GetNetworkStats sampgdk_GetNetworkStats
 #undef  GetPlayerVersion
 #define GetPlayerVersion sampgdk_GetPlayerVersion
+#undef  BlockIpAddress
+#define BlockIpAddress sampgdk_BlockIpAddress
+#undef  UnBlockIpAddress
+#define UnBlockIpAddress sampgdk_UnBlockIpAddress
 #undef  GetServerTickRate
 #define GetServerTickRate sampgdk_GetServerTickRate
 #undef  NetStats_GetConnectedTime
@@ -262,6 +268,11 @@ SAMPGDK_NATIVE(bool, SendPlayerMessageToAll(int senderid, const char * message))
  * \ingroup natives
  * \see <a href="http://wiki.sa-mp.com/wiki/SendDeathMessage">SendDeathMessage on SA-MP Wiki</a> */
 SAMPGDK_NATIVE(bool, SendDeathMessage(int killer, int killee, int weapon));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/SendDeathMessageToPlayer">SendDeathMessageToPlayer on SA-MP Wiki</a> */
+SAMPGDK_NATIVE(bool, SendDeathMessageToPlayer(int playerid, int killer, int killee, int weapon));
 
 /**
  * \ingroup natives
@@ -497,6 +508,16 @@ SAMPGDK_NATIVE(bool, GetNetworkStats(char * retstr, int size));
  * \ingroup natives
  * \see <a href="http://wiki.sa-mp.com/wiki/GetPlayerVersion">GetPlayerVersion on SA-MP Wiki</a> */
 SAMPGDK_NATIVE(bool, GetPlayerVersion(int playerid, char * version, int len));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/BlockIpAddress">BlockIpAddress on SA-MP Wiki</a> */
+SAMPGDK_NATIVE(bool, BlockIpAddress(const char * ip_address, int timems));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/UnBlockIpAddress">UnBlockIpAddress on SA-MP Wiki</a> */
+SAMPGDK_NATIVE(bool, UnBlockIpAddress(const char * ip_address));
 
 /**
  * \ingroup natives
@@ -1171,6 +1192,11 @@ SAMPGDK_CALLBACK(bool, OnPlayerClickTextDraw(int playerid, int clickedid));
  * \ingroup callbacks
  * \see <a href="http://wiki.sa-mp.com/wiki/OnPlayerClickPlayerTextDraw">OnPlayerClickPlayerTextDraw on SA-MP Wiki</a> */
 SAMPGDK_CALLBACK(bool, OnPlayerClickPlayerTextDraw(int playerid, int playertextid));
+
+/**
+ * \ingroup callbacks
+ * \see <a href="http://wiki.sa-mp.com/wiki/OnIncomingConnection">OnIncomingConnection on SA-MP Wiki</a> */
+SAMPGDK_CALLBACK(bool, OnIncomingConnection(int playerid, const char * ip_address, int port));
 
 /**
  * \ingroup callbacks

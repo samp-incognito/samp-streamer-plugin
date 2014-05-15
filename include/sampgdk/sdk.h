@@ -48,26 +48,8 @@
   #endif
 #endif
 
-#if defined __INTEL_COMPILER
-  /* ... */
-#elif defined __clang__
-  #pragma clang diagnostic push
-  #pragma clang diagnostic ignored "-Wignored-attributes"
-#elif defined __GNUC__
-  #pragma GCC diagnostic push
-  #pragma GCC diagnostic ignored "-Wattributes"
-#endif
-
 #include <sdk/amx/amx.h>
 #include <sdk/plugin.h>
-
-#if defined __INTEL_COMPILER
-  /* ... */
-#elif defined __clang_
-  #pragma clang diagnostic pop
-#elif defined __GNUC__
-  #pragma GCC diagnostic pop
-#endif
 
 /**
  * \addtogroup sdk

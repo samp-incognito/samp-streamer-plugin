@@ -16,6 +16,8 @@
 #ifndef SAMPGDK_INTEROP_H
 #define SAMPGDK_INTEROP_H
 
+#include <stdarg.h>
+
 #include <sampgdk/bool.h>
 #include <sampgdk/export.h>
 
@@ -113,17 +115,30 @@ SAMPGDK_API(cell, sampgdk_CallNative(AMX_NATIVE native, cell *params));
  *
  * \see sampgdk_GetNatives()
  * \see sampgdk_FindNative()
- * \see sampgdk_InvokeNative()
+ * \see sampgdk_InvokeNativeV()
  */
 SAMPGDK_API(cell, sampgdk_InvokeNative(AMX_NATIVE native,
                                        const char *format, ...));
 
 /**
+ * \brief Invokes a native function with the specified arguments.
+ *
+ * This function is identical to sampgdk_InvokeNative() but takes a
+ * \c va_list instead of a variable number of arguments.
+ *
+ * \see sampgdk_GetNatives()
+ * \see sampgdk_FindNative()
+ * \see sampgdk_InvokeNative()
+ */
+SAMPGDK_API(cell, sampgdk_InvokeNativeV(AMX_NATIVE native,
+                                        const char *format, va_list args));
+
+/**
  * \brief Gets called on every public function call.
  *
- * This is the so called "public filter". It is called whenever the server
- * calls \c amx_Exec(). The return value indicates  whether corresponding
- * callback function to the public will be executed in this plugin.
+ * This is the public filter callback. It is called whenever the server
+ * calls \c amx_Exec(), which practiacally means that you can use it to
+ * hook *any* callback, even those that are called by other plugins.
  *
  * \param amx The AMX instance on which the public function is called.
  * \param name The name of the function.
@@ -135,5 +150,49 @@ SAMPGDK_API(cell, sampgdk_InvokeNative(AMX_NATIVE native,
 SAMPGDK_CALLBACK(bool, OnPublicCall(AMX *amx, const char *name, cell *params));
 
 /** @} */
+
+#ifdef __cplusplus
+
+namespace sampgdk {
+
+/**
+  * \addtogroup interop
+  * @{
+  */
+
+/// \brief C++ wrapper around sampgdk_GetNatives().
+inline const AMX_NATIVE_INFO *GetNatives(int &number) {
+  return sampgdk_GetNatives(&number);
+}
+
+/// \brief C++ wrapper around sampgdk_FindNative().
+inline AMX_NATIVE FindNative(const char *name) {
+  return sampgdk_FindNative(name);
+}
+
+/// \brief C++ wrapper around sampgdk_CallNative().
+inline cell CallNative(AMX_NATIVE native, cell *params) {
+  return sampgdk_CallNative(native, params);
+}
+
+/// \brief C++ wrapper around sampgdk_InvokeNative().
+inline cell InvokeNative(AMX_NATIVE native, const char *format, ...) {
+  va_list args;
+  va_start(args, format);
+  cell retval = sampgdk_InvokeNativeV(native, format, args);
+  va_end(args);
+  return retval;
+}
+
+/// \brief C++ wrapper around sampgdk_InvokeNativeV().
+inline cell InvokeNative(AMX_NATIVE native, const char *format, va_list args) {
+  return sampgdk_InvokeNativeV(native, format, args);
+}
+
+/** @} */
+
+} // namespace sampgdk
+
+#endif /* __cplusplus */
 
 #endif /* !SAMPGDK_INTEROP_H */

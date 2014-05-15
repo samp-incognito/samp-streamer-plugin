@@ -171,7 +171,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetUpperBound(AMX *amx, cell *params)
 		}
 		default:
 		{
-			sampgdk_logprintf("*** Streamer_GetUpperBound: Invalid type specified");
+			sampgdk::logprintf("*** Streamer_GetUpperBound: Invalid type specified");
 			return 0;
 		}
 	}

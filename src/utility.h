@@ -196,7 +196,7 @@ namespace Utility
 	template<typename T>
 	inline bool removeFromContainer(std::vector<T> &container, T value)
 	{
-		std::vector<T>::iterator i = std::find(container.begin(), container.end(), value);
+		typename std::vector<T>::iterator i = std::find(container.begin(), container.end(), value);
 		if (i != container.end())
 		{
 			container.erase(i);
