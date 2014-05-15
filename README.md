@@ -6,9 +6,13 @@ This plugin streams objects, pickups, checkpoints, race checkpoints, map icons, 
 Compilation
 -----------
 
-Windows: Open the solution file (streamer.sln) in Microsoft Visual Studio 2010 or higher. Build the project.
+**Windows:** Open the solution file (streamer.sln) in Microsoft Visual Studio 2010 (or higher). Build the project.
 
-Linux: Install the GNU Compiler Collection and GNU Make. Type "make" in the top directory to compile the source code.
+To generate project files for a different version of Visual Studio, download Premake 5.x (or higher), and type "premake5 vs20xx" (where "xx" completes the version number, as in "vs2010") in the top directory.
+
+**Linux:** Install the GNU Compiler Collection and GNU Make. Type "make" in the top directory to compile the source code.
+
+To generate the GNU makefiles again, download Premake 4.x (or higher), and type "premake4 gmake" in the top directory.
 
 Download
 --------
