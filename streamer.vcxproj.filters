@@ -19,15 +19,6 @@
     <Filter Include="lib\sdk\src">
       <UniqueIdentifier>{2443EE53-90F8-6649-19ED-602085A15D4D}</UniqueIdentifier>
     </Filter>
-    <Filter Include="obj">
-      <UniqueIdentifier>{2098880B-8CA1-887C-151D-9F7C8125947C}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="obj\win32">
-      <UniqueIdentifier>{2278293B-8EE2-DDB1-D720-8F5743CABB06}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="obj\win32\Debug">
-      <UniqueIdentifier>{1894492E-841F-B7F2-8D30-3AE7F93A13F3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
@@ -169,9 +160,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="obj\win32\Debug\streamer_manifest.rc">
-      <Filter>obj\win32\Debug</Filter>
-    </ResourceCompile>
     <ResourceCompile Include="streamer.rc" />
   </ItemGroup>
 </Project>

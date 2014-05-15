@@ -156,7 +156,6 @@
     <None Include="streamer.def" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="obj\win32\Debug\streamer_manifest.rc" />
     <ResourceCompile Include="streamer.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
