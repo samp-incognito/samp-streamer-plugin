@@ -41,6 +41,21 @@
 #define STREAMER_OBJECT_TYPE_PLAYER (1)
 #define STREAMER_OBJECT_TYPE_DYNAMIC (2)
 
+template<typename T>
+inline void intrusive_ptr_add_ref(T *t)
+{
+	++t->references;
+}
+
+template<typename T>
+inline void intrusive_ptr_release(T *t)
+{
+	if (!(--t->references))
+	{
+		delete t;
+	}
+}
+
 #include <boost/geometry.hpp>
 #include <boost/geometry/geometries/geometries.hpp>
 #include <boost/intrusive_ptr.hpp>
@@ -120,20 +135,5 @@ namespace boost { namespace geometry { namespace traits {
 		}
 	};
 }}}
-
-template<typename T>
-inline void intrusive_ptr_add_ref(T *t)
-{
-	++t->references;
-}
-
-template<typename T>
-inline void intrusive_ptr_release(T *t)
-{
-	if (!(--t->references))
-	{
-		delete t;
-	}
-}
 
 #endif
