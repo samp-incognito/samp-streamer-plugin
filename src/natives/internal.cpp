@@ -29,9 +29,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_CallbackHook(AMX *amx, cell *params)
 		case STREAMER_OPC:
 		{
 			CHECK_PARAMS(2, "Streamer_CallbackHook");
-			cell *playerid = NULL;
-			amx_GetAddr(amx, params[2], &playerid);
-			return static_cast<cell>(core->getCallbacks()->OnPlayerConnect(static_cast<int>(*playerid)));
+			//cell *playerid = NULL;
+			//amx_GetAddr(amx, params[2], &playerid);
+			return static_cast<cell>(core->getCallbacks()->OnPlayerConnect(static_cast<int>(params[2])));
 		}
 		case STREAMER_OPDC:
 		{
