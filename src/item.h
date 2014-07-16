@@ -278,6 +278,37 @@ namespace Item
 
 		static Identifier identifier;
 	};
+
+	struct Vehicle
+	{
+		Vehicle();
+
+		AMX *amx;
+		SharedCell cell;
+		
+		int model;
+		Eigen::Vector3f position;
+		float angle;
+		int color1;
+		int color2;
+		int respawndelay;
+		int paintjob;
+		int interior;
+		int virtualworld;
+		float health;
+		unsigned char carmod[14];
+		std::string numberplate;
+
+		int vehicleID;
+		float streamDistance;
+
+		std::vector<int> extras;
+		boost::unordered_set<int> interiors;
+		std::bitset<MAX_PLAYERS> players;
+		boost::unordered_set<int> worlds;
+
+		static Identifier identifier;
+	};
 }
 
 #endif

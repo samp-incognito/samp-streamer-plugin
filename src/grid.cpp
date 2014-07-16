@@ -207,6 +207,23 @@ void Grid::addTextLabel(const Item::SharedTextLabel &textLabel)
 	}
 }
 
+void Grid::addVehicle(const Item::SharedVehicle &vehicle)
+{
+	if (vehicle->streamDistance > cellDistance)
+	{
+		globalCell->textLabels.insert(std::make_pair(vehicle->vehicleID, vehicle));
+		vehicle->cell.reset();
+	}
+	else
+	{
+		Eigen::Vector2f position = Eigen::Vector2f::Zero();
+		position = Eigen::Vector2f(vehicle->position[0], vehicle->position[1]);;
+		CellID cellID = getCellID(position);
+		cells[cellID]->vehicles.insert(std::make_pair(vehicle->vehicleID, vehicle));
+		vehicle->cell = cells[cellID];
+	}
+}
+
 void Grid::rebuildGrid()
 {
 	cells.clear();
