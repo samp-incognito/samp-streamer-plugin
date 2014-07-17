@@ -69,7 +69,7 @@ public:
 	void removePickup(const Item::SharedPickup &pickup, bool reassign = false);
 	void removeRaceCheckpoint(const Item::SharedRaceCheckpoint &raceCheckpoint, bool reassign = false);
 	void removeTextLabel(const Item::SharedTextLabel &textLabel, bool reassign = false);
-	void removeVehicle(const Item::SharedTextLabel &textLabel, bool reassign = false);
+	void removeVehicle(const Item::SharedVehicle &vehicle, bool reassign = false);
 
 	void findAllCells(Player &player, std::vector<SharedCell> &playerCells);
 	void findMinimalCells(Player &player, std::vector<SharedCell> &playerCells);

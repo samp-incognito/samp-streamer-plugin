@@ -31,6 +31,7 @@
 #include <Eigen/Core>
 
 #include <sampgdk/a_objects.h>
+#include <sampgdk/a_vehicles.h>
 #include <sampgdk/a_players.h>
 #include <sampgdk/a_samp.h>
 #include <sampgdk/core.h>
@@ -303,6 +304,19 @@ boost::unordered_map<int, Item::SharedTextLabel>::iterator Utility::destroyTextL
 	}
 	core->getGrid()->removeTextLabel(t->second);
 	return core->getData()->textLabels.erase(t);
+}
+
+boost::unordered_map<int, Item::SharedVehicle>::iterator Utility::destroyVehicle(boost::unordered_map<int, Item::SharedVehicle>::iterator p)
+{
+	Item::Vehicle::identifier.remove(p->first, core->getData()->pickups.size());
+	boost::unordered_map<int, int>::iterator i = core->getStreamer()->internalVehicles.find(p->first);
+	if (i != core->getStreamer()->internalVehicles.end())
+	{
+		DestroyVehicle(i->second);
+		core->getStreamer()->internalVehicles.quick_erase(i);
+	}
+	core->getGrid()->removeVehicle(p->second);
+	return core->getData()->vehicles.erase(p);
 }
 
 bool Utility::isPointInArea(const Eigen::Vector3f &point, const Item::SharedArea &area)

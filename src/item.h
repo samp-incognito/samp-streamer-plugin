@@ -286,7 +286,7 @@ namespace Item
 		AMX *amx;
 		SharedCell cell;
 		
-		int model;
+		int modelID;
 		Eigen::Vector3f position;
 		float angle;
 		int color1;
@@ -294,7 +294,7 @@ namespace Item
 		int respawndelay;
 		int paintjob;
 		int interior;
-		int virtualworld;
+		int worldID;
 		float health;
 		unsigned char carmod[14];
 		std::string numberplate;
@@ -307,6 +307,7 @@ namespace Item
 		std::bitset<MAX_PLAYERS> players;
 		boost::unordered_set<int> worlds;
 
+		int references;
 		static Identifier identifier;
 	};
 }

@@ -37,6 +37,10 @@ std::size_t Data::getMaxItems(int type)
 		{
 			return maxObjects;
 		}
+		case STREAMER_TYPE_VEHICLE:
+		{
+			return maxVehicles;
+		}
 		case STREAMER_TYPE_PICKUP:
 		{
 			return maxPickups;

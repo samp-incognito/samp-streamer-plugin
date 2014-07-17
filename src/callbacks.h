@@ -33,6 +33,16 @@ public:
 	bool OnPlayerSelectObject(int playerid, int type, int objectid, int modelid, float x, float y, float z);
 	bool OnPlayerWeaponShot(int playerid, int weaponid, int hittype, int hitid, float x, float y, float z);
 
+	bool OnVehicleSpawn(int vehicleid);
+	bool OnVehicleDeath(int vehicleid, int killerid);
+	bool OnPlayerEnterVehicle(int playerid, int vehicleid, int ispassenger);
+	bool OnPlayerExitVehicle(int playerid, int vehicleid);
+	bool OnVehicleMod(int playerid, int vehicleid, int componentid);
+	bool OnVehiclePaintjob(int playerid, int vehicleid, int paintjobid);
+	bool OnVehicleRespray(int playerid, int vehicleid, int color1, int color2);
+	bool OnVehicleDamageStatusUpdate(int vehicleid, int playerid);
+	bool OnUnoccupiedVehicleUpdate(int vehicleid, int playerid, int passenger_seat, float new_x, float new_y, float new_z);
+
 	inline void setInterface(AMX *amx)
 	{
 		interface = amx;

@@ -150,6 +150,7 @@
     <ClCompile Include="src\natives\settings.cpp" />
     <ClCompile Include="src\natives\text-labels.cpp" />
     <ClCompile Include="src\natives\updates.cpp" />
+    <ClCompile Include="src\natives\vehicles.cpp" />
     <ClCompile Include="src\player.cpp" />
     <ClCompile Include="src\streamer.cpp" />
     <ClCompile Include="src\utility.cpp" />

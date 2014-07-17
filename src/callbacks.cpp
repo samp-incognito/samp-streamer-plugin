@@ -310,3 +310,42 @@ bool Callbacks::OnPlayerWeaponShot(int playerid, int weaponid, int hittype, int 
 	}
 	return true;
 }
+/* Please, help me with this :D
+bool Callbacks::OnVehicleSpawn(int vehicleid)
+{
+	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+	if (p != core->getData()->players.end())
+	{
+		for (boost::unordered_map<int, int>::iterator i = p->second.internalObjects.begin(); i != p->second.internalObjects.end(); ++i)
+		{
+			if (i->second == hitid)
+			{
+				boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(i->first);
+				if (o != core->getData()->objects.end())
+				{
+					if (o->second->amx != interface)
+					{
+						break;
+					}
+				}
+				int objectid = i->first;
+				for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
+				{
+					int amxIndex = 0;
+					if (!amx_FindPublic(*a, "OnPlayerShootDynamicObject", &amxIndex))
+					{
+						amx_Push(*a, amx_ftoc(z));
+						amx_Push(*a, amx_ftoc(y));
+						amx_Push(*a, amx_ftoc(x));
+						amx_Push(*a, static_cast<cell>(objectid));
+						amx_Push(*a, static_cast<cell>(weaponid));
+						amx_Push(*a, static_cast<cell>(playerid));
+						amx_Exec(*a, NULL, amxIndex);
+					}
+				}
+				break;
+			}
+		}
+	}
+	return true;
+}*/

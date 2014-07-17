@@ -253,6 +253,12 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 			}
 			processPickups(player, cells);
 		}
+		
+		if (!core->getData()->vehicles.empty())
+		{
+			processVehicles(player, cells);
+		}
+
 		if (!delta.isZero())
 		{
 			player.position = position;
@@ -776,6 +782,65 @@ void Streamer::processTextLabels(Player &player, const std::vector<SharedCell> &
 		{
 			player.visibleCell->textLabels.insert(std::make_pair(d->second->textLabelID, d->second));
 		}
+	}
+}
+
+void Streamer::processVehicles(Player &player, const std::vector<SharedCell> &cells)
+{
+	static boost::unordered_map<int, Item::SharedVehicle> discoveredVehicles;
+	for (std::vector<SharedCell>::const_iterator c = cells.begin(); c != cells.end(); ++c)
+	{
+		for (boost::unordered_map<int, Item::SharedVehicle>::const_iterator p = (*c)->vehicles.begin(); p != (*c)->vehicles.end(); ++p)
+		{
+			boost::unordered_map<int, Item::SharedVehicle>::iterator d = discoveredVehicles.find(p->first);
+			if (d == discoveredVehicles.end())
+			{
+				if (checkPlayer(p->second->players, player.playerID, p->second->interiors, player.interiorID, p->second->worlds, player.worldID))
+				{
+					if (boost::geometry::comparable_distance(player.position, p->second->position) <= p->second->streamDistance)
+					{
+						boost::unordered_map<int, int>::iterator i = internalVehicles.find(p->first);
+						if (i == internalVehicles.end())
+						{
+							p->second->worldID = !p->second->worlds.empty() ? player.worldID : -1;
+						}
+						discoveredVehicles.insert(*p);
+					}
+				}
+			}
+		}
+	}
+	if (processingFinalPlayer)
+	{
+		boost::unordered_map<int, int>::iterator i = internalVehicles.begin();
+		while (i != internalVehicles.end())
+		{
+			boost::unordered_map<int, Item::SharedVehicle>::iterator d = discoveredVehicles.find(i->first);
+			if (d == discoveredVehicles.end())
+			{
+				DestroyVehicle(i->second);
+				i = internalVehicles.erase(i);
+			}
+			else
+			{
+				discoveredVehicles.erase(d);
+				++i;
+			}
+		}
+		for (boost::unordered_map<int, Item::SharedVehicle>::iterator d = discoveredVehicles.begin(); d != discoveredVehicles.end(); ++d)
+		{
+			if (internalVehicles.size() == visibleVehicles)
+			{
+				break;
+			}
+			int internalID = CreateVehicle(d->second->modelID, d->second->position[0], d->second->position[1], d->second->position[2], d->second->angle, d->second->color1, d->second->color2, d->second->respawndelay);
+			if (internalID == INVALID_ALTERNATE_ID)
+			{
+				break;
+			}
+			internalVehicles.insert(std::make_pair(d->second->vehicleID, internalID));
+		}
+		discoveredVehicles.clear();
 	}
 }
 
