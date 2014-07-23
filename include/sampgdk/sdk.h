@@ -48,8 +48,34 @@
   #endif
 #endif
 
+#if defined __INTEL_COMPILER
+  /* ... */
+#elif defined __clang__
+  #pragma clang diagnostic push
+  #pragma clang diagnostic ignored "-Wignored-attributes"
+#elif defined __GNUC__
+  #pragma GCC diagnostic push
+  #pragma GCC diagnostic ignored "-Wattributes"
+#endif
+
 #include <sdk/amx/amx.h>
 #include <sdk/plugin.h>
+
+#if defined __INTEL_COMPILER
+  /* ... */
+#elif defined __clang_
+  #pragma clang diagnostic pop
+#elif defined __GNUC__
+  #pragma GCC diagnostic pop
+#endif
+
+#if !defined IN_SAMPGDK
+  #if defined _MSC_VER
+    #pragma optimize("", off)
+  #elif defined __GNUC__
+    #pragma GCC optimize("-fno-optimize-sibling-calls")
+  #endif
+#endif
 
 /**
  * \addtogroup sdk
@@ -66,7 +92,7 @@
  *
  * The Supports() function indicates what possibilities this
  * plugin has. The SUPPORTS_VERSION flag is required to check
- * for compatibility with the server. 
+ * for compatibility with the server.
  *
  * \returns One or more of the SUPPORTS_* flags.
  */

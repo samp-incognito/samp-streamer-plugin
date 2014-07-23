@@ -28,13 +28,13 @@
   #define SAMPGDK_EXTERN_C
 #endif
 
-#if defined SAMPGDK_STATIC
+#if defined SAMPGDK_STATIC || defined SAMPGDK_AMALGAMATION
   #define SAMPGDK_CALL
 #else
   #define SAMPGDK_CALL SAMPGDK_CDECL
 #endif
 
-#if defined SAMPGDK_STATIC
+#if defined SAMPGDK_STATIC || defined SAMPGDK_AMALGAMATION
   #define SAMPGDK_EXPORT SAMPGDK_EXTERN_C
 #else
   #if SAMPGDK_LINUX

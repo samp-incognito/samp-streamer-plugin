@@ -52,13 +52,6 @@
 SAMPGDK_API(unsigned int, sampgdk_Supports(void));
 
 /**
- * \brief Gets plugin handle by address.
- *
- * \returns The plugin handle or NULL if failed.
- */
-SAMPGDK_API(void *, sampgdk_GetPluginHandle(void *address));
-
-/**
  * \brief Initializes the library.
  *
  * This function should be called when the plugin is loaded,
@@ -67,22 +60,20 @@ SAMPGDK_API(void *, sampgdk_GetPluginHandle(void *address));
  * \code
  * PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData) {
  *   ...
- *   return sampgdk_Load(plugin, ppData);
+ *   return sampgdk_Load(ppData);
  * }
  * \endcode
  *
- * \param plugin The plugin handle obtained with sampgdk_GetPluginHandle().
  * \param ppData A pointer to the SA-MP plugin data passed to Load().
  *
  * \returns Returns \c true on success and \c false otherwise.
  *
  * \see sampgdk_Unload()
- * \see sampgdk_GetPluginHandle()
  */
-SAMPGDK_API(bool, sampgdk_Load(void *plugin, void **ppData));
+SAMPGDK_API(bool, sampgdk_Load(void **ppData));
 
 /**
- * \brief Performs the final cleanup.
+ * \brief Shuts everything down (opposite of sampgdk_Load()).
  *
  * This function should be called when the plugin is unloaded,
  * e.g. from Unload():
@@ -90,33 +81,26 @@ SAMPGDK_API(bool, sampgdk_Load(void *plugin, void **ppData));
  * \code
  * PLUGIN_EXPORT void PLUGIN_CALL Unload() {
  *   ...
- *   sampgdk_Unload(plugin);
+ *   sampgdk_Unload();
  * }
  * \endcode
  *
- * \param plugin The plugin handle obtained with sampgdk_GetPluginHandle().
- *
  * \see sampgdk_Load()
- * \see sampgdk_GetPluginHandle()
  */
-SAMPGDK_API(void, sampgdk_Unload(void *plugin));
+SAMPGDK_API(void, sampgdk_Unload(void));
 
 /**
- * \brief Processes timers created by the specified plugin.
+ * \brief Processes timers created by the calling plugin.
  *
  * This function should be called from ProcessTick():
  *
  * \code
  * PLUGIN_EXPORT void PLUGIN_CALL ProcessTick() {
- *   sampgdk_ProcessTick(plugin);
+ *   sampgdk_ProcessTick();
  * }
  * \endcode
- *
- * \param plugin The plugin handle obtained with sampgdk_GetPluginHandle().
- *
- * \see sampgdk_GetPluginHandle()
  */
-SAMPGDK_API(void, sampgdk_ProcessTick(void *plugin));
+SAMPGDK_API(void, sampgdk_ProcessTick(void));
 
 /**
  * \brief Prints a message to the server log.
@@ -160,45 +144,19 @@ inline unsigned int Supports() {
   return sampgdk_Supports();
 }
 
-/// \brief C++ wrapper around sampgdk_GetPluginHandle().
-inline void *GetPluginHandle(void *address) {
-  return sampgdk_GetPluginHandle(address);
-}
-
-/// \brief Gets current plugin handle.
-inline void *GetCurrentPluginHandle() {
-  static void *handle = sampgdk_GetPluginHandle((void *)&::Load);
-  return handle;
-}
-
-/// \brief C++ wrapper around sampgdk_Load().
-inline bool Load(void *plugin, void **ppData) {
-  return sampgdk_Load(plugin, ppData);
-}
-
 /// \brief C++ wrapper around sampgdk_Load().
 inline bool Load(void **ppData) {
-  return sampgdk_Load(GetCurrentPluginHandle(), ppData);
-}
-
-/// \brief C++ wrapper around sampgdk_Unload().
-inline void Unload(void *plugin) {
-  sampgdk_Unload(plugin);
+  return sampgdk_Load(ppData);
 }
 
 /// \brief C++ wrapper around sampgdk_Unload().
 inline void Unload() {
-  sampgdk_Unload(GetCurrentPluginHandle());
-}
-
-/// \brief C++ wrapper around sampgdk_ProcessTick().
-inline void ProcessTick(void *plugin) {
-  sampgdk_ProcessTick(plugin);
+  sampgdk_Unload();
 }
 
 /// \brief C++ wrapper around sampgdk_ProcessTick().
 inline void ProcessTick() {
-  sampgdk_ProcessTick(GetCurrentPluginHandle());
+  sampgdk_ProcessTick();
 }
 
 /// \brief C++ wrapper around sampgdk_logprintf().

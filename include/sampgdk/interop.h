@@ -29,12 +29,14 @@
 /**
  * \brief Returns all currently registered native functions.
  *
- * This function can be used to retrieve the names and addresses of all native
- * functions that were registered with amx_Register() by the server and plugins
- * loaded prior to the call. The \p number parameter is filled with the total
- * number of functions.
+ * This function can be used to get the names and addresses of all native
+ * functions that have been registered with amx_Register(), by both the
+ * server and plugins.
  *
- * \param number The number of elements in the returned array.
+ * \note The returned array is NULL-terminated.
+ *
+ * \param number A pointer to the variable that will store the number of
+ *               elements in the returned array (optional).
  *
  * \returns A pointer to the internal array of native functions.
  *
@@ -70,9 +72,8 @@ SAMPGDK_API(AMX_NATIVE, sampgdk_FindNative(const char *name));
  * value parameters or don't have any parameters at all. If you have to pass
  * a reference or a string use sampgdk_InvokeNative() instead.
  *
- * \note The first element of \p params should contain the number of arguments
- * multiplied by \c sizeof(cell). If the function takes no arguments, \p params
- * may be \c NULL.
+ * \note The first element of \p params must contain the number of arguments
+ * multiplied by \c sizeof(cell).
  *
  * \param native A pointer to the native function.
  * \param params The \c params array passsed to the function.
@@ -98,14 +99,21 @@ SAMPGDK_API(cell, sampgdk_CallNative(AMX_NATIVE native, cell *params));
  * d         | int           | integer value (same as 'i')
  * b         | bool          | boolean value
  * f         | double        | floating-point value
- * r         | const cell *  | const reference (input-only)
- * R         | cell *        | non-const reference (input and output)
- * s         | const char *  | const string (input-only)
- * S         | char *        | non-const string (input and output)
+ * r         | const cell *  | const reference (input only)
+ * R         | cell *        | non-const reference (both input and output)
+ * s         | const char *  | const string (input only)
+ * S         | char *        | non-const string (both input and output)
+ * a         | const cell *  | const string (input only)
+ * A         | cell *        | non-const string (both input and output)
  *
- * \note For the 'S' specifier, the argument passed next to it specifies
- * the size of the string buffer. Fortunately all current SA-MP natives
- * follow this convention.
+ * \remarks For the 'S', 'a' and 'A' specifiers you have to specify the size
+ * of the string/array in square brackets, e.g. "a[100]" (fixed size)
+ * or s[*2] (size passed via 2nd argument).
+ *
+ * \note In Pawn, variadic functions always take their variable arguments
+ * (those represented by "...") by reference. This means that for such
+ * functions you have to use the 'r' specifier where you would normally
+ * use 'b', 'i' 'd' or 'f'.
  *
  * \param native A pointer to the native function.
  * \param format A format string specifying the types of the arguments.
@@ -116,22 +124,48 @@ SAMPGDK_API(cell, sampgdk_CallNative(AMX_NATIVE native, cell *params));
  * \see sampgdk_GetNatives()
  * \see sampgdk_FindNative()
  * \see sampgdk_InvokeNativeV()
+ * \see sampgdk_InvokeNativeArray()
  */
 SAMPGDK_API(cell, sampgdk_InvokeNative(AMX_NATIVE native,
-                                       const char *format, ...));
+    const char *format, ...));
 
 /**
- * \brief Invokes a native function with the specified arguments.
- *
- * This function is identical to sampgdk_InvokeNative() but takes a
- * \c va_list instead of a variable number of arguments.
- *
- * \see sampgdk_GetNatives()
- * \see sampgdk_FindNative()
- * \see sampgdk_InvokeNative()
- */
+* \brief Invokes a native function with the specified arguments.
+*
+* This function is identical to sampgdk_InvokeNative() but takes a
+* \c va_list instead of a variable number of arguments.
+*
+* \see sampgdk_GetNatives()
+* \see sampgdk_FindNative()
+* \see sampgdk_InvokeNative()
+* \see sampgdk_InvokeNativeArray()
+*/
 SAMPGDK_API(cell, sampgdk_InvokeNativeV(AMX_NATIVE native,
-                                        const char *format, va_list args));
+    const char *format, va_list args));
+
+/**
+* \brief Invokes a native function with the specified arguments.
+*
+* This function is similar to sampgdk_InvokeNative() but the arguments
+* are passed as an array where each element is a pointer pointing to
+* the actual value.
+*
+* Argument types are specified via \p format where each character, or
+* *specifier*, corresponds to a single argument. See sampgdk_InvokeNative()
+* for the list of supported format specifiers.
+*
+* \param native A pointer to the native function.
+* \param format A format string specifying the types of the arguments.
+* \param args The arguments themselves.
+*
+* \returns The value returned by the function.
+*
+* \see sampgdk_GetNatives()
+* \see sampgdk_FindNative()
+* \see sampgdk_InvokeNative()
+*/
+SAMPGDK_API(cell, sampgdk_InvokeNativeArray(AMX_NATIVE native,
+    const char *format, void **args));
 
 /**
  * \brief Gets called on every public function call.
@@ -142,12 +176,15 @@ SAMPGDK_API(cell, sampgdk_InvokeNativeV(AMX_NATIVE native,
  *
  * \param amx The AMX instance on which the public function is called.
  * \param name The name of the function.
- * \param params The function's arguments as stored on the AMX stack, with the
- * \c params[0] equal to the number of arguments multiplied by \c sizeof(cell).
+ * \param params The function's arguments as stored on the AMX stack, with
+ * \c params[0] set to the number of arguments multiplied by \c sizeof(cell).
+ * \param retval The function's return value. This parameter can be \c NULL.
  *
- * \returns If returns \c true the callback is executed, otherwise it's ignored.
+ * \returns If returns \c true the callback is executed,
+ *          otherwise it's ignored.
  */
-SAMPGDK_CALLBACK(bool, OnPublicCall(AMX *amx, const char *name, cell *params));
+SAMPGDK_CALLBACK(bool, OnPublicCall(AMX *amx, const char *name,
+    cell *params, cell *retval));
 
 /** @} */
 
@@ -163,6 +200,11 @@ namespace sampgdk {
 /// \brief C++ wrapper around sampgdk_GetNatives().
 inline const AMX_NATIVE_INFO *GetNatives(int &number) {
   return sampgdk_GetNatives(&number);
+}
+
+/// \brief C++ wrapper around sampgdk_GetNatives().
+inline const AMX_NATIVE_INFO *GetNatives() {
+  return sampgdk_GetNatives(0);
 }
 
 /// \brief C++ wrapper around sampgdk_FindNative().
@@ -185,8 +227,15 @@ inline cell InvokeNative(AMX_NATIVE native, const char *format, ...) {
 }
 
 /// \brief C++ wrapper around sampgdk_InvokeNativeV().
-inline cell InvokeNative(AMX_NATIVE native, const char *format, va_list args) {
+inline cell InvokeNativeV(AMX_NATIVE native, const char *format,
+    va_list args) {
   return sampgdk_InvokeNativeV(native, format, args);
+}
+
+/// \brief C++ wrapper around sampgdk_InvokeNativeArray().
+inline cell InvokeNativeArray(AMX_NATIVE native, const char *format,
+    void **args) {
+  return sampgdk_InvokeNativeArray(native, format, args);
 }
 
 /** @} */

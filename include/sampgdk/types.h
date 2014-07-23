@@ -1,5 +1,4 @@
-/*
- * Copyright (C) 2014 Incognito
+/* Copyright (C) 2011-2014 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,40 +13,19 @@
  * limitations under the License.
  */
 
-#ifndef CORE_H
-#define CORE_H
+#ifndef SAMPGDK_TYPES_H
+#define SAMPGDK_TYPES_H
 
-#include "data.h"
-#include "grid.h"
-#include "streamer.h"
+#include <sampgdk/export.h>
 
-#include <boost/scoped_ptr.hpp>
+/**
+ * \brief Defines the signature of a timer callback function.
+ * \ingroup natives
+ *
+ * \param timerid The unique ID for the timer returned by SetTimer().
+ * \param param A pointer to user-supplied data passed to SetTimer().
+ * This parameter may be \c NULL.
+ */
+typedef void (SAMPGDK_CALL *TimerCallback)(int timerid, void *param);
 
-class Core
-{
-public:
-	Core();
-
-	inline Data *getData()
-	{
-		return data.get();
-	}
-
-	inline Grid *getGrid()
-	{
-		return grid.get();
-	}
-
-	inline Streamer *getStreamer()
-	{
-		return streamer.get();
-	}
-private:
-	boost::scoped_ptr<Data> data;
-	boost::scoped_ptr<Grid> grid;
-	boost::scoped_ptr<Streamer> streamer;
-};
-
-extern boost::scoped_ptr<Core> core;
-
-#endif
+#endif /* !SAMPGDK_TYPES_H */
