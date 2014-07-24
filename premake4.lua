@@ -6,11 +6,11 @@ solution "streamer"
 		includedirs { "include" }
 		kind "SharedLib"
 		if _ACTION == "gmake" then
-			files { "**.cpp" }
+			files { "**.cpp", "**.c", }
 			libdirs { "lib/sampgdk/linux" }
 			targetextension ".so"
 		elseif string.startswith(_ACTION, "vs") then
-			files { "**.cpp", "**.def", "**.rc", "src/**.h" }
+			files { "**.cpp", "**.c", "**.def", "**.rc", "src/**.h" }
 			libdirs { "lib/sampgdk/win32" }
 			targetextension ".dll"
 		end
@@ -42,7 +42,7 @@ solution "streamer"
 			objdir "obj/linux/Debug"
 			targetdir "bin/linux/Debug"
 		elseif string.startswith(_ACTION, "vs") then
-			defines { "BOOST_ALL_NO_LIB", "BOOST_CHRONO_HEADER_ONLY", "SAMPGDK_STATIC", "SAMPGDK_AMALGAMATION" }
+			defines { "BOOST_ALL_NO_LIB", "BOOST_CHRONO_HEADER_ONLY", "SAMPGDK_STATIC", "SAMPGDK_AMALGAMATION", "_CRT_SECURE_NO_WARNINGS" }
 			flags { "FatalWarnings", "Symbols" }
 			links { "sampgdk4" }
 			objdir "obj/win32/Debug"

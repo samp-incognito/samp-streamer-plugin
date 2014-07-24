@@ -62,6 +62,7 @@ endif
 
 OBJECTS := \
 	$(OBJDIR)/error_code.o \
+	$(OBJDIR)/sampgdk.o \
 	$(OBJDIR)/plugin.o \
 	$(OBJDIR)/callbacks.o \
 	$(OBJDIR)/cell.o \
@@ -145,6 +146,9 @@ endif
 $(OBJDIR)/error_code.o: lib/boost/system/src/error_code.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
+$(OBJDIR)/sampgdk.o: lib/sampgdk/src/sampgdk.c
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 $(OBJDIR)/plugin.o: lib/sdk/src/plugin.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"

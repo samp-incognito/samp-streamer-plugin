@@ -87,14 +87,14 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;BOOST_CHRONO_HEADER_ONLY;SAMPGDK_STATIC;SAMPGDK_AMALGAMATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;BOOST_CHRONO_HEADER_ONLY;SAMPGDK_STATIC;SAMPGDK_AMALGAMATION;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <ProgramDataBaseFileName>$(OutDir)streamer.pdb</ProgramDataBaseFileName>
       <Optimization>Disabled</Optimization>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;BOOST_CHRONO_HEADER_ONLY;SAMPGDK_STATIC;SAMPGDK_AMALGAMATION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;BOOST_CHRONO_HEADER_ONLY;SAMPGDK_STATIC;SAMPGDK_AMALGAMATION;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
@@ -123,6 +123,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="lib\boost\system\src\error_code.cpp" />
+    <ClCompile Include="lib\sampgdk\src\sampgdk.c" />
     <ClCompile Include="lib\sdk\src\plugin.cpp" />
     <ClCompile Include="src\callbacks.cpp" />
     <ClCompile Include="src\cell.cpp" />
