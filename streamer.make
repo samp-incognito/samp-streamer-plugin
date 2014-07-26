@@ -14,16 +14,16 @@ ifeq ($(config),release)
   TARGETDIR = bin/linux/Release
   TARGET = $(TARGETDIR)/streamer.so
   OBJDIR = obj/linux/Release
-  DEFINES += -DBOOST_CHRONO_HEADER_ONLY -DNDEBUG -DSAMPGDK_STATIC -DSAMPGDK_AMALGAMATION
+  DEFINES += -DBOOST_CHRONO_HEADER_ONLY -DNDEBUG -DSAMPGDK_AMALGAMATION
   INCLUDES += -Iinclude
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -ffast-math -fmerge-all-constants -fno-strict-aliasing -fvisibility=hidden -fvisibility-inlines-hidden -O3 -Wall
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CFLAGS)
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  LIBS += -lrt -lsampgdk
+  LIBS += -lrt
   LDDEPS +=
-  ALL_LDFLAGS += $(LDFLAGS) -Llib/sampgdk/linux -s -shared
+  ALL_LDFLAGS += $(LDFLAGS) -s -shared
   LINKCMD = $(CXX) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
   endef
@@ -39,16 +39,16 @@ ifeq ($(config),debug)
   TARGETDIR = bin/linux/Debug
   TARGET = $(TARGETDIR)/streamer.so
   OBJDIR = obj/linux/Debug
-  DEFINES += -DBOOST_CHRONO_HEADER_ONLY -DSAMPGDK_STATIC -DSAMPGDK_AMALGAMATION
+  DEFINES += -DBOOST_CHRONO_HEADER_ONLY -DSAMPGDK_AMALGAMATION
   INCLUDES += -Iinclude
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -g -O0 -Wall
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CFLAGS)
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  LIBS += -lrt -lsampgdk
+  LIBS += -lrt
   LDDEPS +=
-  ALL_LDFLAGS += $(LDFLAGS) -Llib/sampgdk/linux -shared -rdynamic
+  ALL_LDFLAGS += $(LDFLAGS) -shared -rdynamic
   LINKCMD = $(CXX) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
   endef
@@ -146,7 +146,7 @@ endif
 $(OBJDIR)/error_code.o: lib/boost/system/src/error_code.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
-$(OBJDIR)/sampgdk.o: lib/sampgdk/src/sampgdk.c
+$(OBJDIR)/sampgdk.o: lib/sampgdk-amalgamation/sampgdk.c
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF $(@:%.o=%.d) -c "$<"
 $(OBJDIR)/plugin.o: lib/sdk/src/plugin.cpp
