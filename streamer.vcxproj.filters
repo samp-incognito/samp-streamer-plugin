@@ -155,10 +155,10 @@
     <ClCompile Include="src\utility.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\natives\vehicles.cpp">
+    <ClCompile Include="src\natives\pickups.cpp">
       <Filter>src\natives</Filter>
     </ClCompile>
-    <ClCompile Include="src\natives\pickups.cpp">
+    <ClCompile Include="src\natives\vehicles.cpp">
       <Filter>src\natives</Filter>
     </ClCompile>
   </ItemGroup>
