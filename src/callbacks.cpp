@@ -257,3 +257,210 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerWeaponShot(int playerid, int weaponid, in
 	}
 	return true;
 }
+
+PLUGIN_EXPORT bool PLUGIN_CALL OnVehicleSpawn(int vehicleid)
+{
+	for (boost::unordered_map<int, int>::iterator i = core->getStreamer()->internalVehicles.begin(); i != core->getStreamer()->internalVehicles.end(); ++i)
+	{
+		if (i->second == vehicleid)
+		{
+			int vehicleid = i->first;
+			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
+			{
+				int amxIndex = 0;
+				if (!amx_FindPublic(*a, "OnDynamicVehicleSpawn", &amxIndex))
+				{
+					amx_Push(*a, static_cast<cell>(vehicleid));
+					amx_Exec(*a, NULL, amxIndex);
+				}
+			}
+			break;
+		}
+	}
+	return true;
+}
+
+PLUGIN_EXPORT bool PLUGIN_CALL OnVehicleDeath(int vehicleid, int killerid)
+{
+	for (boost::unordered_map<int, int>::iterator i = core->getStreamer()->internalVehicles.begin(); i != core->getStreamer()->internalVehicles.end(); ++i)
+	{
+		if (i->second == vehicleid)
+		{
+			int vehicleid = i->first;
+			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
+			{
+				int amxIndex = 0;
+				if (!amx_FindPublic(*a, "OnDynamicVehicleDeath", &amxIndex))
+				{
+					amx_Push(*a, static_cast<cell>(killerid));
+					amx_Push(*a, static_cast<cell>(vehicleid));
+					amx_Exec(*a, NULL, amxIndex);
+				}
+			}
+			break;
+		}
+	}
+	return true;
+}
+
+PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerEnterVehicle(int playerid, int vehicleid, bool ispassenger)
+{
+	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+	if (p != core->getData()->players.end())
+	{
+		for (boost::unordered_map<int, int>::iterator i = core->getStreamer()->internalVehicles.begin(); i != core->getStreamer()->internalVehicles.end(); ++i)
+		{
+			if (i->second == vehicleid)
+			{
+				int vehicleid = i->first;
+				p->second.activeVehicle = vehicleid;
+				for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
+				{
+					int amxIndex = 0;
+					if (!amx_FindPublic(*a, "OnPlayerEnterDynamicVehicle", &amxIndex))
+					{
+						amx_Push(*a, static_cast<cell>(ispassenger));
+						amx_Push(*a, static_cast<cell>(vehicleid));
+						amx_Push(*a, static_cast<cell>(playerid));
+						amx_Exec(*a, NULL, amxIndex);
+					}
+				}
+				break;
+			}
+		}
+	}
+	return true;
+}
+
+PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerExitVehicle(int playerid, int vehicleid)
+{
+	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+	if (p != core->getData()->players.end())
+	{
+		for (boost::unordered_map<int, int>::iterator i = core->getStreamer()->internalVehicles.begin(); i != core->getStreamer()->internalVehicles.end(); ++i)
+		{
+			if (i->second == vehicleid)
+			{
+				int vehicleid = i->first;
+				p->second.activeVehicle = INVALID_VEHICLE_ID;
+				for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
+				{
+					int amxIndex = 0;
+					if (!amx_FindPublic(*a, "OnPlayerExitDynamicVehicle", &amxIndex))
+					{
+						amx_Push(*a, static_cast<cell>(vehicleid));
+						amx_Push(*a, static_cast<cell>(playerid));
+						amx_Exec(*a, NULL, amxIndex);
+					}
+				}
+				break;
+			}
+		}
+	}
+	return true;
+}
+
+PLUGIN_EXPORT bool PLUGIN_CALL OnVehicleMod(int playerid, int vehicleid, int componentid)
+{
+	for (boost::unordered_map<int, int>::iterator i = core->getStreamer()->internalVehicles.begin(); i != core->getStreamer()->internalVehicles.end(); ++i)
+	{
+		if (i->second == vehicleid)
+		{
+			int vehicleid = i->first;
+			boost::unordered_map<int, Item::SharedVehicle>::iterator v = core->getData()->vehicles.find(vehicleid);
+			if (!v->second->components.count(componentid)) {
+				v->second->components.insert(std::make_pair(GetVehicleComponentType(componentid), componentid));
+			}
+			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
+			{
+				int amxIndex = 0;
+				if (!amx_FindPublic(*a, "OnDynamicVehicleMod", &amxIndex))
+				{
+					amx_Push(*a, static_cast<cell>(componentid));
+					amx_Push(*a, static_cast<cell>(vehicleid));
+					amx_Push(*a, static_cast<cell>(playerid));
+					amx_Exec(*a, NULL, amxIndex);
+				}
+			}
+			break;
+		}
+	}
+	return true;
+}
+
+PLUGIN_EXPORT bool PLUGIN_CALL OnVehiclePaintjob(int playerid, int vehicleid, int paintjobid)
+{
+	for (boost::unordered_map<int, int>::iterator i = core->getStreamer()->internalVehicles.begin(); i != core->getStreamer()->internalVehicles.end(); ++i)
+	{
+		if (i->second == vehicleid)
+		{
+			int vehicleid = i->first;
+			boost::unordered_map<int, Item::SharedVehicle>::iterator v = core->getData()->vehicles.find(vehicleid);
+			v->second->paintjob = paintjobid;
+			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
+			{
+				int amxIndex = 0;
+				if (!amx_FindPublic(*a, "OnDynamicVehiclePaintjob", &amxIndex))
+				{
+					amx_Push(*a, static_cast<cell>(paintjobid));
+					amx_Push(*a, static_cast<cell>(vehicleid));
+					amx_Push(*a, static_cast<cell>(playerid));
+					amx_Exec(*a, NULL, amxIndex);
+				}
+			}
+			break;
+		}
+	}
+	return true;
+}
+
+PLUGIN_EXPORT bool PLUGIN_CALL OnVehicleRespray(int playerid, int vehicleid, int color1, int color2)
+{
+	for (boost::unordered_map<int, int>::iterator i = core->getStreamer()->internalVehicles.begin(); i != core->getStreamer()->internalVehicles.end(); ++i)
+	{
+		if (i->second == vehicleid)
+		{
+			int vehicleid = i->first;
+			boost::unordered_map<int, Item::SharedVehicle>::iterator v = core->getData()->vehicles.find(vehicleid);
+			v->second->color1 = color1;
+			v->second->color2 = color2;
+			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
+			{
+				int amxIndex = 0;
+				if (!amx_FindPublic(*a, "OnDynamicVehicleRespray", &amxIndex))
+				{
+					amx_Push(*a, static_cast<cell>(color2));
+					amx_Push(*a, static_cast<cell>(color1));
+					amx_Push(*a, static_cast<cell>(vehicleid));
+					amx_Push(*a, static_cast<cell>(playerid));
+					amx_Exec(*a, NULL, amxIndex);
+				}
+			}
+			break;
+		}
+	}
+	return true;
+}
+
+PLUGIN_EXPORT bool PLUGIN_CALL OnVehicleDamageStatusUpdate(int vehicleid, int playerid)
+{
+	for (boost::unordered_map<int, int>::iterator i = core->getStreamer()->internalVehicles.begin(); i != core->getStreamer()->internalVehicles.end(); ++i)
+	{
+		if (i->second == vehicleid)
+		{
+			int vehicleid = i->first;
+			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
+			{
+				int amxIndex = 0;
+				if (!amx_FindPublic(*a, "OnDynamicVehicleDamageStatusUpdate", &amxIndex))
+				{
+					amx_Push(*a, static_cast<cell>(playerid));
+					amx_Push(*a, static_cast<cell>(vehicleid));
+					amx_Exec(*a, NULL, amxIndex);
+				}
+			}
+			break;
+		}
+	}
+	return true;
+}

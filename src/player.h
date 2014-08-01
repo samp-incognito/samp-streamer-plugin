@@ -35,6 +35,7 @@ struct Player
 
 	int activeCheckpoint;
 	int activeRaceCheckpoint;
+	int activeVehicle;
 	int interiorID;
 	int playerID;
 	Eigen::Vector3f position;

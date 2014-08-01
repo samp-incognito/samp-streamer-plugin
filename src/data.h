@@ -44,6 +44,7 @@ public:
 	boost::unordered_map<int, Item::SharedPickup> pickups;
 	boost::unordered_map<int, Item::SharedRaceCheckpoint> raceCheckpoints;
 	boost::unordered_map<int, Item::SharedTextLabel> textLabels;
+	boost::unordered_map<int, Item::SharedVehicle> vehicles;
 
 	boost::unordered_map<int, Player> players;
 private:
@@ -54,6 +55,7 @@ private:
 	std::size_t maxPickups;
 	std::size_t maxRaceCheckpoints;
 	std::size_t maxTextLabels;
+	std::size_t maxVehicles;
 };
 
 #endif

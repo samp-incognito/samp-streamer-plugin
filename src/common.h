@@ -17,7 +17,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#define STREAMER_MAX_TYPES (7)
+#define STREAMER_MAX_TYPES (8)
 
 #define STREAMER_TYPE_OBJECT (0)
 #define STREAMER_TYPE_PICKUP (1)
@@ -26,6 +26,7 @@
 #define STREAMER_TYPE_MAP_ICON (4)
 #define STREAMER_TYPE_3D_TEXT_LABEL (5)
 #define STREAMER_TYPE_AREA (6)
+#define STREAMER_TYPE_VEHICLE (7)
 
 #define STREAMER_MAX_AREA_TYPES (5)
 
@@ -89,6 +90,7 @@ namespace Item
 	struct Pickup;
 	struct RaceCheckpoint;
 	struct TextLabel;
+	struct Vehicle;
 
 	typedef boost::intrusive_ptr<Area> SharedArea;
 	typedef boost::intrusive_ptr<Checkpoint> SharedCheckpoint;
@@ -97,6 +99,7 @@ namespace Item
 	typedef boost::intrusive_ptr<Pickup> SharedPickup;
 	typedef boost::intrusive_ptr<RaceCheckpoint> SharedRaceCheckpoint;
 	typedef boost::intrusive_ptr<TextLabel> SharedTextLabel;
+	typedef boost::intrusive_ptr<Vehicle> SharedVehicle;
 }
 
 namespace boost { namespace geometry { namespace traits {

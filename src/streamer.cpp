@@ -51,6 +51,7 @@ Streamer::Streamer()
 	visibleObjects = 500;
 	visiblePickups = 4096;
 	visibleTextLabels = 1024;
+	visibleVehicles = 2000;
 }
 
 std::size_t Streamer::getVisibleItems(int type)
@@ -72,6 +73,10 @@ std::size_t Streamer::getVisibleItems(int type)
 		case STREAMER_TYPE_3D_TEXT_LABEL:
 		{
 			return visibleTextLabels;
+		}
+		case STREAMER_TYPE_VEHICLE:
+		{
+			return visibleVehicles;
 		}
 	}
 	return 0;
@@ -99,6 +104,11 @@ bool Streamer::setVisibleItems(int type, std::size_t value)
 		case STREAMER_TYPE_3D_TEXT_LABEL:
 		{
 			visibleTextLabels = value;
+			return true;
+		}
+		case STREAMER_TYPE_VEHICLE:
+		{
+			visibleVehicles = true;
 			return true;
 		}
 	}
@@ -241,13 +251,17 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 	}
 	if (automatic)
 	{
+		if (!update)
+		{
+			core->getGrid()->findMinimalCells(player, cells);
+		}
 		if (!core->getData()->pickups.empty())
 		{
-			if (!update)
-			{
-				core->getGrid()->findMinimalCells(player, cells);
-			}
 			processPickups(player, cells);
+		}
+		if (!core->getData()->vehicles.empty())
+		{
+			processVehicles(player, cells);
 		}
 		if (!delta.isZero())
 		{
@@ -772,6 +786,84 @@ void Streamer::processTextLabels(Player &player, const std::vector<SharedCell> &
 		{
 			player.visibleCell->textLabels.insert(std::make_pair(d->second->textLabelID, d->second));
 		}
+	}
+}
+
+void Streamer::processVehicles(Player &player, const std::vector<SharedCell> &cells)
+{
+	static boost::unordered_map<int, Item::SharedVehicle> discoveredVehicles;
+	for (std::vector<SharedCell>::const_iterator c = cells.begin(); c != cells.end(); ++c)
+	{
+		for (boost::unordered_map<int, Item::SharedVehicle>::const_iterator p = (*c)->vehicles.begin(); p != (*c)->vehicles.end(); ++p)
+		{
+			boost::unordered_map<int, Item::SharedVehicle>::iterator d = discoveredVehicles.find(p->first);
+			if (d == discoveredVehicles.end())
+			{
+				if (checkPlayer(p->second->players, player.playerID, p->second->interiors, player.interiorID, p->second->worlds, player.worldID))
+				{
+					if (boost::geometry::comparable_distance(player.position, p->second->position) <= p->second->streamDistance)
+					{
+						boost::unordered_map<int, int>::iterator i = internalVehicles.find(p->first);
+						if (i == internalVehicles.end())
+						{
+							p->second->worldID = !p->second->worlds.empty() ? player.worldID : -1;
+						}
+						discoveredVehicles.insert(*p);
+					}
+				}
+			}
+		}
+	}
+	if (processingFinalPlayer)
+	{
+		boost::unordered_map<int, int>::iterator i = internalVehicles.begin();
+		while (i != internalVehicles.end())
+		{
+			boost::unordered_map<int, Item::SharedVehicle>::iterator d = discoveredVehicles.find(i->first);
+			if (d == discoveredVehicles.end())
+			{
+				// Save vehicle state
+				boost::unordered_map<int, Item::SharedVehicle>::iterator v = core->getData()->vehicles.find(i->second);
+				v->second->lastState = boost::intrusive_ptr<Item::Vehicle::State>(new Item::Vehicle::State);
+				GetVehiclePos(i->second, &v->second->lastState->position[0], &v->second->lastState->position[1], &v->second->lastState->position[2]);
+				GetVehicleZAngle(i->second, &v->second->lastState->angle);
+				GetVehicleHealth(i->second, &v->second->lastState->health);
+				GetVehicleDamageStatus(i->second, &v->second->lastState->panels, &v->second->lastState->doors, &v->second->lastState->lights, &v->second->lastState->tires);
+				DestroyVehicle(i->second);
+				i = internalVehicles.erase(i);
+			}
+			else
+			{
+				discoveredVehicles.erase(d);
+				++i;
+			}
+		}
+		for (boost::unordered_map<int, Item::SharedVehicle>::iterator d = discoveredVehicles.begin(); d != discoveredVehicles.end(); ++d)
+		{
+			if (internalVehicles.size() == visibleVehicles)
+			{
+				break;
+			}
+			int internalID = CreateVehicle(d->second->modelID, d->second->position[0], d->second->position[1], d->second->position[2], d->second->angle, d->second->color1, d->second->color2, d->second->respawn_delay);
+			if (internalID == INVALID_ALTERNATE_ID)
+			{
+				break;
+			}
+			// Restore vehicle state
+			if (d->second->lastState) {
+				SetVehiclePos(internalID, d->second->lastState->position[0], d->second->lastState->position[1], d->second->lastState->position[2]);
+				SetVehicleZAngle(internalID, d->second->lastState->angle);
+				SetVehicleHealth(internalID, d->second->lastState->health);
+				UpdateVehicleDamageStatus(internalID, d->second->lastState->panels, d->second->lastState->doors, d->second->lastState->lights, d->second->lastState->tires);
+				for (boost::unordered_map<int, int>::iterator c = d->second->components.begin(); c != d->second->components.end(); ++c) {
+					AddVehicleComponent(internalID, c->second);
+				}
+				ChangeVehiclePaintjob(internalID, d->second->paintjob);
+				d->second->lastState.reset();
+			}
+			internalVehicles.insert(std::make_pair(d->second->vehicleID, internalID));
+		}
+		discoveredVehicles.clear();
 	}
 }
 

@@ -186,6 +186,18 @@ void Utility::destroyAllItemsInInterface(AMX *amx)
 			++a;
 		}
 	}
+	boost::unordered_map<int, Item::SharedVehicle>::iterator v = core->getData()->vehicles.begin();
+	while (v != core->getData()->vehicles.end())
+	{
+		if (v->second->amx == amx)
+		{
+			v = destroyVehicle(v);
+		}
+		else
+		{
+			++v;
+		}
+	}
 }
 
 boost::unordered_map<int, Item::SharedArea>::iterator Utility::destroyArea(boost::unordered_map<int, Item::SharedArea>::iterator a)
@@ -301,6 +313,20 @@ boost::unordered_map<int, Item::SharedTextLabel>::iterator Utility::destroyTextL
 	core->getGrid()->removeTextLabel(t->second);
 	return core->getData()->textLabels.erase(t);
 }
+
+boost::unordered_map<int, Item::SharedVehicle>::iterator Utility::destroyVehicle(boost::unordered_map<int, Item::SharedVehicle>::iterator v)
+{
+	Item::Vehicle::identifier.remove(v->first, core->getData()->vehicles.size());
+	boost::unordered_map<int, int>::iterator i = core->getStreamer()->internalVehicles.find(v->first);
+	if (i != core->getStreamer()->internalVehicles.end())
+	{
+		DestroyVehicle(i->second);
+		core->getStreamer()->internalVehicles.quick_erase(i);
+	}
+	core->getGrid()->removeVehicle(v->second);
+	return core->getData()->vehicles.erase(v);
+}
+
 
 bool Utility::isPointInArea(const Eigen::Vector3f &point, const Item::SharedArea &area)
 {
