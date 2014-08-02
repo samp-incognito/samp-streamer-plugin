@@ -296,7 +296,7 @@ namespace Item
 		int interior;
 		int worldID;
 		float health;
-		unsigned char carmod[14];
+		std::list<int> carmods;
 		std::string numberplate;
 
 		int vehicleID;
