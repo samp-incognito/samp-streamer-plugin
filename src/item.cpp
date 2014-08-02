@@ -40,4 +40,9 @@ Item::Pickup::Pickup() : references(0) {}
 Item::RaceCheckpoint::RaceCheckpoint() : references(0) {}
 Item::TextLabel::TextLabel() : references(0) {}
 Item::TextLabel::Attach::Attach() : references(0) {}
+<<<<<<< HEAD
 Item::Vehicle::Vehicle() : references(0) {}
+=======
+Item::Vehicle::Vehicle() : references(0) {}
+Item::Vehicle::State::State() : references(0) {}
+>>>>>>> eb58555d09afd5eef80ed420a45e41a2f820cc69

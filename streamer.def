@@ -7,3 +7,21 @@ EXPORTS
 	AmxLoad
 	AmxUnload
 	ProcessTick
+	OnPlayerConnect
+	OnPlayerDisconnect
+	OnPlayerEnterCheckpoint
+	OnPlayerLeaveCheckpoint
+	OnPlayerEnterRaceCheckpoint
+	OnPlayerLeaveRaceCheckpoint
+	OnPlayerPickUpPickup
+	OnPlayerEditObject
+	OnPlayerSelectObject
+	OnPlayerWeaponShot
+	OnVehicleSpawn
+	OnVehicleDeath
+	OnPlayerEnterVehicle
+	OnPlayerExitVehicle
+	OnVehicleMod
+	OnVehiclePaintjob
+	OnVehicleRespray
+	OnVehicleDamageStatusUpdate

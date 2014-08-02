@@ -29,6 +29,7 @@ Player::Player(int playerID) : playerID(playerID)
 {
 	activeCheckpoint = 0;
 	activeRaceCheckpoint = 0;
+	activeVehicle = INVALID_VEHICLE_ID;
 	enabledItems.set();
 	interiorID = 0;
 	position.setZero();

@@ -30,11 +30,15 @@
 
 #include <Eigen/Core>
 
+<<<<<<< HEAD
 #include <sampgdk/a_objects.h>
 #include <sampgdk/a_vehicles.h>
 #include <sampgdk/a_players.h>
 #include <sampgdk/a_samp.h>
 #include <sampgdk/core.h>
+=======
+#include <sampgdk/sampgdk.h>
+>>>>>>> eb58555d09afd5eef80ed420a45e41a2f820cc69
 
 #include <set>
 #include <sstream>
@@ -190,6 +194,18 @@ void Utility::destroyAllItemsInInterface(AMX *amx)
 			++a;
 		}
 	}
+	boost::unordered_map<int, Item::SharedVehicle>::iterator v = core->getData()->vehicles.begin();
+	while (v != core->getData()->vehicles.end())
+	{
+		if (v->second->amx == amx)
+		{
+			v = destroyVehicle(v);
+		}
+		else
+		{
+			++v;
+		}
+	}
 }
 
 boost::unordered_map<int, Item::SharedArea>::iterator Utility::destroyArea(boost::unordered_map<int, Item::SharedArea>::iterator a)
@@ -306,19 +322,34 @@ boost::unordered_map<int, Item::SharedTextLabel>::iterator Utility::destroyTextL
 	return core->getData()->textLabels.erase(t);
 }
 
+<<<<<<< HEAD
 boost::unordered_map<int, Item::SharedVehicle>::iterator Utility::destroyVehicle(boost::unordered_map<int, Item::SharedVehicle>::iterator p)
 {
 	Item::Vehicle::identifier.remove(p->first, core->getData()->pickups.size());
 	boost::unordered_map<int, int>::iterator i = core->getStreamer()->internalVehicles.find(p->first);
+=======
+boost::unordered_map<int, Item::SharedVehicle>::iterator Utility::destroyVehicle(boost::unordered_map<int, Item::SharedVehicle>::iterator v)
+{
+	Item::Vehicle::identifier.remove(v->first, core->getData()->vehicles.size());
+	boost::unordered_map<int, int>::iterator i = core->getStreamer()->internalVehicles.find(v->first);
+>>>>>>> eb58555d09afd5eef80ed420a45e41a2f820cc69
 	if (i != core->getStreamer()->internalVehicles.end())
 	{
 		DestroyVehicle(i->second);
 		core->getStreamer()->internalVehicles.quick_erase(i);
 	}
+<<<<<<< HEAD
 	core->getGrid()->removeVehicle(p->second);
 	return core->getData()->vehicles.erase(p);
 }
 
+=======
+	core->getGrid()->removeVehicle(v->second);
+	return core->getData()->vehicles.erase(v);
+}
+
+
+>>>>>>> eb58555d09afd5eef80ed420a45e41a2f820cc69
 bool Utility::isPointInArea(const Eigen::Vector3f &point, const Item::SharedArea &area)
 {
 	switch (area->type)

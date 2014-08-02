@@ -28,7 +28,7 @@
 #define STREAMER_OPLRC (8)
 #define STREAMER_OPWS (9)
 
-#include <sampgdk/core.h>
+#include <sampgdk/sampgdk.h>
 
 #define CHECK_PARAMS(m, n) \
 	if (params[0] != (m * 4)) \
@@ -184,6 +184,36 @@ namespace Natives
 	cell AMX_NATIVE_CALL CountDynamic3DTextLabels(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL DestroyAllDynamicAreas(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL CountDynamicAreas(AMX *amx, cell *params);
+	// Vehicles
+	cell AMX_NATIVE_CALL CreateDynamicVehicle(AMX *amx, cell *params); // native CreateDynamicVehicle(modelid, Float:x, Float:y, Float:z Float:angle, color1, color2, worldid = -1, interiorid = -1, playerid = -1, Float:streamdistance = 100.0, respawn_delay = 60)
+	cell AMX_NATIVE_CALL DestroyDynamicVehicle(AMX *amx, cell *params); // native DestroyDynamicVehicle(vehicleid)
+	cell AMX_NATIVE_CALL IsValidDynamicVehicle(AMX *amx, cell *params); // native IsValidDynamicVehicle(vehicleid)
+	cell AMX_NATIVE_CALL GetDynamicVehicleModel(AMX *amx, cell *params); // native GetDynamicVehicleModel(vehicleid)
+	cell AMX_NATIVE_CALL GetDynamicVehiclePos(AMX *amx, cell *params); // native GetDynamicVehicleZAngle(vehicleid, &Float:x, &Float:y, &Float:z)
+	cell AMX_NATIVE_CALL SetDynamicVehiclePos(AMX *amx, cell *params); // native SetDynamicVehicleZAngle(vehicleid, Float:x, Float:y, Float:z)
+	cell AMX_NATIVE_CALL GetDynamicVehicleZAngle(AMX *amx, cell *params); // native GetDynamicVehicleZAngle(vehicleid, &Float:angle)
+	cell AMX_NATIVE_CALL SetDynamicVehicleZAngle(AMX *amx, cell *params); // native SetDynamicVehicleZAngle(vehicleid, Float:angle)
+	cell AMX_NATIVE_CALL GetDynamicVehicleDistanceFromPoint(AMX *amx, cell *params); // native GetDynamicVehicleDistanceFromPoint(vehicleid, Float:x, Float:y, Float:z)
+	cell AMX_NATIVE_CALL SetDynamicVehicleColor(AMX *amx, cell *params); // native SetDynamicVehicleColor(vehicleid, color1, color2)
+	cell AMX_NATIVE_CALL GetDynamicVehicleColor(AMX *amx, cell *params); // native GetDynamicVehicleColor(vehicleid, &color1, &color2)
+	cell AMX_NATIVE_CALL SetDynamicVehiclePaintjob(AMX *amx, cell *params); // native SetDynamicVehicleColor(vehicleid, paintjobid)
+	cell AMX_NATIVE_CALL GetDynamicVehiclePaintjob(AMX *amx, cell *params); // native GetDynamicVehiclePaintjob(vehicleid, &paintjobid)
+	cell AMX_NATIVE_CALL SetDynamicVehicleNumberPlate(AMX *amx, cell *params); // native SetDynamicVehicleNumberPlate(vehicleid, numberplate[])
+	cell AMX_NATIVE_CALL GetDynamicVehicleNumberPlate(AMX *amx, cell *params); // native GetDynamicVehicleNumberPlate(vehicleid, numberplate[], length = sizeof numberplate)
+	cell AMX_NATIVE_CALL SetDynamicVehicleToRespawn(AMX *amx, cell *params); // native SetDynamicVehicleToRespawn(vehicleid)
+	cell AMX_NATIVE_CALL AddDynamicVehicleComponent(AMX *amx, cell *params); // native AddDynamicVehicleComponent(vehicleid, componentid)
+	cell AMX_NATIVE_CALL RemoveDynamicVehicleComponent(AMX *amx, cell *params); // native RemoveDynamicVehicleComponent(vehicleid, componentid)
+	cell AMX_NATIVE_CALL GetDynamicVehicleComponentInSlot(AMX *amx, cell *params); // native GetDynamicVehicleComponentInSlot(vehicleid, slot)
+	cell AMX_NATIVE_CALL GetDynamicVehicleHealth(AMX *amx, cell *params); // native GetDynamicVehicleHealth(vehicleid, &Float:health)
+	cell AMX_NATIVE_CALL SetDynamicVehicleHealth(AMX *amx, cell *params); // native SetDynamicVehicleHealth(vehicleid, Float:health)
+	cell AMX_NATIVE_CALL GetDynamicVehicleDamageStatus(AMX *amx, cell *params); // native GetDynamicVehicleDamageStatus(vehicleid, &panels, &doors, &lights, &tires)
+	cell AMX_NATIVE_CALL SetDynamicVehicleDamageStatus(AMX *amx, cell *params); // native SetDynamicVehicleDamageStatus(vehicleid, panels, doors, lights, tires)
+	//cell AMX_NATIVE_CALL GetPlayerDynamicVehicleSeat(AMX *amx, cell *params); // #define GetPlayerDynamicVehicleSeat(%0) (GetPlayerVehicleSeat(%0))
+	cell AMX_NATIVE_CALL GetPlayerDynamicVehicleID(AMX *amx, cell *params); // native GetPlayerDynamicVehicleID(playerid)
+	cell AMX_NATIVE_CALL PutPlayerInDynamicVehicle(AMX *amx, cell *params); // native PutPlayerInDynamicVehicle(playerid, vehicleid, seatid)
+	//cell AMX_NATIVE_CALL RemovePlayerFromDynamicVehicle(AMX *amx, cell *params);  // #define RemovePlayerFromDynamicVehicle(%0) (RemovePlayerFromVehicle(%0))
+	//cell AMX_NATIVE_CALL IsPlayerInDynamicVehicle(AMX *amx, cell *params); // #define IsPlayerInDynamicVehicle(%0,%1) (GetPlayerDynamicVehicleID(%0) == %1)
+	//cell AMX_NATIVE_CALL IsPlayerInAnyDynamicVehicle(AMX *amx, cell *params); // #define IsPlayerInAnyDynamicVehicle(%0,%1) (GetPlayerDynamicVehicleID(%0) != INVALID_VEHICLE_ID)
 }
 
 #endif

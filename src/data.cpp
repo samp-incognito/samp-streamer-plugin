@@ -27,6 +27,7 @@ Data::Data()
 	maxPickups = std::numeric_limits<int>::max();
 	maxRaceCheckpoints = std::numeric_limits<int>::max();
 	maxTextLabels = std::numeric_limits<int>::max();
+	maxVehicles = std::numeric_limits<int>::max();
 }
 
 std::size_t Data::getMaxItems(int type)
@@ -64,6 +65,10 @@ std::size_t Data::getMaxItems(int type)
 		case STREAMER_TYPE_AREA:
 		{
 			return maxAreas;
+		}
+		case STREAMER_TYPE_VEHICLE:
+		{
+			return maxVehicles;
 		}
 	}
 	return 0;
@@ -106,6 +111,11 @@ bool Data::setMaxItems(int type, std::size_t value)
 		case STREAMER_TYPE_AREA:
 		{
 			maxAreas = value;
+			return true;
+		}
+		case STREAMER_TYPE_VEHICLE:
+		{
+			maxVehicles = value;
 			return true;
 		}
 	}

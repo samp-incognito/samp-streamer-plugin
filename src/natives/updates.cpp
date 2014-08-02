@@ -25,7 +25,7 @@
 
 #include <Eigen/Core>
 
-#include <sampgdk/a_players.h>
+#include <sampgdk/sampgdk.h>
 
 #include <bitset>
 

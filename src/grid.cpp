@@ -216,9 +216,13 @@ void Grid::addVehicle(const Item::SharedVehicle &vehicle)
 	}
 	else
 	{
+<<<<<<< HEAD
 		Eigen::Vector2f position = Eigen::Vector2f::Zero();
 		position = Eigen::Vector2f(vehicle->position[0], vehicle->position[1]);;
 		CellID cellID = getCellID(position);
+=======
+		CellID cellID = getCellID(Eigen::Vector2f(vehicle->position[0], vehicle->position[1]));
+>>>>>>> eb58555d09afd5eef80ed420a45e41a2f820cc69
 		cells[cellID]->vehicles.insert(std::make_pair(vehicle->vehicleID, vehicle));
 		vehicle->cell = cells[cellID];
 	}
@@ -257,9 +261,15 @@ void Grid::rebuildGrid()
 	{
 		addTextLabel(t->second);
 	}
+<<<<<<< HEAD
 	for (boost::unordered_map<int, Item::SharedVehicle>::iterator p = core->getData()->vehicles.begin(); p != core->getData()->vehicles.end(); ++p)
 	{
 		addVehicle(p->second);
+=======
+	for (boost::unordered_map<int, Item::SharedVehicle>::iterator t = core->getData()->vehicles.begin(); t != core->getData()->vehicles.end(); ++t)
+	{
+		addVehicle(t->second);
+>>>>>>> eb58555d09afd5eef80ed420a45e41a2f820cc69
 	}
 }
 

@@ -32,8 +32,7 @@
 
 #include <Eigen/Core>
 
-#include <sampgdk/a_samp.h>
-#include <sampgdk/sdk.h>
+#include <sampgdk/sampgdk.h>
 
 #include <bitset>
 #include <string>
@@ -285,6 +284,7 @@ namespace Item
 
 		AMX *amx;
 		SharedCell cell;
+<<<<<<< HEAD
 		
 		int modelID;
 		Eigen::Vector3f position;
@@ -301,13 +301,50 @@ namespace Item
 
 		int vehicleID;
 		float streamDistance;
+=======
+		int modelID;
+		int vehicleID;
+		Eigen::Vector3f position;
+		int references;
+		float streamDistance;
+		
+		float angle;
+		int color1;
+		int color2;
+		int paintjob;
+		int respawn_delay;
+		int worldID;
+		std::string plate_number;
+		boost::unordered_map<int, int> components;
+
+		struct State
+		{
+			State();
+
+			Eigen::Vector3f position;
+			float angle;
+
+			float health;
+			int panels;
+			int doors;
+			int lights;
+			int tires;
+
+			int references;
+		};
+
+		boost::intrusive_ptr<State> lastState;
+>>>>>>> eb58555d09afd5eef80ed420a45e41a2f820cc69
 
 		std::vector<int> extras;
 		boost::unordered_set<int> interiors;
 		std::bitset<MAX_PLAYERS> players;
 		boost::unordered_set<int> worlds;
 
+<<<<<<< HEAD
 		int references;
+=======
+>>>>>>> eb58555d09afd5eef80ed420a45e41a2f820cc69
 		static Identifier identifier;
 	};
 }

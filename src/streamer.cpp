@@ -31,11 +31,7 @@
 
 #include <Eigen/Core>
 
-#include <sampgdk/a_objects.h>
-#include <sampgdk/a_players.h>
-#include <sampgdk/a_samp.h>
-#include <sampgdk/a_vehicles.h>
-#include <sampgdk/sdk.h>
+#include <sampgdk/sampgdk.h>
 
 #include <bitset>
 #include <limits>
@@ -55,6 +51,7 @@ Streamer::Streamer()
 	visibleObjects = 500;
 	visiblePickups = 4096;
 	visibleTextLabels = 1024;
+	visibleVehicles = 2000;
 }
 
 std::size_t Streamer::getVisibleItems(int type)
@@ -76,6 +73,10 @@ std::size_t Streamer::getVisibleItems(int type)
 		case STREAMER_TYPE_3D_TEXT_LABEL:
 		{
 			return visibleTextLabels;
+		}
+		case STREAMER_TYPE_VEHICLE:
+		{
+			return visibleVehicles;
 		}
 	}
 	return 0;
@@ -103,6 +104,11 @@ bool Streamer::setVisibleItems(int type, std::size_t value)
 		case STREAMER_TYPE_3D_TEXT_LABEL:
 		{
 			visibleTextLabels = value;
+			return true;
+		}
+		case STREAMER_TYPE_VEHICLE:
+		{
+			visibleVehicles = true;
 			return true;
 		}
 	}
@@ -245,20 +251,26 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 	}
 	if (automatic)
 	{
+		if (!update)
+		{
+			core->getGrid()->findMinimalCells(player, cells);
+		}
 		if (!core->getData()->pickups.empty())
 		{
-			if (!update)
-			{
-				core->getGrid()->findMinimalCells(player, cells);
-			}
 			processPickups(player, cells);
 		}
+<<<<<<< HEAD
 		
+=======
+>>>>>>> eb58555d09afd5eef80ed420a45e41a2f820cc69
 		if (!core->getData()->vehicles.empty())
 		{
 			processVehicles(player, cells);
 		}
+<<<<<<< HEAD
 
+=======
+>>>>>>> eb58555d09afd5eef80ed420a45e41a2f820cc69
 		if (!delta.isZero())
 		{
 			player.position = position;
@@ -818,6 +830,16 @@ void Streamer::processVehicles(Player &player, const std::vector<SharedCell> &ce
 			boost::unordered_map<int, Item::SharedVehicle>::iterator d = discoveredVehicles.find(i->first);
 			if (d == discoveredVehicles.end())
 			{
+<<<<<<< HEAD
+=======
+				// Save vehicle state
+				boost::unordered_map<int, Item::SharedVehicle>::iterator v = core->getData()->vehicles.find(i->second);
+				v->second->lastState = boost::intrusive_ptr<Item::Vehicle::State>(new Item::Vehicle::State);
+				GetVehiclePos(i->second, &v->second->lastState->position[0], &v->second->lastState->position[1], &v->second->lastState->position[2]);
+				GetVehicleZAngle(i->second, &v->second->lastState->angle);
+				GetVehicleHealth(i->second, &v->second->lastState->health);
+				GetVehicleDamageStatus(i->second, &v->second->lastState->panels, &v->second->lastState->doors, &v->second->lastState->lights, &v->second->lastState->tires);
+>>>>>>> eb58555d09afd5eef80ed420a45e41a2f820cc69
 				DestroyVehicle(i->second);
 				i = internalVehicles.erase(i);
 			}
@@ -833,11 +855,30 @@ void Streamer::processVehicles(Player &player, const std::vector<SharedCell> &ce
 			{
 				break;
 			}
+<<<<<<< HEAD
 			int internalID = CreateVehicle(d->second->modelID, d->second->position[0], d->second->position[1], d->second->position[2], d->second->angle, d->second->color1, d->second->color2, d->second->respawndelay);
+=======
+			int internalID = CreateVehicle(d->second->modelID, d->second->position[0], d->second->position[1], d->second->position[2], d->second->angle, d->second->color1, d->second->color2, d->second->respawn_delay);
+>>>>>>> eb58555d09afd5eef80ed420a45e41a2f820cc69
 			if (internalID == INVALID_ALTERNATE_ID)
 			{
 				break;
 			}
+<<<<<<< HEAD
+=======
+			// Restore vehicle state
+			if (d->second->lastState) {
+				SetVehiclePos(internalID, d->second->lastState->position[0], d->second->lastState->position[1], d->second->lastState->position[2]);
+				SetVehicleZAngle(internalID, d->second->lastState->angle);
+				SetVehicleHealth(internalID, d->second->lastState->health);
+				UpdateVehicleDamageStatus(internalID, d->second->lastState->panels, d->second->lastState->doors, d->second->lastState->lights, d->second->lastState->tires);
+				for (boost::unordered_map<int, int>::iterator c = d->second->components.begin(); c != d->second->components.end(); ++c) {
+					AddVehicleComponent(internalID, c->second);
+				}
+				ChangeVehiclePaintjob(internalID, d->second->paintjob);
+				d->second->lastState.reset();
+			}
+>>>>>>> eb58555d09afd5eef80ed420a45e41a2f820cc69
 			internalVehicles.insert(std::make_pair(d->second->vehicleID, internalID));
 		}
 		discoveredVehicles.clear();

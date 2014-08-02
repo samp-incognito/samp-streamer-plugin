@@ -72,6 +72,7 @@ private:
 	void processMapIcons(Player &player, const std::vector<SharedCell> &cells);
 	void processObjects(Player &player, const std::vector<SharedCell> &cells);
 	void processPickups(Player &player, const std::vector<SharedCell> &cells);
+	void processVehicles(Player &player, const std::vector<SharedCell> &cells);
 	void processRaceCheckpoints(Player &player, const std::vector<SharedCell> &cells);
 	void processTextLabels(Player &player, const std::vector<SharedCell> &cells);
 	void processVehicles(Player &player, const std::vector<SharedCell> &cells);
@@ -89,6 +90,7 @@ private:
 	std::size_t visibleMapIcons;
 	std::size_t visibleObjects;
 	std::size_t visiblePickups;
+	std::size_t visibleVehicles;
 	std::size_t visibleTextLabels;
 	std::size_t visibleVehicles;
 
