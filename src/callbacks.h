@@ -17,7 +17,7 @@
 #ifndef EVENTS_H
 #define EVENTS_H
 
-#include <sampgdk/sdk.h>
+#include "common.h"
 
 class Callbacks
 {

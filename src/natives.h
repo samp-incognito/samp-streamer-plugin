@@ -28,7 +28,7 @@
 #define STREAMER_OPLRC (8)
 #define STREAMER_OPWS (9)
 
-#include <sampgdk/core.h>
+#include "common.h"
 
 #define CHECK_PARAMS(m, n) \
 	if (params[0] != (m * 4)) \

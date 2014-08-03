@@ -31,8 +31,6 @@
 
 #include <Eigen/Core>
 
-#include <sampgdk/core.h>
-
 cell AMX_NATIVE_CALL Natives::CreateDynamicObjectEx(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(15, "CreateDynamicObjectEx");

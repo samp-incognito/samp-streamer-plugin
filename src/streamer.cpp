@@ -31,12 +31,6 @@
 
 #include <Eigen/Core>
 
-#include <sampgdk/a_objects.h>
-#include <sampgdk/a_players.h>
-#include <sampgdk/a_samp.h>
-#include <sampgdk/a_vehicles.h>
-#include <sampgdk/sdk.h>
-
 #include <bitset>
 #include <limits>
 #include <map>

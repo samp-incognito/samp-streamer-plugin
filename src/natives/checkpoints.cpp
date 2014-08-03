@@ -29,8 +29,6 @@
 
 #include <Eigen/Core>
 
-#include <sampgdk/a_players.h>
-
 cell AMX_NATIVE_CALL Natives::CreateDynamicCP(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(8, "CreateDynamicCP");

@@ -25,8 +25,6 @@
 
 #include <Eigen/Core>
 
-#include <sampgdk/a_players.h>
-
 #include <bitset>
 
 cell AMX_NATIVE_CALL Natives::Streamer_ProcessActiveItems(AMX *amx, cell *params)

@@ -22,10 +22,6 @@
 #include <boost/scoped_ptr.hpp>
 #include <boost/unordered_map.hpp>
 
-#include <sampgdk/a_samp.h>
-#include <sampgdk/core.h>
-#include <sampgdk/sdk.h>
-
 #include <set>
 
 bool Callbacks::OnPlayerConnect(int playerid)
