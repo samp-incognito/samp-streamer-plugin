@@ -20,6 +20,8 @@
 #include "main.h"
 #include "utility.h"
 
+#include <sampgdk/sdk.h>
+
 namespace Manipulation
 {
 	enum

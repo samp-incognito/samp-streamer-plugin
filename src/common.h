@@ -63,14 +63,7 @@ inline void intrusive_ptr_release(T *t)
 
 #include <Eigen/Core>
 
-#include <sampgdk/sampgdk.h>
-
 #include <utility>
-
-#ifdef MAX_PLAYERS
-	#undef MAX_PLAYERS
-	#define MAX_PLAYERS (1000)
-#endif
 
 class Cell;
 class Data;

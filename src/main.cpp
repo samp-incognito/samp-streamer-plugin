@@ -22,7 +22,11 @@
 
 #include <boost/scoped_ptr.hpp>
 
+#include <sampgdk/core.h>
+
 #include <set>
+
+typedef void (*logprintf_t)(const char*, ...);
 
 extern void *pAMXFunctions;
 
@@ -35,15 +39,16 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 {
 	core.reset(new Core);
 	pAMXFunctions = ppData[PLUGIN_DATA_AMX_EXPORTS];
-	sampgdk::logprintf("\n\n*** Streamer Plugin v%s by Incognito loaded ***\n", PLUGIN_VERSION);
-	return sampgdk::Load(ppData);
+	logprintf_t logprintf = (logprintf_t)ppData[PLUGIN_DATA_LOGPRINTF];
+	logprintf("\n\n*** Streamer Plugin v%s by Incognito loaded ***\n", PLUGIN_VERSION);
+	return sampgdk::Load(sampgdk::GetCurrentPluginHandle(), ppData);
 }
 
 PLUGIN_EXPORT void PLUGIN_CALL Unload()
 {
 	core.reset();
 	sampgdk::logprintf("\n\n*** Streamer Plugin v%s by Incognito unloaded ***\n", PLUGIN_VERSION);
-	sampgdk::Unload();
+	sampgdk::Unload(sampgdk::GetCurrentPluginHandle());
 }
 
 AMX_NATIVE_INFO natives[] =

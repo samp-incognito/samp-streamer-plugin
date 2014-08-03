@@ -29,6 +29,8 @@
 
 #include <Eigen/Core>
 
+#include <sampgdk/a_players.h>
+
 cell AMX_NATIVE_CALL Natives::CreateDynamicRaceCP(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(12, "CreateDynamicRaceCP");

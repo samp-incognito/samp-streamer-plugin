@@ -24,6 +24,8 @@
 #include <boost/scoped_ptr.hpp>
 #include <boost/unordered_map.hpp>
 
+#include <sampgdk/core.h>
+
 cell AMX_NATIVE_CALL Natives::Streamer_GetFloatData(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(4, "Streamer_GetFloatData");

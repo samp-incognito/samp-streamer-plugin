@@ -30,6 +30,10 @@
 
 #include <Eigen/Core>
 
+#include <sampgdk/a_objects.h>
+#include <sampgdk/a_players.h>
+#include <sampgdk/core.h>
+
 #include <limits>
 #include <string>
 

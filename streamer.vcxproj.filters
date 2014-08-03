@@ -13,12 +13,6 @@
     <Filter Include="lib\boost\system\src">
       <UniqueIdentifier>{BD7179BB-A900-0385-521F-17803E8D132B}</UniqueIdentifier>
     </Filter>
-    <Filter Include="lib\sampgdk">
-      <UniqueIdentifier>{126A364D-7E1F-AF42-0714-A91973C8A546}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="lib\sampgdk\src">
-      <UniqueIdentifier>{29E1BC77-956C-2A3C-9E7D-AD300A88863C}</UniqueIdentifier>
-    </Filter>
     <Filter Include="lib\sdk">
       <UniqueIdentifier>{8D064879-F9E5-C614-02FE-51EB6E5C2D76}</UniqueIdentifier>
     </Filter>
@@ -82,9 +76,6 @@
   <ItemGroup>
     <ClCompile Include="lib\boost\system\src\error_code.cpp">
       <Filter>lib\boost\system\src</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\sampgdk\src\sampgdk.c">
-      <Filter>lib\sampgdk\src</Filter>
     </ClCompile>
     <ClCompile Include="lib\sdk\src\plugin.cpp">
       <Filter>lib\sdk\src</Filter>

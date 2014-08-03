@@ -31,6 +31,8 @@
 
 #include <Eigen/Core>
 
+#include <sampgdk/core.h>
+
 cell AMX_NATIVE_CALL Natives::CreateDynamicCircle(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(6, "CreateDynamicCircle");

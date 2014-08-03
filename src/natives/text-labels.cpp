@@ -29,6 +29,8 @@
 
 #include <Eigen/Core>
 
+#include <sampgdk/a_samp.h>
+
 #include <string>
 
 cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabel(AMX *amx, cell *params)
