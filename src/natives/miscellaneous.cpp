@@ -31,9 +31,7 @@
 
 #include <Eigen/Core>
 
-#include <sampgdk/a_players.h>
-#include <sampgdk/a_objects.h>
-#include <sampgdk/core.h>
+#include <sampgdk/sampgdk.h>
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 {

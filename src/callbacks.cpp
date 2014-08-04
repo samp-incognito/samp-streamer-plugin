@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 
-#include "callbacks.h"
-
 #include "core.h"
 
 #include <boost/intrusive_ptr.hpp>
 #include <boost/scoped_ptr.hpp>
 #include <boost/unordered_map.hpp>
 
-#include <sampgdk/a_samp.h>
-#include <sampgdk/core.h>
-#include <sampgdk/sdk.h>
+#include <sampgdk/sampgdk.h>
 
 #include <set>
 
-bool Callbacks::OnPlayerConnect(int playerid)
+PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerConnect(int playerid)
 {
 	if (playerid >= 0 && playerid < MAX_PLAYERS)
 	{
@@ -42,27 +38,18 @@ bool Callbacks::OnPlayerConnect(int playerid)
 	return true;
 }
 
-bool Callbacks::OnPlayerDisconnect(int playerid, int reason)
+PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerDisconnect(int playerid, int reason)
 {
 	core->getData()->players.erase(playerid);
 	return true;
 }
-
-bool Callbacks::OnPlayerEnterCheckpoint(int playerid)
+PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerEnterCheckpoint(int playerid)
 {
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 	if (p != core->getData()->players.end())
 	{
 		if (p->second.activeCheckpoint != p->second.visibleCheckpoint)
 		{
-			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(p->second.activeCheckpoint);
-			if (c != core->getData()->checkpoints.end())
-			{
-				if (c->second->amx != interface)
-				{
-					return true;
-				}
-			}
 			int checkpointid = p->second.visibleCheckpoint;
 			p->second.activeCheckpoint = checkpointid;
 			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
@@ -80,21 +67,13 @@ bool Callbacks::OnPlayerEnterCheckpoint(int playerid)
 	return true;
 }
 
-bool Callbacks::OnPlayerLeaveCheckpoint(int playerid)
+PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerLeaveCheckpoint(int playerid)
 {
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 	if (p != core->getData()->players.end())
 	{
 		if (p->second.activeCheckpoint == p->second.visibleCheckpoint)
 		{
-			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(p->second.activeCheckpoint);
-			if (c != core->getData()->checkpoints.end())
-			{
-				if (c->second->amx != interface)
-				{
-					return true;
-				}
-			}
 			int checkpointid = p->second.activeCheckpoint;
 			p->second.activeCheckpoint = 0;
 			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
@@ -112,21 +91,13 @@ bool Callbacks::OnPlayerLeaveCheckpoint(int playerid)
 	return true;
 }
 
-bool Callbacks::OnPlayerEnterRaceCheckpoint(int playerid)
+PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerEnterRaceCheckpoint(int playerid)
 {
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 	if (p != core->getData()->players.end())
 	{
 		if (p->second.activeRaceCheckpoint != p->second.visibleRaceCheckpoint)
 		{
-			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(p->second.activeRaceCheckpoint);
-			if (r != core->getData()->raceCheckpoints.end())
-			{
-				if (r->second->amx != interface)
-				{
-					return true;
-				}
-			}
 			int checkpointid = p->second.visibleRaceCheckpoint;
 			p->second.activeRaceCheckpoint = checkpointid;
 			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
@@ -144,21 +115,13 @@ bool Callbacks::OnPlayerEnterRaceCheckpoint(int playerid)
 	return true;
 }
 
-bool Callbacks::OnPlayerLeaveRaceCheckpoint(int playerid)
+PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerLeaveRaceCheckpoint(int playerid)
 {
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 	if (p != core->getData()->players.end())
 	{
 		if (p->second.activeRaceCheckpoint == p->second.visibleRaceCheckpoint)
 		{
-			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(p->second.activeRaceCheckpoint);
-			if (r != core->getData()->raceCheckpoints.end())
-			{
-				if (r->second->amx != interface)
-				{
-					return true;
-				}
-			}
 			int checkpointid = p->second.activeRaceCheckpoint;
 			p->second.activeRaceCheckpoint = 0;
 			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
@@ -176,20 +139,12 @@ bool Callbacks::OnPlayerLeaveRaceCheckpoint(int playerid)
 	return true;
 }
 
-bool Callbacks::OnPlayerPickUpPickup(int playerid, int pickupid)
+PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerPickUpPickup(int playerid, int pickupid)
 {
 	for (boost::unordered_map<int, int>::iterator i = core->getStreamer()->internalPickups.begin(); i != core->getStreamer()->internalPickups.end(); ++i)
 	{
 		if (i->second == pickupid)
 		{
-			boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(i->first);
-			if (p != core->getData()->pickups.end())
-			{
-				if (p->second->amx != interface)
-				{
-					break;
-				}
-			}
 			int pickupid = i->first;
 			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
 			{
@@ -207,7 +162,7 @@ bool Callbacks::OnPlayerPickUpPickup(int playerid, int pickupid)
 	return true;
 }
 
-bool Callbacks::OnPlayerEditObject(int playerid, int playerobject, int objectid, int response, float x, float y, float z, float rx, float ry, float rz)
+PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerEditObject(int playerid, bool playerobject, int objectid, int response, float fX, float fY, float fZ, float fRotX, float fRotY, float fRotZ)
 {
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 	if (p != core->getData()->players.end())
@@ -222,12 +177,12 @@ bool Callbacks::OnPlayerEditObject(int playerid, int playerobject, int objectid,
 					int amxIndex = 0;
 					if (!amx_FindPublic(*a, "OnPlayerEditDynamicObject", &amxIndex))
 					{
-						amx_Push(*a, amx_ftoc(rz));
-						amx_Push(*a, amx_ftoc(ry));
-						amx_Push(*a, amx_ftoc(rx));
-						amx_Push(*a, amx_ftoc(z));
-						amx_Push(*a, amx_ftoc(y));
-						amx_Push(*a, amx_ftoc(x));
+						amx_Push(*a, amx_ftoc(fRotZ));
+						amx_Push(*a, amx_ftoc(fRotY));
+						amx_Push(*a, amx_ftoc(fRotX));
+						amx_Push(*a, amx_ftoc(fZ));
+						amx_Push(*a, amx_ftoc(fY));
+						amx_Push(*a, amx_ftoc(fX));
 						amx_Push(*a, static_cast<cell>(response));
 						amx_Push(*a, static_cast<cell>(objectid));
 						amx_Push(*a, static_cast<cell>(playerid));
@@ -241,7 +196,7 @@ bool Callbacks::OnPlayerEditObject(int playerid, int playerobject, int objectid,
 	return true;
 }
 
-bool Callbacks::OnPlayerSelectObject(int playerid, int type, int objectid, int modelid, float x, float y, float z)
+PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerSelectObject(int playerid, int type, int objectid, int modelid, float x, float y, float z)
 {
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 	if (p != core->getData()->players.end())
@@ -272,7 +227,7 @@ bool Callbacks::OnPlayerSelectObject(int playerid, int type, int objectid, int m
 	return true;
 }
 
-bool Callbacks::OnPlayerWeaponShot(int playerid, int weaponid, int hittype, int hitid, float x, float y, float z)
+PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerWeaponShot(int playerid, int weaponid, int hittype, int hitid, float x, float y, float z)
 {
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 	if (p != core->getData()->players.end())
@@ -281,14 +236,6 @@ bool Callbacks::OnPlayerWeaponShot(int playerid, int weaponid, int hittype, int 
 		{
 			if (i->second == hitid)
 			{
-				boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(i->first);
-				if (o != core->getData()->objects.end())
-				{
-					if (o->second->amx != interface)
-					{
-						break;
-					}
-				}
 				int objectid = i->first;
 				for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
 				{

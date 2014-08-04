@@ -29,7 +29,7 @@
 
 #include <Eigen/Core>
 
-#include <sampgdk/a_samp.h>
+#include <sampgdk/sampgdk.h>
 
 #include <string>
 

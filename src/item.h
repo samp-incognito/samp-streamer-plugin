@@ -32,8 +32,7 @@
 
 #include <Eigen/Core>
 
-#include <sampgdk/a_samp.h>
-#include <sampgdk/sdk.h>
+#include <sampgdk/sampgdk.h>
 
 #include <bitset>
 #include <string>

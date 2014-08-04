@@ -20,7 +20,7 @@
 #include "main.h"
 #include "utility.h"
 
-#include <sampgdk/sdk.h>
+#include <sampgdk/sampgdk.h>
 
 namespace Manipulation
 {

@@ -29,7 +29,7 @@
 
 #include <Eigen/Core>
 
-#include <sampgdk/a_players.h>
+#include <sampgdk/sampgdk.h>
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicRaceCP(AMX *amx, cell *params)
 {

@@ -13,6 +13,9 @@
     <Filter Include="lib\boost\system\src">
       <UniqueIdentifier>{BD7179BB-A900-0385-521F-17803E8D132B}</UniqueIdentifier>
     </Filter>
+    <Filter Include="lib\sampgdk-amalgamation">
+      <UniqueIdentifier>{CA45E88A-B66A-370B-DFB5-1C9BCB393629}</UniqueIdentifier>
+    </Filter>
     <Filter Include="lib\sdk">
       <UniqueIdentifier>{8D064879-F9E5-C614-02FE-51EB6E5C2D76}</UniqueIdentifier>
     </Filter>
@@ -30,9 +33,6 @@
     <None Include="streamer.def" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\callbacks.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\cell.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -77,6 +77,9 @@
     <ClCompile Include="lib\boost\system\src\error_code.cpp">
       <Filter>lib\boost\system\src</Filter>
     </ClCompile>
+    <ClCompile Include="lib\sampgdk-amalgamation\sampgdk.c">
+      <Filter>lib\sampgdk-amalgamation</Filter>
+    </ClCompile>
     <ClCompile Include="lib\sdk\src\plugin.cpp">
       <Filter>lib\sdk\src</Filter>
     </ClCompile>
@@ -120,9 +123,6 @@
       <Filter>src\natives</Filter>
     </ClCompile>
     <ClCompile Include="src\natives\extended.cpp">
-      <Filter>src\natives</Filter>
-    </ClCompile>
-    <ClCompile Include="src\natives\internal.cpp">
       <Filter>src\natives</Filter>
     </ClCompile>
     <ClCompile Include="src\natives\map-icons.cpp">
