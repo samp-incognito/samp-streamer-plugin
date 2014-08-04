@@ -22,33 +22,28 @@
 
 #include <boost/scoped_ptr.hpp>
 
-#include <sampgdk/core.h>
-
 #include <set>
-
-typedef void (*logprintf_t)(const char*, ...);
 
 extern void *pAMXFunctions;
 
 PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports()
 {
-	return SUPPORTS_VERSION | SUPPORTS_AMX_NATIVES | SUPPORTS_PROCESS_TICK;
+	return sampgdk::Supports() | SUPPORTS_VERSION | SUPPORTS_AMX_NATIVES | SUPPORTS_PROCESS_TICK;
 }
 
 PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 {
 	core.reset(new Core);
 	pAMXFunctions = ppData[PLUGIN_DATA_AMX_EXPORTS];
-	logprintf_t logprintf = (logprintf_t)ppData[PLUGIN_DATA_LOGPRINTF];
-	logprintf("\n\n*** Streamer Plugin v%s by Incognito loaded ***\n", PLUGIN_VERSION);
-	return sampgdk::Load(sampgdk::GetCurrentPluginHandle(), ppData);
+	sampgdk::logprintf("\n\n*** Streamer Plugin v%s by Incognito loaded ***\n", PLUGIN_VERSION);
+	return sampgdk::Load(ppData);
 }
 
 PLUGIN_EXPORT void PLUGIN_CALL Unload()
 {
 	core.reset();
 	sampgdk::logprintf("\n\n*** Streamer Plugin v%s by Incognito unloaded ***\n", PLUGIN_VERSION);
-	sampgdk::Unload(sampgdk::GetCurrentPluginHandle());
+	sampgdk::Unload();
 }
 
 AMX_NATIVE_INFO natives[] =
@@ -175,14 +170,13 @@ AMX_NATIVE_INFO natives[] =
 	{ "CreateDynamicSphereEx", Natives::CreateDynamicSphereEx },
 	{ "CreateDynamicCubeEx", Natives::CreateDynamicCubeEx },
 	{ "CreateDynamicPolygonEx", Natives::CreateDynamicPolygonEx },
-	// Internal
-	{ "Streamer_CallbackHook", Natives::Streamer_CallbackHook },
 	// Deprecated
 	{ "Streamer_TickRate", Natives::Streamer_SetTickRate },
 	{ "Streamer_MaxItems", Natives::Streamer_SetMaxItems },
 	{ "Streamer_VisibleItems", Natives::Streamer_SetVisibleItems },
 	{ "Streamer_CellDistance", Natives::Streamer_SetCellDistance },
 	{ "Streamer_CellSize", Natives::Streamer_SetCellSize },
+	{ "Streamer_CallbackHook", Natives::Streamer_CallbackHook },
 	{ "DestroyAllDynamicObjects", Natives::DestroyAllDynamicObjects },
 	{ "CountDynamicObjects", Natives::CountDynamicObjects },
 	{ "DestroyAllDynamicPickups", Natives::DestroyAllDynamicPickups },
@@ -215,5 +209,6 @@ PLUGIN_EXPORT int PLUGIN_CALL AmxUnload(AMX *amx)
 
 PLUGIN_EXPORT void PLUGIN_CALL ProcessTick()
 {
+	sampgdk::ProcessTick();
 	core->getStreamer()->startAutomaticUpdate();
 }

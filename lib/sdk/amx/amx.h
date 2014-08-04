@@ -18,109 +18,82 @@
  *      misrepresented as being the original software.
  *  3.  This notice may not be removed or altered from any source distribution.
  *
- *  Version: $Id: amx.h 3363 2005-07-23 09:03:29Z thiadmer $
+ *  Version: $Id: amx.h,v 1.5 2006/03/26 16:56:15 spookie Exp $
  */
-
-#ifndef AMX_H_INCLUDED
-#define AMX_H_INCLUDED
-
-#include <stdlib.h> /* for size_t */
-#include <limits.h>
-
-#if defined __linux || defined __linux__
-  #define __LINUX__
-#endif
 
 #if defined FREEBSD && !defined __FreeBSD__
   #define __FreeBSD__
 #endif
-
-#if !defined HAVE_STDINT_H
-  #if (defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L) \
-      || (defined _MSC_VER && _MSC_VER >= 1600) \
-      || defined __GNUC__ || defined __LCC__ || defined __DMC__ \
-      || (defined __WATCOMC__ && __WATCOMC__ >= 1200)
-    #define HAVE_STDINT_H 1
-  #endif
+#if defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
+  #include <sclinux.h>
 #endif
 
-#if !defined HAVE_INTTYPES_H
-  #if defined __FreeBSD__
-    #define HAVE_INTTYPES_H 1
-  #endif
-#endif
+#ifndef AMX_H_INCLUDED
+#define AMX_H_INCLUDED
 
 #if defined HAVE_STDINT_H
   #include <stdint.h>
-#elif defined HAVE_INTTYPES_H
-  #include <inttypes.h>
 #else
-  #if defined __MACH__
-    #include <ppc/types.h>
-  #endif
-  typedef short int int16_t;
-  typedef unsigned short int uint16_t;
-  #if defined SN_TARGET_PS2
-    typedef int int32_t;
-    typedef unsigned int uint32_t;
-  #else
-    typedef long int int32_t;
-    typedef unsigned long int uint32_t;
-  #endif
-  #if defined __WIN32__ || defined _WIN32 || defined WIN32
-    typedef __int64 int64_t;
-    typedef unsigned __int64 uint64_t;
-    #define HAVE_I64
-  #endif
-  #if !defined _INTPTR_T_DEFINED
-    #if defined _LP64 || defined WIN64 || defined _WIN64
-      typedef __int64 intptr_t;
+  #if defined __LCC__ || defined __DMC__ || defined LINUX
+    #if defined HAVE_INTTYPES_H
+      #include <inttypes.h>
     #else
-      typedef int32_t intptr_t;
+      #include <stdint.h>
+    #endif
+  #elif !defined __STDC_VERSION__ || __STDC_VERSION__ < 199901L
+    /* The ISO C99 defines the int16_t and int_32t types. If the compiler got
+     * here, these types are probably undefined.
+     */
+    #if defined __MACH__
+      #include <ppc/types.h>
+      typedef unsigned short int  uint16_t;
+      typedef unsigned long int   uint32_t;
+    #elif defined __FreeBSD__
+      #include <inttypes.h>
+    #else
+      typedef short int           int16_t;
+      typedef unsigned short int  uint16_t;
+      #if defined SN_TARGET_PS2
+        typedef int               int32_t;
+        typedef unsigned int      uint32_t;
+      #else
+        typedef long int          int32_t;
+        typedef unsigned long int uint32_t;
+      #endif
+      #if defined __WIN32__ || defined _WIN32 || defined WIN32
+        typedef __int64	          int64_t;
+        typedef unsigned __int64  uint64_t;
+        #define HAVE_I64
+      #elif defined __GNUC__
+        typedef long long         int64_t;
+        typedef unsigned long long uint64_t;
+        #define HAVE_I64
+      #endif
     #endif
   #endif
+  #define HAVE_STDINT_H
 #endif
-
 #if defined _LP64 || defined WIN64 || defined _WIN64
   #if !defined __64BIT__
     #define __64BIT__
   #endif
 #endif
 
-#if !defined HAVE_ALLOCA_H
-  #if defined __GNUC__ || defined __LCC__ || defined __DMC__ || defined __ARMCC_VERSION
-    #define HAVE_ALLOCA_H 1
-  #elif (defined __WATCOMC__ && __WATCOMC__ >= 1200)
-    #define HAVE_ALLOCA_H 1
-  #endif
-#endif
-
-#if defined HAVE_ALLOCA_H && HAVE_ALLOCA_H
+#if HAVE_ALLOCA_H
   #include <alloca.h>
-#elif defined __BORLANDC__
-  #include <malloc.h>
 #endif
-
-#if defined __WIN32__ || defined _WIN32 || defined WIN32
+#if defined __WIN32__ || defined _WIN32 || defined WIN32 /* || defined __MSDOS__ */
   #if !defined alloca
-    #define alloca _alloca
+    #define alloca(n)   _alloca(n)
   #endif
 #endif
 
-#if !defined assert_static
-  /* see "Compile-Time Assertions" by Greg Miller,
-   * (with modifications to port it to C)
-   */
-  #define _ASSERT_STATIC_SYMBOL_INNER(line) __ASSERT_STATIC_ ## line
-  #define _ASSERT_STATIC_SYMBOL(line) _ASSERT_STATIC_SYMBOL_INNER(line)
-  #define assert_static(test) \
-    do { \
-      typedef char _ASSERT_STATIC_SYMBOL(__LINE__)[((test) ? 1 : -1)]; \
-    } while (0)
+#if !defined arraysize
+  #define arraysize(array)  (sizeof(array) / sizeof((array)[0]))
 #endif
 
-#ifdef __cplusplus
-extern "C" {
+#ifdef  __cplusplus
+extern  "C" {
 #endif
 
 #if defined PAWN_DLL
@@ -128,7 +101,7 @@ extern "C" {
     #define AMX_NATIVE_CALL __stdcall
   #endif
   #if !defined AMXAPI
-    #define AMXAPI __stdcall
+    #define AMXAPI          __stdcall
   #endif
 #endif
 
@@ -136,80 +109,69 @@ extern "C" {
 #if !defined AMX_NATIVE_CALL
   #define AMX_NATIVE_CALL
 #endif
-
 /* calling convention for all interface functions and callback functions */
 #if !defined AMXAPI
   #if defined STDECL
-    #define AMXAPI __stdcall
+    #define AMXAPI      __stdcall
   #elif defined CDECL
-    #define AMXAPI __cdecl
+    #define AMXAPI      __cdecl
   #elif defined GCC_HASCLASSVISIBILITY
-    #define AMXAPI __attribute__((visibility("default")))
+    #define AMXAPI __attribute__ ((visibility("default")))
   #else
     #define AMXAPI
   #endif
 #endif
-
 #if !defined AMXEXPORT
   #define AMXEXPORT
 #endif
 
-/* File format version (in CUR_FILE_VERSION)
- *   0 original version
- *   1 opcodes JUMP.pri, SWITCH and CASETBL
- *   2 compressed files
- *   3 public variables
- *   4 opcodes SWAP.pri/alt and PUSHADDR
- *   5 tagnames table
- *   6 reformatted header
- *   7 name table, opcodes SYMTAG & SYSREQ.D
- *   8 opcode BREAK, renewed debug interface
- *   9 macro opcodes
- *  10 position-independent code, overlays, packed instructions
- *  11 relocating instructions for the native interface, reorganized instruction set
- * MIN_FILE_VERSION is the lowest file version number that the current AMX
- * implementation supports. If the AMX file header gets new fields, this number
- * often needs to be incremented. MIN_AMX_VERSION is the lowest AMX version that
- * is needed to support the current file version. When there are new opcodes,
- * this number needs to be incremented.
+/* File format version                          Required AMX version
+ *   0 (original version)                       0
+ *   1 (opcodes JUMP.pri, SWITCH and CASETBL)   1
+ *   2 (compressed files)                       2
+ *   3 (public variables)                       2
+ *   4 (opcodes SWAP.pri/alt and PUSHADDR)      4
+ *   5 (tagnames table)                         4
+ *   6 (reformatted header)                     6
+ *   7 (name table, opcodes SYMTAG & SYSREQ.D)  7
+ *   8 (opcode STMT, renewed debug interface)   8
  */
-#define CUR_FILE_VERSION 8  /* current file version; also the current AMX version */
-#define MIN_FILE_VERSION 6  /* lowest supported file format version for the current AMX version */
-#define MIN_AMX_VERSION 8   /* minimum AMX version needed to support the current file format */
+#define CUR_FILE_VERSION  8     /* current file version; also the current AMX version */
+#define MIN_FILE_VERSION  6     /* lowest supported file format version for the current AMX version */
+#define MIN_AMX_VERSION   8     /* minimum AMX version needed to support the current file format */
 
 #if !defined PAWN_CELL_SIZE
-  #define PAWN_CELL_SIZE 32 /* by default, use 32-bit cells */
+  #define PAWN_CELL_SIZE 32     /* by default, use 32-bit cells */
 #endif
-
-#if PAWN_CELL_SIZE == 16
-  typedef uint16_t ucell;
-  typedef int16_t cell;
-#elif PAWN_CELL_SIZE == 32
-  typedef uint32_t ucell;
-  typedef int32_t cell;
-#elif PAWN_CELL_SIZE == 64
-  typedef uint64_t ucell;
-  typedef int64_t cell;
+#if PAWN_CELL_SIZE==16
+  typedef uint16_t  ucell;
+  typedef int16_t   cell;
+#elif PAWN_CELL_SIZE==32
+  typedef uint32_t  ucell;
+  typedef int32_t   cell;
+#elif PAWN_CELL_SIZE==64
+  typedef uint64_t  ucell;
+  typedef int64_t   cell;
 #else
   #error Unsupported cell size (PAWN_CELL_SIZE)
 #endif
 
-#define UNPACKEDMAX ((1L << (sizeof(cell) - 1) * 8) - 1)
-#define UNLIMITED (~1u >> 1)
+#define UNPACKEDMAX   ((1L << (sizeof(cell)-1)*8) - 1)
+#define UNLIMITED     (~1u >> 1)
 
 struct tagAMX;
-
 typedef cell (AMX_NATIVE_CALL *AMX_NATIVE)(struct tagAMX *amx, cell *params);
-typedef int (AMXAPI *AMX_CALLBACK)(struct tagAMX *amx, cell index, cell *result, cell *params);
+typedef int (AMXAPI *AMX_CALLBACK)(struct tagAMX *amx, cell index,
+                                   cell *result, cell *params);
 typedef int (AMXAPI *AMX_DEBUG)(struct tagAMX *amx);
-
 #if !defined _FAR
   #define _FAR
 #endif
 
 #if defined _MSC_VER
-  #pragma warning(disable:4103) /* used #pragma pack to change alignment */
-  #pragma warning(disable:4100) /* unreferenced formal parameter */
+  #pragma warning(disable:4103)  /* disable warning message 4103 that complains
+                                  * about pragma pack in a header file */
+  #pragma warning(disable:4100)  /* "'%$S' : unreferenced formal parameter" */
 #endif
 
 /* Some compilers do not support the #pragma align, which should be fine. Some
@@ -220,16 +182,16 @@ typedef int (AMXAPI *AMX_DEBUG)(struct tagAMX *amx);
 #endif
 
 #if defined __GNUC__
-  #define PACKED __attribute__((packed))
+  #define PACKED        __attribute__((packed))
 #else
   #define PACKED
 #endif
 
 #if !defined AMX_NO_ALIGN
-  #if defined __LINUX__ || defined __FreeBSD__
+  #if defined LINUX || defined __FreeBSD__
     #pragma pack(1)         /* structures must be packed (byte-aligned) */
   #elif defined MACOS && defined __MWERKS__
-    #pragma options align=mac68k
+	#pragma options align=mac68k
   #else
     #pragma pack(push)
     #pragma pack(1)         /* structures must be packed (byte-aligned) */
@@ -240,96 +202,89 @@ typedef int (AMXAPI *AMX_DEBUG)(struct tagAMX *amx);
 #endif
 
 typedef struct tagAMX_NATIVE_INFO {
-  const char _FAR *name;
-  AMX_NATIVE func;
+  const char _FAR *name PACKED;
+  AMX_NATIVE func       PACKED;
 } PACKED AMX_NATIVE_INFO;
 
-#if !defined AMX_USERNUM
-  #define AMX_USERNUM 4
-#endif
-#define sEXPMAX 19  /* maximum name length for file version <= 6 */
-#define sNAMEMAX 31 /* maximum name length of symbol name */
+#define AMX_USERNUM     4
+#define sEXPMAX         19      /* maximum name length for file version <= 6 */
+#define sNAMEMAX        31      /* maximum name length of symbol name */
 
-typedef struct tagFUNCSTUB {
-  uint32_t address;
-  char name[sEXPMAX + 1];
+typedef struct tagAMX_FUNCSTUB {
+  ucell address         PACKED;
+  char name[sEXPMAX+1]  PACKED;
 } PACKED AMX_FUNCSTUB;
 
 typedef struct tagFUNCSTUBNT {
-  uint32_t address;
-  uint32_t nameofs;
+  ucell address         PACKED;
+  uint32_t nameofs      PACKED;
 } PACKED AMX_FUNCSTUBNT;
 
 /* The AMX structure is the internal structure for many functions. Not all
  * fields are valid at all times; many fields are cached in local variables.
  */
 typedef struct tagAMX {
-  unsigned char _FAR *base; /* points to the AMX header, perhaps followed by P-code and data */
-  unsigned char _FAR *data; /* points to separate data+stack+heap, may be NULL */
-  AMX_CALLBACK callback;    /* native function callback */
-  AMX_DEBUG debug;          /* debug callback */
+  unsigned char _FAR *base PACKED; /* points to the AMX header plus the code, optionally also the data */
+  unsigned char _FAR *data PACKED; /* points to separate data+stack+heap, may be NULL */
+  AMX_CALLBACK callback PACKED;
+  AMX_DEBUG debug       PACKED; /* debug callback */
   /* for external functions a few registers must be accessible from the outside */
-  cell cip;                 /* instruction pointer: relative to base + amxhdr->cod */
-  cell frm;                 /* stack frame base: relative to base + amxhdr->dat */
-  cell hea;                 /* top of the heap: relative to base + amxhdr->dat */
-  cell hlw;                 /* bottom of the heap: relative to base + amxhdr->dat */
-  cell stk;                 /* stack pointer: relative to base + amxhdr->dat */
-  cell stp;                 /* top of the stack: relative to base + amxhdr->dat */
-  int flags;                /* current status, see amx_Flags() */
+  cell cip              PACKED; /* instruction pointer: relative to base + amxhdr->cod */
+  cell frm              PACKED; /* stack frame base: relative to base + amxhdr->dat */
+  cell hea              PACKED; /* top of the heap: relative to base + amxhdr->dat */
+  cell hlw              PACKED; /* bottom of the heap: relative to base + amxhdr->dat */
+  cell stk              PACKED; /* stack pointer: relative to base + amxhdr->dat */
+  cell stp              PACKED; /* top of the stack: relative to base + amxhdr->dat */
+  int flags             PACKED; /* current status, see amx_Flags() */
   /* user data */
-  #if AMX_USERNUM > 0
-    long usertags[AMX_USERNUM];
-    void _FAR *userdata[AMX_USERNUM];
-  #endif
+  long usertags[AMX_USERNUM] PACKED;
+  void _FAR *userdata[AMX_USERNUM] PACKED;
   /* native functions can raise an error */
-  int error;
+  int error             PACKED;
   /* passing parameters requires a "count" field */
   int paramcount;
   /* the sleep opcode needs to store the full AMX status */
-  cell pri;
-  cell alt;
-  cell reset_stk;
-  cell reset_hea;
-  cell sysreq_d;            /* relocated address/value for the SYSREQ.D opcode */
+  cell pri              PACKED;
+  cell alt              PACKED;
+  cell reset_stk        PACKED;
+  cell reset_hea        PACKED;
+  cell sysreq_d         PACKED; /* relocated address/value for the SYSREQ.D opcode */
   #if defined JIT
     /* support variables for the JIT */
-    int reloc_size;         /* required temporary buffer for relocations */
-    long code_size;         /* estimated memory footprint of the native code */
+    int reloc_size      PACKED; /* required temporary buffer for relocations */
+    long code_size      PACKED; /* estimated memory footprint of the native code */
   #endif
 } PACKED AMX;
 
 /* The AMX_HEADER structure is both the memory format as the file format. The
- * structure is used internally.
+ * structure is used internaly.
  */
 typedef struct tagAMX_HEADER {
-  int32_t size;             /* size of the "file" */
-  uint16_t magic;           /* signature */
-  char file_version;        /* file format version */
-  char amx_version;         /* required version of the AMX */
-  int16_t flags;
-  int16_t defsize;          /* size of a definition record */
-  int32_t cod;              /* initial value of COD - code block */
-  int32_t dat;              /* initial value of DAT - data block */
-  int32_t hea;              /* initial value of HEA - start of the heap */
-  int32_t stp;              /* initial value of STP - stack top */
-  int32_t cip;              /* initial value of CIP - the instruction pointer */
-  int32_t publics;          /* offset to the "public functions" table */
-  int32_t natives;          /* offset to the "native functions" table */
-  int32_t libraries;        /* offset to the table of libraries */
-  int32_t pubvars;          /* offset to the "public variables" table */
-  int32_t tags;             /* offset to the "public tagnames" table */
-  int32_t nametable;        /* offset to the name table */
+  int32_t size          PACKED; /* size of the "file" */
+  uint16_t magic        PACKED; /* signature */
+  char    file_version  PACKED; /* file format version */
+  char    amx_version   PACKED; /* required version of the AMX */
+  int16_t flags         PACKED;
+  int16_t defsize       PACKED; /* size of a definition record */
+  int32_t cod           PACKED; /* initial value of COD - code block */
+  int32_t dat           PACKED; /* initial value of DAT - data block */
+  int32_t hea           PACKED; /* initial value of HEA - start of the heap */
+  int32_t stp           PACKED; /* initial value of STP - stack top */
+  int32_t cip           PACKED; /* initial value of CIP - the instruction pointer */
+  int32_t publics       PACKED; /* offset to the "public functions" table */
+  int32_t natives       PACKED; /* offset to the "native functions" table */
+  int32_t libraries     PACKED; /* offset to the table of libraries */
+  int32_t pubvars       PACKED; /* the "public variables" table */
+  int32_t tags          PACKED; /* the "public tagnames" table */
+  int32_t nametable     PACKED; /* name table */
 } PACKED AMX_HEADER;
 
-#define AMX_MAGIC_16 0xf1e2
-#define AMX_MAGIC_32 0xf1e0
-#define AMX_MAGIC_64 0xf1e1
-#if PAWN_CELL_SIZE == 16
-  #define AMX_MAGIC AMX_MAGIC_16
-#elif PAWN_CELL_SIZE == 32
-  #define AMX_MAGIC AMX_MAGIC_32
-#elif PAWN_CELL_SIZE == 64
-  #define AMX_MAGIC AMX_MAGIC_64
+#if PAWN_CELL_SIZE==16
+  #define AMX_MAGIC     0xf1e2
+#elif PAWN_CELL_SIZE==32
+  #define AMX_MAGIC     0xf1e0
+#elif PAWN_CELL_SIZE==64
+  #define AMX_MAGIC     0xf1e1
 #endif
 
 enum {
@@ -363,49 +318,54 @@ enum {
   AMX_ERR_GENERAL,      /* general error (unknown or unspecific error) */
 };
 
-#define AMX_FLAG_DEBUG 0x02     /* symbolic info. available */
-#define AMX_FLAG_COMPACT 0x04   /* compact encoding */
-#define AMX_FLAG_BYTEOPC 0x08   /* opcode is a byte (not a cell) */
+/*      AMX_FLAG_CHAR16   0x01     no longer used */
+#define AMX_FLAG_DEBUG    0x02  /* symbolic info. available */
+#define AMX_FLAG_COMPACT  0x04  /* compact encoding */
+#define AMX_FLAG_BYTEOPC  0x08  /* opcode is a byte (not a cell) */
 #define AMX_FLAG_NOCHECKS 0x10  /* no array bounds checking; no STMT opcode */
 #define AMX_FLAG_NTVREG 0x1000  /* all native functions are registered */
 #define AMX_FLAG_JITC   0x2000  /* abstract machine is JIT compiled */
 #define AMX_FLAG_BROWSE 0x4000  /* busy browsing */
 #define AMX_FLAG_RELOC  0x8000  /* jump/call addresses relocated */
 
-#define AMX_EXEC_MAIN (-1)      /* start at program entry point */
-#define AMX_EXEC_CONT (-2)      /* continue from last address */
+#define AMX_EXEC_MAIN   -1      /* start at program entry point */
+#define AMX_EXEC_CONT   -2      /* continue from last address */
 
-#define AMX_USERTAG(a, b, c, d) ((a) | ((b) << 8) | ((long)(c) << 16) | ((long)(d) << 24))
+#define AMX_USERTAG(a,b,c,d)    ((a) | ((b)<<8) | ((long)(c)<<16) | ((long)(d)<<24))
+
+#if !defined AMX_COMPACTMARGIN
+  #define AMX_COMPACTMARGIN 64
+#endif
 
 /* for native functions that use floating point parameters, the following
  * two macros are convenient for casting a "cell" into a "float" type _without_
  * changing the bit pattern
  */
-#if PAWN_CELL_SIZE == 32
-  #define amx_ftoc(f) (*((cell*)&f))    /* float to cell */
-  #define amx_ctof(c) (*((float*)&c))   /* cell to float */
-#elif PAWN_CELL_SIZE == 64
-  #define amx_ftoc(f) (*((cell*)&f))    /* float to cell */
-  #define amx_ctof(c) (*((double*)&c))  /* cell to float */
+#if PAWN_CELL_SIZE==32
+  #define amx_ftoc(f)   ( * ((cell*)&f) )   /* float to cell */
+  #define amx_ctof(c)   ( * ((float*)&c) )  /* cell to float */
+#elif PAWN_CELL_SIZE==64
+  #define amx_ftoc(f)   ( * ((cell*)&f) )   /* float to cell */
+  #define amx_ctof(c)   ( * ((double*)&c) ) /* cell to float */
 #else
-  // amx_ftoc() and amx_ctof() cannot be used
+  #error Unsupported cell size
 #endif
 
-#define amx_StrParam(amx,param,result) \
-    do { \
-      cell *amx_cstr_; int amx_length_; \
-      amx_GetAddr((amx), (param), &amx_cstr_); \
-      amx_StrLen(amx_cstr_, &amx_length_); \
-      if (amx_length_ > 0 && \
+#define amx_StrParam(amx,param,result)                                      \
+    do {                                                                    \
+      cell *amx_cstr_; int amx_length_;                                     \
+      amx_GetAddr((amx), (param), &amx_cstr_);                              \
+      amx_StrLen(amx_cstr_, &amx_length_);                                  \
+      if (amx_length_ > 0 &&                                                \
           ((result) = (char*)alloca((amx_length_ + 1) * sizeof(*(result)))) != NULL) \
-        amx_GetString((char*)(result), amx_cstr_, sizeof(*(result)) > 1, amx_length_ + 1); \
-      else (result) = NULL; \
+        amx_GetString((char*)(result), amx_cstr_, sizeof(*(result))>1, amx_length_ + 1); \
+      else (result) = NULL;                                                 \
     } while (0)
 
-uint16_t *AMXAPI amx_Align16(uint16_t *v);
-uint32_t *AMXAPI amx_Align32(uint32_t *v);
-#if defined _I64_MAX || defined INT64_MAX || defined HAVE_I64
-  uint64_t *AMXAPI amx_Align64(uint64_t *v);
+uint16_t * AMXAPI amx_Align16(uint16_t *v);
+uint32_t * AMXAPI amx_Align32(uint32_t *v);
+#if defined _I64_MAX || defined HAVE_I64
+  uint64_t * AMXAPI amx_Align64(uint64_t *v);
 #endif
 int AMXAPI amx_Allot(AMX *amx, int cells, cell *amx_addr, cell **phys_addr);
 int AMXAPI amx_Callback(AMX *amx, cell index, cell *result, cell *params);
@@ -449,11 +409,11 @@ int AMXAPI amx_UTF8Get(const char *string, const char **endptr, cell *value);
 int AMXAPI amx_UTF8Len(const cell *cstr, int *length);
 int AMXAPI amx_UTF8Put(char *string, char **endptr, int maxchars, cell value);
 
-#if PAWN_CELL_SIZE == 16
+#if PAWN_CELL_SIZE==16
   #define amx_AlignCell(v) amx_Align16(v)
-#elif PAWN_CELL_SIZE == 32
+#elif PAWN_CELL_SIZE==32
   #define amx_AlignCell(v) amx_Align32(v)
-#elif PAWN_CELL_SIZE == 64 && (defined _I64_MAX || defined INT64_MAX || defined HAVE_I64)
+#elif PAWN_CELL_SIZE==64 && (defined _I64_MAX || defined HAVE_I64)
   #define amx_AlignCell(v) amx_Align64(v)
 #else
   #error Unsupported cell size
@@ -463,16 +423,16 @@ int AMXAPI amx_UTF8Put(char *string, char **endptr, int maxchars, cell value);
   amx_Register((amx), amx_NativeInfo((name),(func)), 1);
 
 #if !defined AMX_NO_ALIGN
-  #if defined __LINUX__ || defined __FreeBSD__
-    #pragma pack()      /* reset default packing */
+  #if defined LINUX || defined __FreeBSD__
+    #pragma pack()    /* reset default packing */
   #elif defined MACOS && defined __MWERKS__
     #pragma options align=reset
   #else
-    #pragma pack(pop)   /* reset previous packing */
+    #pragma pack(pop) /* reset previous packing */
   #endif
 #endif
 
-#ifdef __cplusplus
+#ifdef  __cplusplus
 }
 #endif
 

@@ -1,14 +1,11 @@
 //----------------------------------------------------------
 //
-//   SA:MP Multiplayer Modification For GTA:SA
-//   Copyright 2004-2007 SA:MP Team
+//   SA-MP Multiplayer Modification For GTA:SA
+//   Copyright 2004-2009 SA-MP Team
 //
 //----------------------------------------------------------
 
-#ifndef PLUGIN_H_INCLUDED
-#define PLUGIN_H_INCLUDED
-
-#include "amx/amx.h"
+#pragma once
 
 //----------------------------------------------------------
 
@@ -19,38 +16,38 @@
 #ifdef __cplusplus
   #define PLUGIN_EXTERN_C extern "C"
 #else
-  #define PLUGIN_EXTERN_C
+  #define PLUGIN_EXTERN_C 
 #endif
 
-#if defined __LINUX__ || defined __FreeBSD__ || defined __OpenBSD__
+#if defined(LINUX) || defined(FREEBSD) || defined(__FreeBSD__) || defined(__OpenBSD__)
   #ifndef __GNUC__
     #pragma message "Warning: Not using a GNU compiler."
   #endif
-  #define PLUGIN_CALL
+  #define PLUGIN_CALL 
   #ifndef SAMPSVR
     // Compile code with -fvisibility=hidden to hide non-exported functions.
     #define PLUGIN_EXPORT PLUGIN_EXTERN_C __attribute__((visibility("default")))
   #else
-    #define PLUGIN_EXPORT PLUGIN_EXTERN_C
+    #define PLUGIN_EXPORT PLUGIN_EXTERN_C 
   #endif
-#elif defined __WIN32__ || defined _WIN32 || defined WIN32
+#elif defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
   #ifndef _MSC_VER
     #pragma message "Warning: Not using a VC++ compiler."
   #endif
   #define PLUGIN_CALL __stdcall
   #define PLUGIN_EXPORT PLUGIN_EXTERN_C
 #else
-  #error "You must define one of WIN32, LINUX, or FREEBSD."
+  #error "You must define one of WIN32, LINUX or FREEBSD"
 #endif
 
 //----------------------------------------------------------
 
-enum SUPPORTS_FLAGS
+enum SUPPORTS_FLAGS 
 {
 	SUPPORTS_VERSION		= SAMP_PLUGIN_VERSION,
 	SUPPORTS_VERSION_MASK	= 0xffff,
 	SUPPORTS_AMX_NATIVES	= 0x10000,
-	SUPPORTS_PROCESS_TICK	= 0x20000,
+	SUPPORTS_PROCESS_TICK	= 0x20000
 };
 
 //----------------------------------------------------------
@@ -58,12 +55,13 @@ enum SUPPORTS_FLAGS
 enum PLUGIN_DATA_TYPE
 {
 	// For some debugging
-	PLUGIN_DATA_LOGPRINTF		= 0x00,	// void (*logprintf_t)(const char*, ...)
+	PLUGIN_DATA_LOGPRINTF		= 0x00,	// void (*logprintf)(char* format, ...)
 
 	// AMX
-	PLUGIN_DATA_AMX_EXPORTS		= 0x10,	// void *AmxFunctionTable[] (see PLUGIN_AMX_EXPORT)
+	PLUGIN_DATA_AMX_EXPORTS		= 0x10,	// void* AmxFunctionTable[]    (see PLUGIN_AMX_EXPORT)
 	PLUGIN_DATA_CALLPUBLIC_FS	= 0x11, // int (*AmxCallPublicFilterScript)(char *szFunctionName)
 	PLUGIN_DATA_CALLPUBLIC_GM	= 0x12, // int (*AmxCallPublicGameMode)(char *szFunctionName)
+
 };
 
 //----------------------------------------------------------
@@ -115,10 +113,6 @@ enum PLUGIN_AMX_EXPORT
 	PLUGIN_AMX_EXPORT_UTF8Len		= 42,
 	PLUGIN_AMX_EXPORT_UTF8Put		= 43,
 };
-
-//----------------------------------------------------------
-
-#endif // PLUGIN_H_INCLUDED
 
 //----------------------------------------------------------
 // EOF

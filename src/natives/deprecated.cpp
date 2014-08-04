@@ -21,6 +21,11 @@
 
 #include <boost/scoped_ptr.hpp>
 
+cell AMX_NATIVE_CALL Natives::Streamer_CallbackHook(AMX *amx, cell *params)
+{
+	return 0;
+}
+
 cell AMX_NATIVE_CALL Natives::DestroyAllDynamicObjects(AMX *amx, cell *params)
 {
 	cell newParams[3] = { sizeof(cell) * 2, STREAMER_TYPE_OBJECT, 1 };

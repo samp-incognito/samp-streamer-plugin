@@ -17,7 +17,6 @@
 #ifndef CORE_H
 #define CORE_H
 
-#include "callbacks.h"
 #include "data.h"
 #include "grid.h"
 #include "streamer.h"
@@ -28,11 +27,6 @@ class Core
 {
 public:
 	Core();
-
-	inline Callbacks *getCallbacks()
-	{
-		return callbacks.get();
-	}
 
 	inline Data *getData()
 	{
@@ -49,7 +43,6 @@ public:
 		return streamer.get();
 	}
 private:
-	boost::scoped_ptr<Callbacks> callbacks;
 	boost::scoped_ptr<Data> data;
 	boost::scoped_ptr<Grid> grid;
 	boost::scoped_ptr<Streamer> streamer;

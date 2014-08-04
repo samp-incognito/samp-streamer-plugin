@@ -22,7 +22,6 @@ boost::scoped_ptr<Core> core;
 
 Core::Core()
 {
-	callbacks.reset(new Callbacks);
 	data.reset(new Data);
 	grid.reset(new Grid);
 	streamer.reset(new Streamer);
