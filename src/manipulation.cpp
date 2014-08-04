@@ -548,7 +548,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 								Utility::storeFloatInNative(amx, params[4], boost::get<Box2D>(a->second->position).max_corner()[0]);
 								return 1;
 							}
-							case STREAMER_AREA_TYPE_CUBE:
+							case STREAMER_AREA_TYPE_CUBOID:
 							{
 								Utility::storeFloatInNative(amx, params[4], boost::get<Box3D>(a->second->position).max_corner()[0]);
 								return 1;
@@ -565,7 +565,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 								Utility::storeFloatInNative(amx, params[4], boost::get<Box2D>(a->second->position).max_corner()[1]);
 								return 1;
 							}
-							case STREAMER_AREA_TYPE_CUBE:
+							case STREAMER_AREA_TYPE_CUBOID:
 							{
 								Utility::storeFloatInNative(amx, params[4], boost::get<Box3D>(a->second->position).max_corner()[1]);
 								return 1;
@@ -577,7 +577,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 					{
 						switch (a->second->type)
 						{
-							case STREAMER_AREA_TYPE_CUBE:
+							case STREAMER_AREA_TYPE_CUBOID:
 							{
 								Utility::storeFloatInNative(amx, params[4], boost::get<Box3D>(a->second->position).max_corner()[2]);
 								return 1;
@@ -599,7 +599,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 								Utility::storeFloatInNative(amx, params[4], boost::get<Box2D>(a->second->position).min_corner()[0]);
 								return 1;
 							}
-							case STREAMER_AREA_TYPE_CUBE:
+							case STREAMER_AREA_TYPE_CUBOID:
 							{
 								Utility::storeFloatInNative(amx, params[4], boost::get<Box3D>(a->second->position).min_corner()[0]);
 								return 1;
@@ -616,7 +616,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 								Utility::storeFloatInNative(amx, params[4], boost::get<Box2D>(a->second->position).min_corner()[1]);
 								return 1;
 							}
-							case STREAMER_AREA_TYPE_CUBE:
+							case STREAMER_AREA_TYPE_CUBOID:
 							{
 								Utility::storeFloatInNative(amx, params[4], boost::get<Box3D>(a->second->position).min_corner()[1]);
 								return 1;
@@ -628,7 +628,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 					{
 						switch (a->second->type)
 						{
-							case STREAMER_AREA_TYPE_CUBE:
+							case STREAMER_AREA_TYPE_CUBOID:
 							{
 								Utility::storeFloatInNative(amx, params[4], boost::get<Box3D>(a->second->position).min_corner()[2]);
 								return 1;
@@ -1344,7 +1344,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 								reassign = true;
 								break;
 							}
-							case STREAMER_AREA_TYPE_CUBE:
+							case STREAMER_AREA_TYPE_CUBOID:
 							{
 								boost::get<Box3D>(a->second->position).max_corner()[0] = amx_ctof(params[4]);
 								reassign = true;
@@ -1363,7 +1363,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 								reassign = true;
 								break;
 							}
-							case STREAMER_AREA_TYPE_CUBE:
+							case STREAMER_AREA_TYPE_CUBOID:
 							{
 								boost::get<Box3D>(a->second->position).max_corner()[1] = amx_ctof(params[4]);
 								reassign = true;
@@ -1376,7 +1376,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					{
 						switch (a->second->type)
 						{
-							case STREAMER_AREA_TYPE_CUBE:
+							case STREAMER_AREA_TYPE_CUBOID:
 							{
 								boost::get<Box3D>(a->second->position).max_corner()[2] = amx_ctof(params[4]);
 								return 1;
@@ -1399,7 +1399,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 								reassign = true;
 								break;
 							}
-							case STREAMER_AREA_TYPE_CUBE:
+							case STREAMER_AREA_TYPE_CUBOID:
 							{
 								boost::get<Box3D>(a->second->position).min_corner()[0] = amx_ctof(params[4]);
 								reassign = true;
@@ -1418,7 +1418,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 								reassign = true;
 								break;
 							}
-							case STREAMER_AREA_TYPE_CUBE:
+							case STREAMER_AREA_TYPE_CUBOID:
 							{
 								boost::get<Box3D>(a->second->position).min_corner()[1] = amx_ctof(params[4]);
 								reassign = true;
@@ -1431,7 +1431,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					{
 						switch (a->second->type)
 						{
-							case STREAMER_AREA_TYPE_CUBE:
+							case STREAMER_AREA_TYPE_CUBOID:
 							{
 								boost::get<Box3D>(a->second->position).min_corner()[2] = amx_ctof(params[4]);
 								return 1;
@@ -1524,7 +1524,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 							a->second->size = static_cast<float>(boost::geometry::comparable_distance(boost::get<Box2D>(a->second->position).min_corner(), boost::get<Box2D>(a->second->position).max_corner()));
 							break;
 						}
-						case STREAMER_AREA_TYPE_CUBE:
+						case STREAMER_AREA_TYPE_CUBOID:
 						{
 							boost::geometry::correct(boost::get<Box3D>(a->second->position));
 							a->second->size = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector2f(boost::get<Box3D>(a->second->position).min_corner()[0], boost::get<Box3D>(a->second->position).min_corner()[1]), Eigen::Vector2f(boost::get<Box3D>(a->second->position).max_corner()[0], boost::get<Box3D>(a->second->position).max_corner()[1])));

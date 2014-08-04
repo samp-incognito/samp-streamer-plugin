@@ -98,9 +98,9 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicSphere(AMX *amx, cell *params)
 	return static_cast<cell>(areaID);
 }
 
-cell AMX_NATIVE_CALL Natives::CreateDynamicCube(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL Natives::CreateDynamicCuboid(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(9, "CreateDynamicCube");
+	CHECK_PARAMS(9, "CreateDynamicCuboid");
 	if (core->getData()->getMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return 0;
@@ -109,7 +109,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCube(AMX *amx, cell *params)
 	Item::SharedArea area(new Item::Area);
 	area->amx = amx;
 	area->areaID = areaID;
-	area->type = STREAMER_AREA_TYPE_CUBE;
+	area->type = STREAMER_AREA_TYPE_CUBOID;
 	area->position = Box3D(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), Eigen::Vector3f(amx_ctof(params[4]), amx_ctof(params[5]), amx_ctof(params[6])));
 	boost::geometry::correct(boost::get<Box3D>(area->position));
 	area->size = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector2f(boost::get<Box3D>(area->position).min_corner()[0], boost::get<Box3D>(area->position).min_corner()[1]), Eigen::Vector2f(boost::get<Box3D>(area->position).max_corner()[0], boost::get<Box3D>(area->position).max_corner()[1])));

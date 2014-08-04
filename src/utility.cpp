@@ -344,7 +344,7 @@ bool Utility::isPointInArea(const Eigen::Vector3f &point, const Item::SharedArea
 			}
 			return false;
 		}
-		case STREAMER_AREA_TYPE_CUBE:
+		case STREAMER_AREA_TYPE_CUBOID:
 		{
 			return boost::geometry::covered_by(point, boost::get<Box3D>(area->position));
 		}

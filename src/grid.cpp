@@ -81,7 +81,7 @@ void Grid::addArea(const Item::SharedArea &area)
 				}
 				break;
 			}
-			case STREAMER_AREA_TYPE_CUBE:
+			case STREAMER_AREA_TYPE_CUBOID:
 			{
 				Eigen::Vector3f centroid = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3D>(area->position));
 				position = Eigen::Vector2f(centroid[0], centroid[1]);
