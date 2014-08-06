@@ -211,6 +211,5 @@ PLUGIN_EXPORT int PLUGIN_CALL AmxUnload(AMX *amx)
 
 PLUGIN_EXPORT void PLUGIN_CALL ProcessTick()
 {
-	sampgdk::ProcessTick();
 	core->getStreamer()->startAutomaticUpdate();
 }

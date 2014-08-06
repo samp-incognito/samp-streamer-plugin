@@ -2957,17 +2957,29 @@ SAMPGDK_API(unsigned int, sampgdk_Supports(void)) {
 }
 
 SAMPGDK_API(bool, sampgdk_Load(void **ppData, sampgdk_hidden_t hidden)) {
-  void *plugin = sampgdk_plugin_get_handle(_SAMPGDK_RETURN_ADDRESS());
+  #ifdef SAMPGDK_EMBEDDED
+    void *plugin = sampgdk_plugin_get_handle(((void *)_sampgdk_init));
+  #else
+    void *plugin = sampgdk_plugin_get_handle(_SAMPGDK_RETURN_ADDRESS());
+  #endif
   return _sampgdk_init_plugin(plugin, ppData) >= 0;
 }
 
 SAMPGDK_API(void, sampgdk_Unload(sampgdk_hidden_t hidden)) {
-  void *plugin = sampgdk_plugin_get_handle(_SAMPGDK_RETURN_ADDRESS());
+  #ifdef SAMPGDK_EMBEDDED
+    void *plugin = sampgdk_plugin_get_handle(((void *)_sampgdk_init));
+  #else
+    void *plugin = sampgdk_plugin_get_handle(_SAMPGDK_RETURN_ADDRESS());
+  #endif
   _sampgdk_cleanup_plugin(plugin);
 }
 
 SAMPGDK_API(void, sampgdk_ProcessTick(sampgdk_hidden_t hidden)) {
-  void *plugin = sampgdk_plugin_get_handle(_SAMPGDK_RETURN_ADDRESS());
+  #ifdef SAMPGDK_EMBEDDED
+    void *plugin = sampgdk_plugin_get_handle(((void *)_sampgdk_init));
+  #else
+    void *plugin = sampgdk_plugin_get_handle(_SAMPGDK_RETURN_ADDRESS());
+  #endif
   sampgdk_timer_process_timers(plugin);
 }
 

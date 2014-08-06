@@ -272,12 +272,16 @@ PLUGIN_EXPORT void PLUGIN_CALL ProcessTick();
 #endif
 
 #if defined SAMPGDK_STATIC || defined SAMPGDK_AMALGAMATION
+ #define SAMPGDK_EMBEDDED
+#endif
+
+#ifdef SAMPGDK_EMBEDDED
   #define SAMPGDK_CALL
 #else
   #define SAMPGDK_CALL SAMPGDK_CDECL
 #endif
 
-#if defined SAMPGDK_STATIC || defined SAMPGDK_AMALGAMATION
+#ifdef SAMPGDK_EMBEDDED
   #define SAMPGDK_EXPORT SAMPGDK_EXTERN_C
 #else
   #if SAMPGDK_LINUX
