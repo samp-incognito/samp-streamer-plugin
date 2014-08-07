@@ -1,7 +1,5 @@
 #define IN_SAMPGDK
 
-#include "sampgdk.h"
-
 #if SAMPGDK_WINDOWS
   #ifdef _MSC_VER
     #pragma warning(disable: 4996)
@@ -17,6 +15,8 @@
 #else
   #define _GNU_SOURCE
 #endif
+
+#include "sampgdk.h"
 
 /* Copyright (C) 2012-2014 Zeex
  *
