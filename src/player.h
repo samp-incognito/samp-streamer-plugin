@@ -59,6 +59,8 @@ struct Player
 	boost::unordered_map<int, int> internalTextLabels;
 
 	Identifier mapIconIdentifier;
+
+	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 };
 
 #endif

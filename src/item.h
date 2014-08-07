@@ -44,6 +44,7 @@ namespace Item
 		AMX *amx;
 		int areaID;
 		SharedCell cell;
+		Eigen::Vector2f height;
 		int references;
 		float size;
 		int type;
@@ -59,6 +60,8 @@ namespace Item
 			Eigen::Vector3f position;
 			int references;
 			int vehicle;
+
+			EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 		};
 
 		boost::intrusive_ptr<Attach> attach;
@@ -69,6 +72,8 @@ namespace Item
 		boost::unordered_set<int> worlds;
 
 		static Identifier identifier;
+
+		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 	};
 
 	struct Checkpoint
@@ -89,6 +94,8 @@ namespace Item
 		boost::unordered_set<int> worlds;
 
 		static Identifier identifier;
+
+		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 	};
 
 	struct MapIcon
@@ -111,6 +118,8 @@ namespace Item
 		boost::unordered_set<int> worlds;
 
 		static Identifier identifier;
+
+		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 	};
 
 	struct Object
@@ -136,6 +145,8 @@ namespace Item
 			int references;
 			Eigen::Vector3f rotation;
 			int vehicle;
+
+			EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 		};
 
 		boost::intrusive_ptr<Attach> attach;
@@ -185,6 +196,8 @@ namespace Item
 			boost::tuple<Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f> rotation;
 			float speed;
 			boost::chrono::steady_clock::time_point time;
+
+			EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 		};
 
 		boost::intrusive_ptr<Move> move;
@@ -195,6 +208,8 @@ namespace Item
 		boost::unordered_set<int> worlds;
 
 		static Identifier identifier;
+
+		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 	};
 
 	struct Pickup
@@ -217,6 +232,8 @@ namespace Item
 		boost::unordered_set<int> worlds;
 
 		static Identifier identifier;
+
+		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 	};
 
 	struct RaceCheckpoint
@@ -239,6 +256,8 @@ namespace Item
 		boost::unordered_set<int> worlds;
 
 		static Identifier identifier;
+
+		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 	};
 
 	struct TextLabel
@@ -274,6 +293,8 @@ namespace Item
 		boost::unordered_set<int> worlds;
 
 		static Identifier identifier;
+
+		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 	};
 }
 

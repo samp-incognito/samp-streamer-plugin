@@ -128,8 +128,9 @@ namespace Natives
 	cell AMX_NATIVE_CALL UpdateDynamic3DTextLabelText(AMX *amx, cell *params);
 	// Areas
 	cell AMX_NATIVE_CALL CreateDynamicCircle(AMX *amx, cell *params);
-	cell AMX_NATIVE_CALL CreateDynamicRectangle(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL CreateDynamicCylinder(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL CreateDynamicSphere(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL CreateDynamicRectangle(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL CreateDynamicCuboid(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL CreateDynamicPolygon(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL DestroyDynamicArea(AMX *amx, cell *params);
@@ -157,8 +158,9 @@ namespace Natives
 	cell AMX_NATIVE_CALL CreateDynamicMapIconEx(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL CreateDynamic3DTextLabelEx(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL CreateDynamicCircleEx(AMX *amx, cell *params);
-	cell AMX_NATIVE_CALL CreateDynamicRectangleEx(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL CreateDynamicCylinderEx(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL CreateDynamicSphereEx(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL CreateDynamicRectangleEx(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL CreateDynamicCuboidEx(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL CreateDynamicPolygonEx(AMX *amx, cell *params);
 	// Internal

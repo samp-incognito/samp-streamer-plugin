@@ -322,9 +322,16 @@ bool Utility::isPointInArea(const Eigen::Vector3f &point, const Item::SharedArea
 			}
 			return false;
 		}
-		case STREAMER_AREA_TYPE_RECTANGLE:
+		case STREAMER_AREA_TYPE_CYLINDER:
 		{
-			return boost::geometry::covered_by(Eigen::Vector2f(point[0], point[1]), boost::get<Box2D>(area->position));
+			if (point[2] >= area->height[0] && point[2] <= area->height[1])
+			{
+				if (boost::geometry::comparable_distance(Eigen::Vector2f(point[0], point[1]), boost::get<Eigen::Vector2f>(area->position)) <= area->size)
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 		case STREAMER_AREA_TYPE_SPHERE:
 		{
@@ -344,15 +351,19 @@ bool Utility::isPointInArea(const Eigen::Vector3f &point, const Item::SharedArea
 			}
 			return false;
 		}
+		case STREAMER_AREA_TYPE_RECTANGLE:
+		{
+			return boost::geometry::covered_by(Eigen::Vector2f(point[0], point[1]), boost::get<Box2D>(area->position));
+		}
 		case STREAMER_AREA_TYPE_CUBOID:
 		{
 			return boost::geometry::covered_by(point, boost::get<Box3D>(area->position));
 		}
 		case STREAMER_AREA_TYPE_POLYGON:
 		{
-			if (point[2] >= boost::get<Polygon2D>(area->position).get<1>()[0] && point[2] <= boost::get<Polygon2D>(area->position).get<1>()[1])
+			if (point[2] >= area->height[0] && point[2] <= area->height[1])
 			{
-				return boost::geometry::covered_by(Eigen::Vector2f(point[0], point[1]), boost::get<Polygon2D>(area->position).get<0>());
+				return boost::geometry::covered_by(Eigen::Vector2f(point[0], point[1]), boost::get<Polygon2D>(area->position));
 			}
 			return false;
 		}
@@ -369,8 +380,8 @@ void Utility::convertArrayToPolygon(AMX *amx, cell input, cell size, Polygon2D &
 	{
 		points.push_back(Eigen::Vector2f(amx_ctof(array[i]), amx_ctof(array[i + 1])));
 	}
-	boost::geometry::assign_points(polygon.get<0>(), points);
-	boost::geometry::correct(polygon.get<0>());
+	boost::geometry::assign_points(polygon, points);
+	boost::geometry::correct(polygon);
 }
 
 bool Utility::convertPolygonToArray(AMX *amx, cell output, cell size, Polygon2D &polygon)
@@ -378,7 +389,7 @@ bool Utility::convertPolygonToArray(AMX *amx, cell output, cell size, Polygon2D 
 	cell *array = NULL;
 	std::size_t i = 0;
 	amx_GetAddr(amx, output, &array);
-	for (std::vector<Eigen::Vector2f>::iterator p = polygon.get<0>().outer().begin(); p != polygon.get<0>().outer().end(); ++p)
+	for (std::vector<Eigen::Vector2f>::iterator p = polygon.outer().begin(); p != polygon.outer().end(); ++p)
 	{
 		if ((i + 1) >= static_cast<std::size_t>(size))
 		{

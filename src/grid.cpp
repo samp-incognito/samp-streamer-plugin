@@ -53,6 +53,7 @@ void Grid::addArea(const Item::SharedArea &area)
 		switch (area->type)
 		{
 			case STREAMER_AREA_TYPE_CIRCLE:
+			case STREAMER_AREA_TYPE_CYLINDER:
 			{
 				if (area->attach)
 				{
@@ -62,11 +63,6 @@ void Grid::addArea(const Item::SharedArea &area)
 				{
 					position = boost::get<Eigen::Vector2f>(area->position);
 				}
-				break;
-			}
-			case STREAMER_AREA_TYPE_RECTANGLE:
-			{
-				boost::geometry::centroid(boost::get<Box2D>(area->position), position);
 				break;
 			}
 			case STREAMER_AREA_TYPE_SPHERE:
@@ -81,6 +77,11 @@ void Grid::addArea(const Item::SharedArea &area)
 				}
 				break;
 			}
+			case STREAMER_AREA_TYPE_RECTANGLE:
+			{
+				boost::geometry::centroid(boost::get<Box2D>(area->position), position);
+				break;
+			}
 			case STREAMER_AREA_TYPE_CUBOID:
 			{
 				Eigen::Vector3f centroid = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3D>(area->position));
@@ -89,7 +90,7 @@ void Grid::addArea(const Item::SharedArea &area)
 			}
 			case STREAMER_AREA_TYPE_POLYGON:
 			{
-				boost::geometry::centroid(boost::get<Polygon2D>(area->position).get<0>(), position);
+				boost::geometry::centroid(boost::get<Polygon2D>(area->position), position);
 				break;
 			}
 		}

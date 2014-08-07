@@ -30,10 +30,11 @@
 #define STREAMER_MAX_AREA_TYPES (5)
 
 #define STREAMER_AREA_TYPE_CIRCLE (0)
-#define STREAMER_AREA_TYPE_RECTANGLE (1)
+#define STREAMER_AREA_TYPE_CYLINDER (1)
 #define STREAMER_AREA_TYPE_SPHERE (2)
-#define STREAMER_AREA_TYPE_CUBOID (3)
-#define STREAMER_AREA_TYPE_POLYGON (4)
+#define STREAMER_AREA_TYPE_RECTANGLE (3)
+#define STREAMER_AREA_TYPE_CUBOID (4)
+#define STREAMER_AREA_TYPE_POLYGON (5)
 
 #define STREAMER_MAX_OBJECT_TYPES (3)
 
@@ -83,9 +84,10 @@ class Streamer;
 typedef std::pair<int, int> CellID;
 typedef boost::intrusive_ptr<Cell> SharedCell;
 
+typedef boost::geometry::model::polygon<Eigen::Vector2f> Polygon2D;
+
 typedef boost::geometry::model::box<Eigen::Vector2f> Box2D;
 typedef boost::geometry::model::box<Eigen::Vector3f> Box3D;
-typedef boost::tuple<boost::geometry::model::polygon<Eigen::Vector2f>, Eigen::Vector2f> Polygon2D;
 
 namespace Item
 {

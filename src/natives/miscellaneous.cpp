@@ -113,6 +113,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 				switch (a->second->type)
 				{
 					case STREAMER_AREA_TYPE_CIRCLE:
+					case STREAMER_AREA_TYPE_CYLINDER:
 					{
 						float distance = 0.0f;
 						if (a->second->attach)
@@ -123,13 +124,6 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 						{
 							distance = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), boost::get<Eigen::Vector2f>(a->second->position)));
 						}
-						Utility::storeFloatInNative(amx, params[6], distance);
-						return 1;
-					}
-					case STREAMER_AREA_TYPE_RECTANGLE:
-					{
-						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Box2D>(a->second->position));
-						float distance = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), centroid));
 						Utility::storeFloatInNative(amx, params[6], distance);
 						return 1;
 					}
@@ -145,6 +139,13 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 						}
 						break;
 					}
+					case STREAMER_AREA_TYPE_RECTANGLE:
+					{
+						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Box2D>(a->second->position));
+						float distance = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), centroid));
+						Utility::storeFloatInNative(amx, params[6], distance);
+						return 1;
+					}
 					case STREAMER_AREA_TYPE_CUBOID:
 					{
 						Eigen::Vector3f centroid = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3D>(a->second->position));
@@ -154,7 +155,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 					}
 					case STREAMER_AREA_TYPE_POLYGON:
 					{
-						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2D>(a->second->position).get<0>());
+						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2D>(a->second->position));
 						float distance = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), centroid));
 						Utility::storeFloatInNative(amx, params[6], distance);
 						return 1;

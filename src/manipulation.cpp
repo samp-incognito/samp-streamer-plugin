@@ -582,9 +582,10 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 								Utility::storeFloatInNative(amx, params[4], boost::get<Box3D>(a->second->position).max_corner()[2]);
 								return 1;
 							}
+							case STREAMER_AREA_TYPE_CYLINDER:
 							case STREAMER_AREA_TYPE_POLYGON:
 							{
-								Utility::storeFloatInNative(amx, params[4], boost::get<Polygon2D>(a->second->position).get<1>()[1]);
+								Utility::storeFloatInNative(amx, params[4], a->second->height[1]);
 								return 1;
 							}
 						}
@@ -633,9 +634,10 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 								Utility::storeFloatInNative(amx, params[4], boost::get<Box3D>(a->second->position).min_corner()[2]);
 								return 1;
 							}
+							case STREAMER_AREA_TYPE_CYLINDER:
 							case STREAMER_AREA_TYPE_POLYGON:
 							{
-								Utility::storeFloatInNative(amx, params[4], boost::get<Polygon2D>(a->second->position).get<1>()[0]);
+								Utility::storeFloatInNative(amx, params[4], a->second->height[0]);
 								return 1;
 							}
 						}
@@ -651,6 +653,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 						switch (a->second->type)
 						{
 							case STREAMER_AREA_TYPE_CIRCLE:
+							case STREAMER_AREA_TYPE_CYLINDER:
 							{
 								Utility::storeFloatInNative(amx, params[4], boost::get<Eigen::Vector2f>(a->second->position)[0]);
 								return 1;
@@ -668,6 +671,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 						switch (a->second->type)
 						{
 							case STREAMER_AREA_TYPE_CIRCLE:
+							case STREAMER_AREA_TYPE_CYLINDER:
 							{
 								Utility::storeFloatInNative(amx, params[4], boost::get<Eigen::Vector2f>(a->second->position)[1]);
 								return 1;
@@ -1381,9 +1385,10 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 								boost::get<Box3D>(a->second->position).max_corner()[2] = amx_ctof(params[4]);
 								return 1;
 							}
+							case STREAMER_AREA_TYPE_CYLINDER:
 							case STREAMER_AREA_TYPE_POLYGON:
 							{
-								boost::get<Polygon2D>(a->second->position).get<1>()[1] = amx_ctof(params[4]);
+								a->second->height[1] = amx_ctof(params[4]);
 								return 0;
 							}
 						}
@@ -1436,9 +1441,10 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 								boost::get<Box3D>(a->second->position).min_corner()[2] = amx_ctof(params[4]);
 								return 1;
 							}
+							case STREAMER_AREA_TYPE_CYLINDER:
 							case STREAMER_AREA_TYPE_POLYGON:
 							{
-								boost::get<Polygon2D>(a->second->position).get<1>()[0] = amx_ctof(params[4]);
+								a->second->height[0] = amx_ctof(params[4]);
 								return 1;
 							}
 						}
@@ -1449,6 +1455,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 						switch (a->second->type)
 						{
 							case STREAMER_AREA_TYPE_CIRCLE:
+							case STREAMER_AREA_TYPE_CYLINDER:
 							case STREAMER_AREA_TYPE_SPHERE:
 							{
 								a->second->size = amx_ctof(params[4]) * amx_ctof(params[4]);
@@ -1463,6 +1470,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 						switch (a->second->type)
 						{
 							case STREAMER_AREA_TYPE_CIRCLE:
+							case STREAMER_AREA_TYPE_CYLINDER:
 							{
 								boost::get<Eigen::Vector2f>(a->second->position)[0] = amx_ctof(params[4]);
 								reassign = true;
@@ -1482,6 +1490,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 						switch (a->second->type)
 						{
 							case STREAMER_AREA_TYPE_CIRCLE:
+							case STREAMER_AREA_TYPE_CYLINDER:
 							{
 								boost::get<Eigen::Vector2f>(a->second->position)[1] = amx_ctof(params[4]);
 								reassign = true;
