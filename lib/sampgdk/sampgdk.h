@@ -70,6 +70,7 @@
   #if !defined LINUX
     #define LINUX
   #endif
+  #define _GNU_SOURCE
   #define SAMPGDK_LINUX 1
   #define SAMPGDK_WINDOWS 0
 #endif
