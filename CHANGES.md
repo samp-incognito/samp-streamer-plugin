@@ -1,6 +1,13 @@
 SA-MP Streamer Plugin
 =====================
 
+v2.7.3
+------
+- Allowed moving object rotations to be set
+- Added integrated callback hooks from sampgdk
+- Renamed CreateDynamicCube to CreateDynamicCuboid
+- Added CreateDynamicCylinder
+
 v2.7.2
 ------
 - Made E_STREAMER_EXTRA_ID data sequential and allowed multiple
