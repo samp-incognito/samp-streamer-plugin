@@ -15,16 +15,16 @@ ifeq ($(config),release)
   TARGETDIR = bin/linux/Release
   TARGET = $(TARGETDIR)/streamer.so
   OBJDIR = obj/linux/Release
-  DEFINES += -DBOOST_CHRONO_HEADER_ONLY -DNDEBUG -DSAMPGDK_AMALGAMATION
-  INCLUDES += -Iinclude -Ilib
+  DEFINES += -D_GNU_SOURCE -DBOOST_CHRONO_HEADER_ONLY -DNDEBUG -DSAMPGDK_AMALGAMATION
+  INCLUDES += -Iinclude -Ilib -Ilib/sdk
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -ffast-math -fmerge-all-constants -fno-strict-aliasing -fvisibility=hidden -fvisibility-inlines-hidden -O3 -Wall
+  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -fPIC -m32 -ffast-math -fmerge-all-constants -fno-strict-aliasing -fvisibility=hidden -fvisibility-inlines-hidden -O3 -Wall
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CFLAGS)
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   LIBS += -lrt
   LDDEPS +=
-  ALL_LDFLAGS += $(LDFLAGS) -s -shared
+  ALL_LDFLAGS += $(LDFLAGS) -s -shared -m32
   LINKCMD = $(CXX) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
   endef
@@ -42,16 +42,16 @@ ifeq ($(config),debug)
   TARGETDIR = bin/linux/Debug
   TARGET = $(TARGETDIR)/streamer.so
   OBJDIR = obj/linux/Debug
-  DEFINES += -DBOOST_CHRONO_HEADER_ONLY -DSAMPGDK_AMALGAMATION
-  INCLUDES += -Iinclude -Ilib
+  DEFINES += -D_GNU_SOURCE -DBOOST_CHRONO_HEADER_ONLY -DSAMPGDK_AMALGAMATION
+  INCLUDES += -Iinclude -Ilib -Ilib/sdk
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -g -O0 -Wall
+  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -g -fPIC -m32 -O0 -Wall
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CFLAGS)
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   LIBS += -lrt
   LDDEPS +=
-  ALL_LDFLAGS += $(LDFLAGS) -shared -rdynamic
+  ALL_LDFLAGS += $(LDFLAGS) -shared -m32 -rdynamic
   LINKCMD = $(CXX) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
   define PREBUILDCMDS
   endef
@@ -142,7 +142,7 @@ prelink:
 	$(PRELINKCMDS)
 
 ifneq (,$(PCH))
-.NOTPARALLEL: $(GCH) $(PCH)
+$(OBJECTS): $(GCH) $(PCH)
 $(GCH): $(PCH)
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) -x c++-header $(ALL_CXXFLAGS) -o "$@" -MF "$(@:%.gch=%.d)" -c "$<"

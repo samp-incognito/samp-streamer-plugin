@@ -3,14 +3,16 @@ solution "streamer"
 	language "C++"
 
 	project "streamer"
-		includedirs { "include", "lib" }
+		includedirs { "include", "lib", "lib/sdk" }
 		kind "SharedLib"
+		targetprefix ""
 		if _ACTION == "gmake" then
+			defines "_GNU_SOURCE"
+			buildoptions "-m32"
+			linkoptions "-m32"
 			files { "**.c", "**.cpp" }
-			targetextension ".so"
 		elseif string.startswith(_ACTION, "vs") then
 			files { "**.c", "**.cpp", "**.def", "**.rc", "src/**.h" }
-			targetextension ".dll"
 		end
 
 	configuration "Release"

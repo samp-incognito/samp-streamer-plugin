@@ -70,7 +70,6 @@
   #if !defined LINUX
     #define LINUX
   #endif
-  #define _GNU_SOURCE
   #define SAMPGDK_LINUX 1
   #define SAMPGDK_WINDOWS 0
 #endif
@@ -155,8 +154,8 @@
   #pragma GCC diagnostic ignored "-Wattributes"
 #endif
 
-#include <sdk/amx/amx.h>
-#include <sdk/plugincommon.h>
+#include "amx/amx.h"
+#include "plugincommon.h"
 
 #if defined __INTEL_COMPILER
   /* ... */
@@ -273,7 +272,7 @@ PLUGIN_EXPORT void PLUGIN_CALL ProcessTick();
 #endif
 
 #if defined SAMPGDK_STATIC || defined SAMPGDK_AMALGAMATION
- #define SAMPGDK_EMBEDDED
+  #define SAMPGDK_EMBEDDED
 #endif
 
 #ifdef SAMPGDK_EMBEDDED
@@ -547,23 +546,23 @@ inline void vlogprintf(const char *format, va_list args) {
 /**
  * \brief Minor version.
  */
-#define SAMPGDK_VERSION_MINOR 0
+#define SAMPGDK_VERSION_MINOR 1
 
 /**
  * \brief Patch version.
  */
-#define SAMPGDK_VERSION_PATCH 4
+#define SAMPGDK_VERSION_PATCH 0
 
 /**
  * \brief Library version in the form of \c 0xAABBCC00 where \c AA, \c BB
  * and \c CC are the major, minor and patch numbers.
  */
-#define SAMPGDK_VERSION_ID 67109888
+#define SAMPGDK_VERSION_ID 67174400
 
 /**
  * \brief Library version string.
  */
-#define SAMPGDK_VERSION_STRING "4.0.4"
+#define SAMPGDK_VERSION_STRING "4.1.0"
 
 /**
  * \brief Gets library version number.
@@ -2536,7 +2535,7 @@ SAMPGDK_CALLBACK(bool, OnVehicleDamageStatusUpdate(int vehicleid, int playerid))
  * \ingroup callbacks
  * \see <a href="http://wiki.sa-mp.com/wiki/OnUnoccupiedVehicleUpdate">OnUnoccupiedVehicleUpdate on SA-MP Wiki</a>
  */
-SAMPGDK_CALLBACK(bool, OnUnoccupiedVehicleUpdate(int vehicleid, int playerid, int passenger_seat, float new_x, float new_y, float new_z));
+SAMPGDK_CALLBACK(bool, OnUnoccupiedVehicleUpdate(int vehicleid, int playerid, int passenger_seat, float new_x, float new_y, float new_z, float vel_x, float vel_y, float vel_z));
 
 /**
  * \ingroup callbacks
@@ -2639,6 +2638,12 @@ SAMPGDK_CALLBACK(bool, OnPlayerClickPlayerTextDraw(int playerid, int playertexti
  * \see <a href="http://wiki.sa-mp.com/wiki/OnIncomingConnection">OnIncomingConnection on SA-MP Wiki</a>
  */
 SAMPGDK_CALLBACK(bool, OnIncomingConnection(int playerid, const char * ip_address, int port));
+
+/**
+ * \ingroup callbacks
+ * \see <a href="http://wiki.sa-mp.com/wiki/OnTrailerUpdate">OnTrailerUpdate on SA-MP Wiki</a>
+ */
+SAMPGDK_CALLBACK(bool, OnTrailerUpdate(int playerid, int vehicleid));
 
 /**
  * \ingroup callbacks
