@@ -90,7 +90,7 @@ namespace Utility
 		{
 			return container.front();
 		}
-		return -1;
+		return 0;
 	}
 
 	template<typename T>
