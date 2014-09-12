@@ -191,6 +191,11 @@ boost::unordered_map<int, Item::SharedArea>::iterator Utility::destroyArea(boost
 	Item::Area::identifier.remove(a->first, core->getData()->areas.size());
 	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 	{
+		boost::unordered_set<int>::iterator i = p->second.internalAreas.find(a->first);
+		if (i != p->second.internalAreas.end())
+		{
+			core->getStreamer()->areaLeaveCallbacks.push_back(boost::make_tuple(a->first, p->first));
+		}
 		p->second.disabledAreas.erase(a->first);
 		p->second.internalAreas.erase(a->first);
 		p->second.visibleCell->areas.erase(a->first);

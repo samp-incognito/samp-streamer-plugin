@@ -285,7 +285,7 @@ void Streamer::executeCallbacks()
 		}
 	}
 	areaEnterCallbacks.clear();
-	for (std::vector<int>::const_iterator c = objectCallbacks.begin(); c != objectCallbacks.end(); ++c)
+	for (std::vector<int>::const_iterator c = objectMoveCallbacks.begin(); c != objectMoveCallbacks.end(); ++c)
 	{
 		for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
 		{
@@ -297,7 +297,7 @@ void Streamer::executeCallbacks()
 			}
 		}
 	}
-	objectCallbacks.clear();
+	objectMoveCallbacks.clear();
 }
 
 void Streamer::processAreas(Player &player, const std::vector<SharedCell> &cells)
@@ -817,7 +817,7 @@ void Streamer::processMovingObjects()
 					(*o)->rotation = (*o)->move->rotation.get<0>();
 				}
 				(*o)->move.reset();
-				objectCallbacks.push_back((*o)->objectID);
+				objectMoveCallbacks.push_back((*o)->objectID);
 				objectFinishedMoving = true;
 			}
 			if ((*o)->cell)

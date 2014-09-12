@@ -60,6 +60,9 @@ public:
 	boost::unordered_set<Item::SharedObject> movingObjects;
 
 	boost::unordered_map<int, int> internalPickups;
+
+	std::vector<boost::tuple<int, int> > areaEnterCallbacks;
+	std::vector<boost::tuple<int, int> > areaLeaveCallbacks;
 private:
 	void calculateAverageUpdateTime();
 
@@ -92,9 +95,7 @@ private:
 	float averageUpdateTime;
 	bool processingFinalPlayer;
 
-	std::vector<boost::tuple<int, int> > areaEnterCallbacks;
-	std::vector<boost::tuple<int, int> > areaLeaveCallbacks;
-	std::vector<int> objectCallbacks;
+	std::vector<int> objectMoveCallbacks;
 
 	template<std::size_t N, typename T>
 	inline bool checkPlayer(const std::bitset<N> &a, const T &b, const boost::unordered_set<T> &c, const T &d, const boost::unordered_set<T> &e, const T &f)
