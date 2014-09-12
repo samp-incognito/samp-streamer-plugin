@@ -257,36 +257,34 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 
 void Streamer::executeCallbacks()
 {
-	for (std::vector<boost::tuple<bool, int, int> >::const_iterator c = areaCallbacks.begin(); c != areaCallbacks.end(); ++c)
+	for (std::vector<boost::tuple<int, int> >::const_iterator c = areaLeaveCallbacks.begin(); c != areaLeaveCallbacks.end(); ++c)
 	{
-		if (c->get<0>())
+		for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
 		{
-			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
+			int amxIndex = 0;
+			if (!amx_FindPublic(*a, "OnPlayerLeaveDynamicArea", &amxIndex))
 			{
-				int amxIndex = 0;
-				if (!amx_FindPublic(*a, "OnPlayerEnterDynamicArea", &amxIndex))
-				{
-					amx_Push(*a, static_cast<cell>(c->get<1>()));
-					amx_Push(*a, static_cast<cell>(c->get<2>()));
-					amx_Exec(*a, NULL, amxIndex);
-				}
-			}
-		}
-		else
-		{
-			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
-			{
-				int amxIndex = 0;
-				if (!amx_FindPublic(*a, "OnPlayerLeaveDynamicArea", &amxIndex))
-				{
-					amx_Push(*a, static_cast<cell>(c->get<1>()));
-					amx_Push(*a, static_cast<cell>(c->get<2>()));
-					amx_Exec(*a, NULL, amxIndex);
-				}
+				amx_Push(*a, static_cast<cell>(c->get<0>()));
+				amx_Push(*a, static_cast<cell>(c->get<1>()));
+				amx_Exec(*a, NULL, amxIndex);
 			}
 		}
 	}
-	areaCallbacks.clear();
+	areaLeaveCallbacks.clear();
+	for (std::vector<boost::tuple<int, int> >::const_iterator c = areaEnterCallbacks.begin(); c != areaEnterCallbacks.end(); ++c)
+	{
+		for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
+		{
+			int amxIndex = 0;
+			if (!amx_FindPublic(*a, "OnPlayerEnterDynamicArea", &amxIndex))
+			{
+				amx_Push(*a, static_cast<cell>(c->get<0>()));
+				amx_Push(*a, static_cast<cell>(c->get<1>()));
+				amx_Exec(*a, NULL, amxIndex);
+			}
+		}
+	}
+	areaEnterCallbacks.clear();
 	for (std::vector<int>::const_iterator c = objectCallbacks.begin(); c != objectCallbacks.end(); ++c)
 	{
 		for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
@@ -323,7 +321,7 @@ void Streamer::processAreas(Player &player, const std::vector<SharedCell> &cells
 				if (i == player.internalAreas.end())
 				{
 					player.internalAreas.insert(a->first);
-					areaCallbacks.push_back(boost::make_tuple(in, a->first, player.playerID));
+					areaEnterCallbacks.push_back(boost::make_tuple(a->first, player.playerID));
 				}
 				if (a->second->cell)
 				{
@@ -335,7 +333,7 @@ void Streamer::processAreas(Player &player, const std::vector<SharedCell> &cells
 				if (i != player.internalAreas.end())
 				{
 					player.internalAreas.quick_erase(i);
-					areaCallbacks.push_back(boost::make_tuple(in, a->first, player.playerID));
+					areaLeaveCallbacks.push_back(boost::make_tuple(a->first, player.playerID));
 				}
 			}
 		}

@@ -92,7 +92,8 @@ private:
 	float averageUpdateTime;
 	bool processingFinalPlayer;
 
-	std::vector<boost::tuple<bool, int, int> > areaCallbacks;
+	std::vector<boost::tuple<int, int> > areaEnterCallbacks;
+	std::vector<boost::tuple<int, int> > areaLeaveCallbacks;
 	std::vector<int> objectCallbacks;
 
 	template<std::size_t N, typename T>
