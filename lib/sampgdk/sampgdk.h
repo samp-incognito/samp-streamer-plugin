@@ -92,6 +92,10 @@
   #define SAMPGDK_STDCALL __attribute__((stdcall))
 #endif
 
+#if SAMPGDK_LINUX && defined IN_SAMPGDK && !defined _GNU_SOURCE
+  #define _GNU_SOURCE
+#endif
+
 #endif /* !SAMPGDK_PLATFORM_H */
 
 /* Copyright (C) 2011-2014 Zeex

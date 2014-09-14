@@ -14,8 +14,6 @@
   #undef SetTimer
   #define WIN32_LEAN_AND_MEAN
   #include <windows.h>
-#else
-  #define _GNU_SOURCE
 #endif
 
 /* Copyright (C) 2012-2014 Zeex
@@ -951,8 +949,8 @@ SAMPGDK_MODULE_CLEANUP(plugin) {
   sampgdk_array_free(&_sampgdk_plugins);
 }
 
-static _sampgdk_plugin_compare_handle(const void *key,
-                                      const void *elem) {
+static int _sampgdk_plugin_compare_handle(const void *key,
+                                          const void *elem) {
   const void *handle2 = *(const void **)elem;
 
   assert(key != NULL);
