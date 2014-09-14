@@ -1,6 +1,15 @@
 SA-MP Streamer Plugin
 =====================
 
+v2.7.4
+------
+- Made OnPlayerLeaveDynamicArea callbacks execute when areas are
+  destroyed
+- Made OnPlayerLeaveDynamicArea callbacks execute before
+  OnPlayerEnterDynamicArea callbacks (regression from a previous
+  version)
+- Updated libraries, fixing some miscellaneous bugs
+
 v2.7.3
 ------
 - Allowed moving object rotations to be set
