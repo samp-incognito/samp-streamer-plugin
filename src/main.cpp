@@ -35,8 +35,9 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 {
 	core.reset(new Core);
 	pAMXFunctions = ppData[PLUGIN_DATA_AMX_EXPORTS];
+	bool load = sampgdk::Load(ppData);
 	sampgdk::logprintf("\n\n*** Streamer Plugin v%s by Incognito loaded ***\n", PLUGIN_VERSION);
-	return sampgdk::Load(ppData);
+	return load;
 }
 
 PLUGIN_EXPORT void PLUGIN_CALL Unload()
