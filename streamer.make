@@ -15,11 +15,11 @@ ifeq ($(config),release)
   TARGETDIR = bin/linux/Release
   TARGET = $(TARGETDIR)/streamer.so
   OBJDIR = obj/linux/Release
-  DEFINES += -D_GNU_SOURCE -DBOOST_CHRONO_HEADER_ONLY -DNDEBUG -DSAMPGDK_AMALGAMATION
+  DEFINES += -DBOOST_CHRONO_HEADER_ONLY -D_GNU_SOURCE -DNDEBUG -DSAMPGDK_AMALGAMATION
   INCLUDES += -Iinclude -Ilib -Ilib/sdk
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -fPIC -m32 -ffast-math -fmerge-all-constants -fno-strict-aliasing -fvisibility=hidden -fvisibility-inlines-hidden -O3 -Wall
+  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -ffast-math -fmerge-all-constants -fno-strict-aliasing -fPIC -fvisibility=hidden -fvisibility-inlines-hidden -m32 -O3 -Wall
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CFLAGS)
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   LIBS += -lrt
@@ -42,7 +42,7 @@ ifeq ($(config),debug)
   TARGETDIR = bin/linux/Debug
   TARGET = $(TARGETDIR)/streamer.so
   OBJDIR = obj/linux/Debug
-  DEFINES += -D_GNU_SOURCE -DBOOST_CHRONO_HEADER_ONLY -DSAMPGDK_AMALGAMATION
+  DEFINES += -DBOOST_CHRONO_HEADER_ONLY -D_GNU_SOURCE -DSAMPGDK_AMALGAMATION
   INCLUDES += -Iinclude -Ilib -Ilib/sdk
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
@@ -142,7 +142,7 @@ prelink:
 	$(PRELINKCMDS)
 
 ifneq (,$(PCH))
-$(OBJECTS): $(GCH) $(PCH)
+.NOTPARALLEL: $(GCH) $(PCH)
 $(GCH): $(PCH)
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) -x c++-header $(ALL_CXXFLAGS) -o "$@" -MF "$(@:%.gch=%.d)" -c "$<"

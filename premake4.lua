@@ -7,20 +7,20 @@ solution "streamer"
 		kind "SharedLib"
 		targetprefix ""
 		if _ACTION == "gmake" then
-			defines "_GNU_SOURCE"
-			buildoptions "-m32"
-			linkoptions "-m32"
 			files { "**.c", "**.cpp" }
+			links "rt"
+			targetextension ".so"
 		elseif string.startswith(_ACTION, "vs") then
 			files { "**.c", "**.cpp", "**.def", "**.rc", "src/**.h" }
+			targetextension ".dll"
 		end
 
 	configuration "Release"
 		if _ACTION == "gmake" then
-			buildoptions { "-ffast-math", "-fmerge-all-constants", "-fno-strict-aliasing", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-Wall" }
-			defines { "BOOST_CHRONO_HEADER_ONLY", "NDEBUG", "SAMPGDK_AMALGAMATION" }
-			flags { "NoImportLib" }
-			links { "rt" }
+			buildoptions { "-ffast-math", "-fmerge-all-constants", "-fno-strict-aliasing", "-fPIC", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-m32", "-O3", "-Wall" }
+			defines { "BOOST_CHRONO_HEADER_ONLY", "_GNU_SOURCE", "NDEBUG", "SAMPGDK_AMALGAMATION" }
+			flags "NoImportLib"
+			linkoptions "-m32"
 			objdir "obj/linux/Release"
 			targetdir "bin/linux/Release"
 		elseif string.startswith(_ACTION, "vs") then
@@ -33,11 +33,10 @@ solution "streamer"
 
 	configuration "Debug"
 		if _ACTION == "gmake" then
-			buildoptions { "-O0", "-Wall" }
-			defines { "BOOST_CHRONO_HEADER_ONLY", "SAMPGDK_AMALGAMATION" }
+			buildoptions { "-fPIC", "-m32", "-O0", "-Wall" }
+			defines { "BOOST_CHRONO_HEADER_ONLY", "_GNU_SOURCE", "SAMPGDK_AMALGAMATION" }
 			flags { "NoImportLib", "Symbols" }
-			linkoptions { "-rdynamic" }
-			links { "rt" }
+			linkoptions { "-m32", "-rdynamic" }
 			objdir "obj/linux/Debug"
 			targetdir "bin/linux/Debug"
 		elseif string.startswith(_ACTION, "vs") then
