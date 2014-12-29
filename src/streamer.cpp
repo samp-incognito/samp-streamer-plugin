@@ -181,7 +181,7 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 					GetVehicleVelocity(GetPlayerVehicleID(player.playerID), &velocity[0], &velocity[1], &velocity[2]);
 				}
 				float velocityNorm = velocity.squaredNorm();
-				if (velocityNorm >= velocityBoundaries.get<0>() && velocityNorm <= velocityBoundaries.get<1>())
+				if (velocityNorm > velocityBoundaries.get<0>() && velocityNorm < velocityBoundaries.get<1>())
 				{
 					delta = velocity * averageUpdateTime;
 					player.position += delta;
@@ -356,7 +356,7 @@ void Streamer::processCheckpoints(Player &player, const std::vector<SharedCell> 
 					distance = static_cast<float>(boost::geometry::comparable_distance(player.position, d->second->position));
 				}
 			}
-			if (distance <= d->second->streamDistance)
+			if (distance < d->second->streamDistance)
 			{
 				discoveredCheckpoints.insert(std::make_pair(distance, d->second));
 			}
@@ -404,7 +404,7 @@ void Streamer::processMapIcons(Player &player, const std::vector<SharedCell> &ce
 				distance = static_cast<float>(boost::geometry::comparable_distance(player.position, m->second->position));
 			}
 			boost::unordered_map<int, int>::iterator i = player.internalMapIcons.find(m->first);
-			if (distance <= m->second->streamDistance)
+			if (distance < m->second->streamDistance)
 			{
 				if (i == player.internalMapIcons.end())
 				{
@@ -488,7 +488,7 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 				}
 			}
 			boost::unordered_map<int, int>::iterator i = player.internalObjects.find(o->first);
-			if (distance <= o->second->streamDistance)
+			if (distance < o->second->streamDistance)
 			{
 				if (i == player.internalObjects.end())
 				{
@@ -586,7 +586,7 @@ void Streamer::processPickups(Player &player, const std::vector<SharedCell> &cel
 			{
 				if (checkPlayer(p->second->players, player.playerID, p->second->interiors, player.interiorID, p->second->worlds, player.worldID))
 				{
-					if (boost::geometry::comparable_distance(player.position, p->second->position) <= p->second->streamDistance)
+					if (boost::geometry::comparable_distance(player.position, p->second->position) < p->second->streamDistance)
 					{
 						boost::unordered_map<int, int>::iterator i = internalPickups.find(p->first);
 						if (i == internalPickups.end())
@@ -649,7 +649,7 @@ void Streamer::processRaceCheckpoints(Player &player, const std::vector<SharedCe
 					distance = static_cast<float>(boost::geometry::comparable_distance(player.position, r->second->position));
 				}
 			}
-			if (distance <= r->second->streamDistance)
+			if (distance < r->second->streamDistance)
 			{
 				discoveredRaceCheckpoints.insert(std::make_pair(distance, r->second));
 			}
@@ -704,7 +704,7 @@ void Streamer::processTextLabels(Player &player, const std::vector<SharedCell> &
 				}
 			}
 			boost::unordered_map<int, int>::iterator i = player.internalTextLabels.find(t->first);
-			if (distance <= t->second->streamDistance)
+			if (distance < t->second->streamDistance)
 			{
 				if (i == player.internalTextLabels.end())
 				{
@@ -804,7 +804,7 @@ void Streamer::processMovingObjects()
 			if (elapsedTime.count() < (*o)->move->duration)
 			{
 				(*o)->position = (*o)->move->position.get<1>() + ((*o)->move->position.get<2>() * elapsedTime.count());
-				if (((*o)->move->rotation.get<0>().maxCoeff() + 1000.0f) > std::numeric_limits<float>::epsilon())
+				if (Utility::almostEquals((*o)->move->rotation.get<0>().maxCoeff(), 1000.0f))
 				{
 					(*o)->rotation = (*o)->move->rotation.get<1>() + ((*o)->move->rotation.get<2>() * elapsedTime.count());
 				}
@@ -812,7 +812,7 @@ void Streamer::processMovingObjects()
 			else
 			{
 				(*o)->position = (*o)->move->position.get<0>();
-				if (((*o)->move->rotation.get<0>().maxCoeff() + 1000.0f) > std::numeric_limits<float>::epsilon())
+				if (Utility::almostEquals((*o)->move->rotation.get<0>().maxCoeff(), 1000.0f))
 				{
 					(*o)->rotation = (*o)->move->rotation.get<0>();
 				}

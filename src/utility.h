@@ -47,6 +47,12 @@ namespace Utility
 	bool isPointInArea(const Eigen::Vector3f &point, const Item::SharedArea &area);
 
 	template<typename T>
+	inline bool almostEquals(T a, T b)
+	{
+		return std::fabs(a - b) < std::numeric_limits<T>::epsilon();
+	}
+
+	template<typename T>
 	inline bool addToContainer(std::vector<T> &container, T value)
 	{
 		container.push_back(value);
