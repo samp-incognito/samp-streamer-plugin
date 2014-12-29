@@ -541,12 +541,13 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 			player.visibleObjects = player.internalObjects.size();
 			break;
 		}
-		int internalID = CreatePlayerObject(player.playerID, d->second->modelID, d->second->position[0], d->second->position[1], d->second->position[2], d->second->rotation[0], d->second->rotation[1], d->second->rotation[2], d->second->drawDistance);
+		int internalID = CreatePlayerObject(player.playerID, d->second->modelID, 0.0f, 0.0f, 0.0f, d->second->rotation[0], d->second->rotation[1], d->second->rotation[2], d->second->drawDistance);
 		if (internalID == INVALID_GENERIC_ID)
 		{
 			player.visibleObjects = player.internalObjects.size();
 			break;
 		}
+		SetPlayerObjectPos(player.playerID, internalID, d->second->position[0], d->second->position[1], d->second->position[2]);
 		if (d->second->attach)
 		{
 			AttachPlayerObjectToVehicle(player.playerID, internalID, d->second->attach->vehicle, d->second->attach->offset[0], d->second->attach->offset[1], d->second->attach->offset[2], d->second->attach->rotation[0], d->second->attach->rotation[1], d->second->attach->rotation[2]);

@@ -903,7 +903,8 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 						if (i != p->second.internalObjects.end())
 						{
 							DestroyPlayerObject(p->first, i->second);
-							i->second = CreatePlayerObject(p->first, o->second->modelID, o->second->position[0], o->second->position[1], o->second->position[2], o->second->rotation[0], o->second->rotation[1], o->second->rotation[2], o->second->drawDistance);
+							i->second = CreatePlayerObject(p->first, o->second->modelID, 0.0f, 0.0f ,0.0f, o->second->rotation[0], o->second->rotation[1], o->second->rotation[2], o->second->drawDistance);
+							SetPlayerObjectPos(p->first, i->second, o->second->position[0], o->second->position[1], o->second->position[2]);
 							if (o->second->attach)
 							{
 								AttachPlayerObjectToVehicle(p->first, i->second, o->second->attach->vehicle, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);		
@@ -2027,7 +2028,8 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 						if (i != p->second.internalObjects.end())
 						{
 							DestroyPlayerObject(p->first, i->second);
-							i->second = CreatePlayerObject(p->first, o->second->modelID, o->second->position[0], o->second->position[1], o->second->position[2], o->second->rotation[0], o->second->rotation[1], o->second->rotation[2], o->second->drawDistance);
+							i->second = CreatePlayerObject(p->first, o->second->modelID, 0.0f, 0.0f, 0.0f, o->second->rotation[0], o->second->rotation[1], o->second->rotation[2], o->second->drawDistance);
+							SetPlayerObjectPos(p->first, i->second, o->second->position[0], o->second->position[1], o->second->position[2]);
 							if (o->second->attach)
 							{
 								AttachPlayerObjectToVehicle(p->first, i->second, o->second->attach->vehicle, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
