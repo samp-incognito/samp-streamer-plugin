@@ -134,6 +134,7 @@ void Streamer::startAutomaticUpdate()
 		{
 			processingFinalPlayer = isLastPlayer(p, core->getData()->players);
 			performPlayerUpdate(p->second, true);
+			executeCallbacks();
 		}
 		processingFinalPlayer = false;
 		tickCount = 0;
@@ -144,25 +145,26 @@ void Streamer::startAutomaticUpdate()
 	}
 }
 
-void Streamer::startManualUpdate(Player &player, bool getData)
+void Streamer::startManualUpdate(Player &player, int type)
 {
-	if (getData)
+	std::bitset<STREAMER_MAX_TYPES> enabledItems = player.enabledItems;
+	if (type >= 0 && type < STREAMER_MAX_TYPES)
 	{
-		player.interiorID = GetPlayerInterior(player.playerID);
-		player.worldID = GetPlayerVirtualWorld(player.playerID);
-		GetPlayerPos(player.playerID, &player.position[0], &player.position[1], &player.position[2]);
+		player.enabledItems.reset();
+		player.enabledItems.set(type);
 	}
 	processActiveItems();
 	performPlayerUpdate(player, false);
+	player.enabledItems = enabledItems;
 }
 
 void Streamer::performPlayerUpdate(Player &player, bool automatic)
 {
 	Eigen::Vector3f delta = Eigen::Vector3f::Zero(), position = player.position;
-	int state = GetPlayerState(player.playerID);
 	bool update = true;
 	if (automatic)
 	{
+		int state = GetPlayerState(player.playerID);
 		player.interiorID = GetPlayerInterior(player.playerID);
 		player.worldID = GetPlayerVirtualWorld(player.playerID);
 		GetPlayerPos(player.playerID, &player.position[0], &player.position[1], &player.position[2]);
@@ -251,7 +253,6 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 		{
 			player.position = position;
 		}
-		executeCallbacks();
 	}
 }
 

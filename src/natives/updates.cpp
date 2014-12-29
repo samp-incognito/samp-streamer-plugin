@@ -87,11 +87,14 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItemUpdate(AMX *amx, cell *params
 
 cell AMX_NATIVE_CALL Natives::Streamer_Update(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "Streamer_Update");
+	CHECK_PARAMS(2, "Streamer_Update");
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
-		core->getStreamer()->startManualUpdate(p->second, true);
+		p->second.interiorID = GetPlayerInterior(p->first);
+		p->second.worldID = GetPlayerVirtualWorld(p->first);
+		GetPlayerPos(p->first, &p->second.position[0], &p->second.position[1], &p->second.position[2]);
+		core->getStreamer()->startManualUpdate(p->second, static_cast<int>(params[2]));
 		return 1;
 	}
 	return 0;
@@ -99,7 +102,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_Update(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_UpdateEx(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(6, "Streamer_UpdateEx");
+	CHECK_PARAMS(7, "Streamer_UpdateEx");
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
@@ -120,7 +123,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_UpdateEx(AMX *amx, cell *params)
 		{
 			p->second.interiorID = GetPlayerInterior(p->first);
 		}
-		core->getStreamer()->startManualUpdate(p->second, false);
+		core->getStreamer()->startManualUpdate(p->second, static_cast<int>(params[7]));
 		return 1;
 	}
 	return 0;
