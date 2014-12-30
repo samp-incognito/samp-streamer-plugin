@@ -551,7 +551,14 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 		SetPlayerObjectPos(player.playerID, internalID, d->second->position[0], d->second->position[1], d->second->position[2]);
 		if (d->second->attach)
 		{
-			AttachPlayerObjectToVehicle(player.playerID, internalID, d->second->attach->vehicle, d->second->attach->offset[0], d->second->attach->offset[1], d->second->attach->offset[2], d->second->attach->rotation[0], d->second->attach->rotation[1], d->second->attach->rotation[2]);
+			if (d->second->attach->player != INVALID_GENERIC_ID)
+			{
+				sampgdk::InvokeNative(sampgdk::FindNative("AttachPlayerObjectToPlayer"), "dddffffff", player.playerID, internalID, d->second->attach->player, d->second->attach->offset[0], d->second->attach->offset[1], d->second->attach->offset[2], d->second->attach->rotation[0], d->second->attach->rotation[1], d->second->attach->rotation[2]);
+			}
+			else if (d->second->attach->vehicle != INVALID_GENERIC_ID)
+			{
+				AttachPlayerObjectToVehicle(player.playerID, internalID, d->second->attach->vehicle, d->second->attach->offset[0], d->second->attach->offset[1], d->second->attach->offset[2], d->second->attach->rotation[0], d->second->attach->rotation[1], d->second->attach->rotation[2]);
+			}
 		}
 		else if (d->second->move)
 		{
@@ -901,7 +908,11 @@ void Streamer::processAttachedObjects()
 		if ((*o)->attach)
 		{
 			bool adjust = false;
-			if ((*o)->attach->vehicle != INVALID_GENERIC_ID)
+			if ((*o)->attach->player != INVALID_GENERIC_ID)
+			{
+				adjust = GetPlayerPos((*o)->attach->player, &(*o)->attach->position[0], &(*o)->attach->position[1], &(*o)->attach->position[2]);
+			}
+			else if ((*o)->attach->vehicle != INVALID_GENERIC_ID)
 			{
 				adjust = GetVehiclePos((*o)->attach->vehicle, &(*o)->attach->position[0], &(*o)->attach->position[1], &(*o)->attach->position[2]);
 			}

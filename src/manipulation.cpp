@@ -907,7 +907,14 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 							SetPlayerObjectPos(p->first, i->second, o->second->position[0], o->second->position[1], o->second->position[2]);
 							if (o->second->attach)
 							{
-								AttachPlayerObjectToVehicle(p->first, i->second, o->second->attach->vehicle, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);		
+								if (o->second->attach->player != INVALID_GENERIC_ID)
+								{
+									sampgdk::InvokeNative(sampgdk::FindNative("AttachPlayerObjectToPlayer"), "dddffffff", p->first, i->second, o->second->attach->player, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
+								}
+								else if (o->second->attach->vehicle != INVALID_GENERIC_ID)
+								{
+									AttachPlayerObjectToVehicle(p->first, i->second, o->second->attach->vehicle, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
+								}
 							}
 							else if (o->second->move)
 							{
@@ -2032,7 +2039,14 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 							SetPlayerObjectPos(p->first, i->second, o->second->position[0], o->second->position[1], o->second->position[2]);
 							if (o->second->attach)
 							{
-								AttachPlayerObjectToVehicle(p->first, i->second, o->second->attach->vehicle, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
+								if (o->second->attach->player != INVALID_GENERIC_ID)
+								{
+									sampgdk::InvokeNative(sampgdk::FindNative("AttachPlayerObjectToPlayer"), "dddffffff", p->first, i->second, o->second->attach->player, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
+								}
+								else if (o->second->attach->vehicle != INVALID_GENERIC_ID)
+								{
+									AttachPlayerObjectToVehicle(p->first, i->second, o->second->attach->vehicle, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
+								}
 							}
 							else if (o->second->move)
 							{

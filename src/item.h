@@ -140,8 +140,9 @@ namespace Item
 		{
 			Attach();
 
-			Eigen::Vector3f position;
 			Eigen::Vector3f offset;
+			int player;
+			Eigen::Vector3f position;
 			int references;
 			Eigen::Vector3f rotation;
 			int vehicle;
