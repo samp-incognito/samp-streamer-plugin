@@ -100,6 +100,7 @@ AMX_NATIVE_INFO natives[] =
 	{ "StopDynamicObject", Natives::StopDynamicObject },
 	{ "IsDynamicObjectMoving", Natives::IsDynamicObjectMoving },
 	{ "AttachCameraToDynamicObject", Natives::AttachCameraToDynamicObject },
+	{ "AttachDynamicObjectToObject", Natives::AttachDynamicObjectToObject },
 	{ "AttachDynamicObjectToPlayer", Natives::AttachDynamicObjectToPlayer },
 	{ "AttachDynamicObjectToVehicle", Natives::AttachDynamicObjectToVehicle },
 	{ "EditDynamicObject", Natives::EditDynamicObject },

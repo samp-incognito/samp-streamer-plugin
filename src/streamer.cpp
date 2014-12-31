@@ -551,7 +551,15 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 		SetPlayerObjectPos(player.playerID, internalID, d->second->position[0], d->second->position[1], d->second->position[2]);
 		if (d->second->attach)
 		{
-			if (d->second->attach->player != INVALID_GENERIC_ID)
+			if (d->second->attach->object != INVALID_GENERIC_ID)
+			{
+				boost::unordered_map<int, int>::iterator i = player.internalObjects.find(d->second->attach->object);
+				if (i != player.internalObjects.end())
+				{
+					sampgdk::InvokeNative(sampgdk::FindNative("AttachPlayerObjectToObject"), "dddffffffb", player.playerID, internalID, i->second, d->second->attach->offset[0], d->second->attach->offset[1], d->second->attach->offset[2], d->second->attach->rotation[0], d->second->attach->rotation[1], d->second->attach->rotation[2], d->second->attach->syncRotation);
+				}
+			}
+			else if (d->second->attach->player != INVALID_GENERIC_ID)
 			{
 				sampgdk::InvokeNative(sampgdk::FindNative("AttachPlayerObjectToPlayer"), "dddffffff", player.playerID, internalID, d->second->attach->player, d->second->attach->offset[0], d->second->attach->offset[1], d->second->attach->offset[2], d->second->attach->rotation[0], d->second->attach->rotation[1], d->second->attach->rotation[2]);
 			}
@@ -908,7 +916,16 @@ void Streamer::processAttachedObjects()
 		if ((*o)->attach)
 		{
 			bool adjust = false;
-			if ((*o)->attach->player != INVALID_GENERIC_ID)
+			if ((*o)->attach->object != INVALID_GENERIC_ID)
+			{
+				boost::unordered_map<int, Item::SharedObject>::iterator p = core->getData()->objects.find((*o)->attach->object);
+				if (p != core->getData()->objects.end())
+				{
+					(*o)->attach->position = p->second->position;
+					adjust = true;
+				}
+			}
+			else if ((*o)->attach->player != INVALID_GENERIC_ID)
 			{
 				adjust = GetPlayerPos((*o)->attach->player, &(*o)->attach->position[0], &(*o)->attach->position[1], &(*o)->attach->position[2]);
 			}

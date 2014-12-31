@@ -140,11 +140,13 @@ namespace Item
 		{
 			Attach();
 
+			int object;
 			Eigen::Vector3f offset;
 			int player;
 			Eigen::Vector3f position;
 			int references;
 			Eigen::Vector3f rotation;
+			bool syncRotation;
 			int vehicle;
 
 			EIGEN_MAKE_ALIGNED_OPERATOR_NEW

@@ -907,7 +907,15 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 							SetPlayerObjectPos(p->first, i->second, o->second->position[0], o->second->position[1], o->second->position[2]);
 							if (o->second->attach)
 							{
-								if (o->second->attach->player != INVALID_GENERIC_ID)
+								if (o->second->attach->object != INVALID_GENERIC_ID)
+								{
+									boost::unordered_map<int, int>::iterator j = p->second.internalObjects.find(o->second->attach->object);
+									if (j != p->second.internalObjects.end())
+									{
+										sampgdk::InvokeNative(sampgdk::FindNative("AttachPlayerObjectToObject"), "dddffffffb", p->first, i->second, j->second, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2], o->second->attach->syncRotation);
+									}
+								}
+								else if (o->second->attach->player != INVALID_GENERIC_ID)
 								{
 									sampgdk::InvokeNative(sampgdk::FindNative("AttachPlayerObjectToPlayer"), "dddffffff", p->first, i->second, o->second->attach->player, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
 								}
@@ -2039,7 +2047,15 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 							SetPlayerObjectPos(p->first, i->second, o->second->position[0], o->second->position[1], o->second->position[2]);
 							if (o->second->attach)
 							{
-								if (o->second->attach->player != INVALID_GENERIC_ID)
+								if (o->second->attach->object != INVALID_GENERIC_ID)
+								{
+									boost::unordered_map<int, int>::iterator j = p->second.internalObjects.find(o->second->attach->object);
+									if (j != p->second.internalObjects.end())
+									{
+										sampgdk::InvokeNative(sampgdk::FindNative("AttachPlayerObjectToObject"), "dddffffffb", p->first, i->second, j->second, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2], o->second->attach->syncRotation);
+									}
+								}
+								else if (o->second->attach->player != INVALID_GENERIC_ID)
 								{
 									sampgdk::InvokeNative(sampgdk::FindNative("AttachPlayerObjectToPlayer"), "dddffffff", p->first, i->second, o->second->attach->player, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
 								}

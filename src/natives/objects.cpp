@@ -283,6 +283,62 @@ cell AMX_NATIVE_CALL Natives::AttachCameraToDynamicObject(AMX *amx, cell *params
 	return 0;
 }
 
+cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToObject(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(9, "AttachDynamicObjectToObject");
+	boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[1]));
+	if (o != core->getData()->objects.end())
+	{
+		if (o->second->move)
+		{
+			sampgdk::logprintf("AttachDynamicObjectToObject: Object is currently moving and cannot be attached");
+			return 0;
+		}
+		o->second->attach = boost::intrusive_ptr<Item::Object::Attach>(new Item::Object::Attach);
+		o->second->attach->player = INVALID_GENERIC_ID;
+		o->second->attach->vehicle = INVALID_GENERIC_ID;
+		o->second->attach->object = static_cast<int>(params[2]);
+		o->second->attach->offset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
+		o->second->attach->rotation = Eigen::Vector3f(amx_ctof(params[6]), amx_ctof(params[7]), amx_ctof(params[8]));
+		o->second->attach->syncRotation = static_cast<int>(params[9]) != 0;
+		for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+		{
+			boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
+			if (i != p->second.internalObjects.end())
+			{
+				boost::unordered_map<int, int>::iterator j = p->second.internalObjects.find(o->second->attach->object);
+				if (j != p->second.internalObjects.end())
+				{
+					sampgdk::InvokeNative(sampgdk::FindNative("AttachPlayerObjectToObject"), "dddffffffb", p->first, i->second, j->second, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2], o->second->attach->syncRotation);
+					for (boost::unordered_map<int, Item::Object::Material>::iterator m = o->second->materials.begin(); m != o->second->materials.end(); ++m)
+					{
+						if (m->second.main)
+						{
+							SetPlayerObjectMaterial(p->first, i->second, m->first, m->second.main->modelID, m->second.main->txdFileName.c_str(), m->second.main->textureName.c_str(), m->second.main->materialColor);
+						}
+						else if (m->second.text)
+						{
+							SetPlayerObjectMaterialText(p->first, i->second, m->second.text->materialText.c_str(), m->first, m->second.text->materialSize, m->second.text->fontFace.c_str(), m->second.text->fontSize, m->second.text->bold, m->second.text->fontColor, m->second.text->backColor, m->second.text->textAlignment);
+						}
+					}
+				}
+			}
+		}
+		if (static_cast<int>(params[2]) != INVALID_GENERIC_ID)
+		{
+			core->getStreamer()->attachedObjects.insert(o->second);
+		}
+		else
+		{
+			o->second->attach.reset();
+			core->getStreamer()->attachedObjects.erase(o->second);
+			core->getGrid()->removeObject(o->second, true);
+		}
+		return 1;
+	}
+	return 0;
+}
+
 cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToPlayer(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(8, "AttachDynamicObjectToPlayer");
@@ -295,6 +351,8 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToPlayer(AMX *amx, cell *params
 			return 0;
 		}
 		o->second->attach = boost::intrusive_ptr<Item::Object::Attach>(new Item::Object::Attach);
+		o->second->attach->object = INVALID_GENERIC_ID;
+		o->second->attach->vehicle = INVALID_GENERIC_ID;
 		o->second->attach->player = static_cast<int>(params[2]);
 		o->second->attach->offset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
 		o->second->attach->rotation = Eigen::Vector3f(amx_ctof(params[6]), amx_ctof(params[7]), amx_ctof(params[8]));
@@ -344,6 +402,8 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToVehicle(AMX *amx, cell *param
 			return 0;
 		}
 		o->second->attach = boost::intrusive_ptr<Item::Object::Attach>(new Item::Object::Attach);
+		o->second->attach->object = INVALID_GENERIC_ID;
+		o->second->attach->player = INVALID_GENERIC_ID;
 		o->second->attach->vehicle = static_cast<int>(params[2]);
 		o->second->attach->offset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
 		o->second->attach->rotation = Eigen::Vector3f(amx_ctof(params[6]), amx_ctof(params[7]), amx_ctof(params[8]));

@@ -90,6 +90,7 @@ namespace Natives
 	cell AMX_NATIVE_CALL StopDynamicObject(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL IsDynamicObjectMoving(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL AttachCameraToDynamicObject(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL AttachDynamicObjectToObject(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL AttachDynamicObjectToPlayer(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL AttachDynamicObjectToVehicle(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL EditDynamicObject(AMX *amx, cell *params);
