@@ -1004,8 +1004,8 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 				}
 				if (update)
 				{
-					boost::unordered_map<int, int>::iterator i = core->getStreamer()->internalPickups.find(p->first);
-					if (i != core->getStreamer()->internalPickups.end())
+					boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.find(p->first);
+					if (i != core->getData()->internalPickups.end())
 					{
 						DestroyPickup(i->second);
 						i->second = CreatePickup(p->second->modelID, p->second->type, p->second->position[0], p->second->position[1], p->second->position[2], p->second->worldID);
@@ -2136,8 +2136,8 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 				}
 				if (update)
 				{
-					boost::unordered_map<int, int>::iterator i = core->getStreamer()->internalPickups.find(p->first);
-					if (i != core->getStreamer()->internalPickups.end())
+					boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.find(p->first);
+					if (i != core->getData()->internalPickups.end())
 					{
 						DestroyPickup(i->second);
 						i->second = CreatePickup(p->second->modelID, p->second->type, p->second->position[0], p->second->position[1], p->second->position[2], p->second->worldID);

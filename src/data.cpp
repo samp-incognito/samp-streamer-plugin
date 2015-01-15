@@ -27,6 +27,10 @@ Data::Data()
 	maxPickups = std::numeric_limits<int>::max();
 	maxRaceCheckpoints = std::numeric_limits<int>::max();
 	maxTextLabels = std::numeric_limits<int>::max();
+	maxVisibleMapIcons = 100;
+	maxVisibleObjects = 500;
+	maxVisiblePickups = 4096;
+	maxVisibleTextLabels = 1024;
 }
 
 std::size_t Data::getMaxItems(int type)
@@ -102,6 +106,58 @@ bool Data::setMaxItems(int type, std::size_t value)
 		case STREAMER_TYPE_AREA:
 		{
 			maxAreas = value;
+			return true;
+		}
+	}
+	return false;
+}
+
+std::size_t Data::getMaxVisibleItems(int type)
+{
+	switch (type)
+	{
+		case STREAMER_TYPE_OBJECT:
+		{
+			return maxVisibleObjects;
+		}
+		case STREAMER_TYPE_PICKUP:
+		{
+			return maxVisiblePickups;
+		}
+		case STREAMER_TYPE_MAP_ICON:
+		{
+			return maxVisibleMapIcons;
+		}
+		case STREAMER_TYPE_3D_TEXT_LABEL:
+		{
+			return maxVisibleTextLabels;
+		}
+	}
+	return 0;
+}
+
+bool Data::setMaxVisibleItems(int type, std::size_t value)
+{
+	switch (type)
+	{
+		case STREAMER_TYPE_OBJECT:
+		{
+			maxVisibleObjects = value;
+			return true;
+		}
+		case STREAMER_TYPE_PICKUP:
+		{
+			maxVisiblePickups = value;
+			return true;
+		}
+		case STREAMER_TYPE_MAP_ICON:
+		{
+			maxVisibleMapIcons = value;
+			return true;
+		}
+		case STREAMER_TYPE_3D_TEXT_LABEL:
+		{
+			maxVisibleTextLabels = value;
 			return true;
 		}
 	}

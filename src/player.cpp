@@ -29,14 +29,17 @@ Player::Player(int playerID) : playerID(playerID)
 {
 	activeCheckpoint = 0;
 	activeRaceCheckpoint = 0;
+	currentVisibleObjects = core->getData()->getMaxVisibleItems(STREAMER_TYPE_OBJECT);
+	currentVisibleTextLabels = core->getData()->getMaxVisibleItems(STREAMER_TYPE_3D_TEXT_LABEL);
 	enabledItems.set();
 	interiorID = 0;
+	maxVisibleMapIcons = core->getData()->getMaxVisibleItems(STREAMER_TYPE_MAP_ICON);
+	maxVisibleObjects = core->getData()->getMaxVisibleItems(STREAMER_TYPE_OBJECT);
+	maxVisibleTextLabels = core->getData()->getMaxVisibleItems(STREAMER_TYPE_3D_TEXT_LABEL);
 	position.setZero();
 	updateWhenIdle = false;
 	visibleCell = SharedCell(new Cell());
 	visibleCheckpoint = 0;
 	visibleRaceCheckpoint = 0;
-	visibleObjects = core->getStreamer()->getVisibleItems(STREAMER_TYPE_OBJECT);
-	visibleTextLabels = core->getStreamer()->getVisibleItems(STREAMER_TYPE_3D_TEXT_LABEL);
 	worldID = 0;
 }

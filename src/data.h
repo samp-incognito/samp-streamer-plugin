@@ -32,8 +32,12 @@ public:
 
 	std::size_t getMaxItems(int type);
 	bool setMaxItems(int type, std::size_t value);
+	std::size_t getMaxVisibleItems(int type);
+	bool setMaxVisibleItems(int type, std::size_t value);
 
 	std::set<AMX*> interfaces;
+
+	boost::unordered_map<int, int> internalPickups;
 
 	boost::unordered_map<int, Item::SharedArea> areas;
 	boost::unordered_map<int, Item::SharedCheckpoint> checkpoints;
@@ -52,6 +56,10 @@ private:
 	std::size_t maxPickups;
 	std::size_t maxRaceCheckpoints;
 	std::size_t maxTextLabels;
+	std::size_t maxVisibleMapIcons;
+	std::size_t maxVisibleObjects;
+	std::size_t maxVisiblePickups;
+	std::size_t maxVisibleTextLabels;
 };
 
 #endif

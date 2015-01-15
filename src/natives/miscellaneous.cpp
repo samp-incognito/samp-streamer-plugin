@@ -198,8 +198,8 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemInternalID(AMX *amx, cell *params)
 	CHECK_PARAMS(3, "Streamer_GetItemInternalID");
 	if (static_cast<int>(params[2]) == STREAMER_TYPE_PICKUP)
 	{
-		boost::unordered_map<int, int>::iterator i = core->getStreamer()->internalPickups.find(static_cast<int>(params[3]));
-		if (i != core->getStreamer()->internalPickups.end())
+		boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.find(static_cast<int>(params[3]));
+		if (i != core->getData()->internalPickups.end())
 		{
 			return static_cast<cell>(i->second);
 		}
@@ -276,7 +276,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemStreamerID(AMX *amx, cell *params)
 	CHECK_PARAMS(3, "Streamer_GetItemStreamerID");
 	if (static_cast<int>(params[2]) == STREAMER_TYPE_PICKUP)
 	{
-		for (boost::unordered_map<int, int>::iterator i = core->getStreamer()->internalPickups.begin(); i != core->getStreamer()->internalPickups.end(); ++i)
+		for (boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.begin(); i != core->getData()->internalPickups.end(); ++i)
 		{
 			if (i->second == static_cast<int>(params[3]))
 			{
@@ -363,8 +363,8 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsItemVisible(AMX *amx, cell *params)
 	CHECK_PARAMS(3, "Streamer_IsItemVisible");
 	if (static_cast<int>(params[2]) == STREAMER_TYPE_PICKUP)
 	{
-		boost::unordered_map<int, int>::iterator i = core->getStreamer()->internalPickups.find(static_cast<int>(params[3]));
-		if (i != core->getStreamer()->internalPickups.end())
+		boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.find(static_cast<int>(params[3]));
+		if (i != core->getData()->internalPickups.end())
 		{
 			return 1;
 		}
@@ -442,14 +442,14 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 	bool serverWide = static_cast<int>(params[3]) != 0;
 	if (static_cast<int>(params[2]) == STREAMER_TYPE_PICKUP)
 	{
-		boost::unordered_map<int, int>::iterator p = core->getStreamer()->internalPickups.begin();
-		while (p != core->getStreamer()->internalPickups.end())
+		boost::unordered_map<int, int>::iterator p = core->getData()->internalPickups.begin();
+		while (p != core->getData()->internalPickups.end())
 		{
 			boost::unordered_map<int, Item::SharedPickup>::iterator q = core->getData()->pickups.find(p->first);
 			if (serverWide || (q != core->getData()->pickups.end() && q->second->amx == amx))
 			{
 				DestroyPickup(p->second);
-				p = core->getStreamer()->internalPickups.erase(p);
+				p = core->getData()->internalPickups.erase(p);
 			}
 			else
 			{
@@ -580,7 +580,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountVisibleItems(AMX *amx, cell *params)
 	bool serverWide = static_cast<int>(params[3]) != 0;
 	if (static_cast<int>(params[2]) == STREAMER_TYPE_PICKUP)
 	{
-		return static_cast<cell>(core->getStreamer()->internalPickups.size());
+		return static_cast<cell>(core->getData()->internalPickups.size());
 	}
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())

@@ -45,62 +45,6 @@ Streamer::Streamer()
 	tickCount = 0;
 	tickRate = 50;
 	velocityBoundaries = boost::make_tuple(0.25f, 25.0f);
-	visibleMapIcons = 100;
-	visibleObjects = 500;
-	visiblePickups = 4096;
-	visibleTextLabels = 1024;
-}
-
-std::size_t Streamer::getVisibleItems(int type)
-{
-	switch (type)
-	{
-		case STREAMER_TYPE_OBJECT:
-		{
-			return visibleObjects;
-		}
-		case STREAMER_TYPE_PICKUP:
-		{
-			return visiblePickups;
-		}
-		case STREAMER_TYPE_MAP_ICON:
-		{
-			return visibleMapIcons;
-		}
-		case STREAMER_TYPE_3D_TEXT_LABEL:
-		{
-			return visibleTextLabels;
-		}
-	}
-	return 0;
-}
-
-bool Streamer::setVisibleItems(int type, std::size_t value)
-{
-	switch (type)
-	{
-		case STREAMER_TYPE_OBJECT:
-		{
-			visibleObjects = value;
-			return true;
-		}
-		case STREAMER_TYPE_PICKUP:
-		{
-			visiblePickups = value;
-			return true;
-		}
-		case STREAMER_TYPE_MAP_ICON:
-		{
-			visibleMapIcons = value;
-			return true;
-		}
-		case STREAMER_TYPE_3D_TEXT_LABEL:
-		{
-			visibleTextLabels = value;
-			return true;
-		}
-	}
-	return false;
 }
 
 void Streamer::calculateAverageUpdateTime()
@@ -433,7 +377,7 @@ void Streamer::processMapIcons(Player &player, const std::vector<SharedCell> &ce
 	}
 	for (std::multimap<float, Item::SharedMapIcon>::iterator d = discoveredMapIcons.begin(); d != discoveredMapIcons.end(); ++d)
 	{
-		if (player.internalMapIcons.size() == visibleMapIcons)
+		if (player.internalMapIcons.size() == player.maxVisibleMapIcons)
 		{
 			std::multimap<float, Item::SharedMapIcon>::reverse_iterator e = existingMapIcons.rbegin();
 			if (e != existingMapIcons.rend())
@@ -454,7 +398,7 @@ void Streamer::processMapIcons(Player &player, const std::vector<SharedCell> &ce
 					existingMapIcons.erase(--e.base());
 				}
 			}
-			if (player.internalMapIcons.size() == visibleMapIcons)
+			if (player.internalMapIcons.size() == player.maxVisibleMapIcons)
 			{
 				break;
 			}
@@ -516,7 +460,7 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 	}
 	for (std::multimap<float, Item::SharedObject>::iterator d = discoveredObjects.begin(); d != discoveredObjects.end(); ++d)
 	{
-		if (player.internalObjects.size() == player.visibleObjects)
+		if (player.internalObjects.size() == player.currentVisibleObjects)
 		{
 			std::multimap<float, Item::SharedObject>::reverse_iterator e = existingObjects.rbegin();
 			if (e != existingObjects.rend())
@@ -537,15 +481,15 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 				}
 			}
 		}
-		if (player.internalObjects.size() == visibleObjects)
+		if (player.internalObjects.size() == player.maxVisibleObjects)
 		{
-			player.visibleObjects = player.internalObjects.size();
+			player.currentVisibleObjects = player.internalObjects.size();
 			break;
 		}
 		int internalID = CreatePlayerObject(player.playerID, d->second->modelID, 0.0f, 0.0f, 0.0f, d->second->rotation[0], d->second->rotation[1], d->second->rotation[2], d->second->drawDistance);
 		if (internalID == INVALID_GENERIC_ID)
 		{
-			player.visibleObjects = player.internalObjects.size();
+			player.currentVisibleObjects = player.internalObjects.size();
 			break;
 		}
 		SetPlayerObjectPos(player.playerID, internalID, d->second->position[0], d->second->position[1], d->second->position[2]);
@@ -605,8 +549,8 @@ void Streamer::processPickups(Player &player, const std::vector<SharedCell> &cel
 				{
 					if (boost::geometry::comparable_distance(player.position, p->second->position) < p->second->streamDistance)
 					{
-						boost::unordered_map<int, int>::iterator i = internalPickups.find(p->first);
-						if (i == internalPickups.end())
+						boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.find(p->first);
+						if (i == core->getData()->internalPickups.end())
 						{
 							p->second->worldID = !p->second->worlds.empty() ? player.worldID : -1;
 						}
@@ -618,14 +562,14 @@ void Streamer::processPickups(Player &player, const std::vector<SharedCell> &cel
 	}
 	if (processingFinalPlayer)
 	{
-		boost::unordered_map<int, int>::iterator i = internalPickups.begin();
-		while (i != internalPickups.end())
+		boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.begin();
+		while (i != core->getData()->internalPickups.end())
 		{
 			boost::unordered_map<int, Item::SharedPickup>::iterator d = discoveredPickups.find(i->first);
 			if (d == discoveredPickups.end())
 			{
 				DestroyPickup(i->second);
-				i = internalPickups.erase(i);
+				i = core->getData()->internalPickups.erase(i);
 			}
 			else
 			{
@@ -635,7 +579,7 @@ void Streamer::processPickups(Player &player, const std::vector<SharedCell> &cel
 		}
 		for (boost::unordered_map<int, Item::SharedPickup>::iterator d = discoveredPickups.begin(); d != discoveredPickups.end(); ++d)
 		{
-			if (internalPickups.size() == visiblePickups)
+			if (core->getData()->internalPickups.size() == core->getData()->getMaxVisibleItems(STREAMER_TYPE_PICKUP))
 			{
 				break;
 			}
@@ -644,7 +588,7 @@ void Streamer::processPickups(Player &player, const std::vector<SharedCell> &cel
 			{
 				break;
 			}
-			internalPickups.insert(std::make_pair(d->second->pickupID, internalID));
+			core->getData()->internalPickups.insert(std::make_pair(d->second->pickupID, internalID));
 		}
 		discoveredPickups.clear();
 	}
@@ -748,7 +692,7 @@ void Streamer::processTextLabels(Player &player, const std::vector<SharedCell> &
 	}
 	for (std::multimap<float, Item::SharedTextLabel>::iterator d = discoveredTextLabels.begin(); d != discoveredTextLabels.end(); ++d)
 	{
-		if (player.internalTextLabels.size() == player.visibleTextLabels)
+		if (player.internalTextLabels.size() == player.currentVisibleTextLabels)
 		{
 			std::multimap<float, Item::SharedTextLabel>::reverse_iterator e = existingTextLabels.rbegin();
 			if (e != existingTextLabels.rend())
@@ -769,15 +713,15 @@ void Streamer::processTextLabels(Player &player, const std::vector<SharedCell> &
 				}
 			}
 		}
-		if (player.internalTextLabels.size() == visibleTextLabels)
+		if (player.internalTextLabels.size() == player.maxVisibleTextLabels)
 		{
-			player.visibleTextLabels = player.internalTextLabels.size();
+			player.currentVisibleTextLabels = player.internalTextLabels.size();
 			break;
 		}
 		int internalID = CreatePlayer3DTextLabel(player.playerID, d->second->text.c_str(), d->second->color, d->second->position[0], d->second->position[1], d->second->position[2], d->second->drawDistance, d->second->attach ? d->second->attach->player : INVALID_GENERIC_ID, d->second->attach ? d->second->attach->vehicle : INVALID_GENERIC_ID, d->second->testLOS);
 		if (internalID == INVALID_GENERIC_ID)
 		{
-			player.visibleTextLabels = player.internalTextLabels.size();
+			player.currentVisibleTextLabels = player.internalTextLabels.size();
 			break;
 		}
 		player.internalTextLabels.insert(std::make_pair(d->second->textLabelID, internalID));

@@ -47,19 +47,19 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetMaxItems(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::Streamer_SetMaxItems(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "Streamer_SetMaxItems");
-	return static_cast<cell>(core->getData()->setMaxItems(static_cast<int>(params[1]), static_cast<int>(params[2])) != 0);
+	return static_cast<cell>(core->getData()->setMaxItems(static_cast<int>(params[1]), static_cast<std::size_t>(params[2])) != 0);
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetVisibleItems(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "Streamer_GetVisibleItems");
-	return static_cast<cell>(core->getStreamer()->getVisibleItems(static_cast<std::size_t>(params[1])));
+	CHECK_PARAMS(2, "Streamer_GetVisibleItems");
+	return static_cast<cell>(Utility::getMaxVisibleItems(static_cast<std::size_t>(params[1]), static_cast<int>(params[2])));
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_SetVisibleItems(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "Streamer_SetVisibleItems");
-	return static_cast<cell>(core->getStreamer()->setVisibleItems(static_cast<int>(params[1]), static_cast<int>(params[2])) != 0);
+	CHECK_PARAMS(3, "Streamer_SetVisibleItems");
+	return static_cast<cell>(Utility::setMaxVisibleItems(static_cast<int>(params[1]), static_cast<std::size_t>(params[2]), static_cast<int>(params[3])) != 0);
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetCellDistance(AMX *amx, cell *params)

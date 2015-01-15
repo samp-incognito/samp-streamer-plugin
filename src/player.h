@@ -35,7 +35,12 @@ struct Player
 
 	int activeCheckpoint;
 	int activeRaceCheckpoint;
+	std::size_t currentVisibleObjects;
+	std::size_t currentVisibleTextLabels;
 	int interiorID;
+	std::size_t maxVisibleMapIcons;
+	std::size_t maxVisibleObjects;
+	std::size_t maxVisibleTextLabels;
 	int playerID;
 	Eigen::Vector3f position;
 	int references;
@@ -43,8 +48,6 @@ struct Player
 	SharedCell visibleCell;
 	int visibleCheckpoint;
 	int visibleRaceCheckpoint;
-	std::size_t visibleObjects;
-	std::size_t visibleTextLabels;
 	int worldID;
 
 	boost::unordered_set<int> disabledAreas;

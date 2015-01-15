@@ -260,11 +260,11 @@ boost::unordered_map<int, Item::SharedObject>::iterator Utility::destroyObject(b
 boost::unordered_map<int, Item::SharedPickup>::iterator Utility::destroyPickup(boost::unordered_map<int, Item::SharedPickup>::iterator p)
 {
 	Item::Pickup::identifier.remove(p->first, core->getData()->pickups.size());
-	boost::unordered_map<int, int>::iterator i = core->getStreamer()->internalPickups.find(p->first);
-	if (i != core->getStreamer()->internalPickups.end())
+	boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.find(p->first);
+	if (i != core->getData()->internalPickups.end())
 	{
 		DestroyPickup(i->second);
-		core->getStreamer()->internalPickups.quick_erase(i);
+		core->getData()->internalPickups.quick_erase(i);
 	}
 	core->getGrid()->removePickup(p->second);
 	return core->getData()->pickups.erase(p);
@@ -374,6 +374,81 @@ bool Utility::isPointInArea(const Eigen::Vector3f &point, const Item::SharedArea
 		}
 	}
 	return false;
+}
+
+std::size_t Utility::getMaxVisibleItems(int type, int playerid)
+{
+	if (playerid >= 0 && playerid < MAX_PLAYERS)
+	{
+		boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+		if (p == core->getData()->players.end())
+		{
+			switch (type)
+			{
+				case STREAMER_TYPE_OBJECT:
+				{
+					return p->second.maxVisibleObjects;
+				}
+				case STREAMER_TYPE_MAP_ICON:
+				{
+					return p->second.maxVisibleMapIcons;
+				}
+				case STREAMER_TYPE_3D_TEXT_LABEL:
+				{
+					return p->second.maxVisibleTextLabels;
+				}
+			}
+		}
+	}
+	return core->getData()->getMaxVisibleItems(type);
+}
+
+bool Utility::setMaxVisibleItems(int type, std::size_t value, int playerid)
+{
+	if (playerid >= 0 && playerid < MAX_PLAYERS)
+	{
+		boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+		if (p == core->getData()->players.end())
+		{
+			switch (type)
+			{
+				case STREAMER_TYPE_OBJECT:
+				{
+					p->second.maxVisibleObjects = value;
+					return true;
+				}
+				case STREAMER_TYPE_MAP_ICON:
+				{
+					p->second.maxVisibleMapIcons = value;
+					return true;
+				}
+				case STREAMER_TYPE_3D_TEXT_LABEL:
+				{
+					p->second.maxVisibleTextLabels = value;
+					return true;
+				}
+			}
+		}
+	}
+	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+	{
+		switch (type)
+		{
+			case STREAMER_TYPE_OBJECT:
+			{
+				p->second.maxVisibleObjects = value;
+			}
+			case STREAMER_TYPE_MAP_ICON:
+			{
+				p->second.maxVisibleMapIcons = value;
+			}
+			case STREAMER_TYPE_3D_TEXT_LABEL:
+			{
+				p->second.maxVisibleTextLabels = value;
+			}
+		}
+	}
+	return core->getData()->setMaxVisibleItems(type, value);
 }
 
 void Utility::convertArrayToPolygon(AMX *amx, cell input, cell size, Polygon2D &polygon)

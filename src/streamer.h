@@ -46,9 +46,6 @@ public:
 		tickRate = value;
 	}
 
-	std::size_t getVisibleItems(int type);
-	bool setVisibleItems(int type, std::size_t value);
-
 	void startAutomaticUpdate();
 	void startManualUpdate(Player &player, int type);
 
@@ -58,8 +55,6 @@ public:
 	boost::unordered_set<Item::SharedObject> attachedObjects;
 	boost::unordered_set<Item::SharedTextLabel> attachedTextLabels;
 	boost::unordered_set<Item::SharedObject> movingObjects;
-
-	boost::unordered_map<int, int> internalPickups;
 
 	std::vector<boost::tuple<int, int> > areaEnterCallbacks;
 	std::vector<boost::tuple<int, int> > areaLeaveCallbacks;
@@ -86,11 +81,6 @@ private:
 	std::size_t tickRate;
 
 	boost::tuple<float, float> velocityBoundaries;
-
-	std::size_t visibleMapIcons;
-	std::size_t visibleObjects;
-	std::size_t visiblePickups;
-	std::size_t visibleTextLabels;
 
 	float averageUpdateTime;
 	bool processingFinalPlayer;
