@@ -32,7 +32,7 @@
 cell AMX_NATIVE_CALL Natives::CreateDynamicCP(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(8, "CreateDynamicCP");
-	if (core->getData()->getMaxItems(STREAMER_TYPE_CP) == core->getData()->checkpoints.size())
+	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_CP) == core->getData()->checkpoints.size())
 	{
 		return 0;
 	}

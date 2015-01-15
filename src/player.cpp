@@ -25,18 +25,26 @@
 
 #include <bitset>
 
-Player::Player(int playerID) : playerID(playerID)
+Player::Player(int id)
 {
 	activeCheckpoint = 0;
 	activeRaceCheckpoint = 0;
-	currentVisibleObjects = core->getData()->getMaxVisibleItems(STREAMER_TYPE_OBJECT);
-	currentVisibleTextLabels = core->getData()->getMaxVisibleItems(STREAMER_TYPE_3D_TEXT_LABEL);
+	currentVisibleObjects = core->getData()->getGlobalMaxVisibleItems(STREAMER_TYPE_OBJECT);
+	currentVisibleTextLabels = core->getData()->getGlobalMaxVisibleItems(STREAMER_TYPE_3D_TEXT_LABEL);
 	enabledItems.set();
 	interiorID = 0;
-	maxVisibleMapIcons = core->getData()->getMaxVisibleItems(STREAMER_TYPE_MAP_ICON);
-	maxVisibleObjects = core->getData()->getMaxVisibleItems(STREAMER_TYPE_OBJECT);
-	maxVisibleTextLabels = core->getData()->getMaxVisibleItems(STREAMER_TYPE_3D_TEXT_LABEL);
+	maxVisibleMapIcons = core->getData()->getGlobalMaxVisibleItems(STREAMER_TYPE_MAP_ICON);
+	maxVisibleObjects = core->getData()->getGlobalMaxVisibleItems(STREAMER_TYPE_OBJECT);
+	maxVisibleTextLabels = core->getData()->getGlobalMaxVisibleItems(STREAMER_TYPE_3D_TEXT_LABEL);
+	playerID = id;
 	position.setZero();
+	radiusMultipliers[STREAMER_TYPE_OBJECT] = core->getData()->getGlobalRadiusMultiplier(STREAMER_TYPE_OBJECT);
+	radiusMultipliers[STREAMER_TYPE_PICKUP] = core->getData()->getGlobalRadiusMultiplier(STREAMER_TYPE_PICKUP);
+	radiusMultipliers[STREAMER_TYPE_CP] = core->getData()->getGlobalRadiusMultiplier(STREAMER_TYPE_CP);
+	radiusMultipliers[STREAMER_TYPE_RACE_CP] = core->getData()->getGlobalRadiusMultiplier(STREAMER_TYPE_RACE_CP);
+	radiusMultipliers[STREAMER_TYPE_MAP_ICON] = core->getData()->getGlobalRadiusMultiplier(STREAMER_TYPE_MAP_ICON);
+	radiusMultipliers[STREAMER_TYPE_3D_TEXT_LABEL] = core->getData()->getGlobalRadiusMultiplier(STREAMER_TYPE_3D_TEXT_LABEL);
+	radiusMultipliers[STREAMER_TYPE_AREA] = core->getData()->getGlobalRadiusMultiplier(STREAMER_TYPE_AREA);
 	updateWhenIdle = false;
 	visibleCell = SharedCell(new Cell());
 	visibleCheckpoint = 0;

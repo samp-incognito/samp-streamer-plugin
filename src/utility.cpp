@@ -376,7 +376,7 @@ bool Utility::isPointInArea(const Eigen::Vector3f &point, const Item::SharedArea
 	return false;
 }
 
-std::size_t Utility::getMaxVisibleItems(int type, int playerid)
+std::size_t Utility::getGlobalMaxVisibleItems(int type, int playerid)
 {
 	if (playerid >= 0 && playerid < MAX_PLAYERS)
 	{
@@ -400,7 +400,7 @@ std::size_t Utility::getMaxVisibleItems(int type, int playerid)
 			}
 		}
 	}
-	return core->getData()->getMaxVisibleItems(type);
+	return core->getData()->getGlobalMaxVisibleItems(type);
 }
 
 bool Utility::setMaxVisibleItems(int type, std::size_t value, int playerid)
@@ -448,7 +448,44 @@ bool Utility::setMaxVisibleItems(int type, std::size_t value, int playerid)
 			}
 		}
 	}
-	return core->getData()->setMaxVisibleItems(type, value);
+	return core->getData()->setGlobalMaxVisibleItems(type, value);
+}
+
+float Utility::getRadiusMultiplier(int type, int playerid)
+{
+	if (type >= 0 && type < STREAMER_MAX_TYPES)
+	{
+		if (playerid >= 0 && playerid < MAX_PLAYERS)
+		{
+			boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+			if (p == core->getData()->players.end())
+			{
+				return p->second.radiusMultipliers[type];
+			}
+		}
+	}
+	return core->getData()->getGlobalRadiusMultiplier(type);
+}
+
+bool Utility::setRadiusMultiplier(int type, float value, int playerid)
+{
+	if (type >= 0 && type < STREAMER_MAX_TYPES)
+	{
+		if (playerid >= 0 && playerid < MAX_PLAYERS)
+		{
+			boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+			if (p == core->getData()->players.end())
+			{
+				p->second.radiusMultipliers[type] = value;
+				return true;
+			}
+		}
+		for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+		{
+			p->second.radiusMultipliers[type] = value;
+		}
+	}
+	return core->getData()->setGlobalRadiusMultiplier(type, value);
 }
 
 void Utility::convertArrayToPolygon(AMX *amx, cell input, cell size, Polygon2D &polygon)

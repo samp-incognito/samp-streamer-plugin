@@ -34,7 +34,7 @@
 cell AMX_NATIVE_CALL Natives::CreateDynamicObjectEx(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(15, "CreateDynamicObjectEx");
-	if (core->getData()->getMaxItems(STREAMER_TYPE_OBJECT) == core->getData()->objects.size())
+	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_OBJECT) == core->getData()->objects.size())
 	{
 		return 0;
 	}
@@ -59,7 +59,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicObjectEx(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::CreateDynamicPickupEx(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(12, "CreateDynamicPickupEx");
-	if (core->getData()->getMaxItems(STREAMER_TYPE_PICKUP) == core->getData()->pickups.size())
+	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_PICKUP) == core->getData()->pickups.size())
 	{
 		return 0;
 	}
@@ -82,7 +82,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPickupEx(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::CreateDynamicCPEx(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(11, "CreateDynamicCPEx");
-	if (core->getData()->getMaxItems(STREAMER_TYPE_CP) == core->getData()->checkpoints.size())
+	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_CP) == core->getData()->checkpoints.size())
 	{
 		return 0;
 	}
@@ -104,7 +104,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCPEx(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::CreateDynamicRaceCPEx(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(15, "CreateDynamicRaceCPEx");
-	if (core->getData()->getMaxItems(STREAMER_TYPE_RACE_CP) == core->getData()->raceCheckpoints.size())
+	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_RACE_CP) == core->getData()->raceCheckpoints.size())
 	{
 		return 0;
 	}
@@ -128,7 +128,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicRaceCPEx(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::CreateDynamicMapIconEx(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(13, "CreateDynamicMapIconEx");
-	if (core->getData()->getMaxItems(STREAMER_TYPE_MAP_ICON) == core->getData()->mapIcons.size())
+	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_MAP_ICON) == core->getData()->mapIcons.size())
 	{
 		return 0;
 	}
@@ -152,7 +152,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicMapIconEx(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabelEx(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(16, "CreateDynamic3DTextLabelEx");
-	if (core->getData()->getMaxItems(STREAMER_TYPE_3D_TEXT_LABEL) == core->getData()->textLabels.size())
+	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_3D_TEXT_LABEL) == core->getData()->textLabels.size())
 	{
 		return 0;
 	}
@@ -188,7 +188,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabelEx(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::CreateDynamicCircleEx(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(9, "CreateDynamicCircleEx");
-	if (core->getData()->getMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
+	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return 0;
 	}
@@ -210,7 +210,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCircleEx(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::CreateDynamicCylinderEx(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(11, "CreateDynamicCylinderEx");
-	if (core->getData()->getMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
+	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return 0;
 	}
@@ -233,7 +233,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCylinderEx(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::CreateDynamicSphereEx(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(10, "CreateDynamicSphereEx");
-	if (core->getData()->getMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
+	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return 0;
 	}
@@ -255,7 +255,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicSphereEx(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::CreateDynamicRectangleEx(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(10, "CreateDynamicRectangleEx");
-	if (core->getData()->getMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
+	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return 0;
 	}
@@ -278,7 +278,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicRectangleEx(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::CreateDynamicCuboidEx(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(12, "CreateDynamicCuboidEx");
-	if (core->getData()->getMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
+	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return 0;
 	}
@@ -301,7 +301,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCuboidEx(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::CreateDynamicPolygonEx(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(10, "CreateDynamicPolygonEx");
-	if (core->getData()->getMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
+	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return 0;
 	}

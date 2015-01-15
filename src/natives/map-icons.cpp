@@ -32,7 +32,7 @@
 cell AMX_NATIVE_CALL Natives::CreateDynamicMapIcon(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(10, "CreateDynamicMapIcon");
-	if (core->getData()->getMaxItems(STREAMER_TYPE_MAP_ICON) == core->getData()->mapIcons.size())
+	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_MAP_ICON) == core->getData()->mapIcons.size())
 	{
 		return 0;
 	}

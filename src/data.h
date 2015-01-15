@@ -30,10 +30,14 @@ class Data
 public:
 	Data();
 
-	std::size_t getMaxItems(int type);
-	bool setMaxItems(int type, std::size_t value);
-	std::size_t getMaxVisibleItems(int type);
-	bool setMaxVisibleItems(int type, std::size_t value);
+	std::size_t getGlobalMaxItems(int type);
+	bool setGlobalMaxItems(int type, std::size_t value);
+
+	std::size_t getGlobalMaxVisibleItems(int type);
+	bool setGlobalMaxVisibleItems(int type, std::size_t value);
+
+	float getGlobalRadiusMultiplier(int type);
+	bool setGlobalRadiusMultiplier(int type, float value);
 
 	std::set<AMX*> interfaces;
 
@@ -49,17 +53,9 @@ public:
 
 	boost::unordered_map<int, Player> players;
 private:
-	std::size_t maxAreas;
-	std::size_t maxCheckpoints;
-	std::size_t maxMapIcons;
-	std::size_t maxObjects;
-	std::size_t maxPickups;
-	std::size_t maxRaceCheckpoints;
-	std::size_t maxTextLabels;
-	std::size_t maxVisibleMapIcons;
-	std::size_t maxVisibleObjects;
-	std::size_t maxVisiblePickups;
-	std::size_t maxVisibleTextLabels;
+	std::size_t globalMaxItems[STREAMER_MAX_TYPES];
+	std::size_t globalMaxVisibleItems[STREAMER_MAX_TYPES];
+	float globalRadiusMultipliers[STREAMER_MAX_TYPES];
 };
 
 #endif

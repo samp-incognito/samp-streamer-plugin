@@ -41,25 +41,39 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetTickRate(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::Streamer_GetMaxItems(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "Streamer_GetMaxItems");
-	return static_cast<cell>(core->getData()->getMaxItems(static_cast<std::size_t>(params[1])));
+	return static_cast<cell>(core->getData()->getGlobalMaxItems(static_cast<std::size_t>(params[1])));
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_SetMaxItems(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "Streamer_SetMaxItems");
-	return static_cast<cell>(core->getData()->setMaxItems(static_cast<int>(params[1]), static_cast<std::size_t>(params[2])) != 0);
+	return static_cast<cell>(core->getData()->setGlobalMaxItems(static_cast<int>(params[1]), static_cast<std::size_t>(params[2])) != 0);
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetVisibleItems(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "Streamer_GetVisibleItems");
-	return static_cast<cell>(Utility::getMaxVisibleItems(static_cast<std::size_t>(params[1]), static_cast<int>(params[2])));
+	return static_cast<cell>(Utility::getGlobalMaxVisibleItems(static_cast<std::size_t>(params[1]), static_cast<int>(params[2])));
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_SetVisibleItems(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(3, "Streamer_SetVisibleItems");
 	return static_cast<cell>(Utility::setMaxVisibleItems(static_cast<int>(params[1]), static_cast<std::size_t>(params[2]), static_cast<int>(params[3])) != 0);
+}
+
+cell AMX_NATIVE_CALL Natives::Streamer_GetRadiusMultiplier(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(3, "Streamer_GetRadiusMultiplier");
+	float radiusMultiplier = Utility::getRadiusMultiplier(static_cast<std::size_t>(params[1]), static_cast<int>(params[3]));
+	Utility::storeFloatInNative(amx, params[2], radiusMultiplier);
+	return 1;
+}
+
+cell AMX_NATIVE_CALL Natives::Streamer_SetRadiusMultiplier(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(3, "Streamer_SetRadiusMultiplier");
+	return static_cast<cell>(Utility::setRadiusMultiplier(static_cast<int>(params[1]), static_cast<float>(params[2]), static_cast<int>(params[3])) != 0);
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetCellDistance(AMX *amx, cell *params)

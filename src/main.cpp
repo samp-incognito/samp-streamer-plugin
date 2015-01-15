@@ -56,6 +56,8 @@ AMX_NATIVE_INFO natives[] =
 	{ "Streamer_SetMaxItems", Natives::Streamer_SetMaxItems },
 	{ "Streamer_GetVisibleItems", Natives::Streamer_GetVisibleItems },
 	{ "Streamer_SetVisibleItems", Natives::Streamer_SetVisibleItems },
+	{ "Streamer_GetRadiusMultiplier", Natives::Streamer_GetRadiusMultiplier },
+	{ "Streamer_SetRadiusMultiplier", Natives::Streamer_SetRadiusMultiplier },
 	{ "Streamer_GetCellDistance", Natives::Streamer_GetCellDistance },
 	{ "Streamer_SetCellDistance", Natives::Streamer_SetCellDistance },
 	{ "Streamer_GetCellSize", Natives::Streamer_GetCellSize },

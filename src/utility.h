@@ -46,8 +46,11 @@ namespace Utility
 
 	bool isPointInArea(const Eigen::Vector3f &point, const Item::SharedArea &area);
 
-	std::size_t getMaxVisibleItems(int type, int playerid);
+	std::size_t getGlobalMaxVisibleItems(int type, int playerid);
 	bool setMaxVisibleItems(int type, std::size_t value, int playerid);
+
+	float getRadiusMultiplier(int type, int playerid);
+	bool setRadiusMultiplier(int type, float value, int playerid);
 
 	template<typename T>
 	inline bool almostEquals(T a, T b)

@@ -32,7 +32,7 @@
 cell AMX_NATIVE_CALL Natives::CreateDynamicRaceCP(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(12, "CreateDynamicRaceCP");
-	if (core->getData()->getMaxItems(STREAMER_TYPE_RACE_CP) == core->getData()->raceCheckpoints.size())
+	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_RACE_CP) == core->getData()->raceCheckpoints.size())
 	{
 		return 0;
 	}

@@ -34,7 +34,7 @@
 cell AMX_NATIVE_CALL Natives::CreateDynamicCircle(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(6, "CreateDynamicCircle");
-	if (core->getData()->getMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
+	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return 0;
 	}
@@ -56,7 +56,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCircle(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::CreateDynamicCylinder(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(8, "CreateDynamicCylinder");
-	if (core->getData()->getMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
+	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return 0;
 	}
@@ -79,7 +79,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCylinder(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::CreateDynamicSphere(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(7, "CreateDynamicSphere");
-	if (core->getData()->getMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
+	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return 0;
 	}
@@ -101,7 +101,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicSphere(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::CreateDynamicRectangle(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(7, "CreateDynamicRectangle");
-	if (core->getData()->getMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
+	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return 0;
 	}
@@ -124,7 +124,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicRectangle(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::CreateDynamicCuboid(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(9, "CreateDynamicCuboid");
-	if (core->getData()->getMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
+	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return 0;
 	}
@@ -147,7 +147,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCuboid(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::CreateDynamicPolygon(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(7, "CreateDynamicPolygon");
-	if (core->getData()->getMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
+	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return 0;
 	}

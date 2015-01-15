@@ -301,7 +301,7 @@ void Streamer::processCheckpoints(Player &player, const std::vector<SharedCell> 
 					distance = static_cast<float>(boost::geometry::comparable_distance(player.position, d->second->position));
 				}
 			}
-			if (distance < d->second->streamDistance)
+			if (distance < (d->second->streamDistance * player.radiusMultipliers[STREAMER_TYPE_CP]))
 			{
 				discoveredCheckpoints.insert(std::make_pair(distance, d->second));
 			}
@@ -349,7 +349,7 @@ void Streamer::processMapIcons(Player &player, const std::vector<SharedCell> &ce
 				distance = static_cast<float>(boost::geometry::comparable_distance(player.position, m->second->position));
 			}
 			boost::unordered_map<int, int>::iterator i = player.internalMapIcons.find(m->first);
-			if (distance < m->second->streamDistance)
+			if (distance < (m->second->streamDistance * player.radiusMultipliers[STREAMER_TYPE_MAP_ICON]))
 			{
 				if (i == player.internalMapIcons.end())
 				{
@@ -433,7 +433,7 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 				}
 			}
 			boost::unordered_map<int, int>::iterator i = player.internalObjects.find(o->first);
-			if (distance < o->second->streamDistance)
+			if (distance < (o->second->streamDistance * player.radiusMultipliers[STREAMER_TYPE_OBJECT]))
 			{
 				if (i == player.internalObjects.end())
 				{
@@ -547,7 +547,7 @@ void Streamer::processPickups(Player &player, const std::vector<SharedCell> &cel
 			{
 				if (checkPlayer(p->second->players, player.playerID, p->second->interiors, player.interiorID, p->second->worlds, player.worldID))
 				{
-					if (boost::geometry::comparable_distance(player.position, p->second->position) < p->second->streamDistance)
+					if (boost::geometry::comparable_distance(player.position, p->second->position) < (p->second->streamDistance * player.radiusMultipliers[STREAMER_TYPE_PICKUP]))
 					{
 						boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.find(p->first);
 						if (i == core->getData()->internalPickups.end())
@@ -579,7 +579,7 @@ void Streamer::processPickups(Player &player, const std::vector<SharedCell> &cel
 		}
 		for (boost::unordered_map<int, Item::SharedPickup>::iterator d = discoveredPickups.begin(); d != discoveredPickups.end(); ++d)
 		{
-			if (core->getData()->internalPickups.size() == core->getData()->getMaxVisibleItems(STREAMER_TYPE_PICKUP))
+			if (core->getData()->internalPickups.size() == core->getData()->getGlobalMaxVisibleItems(STREAMER_TYPE_PICKUP))
 			{
 				break;
 			}
@@ -610,7 +610,7 @@ void Streamer::processRaceCheckpoints(Player &player, const std::vector<SharedCe
 					distance = static_cast<float>(boost::geometry::comparable_distance(player.position, r->second->position));
 				}
 			}
-			if (distance < r->second->streamDistance)
+			if (distance < (r->second->streamDistance * player.radiusMultipliers[STREAMER_TYPE_RACE_CP]))
 			{
 				discoveredRaceCheckpoints.insert(std::make_pair(distance, r->second));
 			}
@@ -665,7 +665,7 @@ void Streamer::processTextLabels(Player &player, const std::vector<SharedCell> &
 				}
 			}
 			boost::unordered_map<int, int>::iterator i = player.internalTextLabels.find(t->first);
-			if (distance < t->second->streamDistance)
+			if (distance < (t->second->streamDistance * player.radiusMultipliers[STREAMER_TYPE_3D_TEXT_LABEL]))
 			{
 				if (i == player.internalTextLabels.end())
 				{

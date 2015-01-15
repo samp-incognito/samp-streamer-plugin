@@ -31,7 +31,7 @@
 cell AMX_NATIVE_CALL Natives::CreateDynamicPickup(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(9, "CreateDynamicPickup");
-	if (core->getData()->getMaxItems(STREAMER_TYPE_PICKUP) == core->getData()->pickups.size())
+	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_PICKUP) == core->getData()->pickups.size())
 	{
 		return 0;
 	}

@@ -36,7 +36,7 @@
 cell AMX_NATIVE_CALL Natives::CreateDynamicObject(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(12, "CreateDynamicObject");
-	if (core->getData()->getMaxItems(STREAMER_TYPE_OBJECT) == core->getData()->objects.size())
+	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_OBJECT) == core->getData()->objects.size())
 	{
 		return 0;
 	}

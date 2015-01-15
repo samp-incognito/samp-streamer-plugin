@@ -31,7 +31,7 @@
 
 struct Player
 {
-	Player(int playerID);
+	Player(int id);
 
 	int activeCheckpoint;
 	int activeRaceCheckpoint;
@@ -43,6 +43,7 @@ struct Player
 	std::size_t maxVisibleTextLabels;
 	int playerID;
 	Eigen::Vector3f position;
+	float radiusMultipliers[STREAMER_MAX_TYPES];
 	int references;
 	bool updateWhenIdle;
 	SharedCell visibleCell;

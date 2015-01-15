@@ -20,146 +20,112 @@
 
 Data::Data()
 {
-	maxAreas = std::numeric_limits<int>::max();
-	maxCheckpoints = std::numeric_limits<int>::max();
-	maxMapIcons = std::numeric_limits<int>::max();
-	maxObjects = std::numeric_limits<int>::max();
-	maxPickups = std::numeric_limits<int>::max();
-	maxRaceCheckpoints = std::numeric_limits<int>::max();
-	maxTextLabels = std::numeric_limits<int>::max();
-	maxVisibleMapIcons = 100;
-	maxVisibleObjects = 500;
-	maxVisiblePickups = 4096;
-	maxVisibleTextLabels = 1024;
+	globalMaxItems[STREAMER_TYPE_OBJECT] = std::numeric_limits<std::size_t>::max();
+	globalMaxItems[STREAMER_TYPE_PICKUP] = std::numeric_limits<std::size_t>::max();
+	globalMaxItems[STREAMER_TYPE_CP] = std::numeric_limits<std::size_t>::max();
+	globalMaxItems[STREAMER_TYPE_RACE_CP] = std::numeric_limits<std::size_t>::max();
+	globalMaxItems[STREAMER_TYPE_MAP_ICON] = std::numeric_limits<std::size_t>::max();
+	globalMaxItems[STREAMER_TYPE_3D_TEXT_LABEL] = std::numeric_limits<std::size_t>::max();
+	globalMaxItems[STREAMER_TYPE_AREA] = std::numeric_limits<std::size_t>::max();
+	globalMaxVisibleItems[STREAMER_TYPE_OBJECT] = 500;
+	globalMaxVisibleItems[STREAMER_TYPE_PICKUP] = 4096;
+	globalMaxVisibleItems[STREAMER_TYPE_MAP_ICON] = 100;
+	globalMaxVisibleItems[STREAMER_TYPE_3D_TEXT_LABEL] = 1024;
+	globalRadiusMultipliers[STREAMER_TYPE_OBJECT] = 1.0f;
+	globalRadiusMultipliers[STREAMER_TYPE_PICKUP] = 1.0f;
+	globalRadiusMultipliers[STREAMER_TYPE_CP] = 1.0f;
+	globalRadiusMultipliers[STREAMER_TYPE_RACE_CP] = 1.0f;
+	globalRadiusMultipliers[STREAMER_TYPE_MAP_ICON] = 1.0f;
+	globalRadiusMultipliers[STREAMER_TYPE_3D_TEXT_LABEL] = 1.0f;
+	globalRadiusMultipliers[STREAMER_TYPE_AREA] = 1.0f;
 }
 
-std::size_t Data::getMaxItems(int type)
+std::size_t Data::getGlobalMaxItems(int type)
+{
+	if (type >= 0 && type < STREAMER_MAX_TYPES)
+	{
+		return globalMaxItems[type];
+	}
+	return 0;
+}
+
+bool Data::setGlobalMaxItems(int type, std::size_t value)
+{
+	if (type >= 0 && type < STREAMER_MAX_TYPES)
+	{
+		globalMaxItems[type] = value;
+		return true;
+	}
+	return false;
+}
+
+std::size_t Data::getGlobalMaxVisibleItems(int type)
 {
 	switch (type)
 	{
 		case STREAMER_TYPE_OBJECT:
 		{
-			return maxObjects;
+			return globalMaxVisibleItems[STREAMER_TYPE_OBJECT];
 		}
 		case STREAMER_TYPE_PICKUP:
 		{
-			return maxPickups;
-		}
-		case STREAMER_TYPE_CP:
-		{
-			return maxCheckpoints;
-		}
-		case STREAMER_TYPE_RACE_CP:
-		{
-			return maxRaceCheckpoints;
+			return globalMaxVisibleItems[STREAMER_TYPE_PICKUP];
 		}
 		case STREAMER_TYPE_MAP_ICON:
 		{
-			return maxMapIcons;
+			return globalMaxVisibleItems[STREAMER_TYPE_MAP_ICON];
 		}
 		case STREAMER_TYPE_3D_TEXT_LABEL:
 		{
-			return maxTextLabels;
-		}
-		case STREAMER_TYPE_AREA:
-		{
-			return maxAreas;
+			return globalMaxVisibleItems[STREAMER_TYPE_3D_TEXT_LABEL];
 		}
 	}
 	return 0;
 }
 
-bool Data::setMaxItems(int type, std::size_t value)
+bool Data::setGlobalMaxVisibleItems(int type, std::size_t value)
 {
 	switch (type)
 	{
 		case STREAMER_TYPE_OBJECT:
 		{
-			maxObjects = value;
+			globalMaxVisibleItems[STREAMER_TYPE_OBJECT] = value;
 			return true;
 		}
 		case STREAMER_TYPE_PICKUP:
 		{
-			maxPickups = value;
-			return true;
-		}
-		case STREAMER_TYPE_CP:
-		{
-			maxCheckpoints = value;
-			return true;
-		}
-		case STREAMER_TYPE_RACE_CP:
-		{
-			maxRaceCheckpoints = value;
+			globalMaxVisibleItems[STREAMER_TYPE_PICKUP] = value;
 			return true;
 		}
 		case STREAMER_TYPE_MAP_ICON:
 		{
-			maxMapIcons = value;
+			globalMaxVisibleItems[STREAMER_TYPE_MAP_ICON] = value;
 			return true;
 		}
 		case STREAMER_TYPE_3D_TEXT_LABEL:
 		{
-			maxTextLabels = value;
-			return true;
-		}
-		case STREAMER_TYPE_AREA:
-		{
-			maxAreas = value;
+			globalMaxVisibleItems[STREAMER_TYPE_3D_TEXT_LABEL] = value;
 			return true;
 		}
 	}
 	return false;
 }
 
-std::size_t Data::getMaxVisibleItems(int type)
+float Data::getGlobalRadiusMultiplier(int type)
 {
-	switch (type)
+	if (type >= 0 && type < STREAMER_MAX_TYPES)
 	{
-		case STREAMER_TYPE_OBJECT:
-		{
-			return maxVisibleObjects;
-		}
-		case STREAMER_TYPE_PICKUP:
-		{
-			return maxVisiblePickups;
-		}
-		case STREAMER_TYPE_MAP_ICON:
-		{
-			return maxVisibleMapIcons;
-		}
-		case STREAMER_TYPE_3D_TEXT_LABEL:
-		{
-			return maxVisibleTextLabels;
-		}
+		return globalRadiusMultipliers[type];
 	}
 	return 0;
 }
 
-bool Data::setMaxVisibleItems(int type, std::size_t value)
+bool Data::setGlobalRadiusMultiplier(int type, float value)
 {
-	switch (type)
+	if (type >= 0 && type < STREAMER_MAX_TYPES)
 	{
-		case STREAMER_TYPE_OBJECT:
-		{
-			maxVisibleObjects = value;
-			return true;
-		}
-		case STREAMER_TYPE_PICKUP:
-		{
-			maxVisiblePickups = value;
-			return true;
-		}
-		case STREAMER_TYPE_MAP_ICON:
-		{
-			maxVisibleMapIcons = value;
-			return true;
-		}
-		case STREAMER_TYPE_3D_TEXT_LABEL:
-		{
-			maxVisibleTextLabels = value;
-			return true;
-		}
+		globalRadiusMultipliers[type] = value;
+		return true;
 	}
 	return false;
 }
