@@ -1,5 +1,14 @@
 SA-MP Streamer Plugin
 =====================
+v2.7.5
+------
+- Updated sampgdk, resolving some issues with callbacks
+- Added type parameter to Streamer_Update(Ex)
+- Added AttachDynamicObjectToObject and AttachDynamicObjectToPlayer
+  (requires YSF by kurta999 to be loaded)
+- Made visible item amounts configurable per player
+- Added Streamer_(Get/Set)RadiusMultiplier
+- Made items static if a negative stream distance is specified
 
 v2.7.4
 ------
