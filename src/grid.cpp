@@ -102,7 +102,7 @@ void Grid::addArea(const Item::SharedArea &area)
 
 void Grid::addCheckpoint(const Item::SharedCheckpoint &checkpoint)
 {
-	if (checkpoint->streamDistance > cellDistance)
+	if (checkpoint->streamDistance > cellDistance || checkpoint->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
 	{
 		globalCell->checkpoints.insert(std::make_pair(checkpoint->checkpointID, checkpoint));
 		checkpoint->cell.reset();
@@ -117,7 +117,7 @@ void Grid::addCheckpoint(const Item::SharedCheckpoint &checkpoint)
 
 void Grid::addMapIcon(const Item::SharedMapIcon &mapIcon)
 {
-	if (mapIcon->streamDistance > cellDistance)
+	if (mapIcon->streamDistance > cellDistance || mapIcon->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
 	{
 		globalCell->mapIcons.insert(std::make_pair(mapIcon->mapIconID, mapIcon));
 		mapIcon->cell.reset();
@@ -132,7 +132,7 @@ void Grid::addMapIcon(const Item::SharedMapIcon &mapIcon)
 
 void Grid::addObject(const Item::SharedObject &object)
 {
-	if (object->streamDistance > cellDistance)
+	if (object->streamDistance > cellDistance || object->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
 	{
 		globalCell->objects.insert(std::make_pair(object->objectID, object));
 		object->cell.reset();
@@ -156,7 +156,7 @@ void Grid::addObject(const Item::SharedObject &object)
 
 void Grid::addPickup(const Item::SharedPickup &pickup)
 {
-	if (pickup->streamDistance > cellDistance)
+	if (pickup->streamDistance > cellDistance || pickup->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
 	{
 		globalCell->pickups.insert(std::make_pair(pickup->pickupID, pickup));
 		pickup->cell.reset();
@@ -171,7 +171,7 @@ void Grid::addPickup(const Item::SharedPickup &pickup)
 
 void Grid::addRaceCheckpoint(const Item::SharedRaceCheckpoint &raceCheckpoint)
 {
-	if (raceCheckpoint->streamDistance > cellDistance)
+	if (raceCheckpoint->streamDistance > cellDistance || raceCheckpoint->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
 	{
 		globalCell->raceCheckpoints.insert(std::make_pair(raceCheckpoint->raceCheckpointID, raceCheckpoint));
 		raceCheckpoint->cell.reset();
@@ -186,7 +186,7 @@ void Grid::addRaceCheckpoint(const Item::SharedRaceCheckpoint &raceCheckpoint)
 
 void Grid::addTextLabel(const Item::SharedTextLabel &textLabel)
 {
-	if (textLabel->streamDistance > cellDistance)
+	if (textLabel->streamDistance > cellDistance || textLabel->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
 	{
 		globalCell->textLabels.insert(std::make_pair(textLabel->textLabelID, textLabel));
 		textLabel->cell.reset();

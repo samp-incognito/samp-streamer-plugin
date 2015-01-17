@@ -46,7 +46,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicMapIcon(AMX *amx, cell *params)
 	Utility::addToContainer(mapIcon->worlds, static_cast<int>(params[6]));
 	Utility::addToContainer(mapIcon->interiors, static_cast<int>(params[7]));
 	Utility::addToContainer(mapIcon->players, static_cast<int>(params[8]));
-	mapIcon->streamDistance = amx_ctof(params[9]) * amx_ctof(params[9]);
+	mapIcon->streamDistance = amx_ctof(params[9]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[9]) : amx_ctof(params[9]) * amx_ctof(params[9]);
 	mapIcon->style = static_cast<int>(params[10]);
 	core->getGrid()->addMapIcon(mapIcon);
 	core->getData()->mapIcons.insert(std::make_pair(mapIconID, mapIcon));

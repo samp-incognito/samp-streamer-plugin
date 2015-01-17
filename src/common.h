@@ -42,6 +42,8 @@
 #define STREAMER_OBJECT_TYPE_PLAYER (1)
 #define STREAMER_OBJECT_TYPE_DYNAMIC (2)
 
+#define STREAMER_STATIC_DISTANCE_CUTOFF (0.0f)
+
 template<typename T>
 inline void intrusive_ptr_add_ref(T *t)
 {

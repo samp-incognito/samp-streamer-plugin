@@ -61,7 +61,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabel(AMX *amx, cell *params)
 	Utility::addToContainer(textLabel->worlds, static_cast<int>(params[10]));
 	Utility::addToContainer(textLabel->interiors, static_cast<int>(params[11]));
 	Utility::addToContainer(textLabel->players, static_cast<int>(params[12]));
-	textLabel->streamDistance = amx_ctof(params[13]) * amx_ctof(params[13]);
+	textLabel->streamDistance = amx_ctof(params[13]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[13]) : amx_ctof(params[13]) * amx_ctof(params[13]);
 	core->getGrid()->addTextLabel(textLabel);
 	core->getData()->textLabels.insert(std::make_pair(textLabelID, textLabel));
 	return static_cast<cell>(textLabelID);

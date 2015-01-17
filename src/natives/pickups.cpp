@@ -46,7 +46,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPickup(AMX *amx, cell *params)
 	Utility::addToContainer(pickup->worlds, static_cast<int>(params[6]));
 	Utility::addToContainer(pickup->interiors, static_cast<int>(params[7]));
 	Utility::addToContainer(pickup->players, static_cast<int>(params[8]));
-	pickup->streamDistance = amx_ctof(params[9]) * amx_ctof(params[9]);
+	pickup->streamDistance = amx_ctof(params[9]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[9]) : amx_ctof(params[9]) * amx_ctof(params[9]);
 	core->getGrid()->addPickup(pickup);
 	core->getData()->pickups.insert(std::make_pair(pickupID, pickup));
 	return static_cast<cell>(pickupID);

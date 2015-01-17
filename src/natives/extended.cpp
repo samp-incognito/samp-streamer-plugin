@@ -46,7 +46,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicObjectEx(AMX *amx, cell *params)
 	object->position = Eigen::Vector3f(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
 	object->rotation = Eigen::Vector3f(amx_ctof(params[5]), amx_ctof(params[6]), amx_ctof(params[7]));
 	object->drawDistance = amx_ctof(params[8]);
-	object->streamDistance = amx_ctof(params[9]) * amx_ctof(params[9]);
+	object->streamDistance = amx_ctof(params[9]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[9]) : amx_ctof(params[9]) * amx_ctof(params[9]);
 	Utility::convertArrayToContainer(amx, params[10], params[13], object->worlds);
 	Utility::convertArrayToContainer(amx, params[11], params[14], object->interiors);
 	Utility::convertArrayToContainer(amx, params[12], params[15], object->players);
@@ -70,7 +70,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPickupEx(AMX *amx, cell *params)
 	pickup->modelID = static_cast<int>(params[1]);
 	pickup->type = static_cast<int>(params[2]);
 	pickup->position = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
-	pickup->streamDistance = amx_ctof(params[6]) * amx_ctof(params[6]);
+	pickup->streamDistance = amx_ctof(params[6]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[6]) : amx_ctof(params[6]) * amx_ctof(params[6]);
 	Utility::convertArrayToContainer(amx, params[7], params[10], pickup->worlds);
 	Utility::convertArrayToContainer(amx, params[8], params[11], pickup->interiors);
 	Utility::convertArrayToContainer(amx, params[9], params[12], pickup->players);
@@ -92,7 +92,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCPEx(AMX *amx, cell *params)
 	checkpoint->checkpointID = checkpointID;
 	checkpoint->position = Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]));
 	checkpoint->size = amx_ctof(params[4]);
-	checkpoint->streamDistance = amx_ctof(params[5]) * amx_ctof(params[5]);
+	checkpoint->streamDistance = amx_ctof(params[5]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[5]) : amx_ctof(params[5]) * amx_ctof(params[5]);
 	Utility::convertArrayToContainer(amx, params[6], params[9], checkpoint->worlds);
 	Utility::convertArrayToContainer(amx, params[7], params[10], checkpoint->interiors);
 	Utility::convertArrayToContainer(amx, params[8], params[11], checkpoint->players);
@@ -116,7 +116,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicRaceCPEx(AMX *amx, cell *params)
 	raceCheckpoint->position = Eigen::Vector3f(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
 	raceCheckpoint->next = Eigen::Vector3f(amx_ctof(params[5]), amx_ctof(params[6]), amx_ctof(params[7]));
 	raceCheckpoint->size = amx_ctof(params[8]);
-	raceCheckpoint->streamDistance = amx_ctof(params[9]) * amx_ctof(params[9]);
+	raceCheckpoint->streamDistance = amx_ctof(params[9]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[9]) : amx_ctof(params[9]) * amx_ctof(params[9]);
 	Utility::convertArrayToContainer(amx, params[10], params[13], raceCheckpoint->worlds);
 	Utility::convertArrayToContainer(amx, params[11], params[14], raceCheckpoint->interiors);
 	Utility::convertArrayToContainer(amx, params[12], params[15], raceCheckpoint->players);
@@ -140,7 +140,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicMapIconEx(AMX *amx, cell *params)
 	mapIcon->type = static_cast<int>(params[4]);
 	mapIcon->color = static_cast<int>(params[5]);
 	mapIcon->style = static_cast<int>(params[6]);
-	mapIcon->streamDistance = amx_ctof(params[7]) * amx_ctof(params[7]);
+	mapIcon->streamDistance = amx_ctof(params[7]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[7]) : amx_ctof(params[7]) * amx_ctof(params[7]);
 	Utility::convertArrayToContainer(amx, params[8], params[11], mapIcon->worlds);
 	Utility::convertArrayToContainer(amx, params[9], params[12], mapIcon->interiors);
 	Utility::convertArrayToContainer(amx, params[10], params[13], mapIcon->players);
@@ -176,7 +176,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabelEx(AMX *amx, cell *params)
 		core->getStreamer()->attachedTextLabels.insert(textLabel);
 	}
 	textLabel->testLOS = static_cast<int>(params[9]) != 0;
-	textLabel->streamDistance = amx_ctof(params[10]) * amx_ctof(params[10]);
+	textLabel->streamDistance = amx_ctof(params[10]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[10]) : amx_ctof(params[10]) * amx_ctof(params[10]);
 	Utility::convertArrayToContainer(amx, params[11], params[14], textLabel->worlds);
 	Utility::convertArrayToContainer(amx, params[12], params[15], textLabel->interiors);
 	Utility::convertArrayToContainer(amx, params[13], params[16], textLabel->players);

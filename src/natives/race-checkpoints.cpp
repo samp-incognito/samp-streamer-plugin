@@ -47,7 +47,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicRaceCP(AMX *amx, cell *params)
 	Utility::addToContainer(raceCheckpoint->worlds, static_cast<int>(params[9]));
 	Utility::addToContainer(raceCheckpoint->interiors, static_cast<int>(params[10]));
 	Utility::addToContainer(raceCheckpoint->players, static_cast<int>(params[11]));
-	raceCheckpoint->streamDistance = amx_ctof(params[12]) * amx_ctof(params[12]);
+	raceCheckpoint->streamDistance = amx_ctof(params[12]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[12]) : amx_ctof(params[12]) * amx_ctof(params[12]);
 	core->getGrid()->addRaceCheckpoint(raceCheckpoint);
 	core->getData()->raceCheckpoints.insert(std::make_pair(raceCheckpointID, raceCheckpoint));
 	return static_cast<cell>(raceCheckpointID);

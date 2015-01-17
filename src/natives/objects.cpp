@@ -50,7 +50,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicObject(AMX *amx, cell *params)
 	Utility::addToContainer(object->worlds, static_cast<int>(params[8]));
 	Utility::addToContainer(object->interiors, static_cast<int>(params[9]));
 	Utility::addToContainer(object->players, static_cast<int>(params[10]));
-	object->streamDistance = amx_ctof(params[11]) * amx_ctof(params[11]);
+	object->streamDistance = amx_ctof(params[11]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[11]) : amx_ctof(params[11]) * amx_ctof(params[11]);
 	object->drawDistance = amx_ctof(params[12]);
 	core->getGrid()->addObject(object);
 	core->getData()->objects.insert(std::make_pair(objectID, object));
