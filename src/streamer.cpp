@@ -568,7 +568,7 @@ void Streamer::processPickups(Player &player, const std::vector<SharedCell> &cel
 			{
 				if (checkPlayer(p->second->players, player.playerID, p->second->interiors, player.interiorID, p->second->worlds, player.worldID))
 				{
-					if (d->second->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF || boost::geometry::comparable_distance(player.position, p->second->position) < (p->second->streamDistance * player.radiusMultipliers[STREAMER_TYPE_PICKUP]))
+					if (p->second->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF || boost::geometry::comparable_distance(player.position, p->second->position) < (p->second->streamDistance * player.radiusMultipliers[STREAMER_TYPE_PICKUP]))
 					{
 						boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.find(p->first);
 						if (i == core->getData()->internalPickups.end())
