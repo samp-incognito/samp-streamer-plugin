@@ -800,7 +800,7 @@ void Streamer::processMovingObjects()
 			if (elapsedTime.count() < (*o)->move->duration)
 			{
 				(*o)->position = (*o)->move->position.get<1>() + ((*o)->move->position.get<2>() * elapsedTime.count());
-				if (Utility::almostEquals((*o)->move->rotation.get<0>().maxCoeff(), 1000.0f))
+				if (!Utility::almostEquals((*o)->move->rotation.get<0>().maxCoeff(), -1000.0f))
 				{
 					(*o)->rotation = (*o)->move->rotation.get<1>() + ((*o)->move->rotation.get<2>() * elapsedTime.count());
 				}
@@ -808,7 +808,7 @@ void Streamer::processMovingObjects()
 			else
 			{
 				(*o)->position = (*o)->move->position.get<0>();
-				if (Utility::almostEquals((*o)->move->rotation.get<0>().maxCoeff(), 1000.0f))
+				if (!Utility::almostEquals((*o)->move->rotation.get<0>().maxCoeff(), -1000.0f))
 				{
 					(*o)->rotation = (*o)->move->rotation.get<0>();
 				}
