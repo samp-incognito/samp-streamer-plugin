@@ -1,5 +1,10 @@
 SA-MP Streamer Plugin
 =====================
+v2.7.5.1
+--------
+- Fixed pickup crash
+- Fixed moving object rotation bug
+
 v2.7.5
 ------
 - Updated sampgdk, resolving some issues with callbacks
