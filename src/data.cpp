@@ -20,6 +20,7 @@
 
 Data::Data()
 {
+	errorCallbackEnabled = false;
 	globalMaxItems[STREAMER_TYPE_OBJECT] = std::numeric_limits<std::size_t>::max();
 	globalMaxItems[STREAMER_TYPE_PICKUP] = std::numeric_limits<std::size_t>::max();
 	globalMaxItems[STREAMER_TYPE_CP] = std::numeric_limits<std::size_t>::max();

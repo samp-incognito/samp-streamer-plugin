@@ -166,7 +166,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 		}
 		default:
 		{
-			sampgdk::logprintf("*** Streamer_GetDistanceToItem: Invalid type specified");
+			Utility::logError("Streamer_GetDistanceToItem: Invalid type specified");
 			return 0;
 		}
 	}
@@ -186,7 +186,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 		}
 		default:
 		{
-			sampgdk::logprintf("*** Streamer_GetDistanceToItem: Invalid number of dimensions specified (outside range of 2-3)");
+			Utility::logError("Streamer_GetDistanceToItem: Invalid number of dimensions specified (outside range of 2-3)");
 			return 0;
 		}
 	}
@@ -263,7 +263,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemInternalID(AMX *amx, cell *params)
 			}
 			default:
 			{
-				sampgdk::logprintf("*** Streamer_GetItemInternalID: Invalid type specified");
+				Utility::logError("Streamer_GetItemInternalID: Invalid type specified");
 				return 0;
 			}
 		}
@@ -350,7 +350,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemStreamerID(AMX *amx, cell *params)
 			}
 			default:
 			{
-				sampgdk::logprintf("*** Streamer_GetItemStreamerID: Invalid type specified");
+				Utility::logError("Streamer_GetItemStreamerID: Invalid type specified");
 				return 0;
 			}
 		}
@@ -428,7 +428,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsItemVisible(AMX *amx, cell *params)
 			}
 			default:
 			{
-				sampgdk::logprintf("*** Streamer_IsItemVisible: Invalid type specified");
+				Utility::logError("Streamer_IsItemVisible: Invalid type specified");
 				return 0;
 			}
 		}
@@ -566,7 +566,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 			}
 			default:
 			{
-				sampgdk::logprintf("*** Streamer_DestroyAllVisibleItems: Invalid type specified");
+				Utility::logError("Streamer_DestroyAllVisibleItems: Invalid type specified");
 				return 0;
 			}
 		}
@@ -693,7 +693,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountVisibleItems(AMX *amx, cell *params)
 			}
 			default:
 			{
-				sampgdk::logprintf("*** Streamer_CountVisibleItems: Invalid type specified");
+				Utility::logError("Streamer_CountVisibleItems: Invalid type specified");
 				return 0;
 			}
 		}
@@ -821,7 +821,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllItems(AMX *amx, cell *params)
 		}
 		default:
 		{
-			sampgdk::logprintf("*** Streamer_DestroyAllItems: Invalid type specified");
+			Utility::logError("Streamer_DestroyAllItems: Invalid type specified");
 			return 0;
 		}
 	}
@@ -969,7 +969,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountItems(AMX *amx, cell *params)
 		}
 		default:
 		{
-			sampgdk::logprintf("*** Streamer_CountItems: Invalid type specified");
+			Utility::logError("Streamer_CountItems: Invalid type specified");
 			return 0;
 		}
 	}

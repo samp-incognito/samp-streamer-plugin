@@ -39,6 +39,8 @@ public:
 	float getGlobalRadiusMultiplier(int type);
 	bool setGlobalRadiusMultiplier(int type, float value);
 
+	bool errorCallbackEnabled;
+
 	std::set<AMX*> interfaces;
 
 	boost::unordered_map<int, int> internalPickups;

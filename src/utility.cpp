@@ -59,7 +59,7 @@ int Utility::checkInterfaceAndRegisterNatives(AMX *amx, AMX_NATIVE_INFO *amxNati
 			foundNatives = true;
 			if (!amxNativeTable[i].address)
 			{
-				sampgdk::logprintf("*** Streamer Plugin: Warning: Obsolete or invalid native \"%s\" found (script might need to be recompiled with the latest include file)", name);
+				Utility::logError("Obsolete or invalid native \"%s\" found (script might need to be recompiled with the latest include file)", name);
 				amxNativeTable[i].address = reinterpret_cast<cell>(hookedNative);
 				hookedNatives = true;
 			}
@@ -88,7 +88,7 @@ int Utility::checkInterfaceAndRegisterNatives(AMX *amx, AMX_NATIVE_INFO *amxNati
 			{
 				includeFileVersion << std::hex << std::showbase << includeFileValue;
 			}
-			sampgdk::logprintf("*** Streamer Plugin: Warning: Include file version (%s) does not match plugin version (%#x) (script might need to be recompiled with the latest include file)", includeFileVersion.str().c_str(), INCLUDE_FILE_VERSION);
+			Utility::logError("Include file version (%s) does not match plugin version (%#x) (script might need to be recompiled with the latest include file)", includeFileVersion.str().c_str(), INCLUDE_FILE_VERSION);
 		}
 	}
 	if (hookedNatives)
@@ -303,6 +303,34 @@ boost::unordered_map<int, Item::SharedTextLabel>::iterator Utility::destroyTextL
 	}
 	core->getGrid()->removeTextLabel(t->second);
 	return core->getData()->textLabels.erase(t);
+}
+
+void Utility::logError(const char *format, ...)
+{
+	va_list args;
+	va_start(args, format);
+	char buffer[MAX_BUFFER];
+	vsnprintf(buffer, sizeof(buffer), format, args);
+	buffer[sizeof(buffer) - 1] = '\0';
+	va_end(args);
+	if (core->getData()->errorCallbackEnabled)
+	{
+		for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
+		{
+			cell amxAddress = 0;
+			int amxIndex = 0;
+			if (!amx_FindPublic(*a, "Streamer_OnPluginError", &amxIndex))
+			{
+				amx_PushString(*a, &amxAddress, NULL, buffer, 0, 0);
+				amx_Exec(*a, NULL, amxIndex);
+				amx_Release(*a, amxAddress);
+			}
+		}
+	}
+	else
+	{
+		sampgdk::logprintf("*** Streamer Plugin: %s", buffer);
+	}
 }
 
 bool Utility::isPointInArea(const Eigen::Vector3f &point, const Item::SharedArea &area)

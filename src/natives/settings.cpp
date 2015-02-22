@@ -107,3 +107,16 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetCellSize(AMX *amx, cell *params)
 	core->getGrid()->rebuildGrid();
 	return 1;
 }
+
+cell AMX_NATIVE_CALL Natives::Streamer_ToggleErrorCallback(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "Streamer_ToggleErrorCallback");
+	core->getData()->errorCallbackEnabled = static_cast<int>(params[1]) != 0;
+	return 1;
+}
+
+cell AMX_NATIVE_CALL Natives::Streamer_IsToggleErrorCallback(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "Streamer_IsToggleErrorCallback");
+	return static_cast<cell>(core->getData()->errorCallbackEnabled != 0);
+}

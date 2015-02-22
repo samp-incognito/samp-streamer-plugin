@@ -153,7 +153,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPolygon(AMX *amx, cell *params)
 	}
 	if (static_cast<int>(params[4] >= 2 && static_cast<int>(params[4]) % 2))
 	{
-		sampgdk::logprintf("*** CreateDynamicPolygon: Number of points must be divisible by two");
+		Utility::logError("CreateDynamicPolygon: Number of points must be divisible by two");
 		return 0;
 	}
 	int areaID = Item::Area::identifier.get();
@@ -422,7 +422,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToObject(AMX *amx, cell *params)
 	{
 		if (a->second->type != STREAMER_AREA_TYPE_CIRCLE && a->second->type != STREAMER_AREA_TYPE_SPHERE)
 		{
-			sampgdk::logprintf("*** AttachDynamicAreaToObject: Only circles and spheres may be attached to objects");
+			Utility::logError("AttachDynamicAreaToObject: Only circles and spheres may be attached to objects");
 			return 0;
 		}
 		if (static_cast<int>(params[2]) != INVALID_GENERIC_ID)
@@ -458,7 +458,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToPlayer(AMX *amx, cell *params)
 	{
 		if (a->second->type != STREAMER_AREA_TYPE_CIRCLE && a->second->type != STREAMER_AREA_TYPE_SPHERE)
 		{
-			sampgdk::logprintf("*** AttachDynamicAreaToPlayer: Only circles and spheres may be attached to players");
+			Utility::logError("AttachDynamicAreaToPlayer: Only circles and spheres may be attached to players");
 			return 0;
 		}
 		if (static_cast<int>(params[2]) != INVALID_GENERIC_ID)
@@ -494,7 +494,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToVehicle(AMX *amx, cell *params)
 	{
 		if (a->second->type != STREAMER_AREA_TYPE_CIRCLE && a->second->type != STREAMER_AREA_TYPE_SPHERE)
 		{
-			sampgdk::logprintf("*** AttachDynamicAreaToVehicle: Only circles and spheres may be attached to vehicles");
+			Utility::logError("AttachDynamicAreaToVehicle: Only circles and spheres may be attached to vehicles");
 			return 0;
 		}
 		if (static_cast<int>(params[2]) != INVALID_GENERIC_ID)

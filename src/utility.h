@@ -29,6 +29,8 @@
 #include <bitset>
 #include <string>
 
+#define MAX_BUFFER (1024)
+
 namespace Utility
 {
 	cell AMX_NATIVE_CALL hookedNative(AMX *amx, cell *params);
@@ -43,6 +45,8 @@ namespace Utility
 	boost::unordered_map<int, Item::SharedPickup>::iterator destroyPickup(boost::unordered_map<int, Item::SharedPickup>::iterator p);
 	boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator destroyRaceCheckpoint(boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r);
 	boost::unordered_map<int, Item::SharedTextLabel>::iterator destroyTextLabel(boost::unordered_map<int, Item::SharedTextLabel>::iterator t);
+
+	void logError(const char *format, ...);
 
 	bool isPointInArea(const Eigen::Vector3f &point, const Item::SharedArea &area);
 

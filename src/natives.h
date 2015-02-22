@@ -29,11 +29,12 @@
 #define STREAMER_OPWS (9)
 
 #include "common.h"
+#include "utility.h"
 
 #define CHECK_PARAMS(m, n) \
 	if (params[0] != (m * 4)) \
 	{ \
-		sampgdk::logprintf("*** %s: Expecting %d parameter(s), but found %d", n, m, params[0] / sizeof(cell)); \
+		Utility::logError("%s: Expecting %d parameter(s), but found %d", n, m, params[0] / sizeof(cell)); \
 		return 0; \
 	}
 
@@ -52,6 +53,8 @@ namespace Natives
 	cell AMX_NATIVE_CALL Streamer_SetCellDistance(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_GetCellSize(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_SetCellSize(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_ToggleErrorCallback(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_IsToggleErrorCallback(AMX *amx, cell *params);
 	// Updates
 	cell AMX_NATIVE_CALL Streamer_ProcessActiveItems(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_ToggleIdleUpdate(AMX *amx, cell *params);

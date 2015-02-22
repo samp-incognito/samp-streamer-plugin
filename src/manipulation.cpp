@@ -719,17 +719,17 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 	{
 		case InvalidData:
 		{
-			sampgdk::logprintf("*** Streamer_GetFloatData: Invalid data specified");
+			Utility::logError("Streamer_GetFloatData: Invalid data specified");
 			break;
 		}
 		case InvalidID:
 		{
-			sampgdk::logprintf("*** Streamer_GetFloatData: Invalid ID specified");
+			Utility::logError("Streamer_GetFloatData: Invalid ID specified");
 			break;
 		}
 		case InvalidType:
 		{
-			sampgdk::logprintf("*** Streamer_GetFloatData: Invalid type specified");
+			Utility::logError("Streamer_GetFloatData: Invalid type specified");
 			break;
 		}
 	}
@@ -817,7 +817,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					case MoveY:
 					case MoveZ:
 					{
-						sampgdk::logprintf("*** Streamer_SetFloatData: Use MoveDynamicObject to adjust moving object data");
+						Utility::logError("Streamer_SetFloatData: Use MoveDynamicObject to adjust moving object data");
 						return 0;
 					}
 					case RX:
@@ -848,7 +848,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					{
 						if (o->second->move)
 						{
-							sampgdk::logprintf("*** Streamer_SetFloatData: Object must be stopped first");
+							Utility::logError("Streamer_SetFloatData: Object must be stopped first");
 							return 0;
 						}
 						o->second->position[0] = amx_ctof(params[4]);
@@ -863,7 +863,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					{
 						if (o->second->move)
 						{
-							sampgdk::logprintf("*** Streamer_SetFloatData: Object must be stopped first");
+							Utility::logError("Streamer_SetFloatData: Object must be stopped first");
 							return 0;
 						}
 						o->second->position[1] = amx_ctof(params[4]);
@@ -878,7 +878,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					{
 						if (o->second->move)
 						{
-							sampgdk::logprintf("*** Streamer_SetFloatData: Object must be stopped first");
+							Utility::logError("Streamer_SetFloatData: Object must be stopped first");
 							return 0;
 						}
 						o->second->position[2] = amx_ctof(params[4]);
@@ -1579,17 +1579,17 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 	{
 		case InvalidData:
 		{
-			sampgdk::logprintf("*** Streamer_SetFloatData: Invalid data specified");
+			Utility::logError("Streamer_SetFloatData: Invalid data specified");
 			break;
 		}
 		case InvalidID:
 		{
-			sampgdk::logprintf("*** Streamer_SetFloatData: Invalid ID specified");
+			Utility::logError("Streamer_SetFloatData: Invalid ID specified");
 			break;
 		}
 		case InvalidType:
 		{
-			sampgdk::logprintf("*** Streamer_SetFloatData: Invalid type specified");
+			Utility::logError("Streamer_SetFloatData: Invalid type specified");
 			break;
 		}
 	}
@@ -1951,17 +1951,17 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 	{
 		case InvalidData:
 		{
-			sampgdk::logprintf("*** Streamer_GetIntData: Invalid data specified");
+			Utility::logError("Streamer_GetIntData: Invalid data specified");
 			break;
 		}
 		case InvalidID:
 		{
-			sampgdk::logprintf("*** Streamer_GetIntData: Invalid ID specified");
+			Utility::logError("Streamer_GetIntData: Invalid ID specified");
 			break;
 		}
 		case InvalidType:
 		{
-			sampgdk::logprintf("*** Streamer_GetIntData: Invalid type specified");
+			Utility::logError("Streamer_GetIntData: Invalid type specified");
 			break;
 		}
 	}
@@ -2449,7 +2449,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 				{
 					case AttachedObject:
 					{
-						sampgdk::logprintf("*** Streamer_SetFloatData: Use AttachDynamicAreaToObject to adjust attached area data");
+						Utility::logError("Streamer_SetFloatData: Use AttachDynamicAreaToObject to adjust attached area data");
 						return 0;
 					}
 					case AttachedPlayer:
@@ -2543,17 +2543,17 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 	{
 		case InvalidData:
 		{
-			sampgdk::logprintf("*** Streamer_SetIntData: Invalid data specified");
+			Utility::logError("Streamer_SetIntData: Invalid data specified");
 			break;
 		}
 		case InvalidID:
 		{
-			sampgdk::logprintf("*** Streamer_SetIntData: Invalid ID specified");
+			Utility::logError("Streamer_SetIntData: Invalid ID specified");
 			break;
 		}
 		case InvalidType:
 		{
-			sampgdk::logprintf("*** Streamer_SetIntData: Invalid type specified");
+			Utility::logError("Streamer_SetIntData: Invalid type specified");
 			break;
 		}
 	}
@@ -2610,17 +2610,17 @@ int Manipulation::getArrayData(AMX *amx, cell *params)
 	{
 		case InvalidData:
 		{
-			sampgdk::logprintf("*** Streamer_GetArrayData: Invalid data specified");
+			Utility::logError("Streamer_GetArrayData: Invalid data specified");
 			break;
 		}
 		case InvalidID:
 		{
-			sampgdk::logprintf("*** Streamer_GetArrayData: Invalid ID specified");
+			Utility::logError("Streamer_GetArrayData: Invalid ID specified");
 			break;
 		}
 		case InvalidType:
 		{
-			sampgdk::logprintf("*** Streamer_GetArrayData: Invalid type specified");
+			Utility::logError("Streamer_GetArrayData: Invalid type specified");
 			break;
 		}
 		default:
@@ -2681,17 +2681,17 @@ int Manipulation::setArrayData(AMX *amx, cell *params)
 	{
 		case InvalidData:
 		{
-			sampgdk::logprintf("*** Streamer_SetArrayData: Invalid data specified");
+			Utility::logError("Streamer_SetArrayData: Invalid data specified");
 			break;
 		}
 		case InvalidID:
 		{
-			sampgdk::logprintf("*** Streamer_SetArrayData: Invalid ID specified");
+			Utility::logError("Streamer_SetArrayData: Invalid ID specified");
 			break;
 		}
 		case InvalidType:
 		{
-			sampgdk::logprintf("*** Streamer_SetArrayData: Invalid type specified");
+			Utility::logError("Streamer_SetArrayData: Invalid type specified");
 			break;
 		}
 		default:
@@ -2752,17 +2752,17 @@ int Manipulation::isInArrayData(AMX *amx, cell *params)
 	{
 		case InvalidData:
 		{
-			sampgdk::logprintf("*** Streamer_IsInArrayData: Invalid data specified");
+			Utility::logError("Streamer_IsInArrayData: Invalid data specified");
 			break;
 		}
 		case InvalidID:
 		{
-			sampgdk::logprintf("*** Streamer_IsInArrayData: Invalid ID specified");
+			Utility::logError("Streamer_IsInArrayData: Invalid ID specified");
 			break;
 		}
 		case InvalidType:
 		{
-			sampgdk::logprintf("*** Streamer_IsInArrayData: Invalid type specified");
+			Utility::logError("Streamer_IsInArrayData: Invalid type specified");
 			break;
 		}
 		default:
@@ -2823,17 +2823,17 @@ int Manipulation::appendArrayData(AMX *amx, cell *params)
 	{
 		case InvalidData:
 		{
-			sampgdk::logprintf("*** Streamer_AppendArrayData: Invalid data specified");
+			Utility::logError("Streamer_AppendArrayData: Invalid data specified");
 			break;
 		}
 		case InvalidID:
 		{
-			sampgdk::logprintf("*** Streamer_AppendArrayData: Invalid ID specified");
+			Utility::logError("Streamer_AppendArrayData: Invalid ID specified");
 			break;
 		}
 		case InvalidType:
 		{
-			sampgdk::logprintf("*** Streamer_AppendArrayData: Invalid type specified");
+			Utility::logError("Streamer_AppendArrayData: Invalid type specified");
 			break;
 		}
 		default:
@@ -2894,17 +2894,17 @@ int Manipulation::removeArrayData(AMX *amx, cell *params)
 	{
 		case InvalidData:
 		{
-			sampgdk::logprintf("*** Streamer_RemoveArrayData: Invalid data specified");
+			Utility::logError("Streamer_RemoveArrayData: Invalid data specified");
 			break;
 		}
 		case InvalidID:
 		{
-			sampgdk::logprintf("*** Streamer_RemoveArrayData: Invalid ID specified");
+			Utility::logError("Streamer_RemoveArrayData: Invalid ID specified");
 			break;
 		}
 		case InvalidType:
 		{
-			sampgdk::logprintf("*** Streamer_RemoveArrayData: Invalid type specified");
+			Utility::logError("Streamer_RemoveArrayData: Invalid type specified");
 			break;
 		}
 		default:

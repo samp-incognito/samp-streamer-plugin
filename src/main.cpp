@@ -62,6 +62,8 @@ AMX_NATIVE_INFO natives[] =
 	{ "Streamer_SetCellDistance", Natives::Streamer_SetCellDistance },
 	{ "Streamer_GetCellSize", Natives::Streamer_GetCellSize },
 	{ "Streamer_SetCellSize", Natives::Streamer_SetCellSize },
+	{ "Streamer_ToggleErrorCallback", Natives::Streamer_ToggleErrorCallback },
+	{ "Streamer_IsToggleErrorCallback", Natives::Streamer_IsToggleErrorCallback },
 	// Updates
 	{ "Streamer_ProcessActiveItems", Natives::Streamer_ProcessActiveItems },
 	{ "Streamer_ToggleIdleUpdate", Natives::Streamer_ToggleIdleUpdate },
