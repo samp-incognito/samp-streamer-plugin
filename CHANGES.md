@@ -1,5 +1,10 @@
 SA-MP Streamer Plugin
 =====================
+v2.7.5.2
+--------
+- Added Streamer_OnPluginError, Streamer_ToggleErrorCallback, and
+  Streamer_IsToggleErrorCallback
+
 v2.7.5.1
 --------
 - Fixed pickup crash
