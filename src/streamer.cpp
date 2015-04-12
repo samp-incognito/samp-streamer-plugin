@@ -521,12 +521,20 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 				boost::unordered_map<int, int>::iterator i = player.internalObjects.find(d->second->attach->object);
 				if (i != player.internalObjects.end())
 				{
-					sampgdk::InvokeNative(sampgdk::FindNative("AttachPlayerObjectToObject"), "dddffffffb", player.playerID, internalID, i->second, d->second->attach->offset[0], d->second->attach->offset[1], d->second->attach->offset[2], d->second->attach->rotation[0], d->second->attach->rotation[1], d->second->attach->rotation[2], d->second->attach->syncRotation);
+					AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToObject");
+					if (native != NULL)
+					{
+						sampgdk::InvokeNative(native, "dddffffffb", player.playerID, internalID, i->second, d->second->attach->offset[0], d->second->attach->offset[1], d->second->attach->offset[2], d->second->attach->rotation[0], d->second->attach->rotation[1], d->second->attach->rotation[2], d->second->attach->syncRotation);
+					}
 				}
 			}
 			else if (d->second->attach->player != INVALID_GENERIC_ID)
 			{
-				sampgdk::InvokeNative(sampgdk::FindNative("AttachPlayerObjectToPlayer"), "dddffffff", player.playerID, internalID, d->second->attach->player, d->second->attach->offset[0], d->second->attach->offset[1], d->second->attach->offset[2], d->second->attach->rotation[0], d->second->attach->rotation[1], d->second->attach->rotation[2]);
+				AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToPlayer");
+				if (native != NULL)
+				{
+					sampgdk::InvokeNative(native, "dddffffff", player.playerID, internalID, d->second->attach->player, d->second->attach->offset[0], d->second->attach->offset[1], d->second->attach->offset[2], d->second->attach->rotation[0], d->second->attach->rotation[1], d->second->attach->rotation[2]);
+				}
 			}
 			else if (d->second->attach->vehicle != INVALID_GENERIC_ID)
 			{
