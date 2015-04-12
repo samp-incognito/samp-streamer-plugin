@@ -37,6 +37,8 @@ struct Player
 	int activeRaceCheckpoint;
 	std::size_t currentVisibleObjects;
 	std::size_t currentVisibleTextLabels;
+	int delayedCheckpoint;
+	int delayedRaceCheckpoint;
 	int interiorID;
 	std::size_t maxVisibleMapIcons;
 	std::size_t maxVisibleObjects;

@@ -142,6 +142,26 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 		{
 			update = false;
 		}
+		if (player.delayedCheckpoint)
+		{
+			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(player.delayedCheckpoint);
+			if (c != core->getData()->checkpoints.end())
+			{
+				SetPlayerCheckpoint(player.playerID, c->second->position[0], c->second->position[1], c->second->position[2], c->second->size);
+				player.visibleCheckpoint = c->first;
+			}
+			player.delayedCheckpoint = 0;
+		}
+		else if (player.delayedRaceCheckpoint)
+		{
+			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(player.delayedRaceCheckpoint);
+			if (r != core->getData()->raceCheckpoints.end())
+			{
+				SetPlayerRaceCheckpoint(player.playerID, r->second->type, r->second->position[0], r->second->position[1], r->second->position[2], r->second->next[0], r->second->next[1], r->second->next[2], r->second->size);
+				player.visibleRaceCheckpoint = r->first;
+			}
+			player.delayedRaceCheckpoint = 0;
+		}
 	}
 	std::vector<SharedCell> cells;
 	if (update)
@@ -333,8 +353,7 @@ void Streamer::processCheckpoints(Player &player, const std::vector<SharedCell> 
 				DisablePlayerCheckpoint(player.playerID);
 				player.activeCheckpoint = 0;
 			}
-			SetPlayerCheckpoint(player.playerID, d->second->position[0], d->second->position[1], d->second->position[2], d->second->size);
-			player.visibleCheckpoint = d->second->checkpointID;
+			player.delayedCheckpoint = d->second->checkpointID;
 		}
 		if (d->second->cell)
 		{
@@ -671,8 +690,7 @@ void Streamer::processRaceCheckpoints(Player &player, const std::vector<SharedCe
 				DisablePlayerRaceCheckpoint(player.playerID);
 				player.activeRaceCheckpoint = 0;
 			}
-			SetPlayerRaceCheckpoint(player.playerID, d->second->type, d->second->position[0], d->second->position[1], d->second->position[2], d->second->next[0], d->second->next[1], d->second->next[2], d->second->size);
-			player.visibleRaceCheckpoint = d->second->raceCheckpointID;
+			player.delayedRaceCheckpoint = d->second->raceCheckpointID;
 		}
 		if (d->second->cell)
 		{

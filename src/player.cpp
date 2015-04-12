@@ -31,6 +31,8 @@ Player::Player(int id)
 	activeRaceCheckpoint = 0;
 	currentVisibleObjects = core->getData()->getGlobalMaxVisibleItems(STREAMER_TYPE_OBJECT);
 	currentVisibleTextLabels = core->getData()->getGlobalMaxVisibleItems(STREAMER_TYPE_3D_TEXT_LABEL);
+	delayedCheckpoint = 0;
+	delayedRaceCheckpoint = 0;
 	enabledItems.set();
 	interiorID = 0;
 	maxVisibleMapIcons = core->getData()->getGlobalMaxVisibleItems(STREAMER_TYPE_MAP_ICON);
