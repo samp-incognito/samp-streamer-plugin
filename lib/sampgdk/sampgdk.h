@@ -1,4 +1,4 @@
-/* Copyright (C) 2011-2014 Zeex
+/* Copyright (C) 2011-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@
 
 #endif /* !SAMPGDK_BOOL_H */
 
-/* Copyright (C) 2011-2014 Zeex
+/* Copyright (C) 2011-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -98,7 +98,7 @@
 
 #endif /* !SAMPGDK_PLATFORM_H */
 
-/* Copyright (C) 2011-2014 Zeex
+/* Copyright (C) 2011-2015 Zeex
  * Portions Copyright 2004-2007 SA:MP Team
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -246,7 +246,7 @@ PLUGIN_EXPORT void PLUGIN_CALL ProcessTick();
 
 #endif /* !SAMPGDK_SDK_H */
 
-/* Copyright (C) 2011-2014 Zeex
+/* Copyright (C) 2011-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -327,7 +327,7 @@ PLUGIN_EXPORT void PLUGIN_CALL ProcessTick();
 
 #endif /* !SAMPGDK_EXPORT_H */
 
-/* Copyright (C) 2013-2014 Zeex
+/* Copyright (C) 2013-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -573,7 +573,7 @@ inline cell InvokeNativeArray(AMX_NATIVE native, const char *format,
 
 #endif /* !SAMPGDK_INTEROP_H */
 
-/* Copyright (C) 2011-2014 Zeex
+/* Copyright (C) 2011-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -755,7 +755,7 @@ inline void vlogprintf(const char *format, va_list args) {
 
 #endif /* !SAMPGDK_CORE_H */
 
-/* Copyright (C) 2011-2014 Zeex
+/* Copyright (C) 2011-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -788,24 +788,24 @@ inline void vlogprintf(const char *format, va_list args) {
 /**
  * \brief Minor version
  */
-#define SAMPGDK_VERSION_MINOR 2
+#define SAMPGDK_VERSION_MINOR 3
 
 /**
  * \brief Patch version
  */
-#define SAMPGDK_VERSION_PATCH 2
+#define SAMPGDK_VERSION_PATCH 0
 
 /**
  * \brief Library version number in the form of \c 0xAABBCC00 where
  * \c AA, \c BB and \c CC are the major, minor and patch numbers
  */
-#define SAMPGDK_VERSION_ID 67240448
+#define SAMPGDK_VERSION_ID 67305472
 
 /**
  * \brief Library version string in the form of \c x.y.z where \c x,
  * \c y and \c z are the major, minor and patch numbers
  */
-#define SAMPGDK_VERSION_STRING "4.2.2"
+#define SAMPGDK_VERSION_STRING "4.3.0"
 
 /**
  * \brief Gets library version number
@@ -849,7 +849,7 @@ inline const char *GetVersionString() {
 
 #endif /* !SAMPGDK_VERSION_H */
 
-/* Copyright (C) 2011-2014 Zeex
+/* Copyright (C) 2011-2015 Zeex
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1066,6 +1066,12 @@ SAMPGDK_NATIVE(int, GetPlayerWeaponState(int playerid));
  * \see <a href="http://wiki.sa-mp.com/wiki/GetPlayerTargetPlayer">GetPlayerTargetPlayer on SA-MP Wiki</a>
  */
 SAMPGDK_NATIVE(int, GetPlayerTargetPlayer(int playerid));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetPlayerTargetActor">GetPlayerTargetActor on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(int, GetPlayerTargetActor(int playerid));
 
 /**
  * \ingroup natives
@@ -1615,6 +1621,12 @@ SAMPGDK_NATIVE(bool, SetPlayerSpecialAction(int playerid, int actionid));
 
 /**
  * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/DisableRemoteVehicleCollisions">DisableRemoteVehicleCollisions on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, DisableRemoteVehicleCollisions(int playerid, bool disable));
+
+/**
+ * \ingroup natives
  * \see <a href="http://wiki.sa-mp.com/wiki/SetPlayerCheckpoint">SetPlayerCheckpoint on SA-MP Wiki</a>
  */
 SAMPGDK_NATIVE(bool, SetPlayerCheckpoint(int playerid, float x, float y, float z, float size));
@@ -1708,6 +1720,36 @@ SAMPGDK_NATIVE(bool, GetPlayerCameraFrontVector(int playerid, float * x, float *
  * \see <a href="http://wiki.sa-mp.com/wiki/GetPlayerCameraMode">GetPlayerCameraMode on SA-MP Wiki</a>
  */
 SAMPGDK_NATIVE(int, GetPlayerCameraMode(int playerid));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/EnablePlayerCameraTarget">EnablePlayerCameraTarget on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, EnablePlayerCameraTarget(int playerid, bool enable));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetPlayerCameraTargetObject">GetPlayerCameraTargetObject on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(int, GetPlayerCameraTargetObject(int playerid));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetPlayerCameraTargetVehicle">GetPlayerCameraTargetVehicle on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(int, GetPlayerCameraTargetVehicle(int playerid));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetPlayerCameraTargetPlayer">GetPlayerCameraTargetPlayer on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(int, GetPlayerCameraTargetPlayer(int playerid));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetPlayerCameraTargetActor">GetPlayerCameraTargetActor on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(int, GetPlayerCameraTargetActor(int playerid));
 
 /**
  * \ingroup natives
@@ -1919,6 +1961,10 @@ inline int GetPlayerWeaponState(int playerid) {
 
 inline int GetPlayerTargetPlayer(int playerid) {
   return sampgdk_GetPlayerTargetPlayer(playerid);
+}
+
+inline int GetPlayerTargetActor(int playerid) {
+  return sampgdk_GetPlayerTargetActor(playerid);
 }
 
 inline bool SetPlayerTeam(int playerid, int teamid) {
@@ -2285,6 +2331,10 @@ inline bool SetPlayerSpecialAction(int playerid, int actionid) {
   return sampgdk_SetPlayerSpecialAction(playerid, actionid);
 }
 
+inline bool DisableRemoteVehicleCollisions(int playerid, bool disable) {
+  return sampgdk_DisableRemoteVehicleCollisions(playerid, disable);
+}
+
 inline bool SetPlayerCheckpoint(int playerid, float x, float y, float z, float size) {
   return sampgdk_SetPlayerCheckpoint(playerid, x, y, z, size);
 }
@@ -2347,6 +2397,26 @@ inline bool GetPlayerCameraFrontVector(int playerid, float * x, float * y, float
 
 inline int GetPlayerCameraMode(int playerid) {
   return sampgdk_GetPlayerCameraMode(playerid);
+}
+
+inline bool EnablePlayerCameraTarget(int playerid, bool enable) {
+  return sampgdk_EnablePlayerCameraTarget(playerid, enable);
+}
+
+inline int GetPlayerCameraTargetObject(int playerid) {
+  return sampgdk_GetPlayerCameraTargetObject(playerid);
+}
+
+inline int GetPlayerCameraTargetVehicle(int playerid) {
+  return sampgdk_GetPlayerCameraTargetVehicle(playerid);
+}
+
+inline int GetPlayerCameraTargetPlayer(int playerid) {
+  return sampgdk_GetPlayerCameraTargetPlayer(playerid);
+}
+
+inline int GetPlayerCameraTargetActor(int playerid) {
+  return sampgdk_GetPlayerCameraTargetActor(playerid);
 }
 
 inline float GetPlayerCameraAspectRatio(int playerid) {
@@ -2496,6 +2566,9 @@ inline bool CreateExplosionForPlayer(int playerid, float X, float Y, float Z, in
 
 #undef  GetPlayerTargetPlayer
 #define GetPlayerTargetPlayer sampgdk_GetPlayerTargetPlayer
+
+#undef  GetPlayerTargetActor
+#define GetPlayerTargetActor sampgdk_GetPlayerTargetActor
 
 #undef  SetPlayerTeam
 #define SetPlayerTeam sampgdk_SetPlayerTeam
@@ -2770,6 +2843,9 @@ inline bool CreateExplosionForPlayer(int playerid, float X, float Y, float Z, in
 #undef  SetPlayerSpecialAction
 #define SetPlayerSpecialAction sampgdk_SetPlayerSpecialAction
 
+#undef  DisableRemoteVehicleCollisions
+#define DisableRemoteVehicleCollisions sampgdk_DisableRemoteVehicleCollisions
+
 #undef  SetPlayerCheckpoint
 #define SetPlayerCheckpoint sampgdk_SetPlayerCheckpoint
 
@@ -2817,6 +2893,21 @@ inline bool CreateExplosionForPlayer(int playerid, float X, float Y, float Z, in
 
 #undef  GetPlayerCameraMode
 #define GetPlayerCameraMode sampgdk_GetPlayerCameraMode
+
+#undef  EnablePlayerCameraTarget
+#define EnablePlayerCameraTarget sampgdk_EnablePlayerCameraTarget
+
+#undef  GetPlayerCameraTargetObject
+#define GetPlayerCameraTargetObject sampgdk_GetPlayerCameraTargetObject
+
+#undef  GetPlayerCameraTargetVehicle
+#define GetPlayerCameraTargetVehicle sampgdk_GetPlayerCameraTargetVehicle
+
+#undef  GetPlayerCameraTargetPlayer
+#define GetPlayerCameraTargetPlayer sampgdk_GetPlayerCameraTargetPlayer
+
+#undef  GetPlayerCameraTargetActor
+#define GetPlayerCameraTargetActor sampgdk_GetPlayerCameraTargetActor
 
 #undef  GetPlayerCameraAspectRatio
 #define GetPlayerCameraAspectRatio sampgdk_GetPlayerCameraAspectRatio
@@ -2885,6 +2976,237 @@ inline bool CreateExplosionForPlayer(int playerid, float X, float Y, float Z, in
 #endif /* !DOXYGEN */
 
 #endif /* !SAMPGDK_A_PLAYERS_H */
+
+#ifndef SAMPGDK_A_ACTOR_H
+#define SAMPGDK_A_ACTOR_H
+
+/* #include <sampgdk/bool.h> */
+/* #include <sampgdk/export.h> */
+/* #include <sampgdk/types.h> */
+
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/CreateActor">CreateActor on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(int, CreateActor(int modelid, float x, float y, float z, float rotation));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/DestroyActor">DestroyActor on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, DestroyActor(int actorid));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/IsActorStreamedIn">IsActorStreamedIn on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, IsActorStreamedIn(int actorid, int forplayerid));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/SetActorVirtualWorld">SetActorVirtualWorld on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, SetActorVirtualWorld(int actorid, int vworld));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetActorVirtualWorld">GetActorVirtualWorld on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(int, GetActorVirtualWorld(int actorid));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/ApplyActorAnimation">ApplyActorAnimation on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, ApplyActorAnimation(int actorid, const char * animlib, const char * animname, float fDelta, bool loop, bool lockx, bool locky, bool freeze, int time));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/ClearActorAnimations">ClearActorAnimations on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, ClearActorAnimations(int actorid));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/SetActorPos">SetActorPos on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, SetActorPos(int actorid, float x, float y, float z));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetActorPos">GetActorPos on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, GetActorPos(int actorid, float * x, float * y, float * z));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/SetActorFacingAngle">SetActorFacingAngle on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, SetActorFacingAngle(int actorid, float angle));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetActorFacingAngle">GetActorFacingAngle on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, GetActorFacingAngle(int actorid, float * angle));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/SetActorHealth">SetActorHealth on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, SetActorHealth(int actorid, float health));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetActorHealth">GetActorHealth on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, GetActorHealth(int actorid, float * health));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/SetActorInvulnerable">SetActorInvulnerable on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, SetActorInvulnerable(int actorid, bool invulnerable));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/IsActorInvulnerable">IsActorInvulnerable on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, IsActorInvulnerable(int actorid));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/IsValidActor">IsValidActor on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, IsValidActor(int actorid));
+
+#ifndef DOXYGEN
+
+#if defined SAMPGDK_CPP_WRAPPERS && !defined IN_SAMPGDK
+
+namespace sampgdk {
+
+inline int CreateActor(int modelid, float x, float y, float z, float rotation) {
+  return sampgdk_CreateActor(modelid, x, y, z, rotation);
+}
+
+inline bool DestroyActor(int actorid) {
+  return sampgdk_DestroyActor(actorid);
+}
+
+inline bool IsActorStreamedIn(int actorid, int forplayerid) {
+  return sampgdk_IsActorStreamedIn(actorid, forplayerid);
+}
+
+inline bool SetActorVirtualWorld(int actorid, int vworld) {
+  return sampgdk_SetActorVirtualWorld(actorid, vworld);
+}
+
+inline int GetActorVirtualWorld(int actorid) {
+  return sampgdk_GetActorVirtualWorld(actorid);
+}
+
+inline bool ApplyActorAnimation(int actorid, const char * animlib, const char * animname, float fDelta, bool loop, bool lockx, bool locky, bool freeze, int time) {
+  return sampgdk_ApplyActorAnimation(actorid, animlib, animname, fDelta, loop, lockx, locky, freeze, time);
+}
+
+inline bool ClearActorAnimations(int actorid) {
+  return sampgdk_ClearActorAnimations(actorid);
+}
+
+inline bool SetActorPos(int actorid, float x, float y, float z) {
+  return sampgdk_SetActorPos(actorid, x, y, z);
+}
+
+inline bool GetActorPos(int actorid, float * x, float * y, float * z) {
+  return sampgdk_GetActorPos(actorid, x, y, z);
+}
+
+inline bool SetActorFacingAngle(int actorid, float angle) {
+  return sampgdk_SetActorFacingAngle(actorid, angle);
+}
+
+inline bool GetActorFacingAngle(int actorid, float * angle) {
+  return sampgdk_GetActorFacingAngle(actorid, angle);
+}
+
+inline bool SetActorHealth(int actorid, float health) {
+  return sampgdk_SetActorHealth(actorid, health);
+}
+
+inline bool GetActorHealth(int actorid, float * health) {
+  return sampgdk_GetActorHealth(actorid, health);
+}
+
+inline bool SetActorInvulnerable(int actorid, bool invulnerable = true) {
+  return sampgdk_SetActorInvulnerable(actorid, invulnerable);
+}
+
+inline bool IsActorInvulnerable(int actorid) {
+  return sampgdk_IsActorInvulnerable(actorid);
+}
+
+inline bool IsValidActor(int actorid) {
+  return sampgdk_IsValidActor(actorid);
+}
+
+} // namespace sampgdk
+
+#else /* SAMPGDK_CPP_WRAPPERS && !IN_SAMPGDK */
+
+#undef  CreateActor
+#define CreateActor sampgdk_CreateActor
+
+#undef  DestroyActor
+#define DestroyActor sampgdk_DestroyActor
+
+#undef  IsActorStreamedIn
+#define IsActorStreamedIn sampgdk_IsActorStreamedIn
+
+#undef  SetActorVirtualWorld
+#define SetActorVirtualWorld sampgdk_SetActorVirtualWorld
+
+#undef  GetActorVirtualWorld
+#define GetActorVirtualWorld sampgdk_GetActorVirtualWorld
+
+#undef  ApplyActorAnimation
+#define ApplyActorAnimation sampgdk_ApplyActorAnimation
+
+#undef  ClearActorAnimations
+#define ClearActorAnimations sampgdk_ClearActorAnimations
+
+#undef  SetActorPos
+#define SetActorPos sampgdk_SetActorPos
+
+#undef  GetActorPos
+#define GetActorPos sampgdk_GetActorPos
+
+#undef  SetActorFacingAngle
+#define SetActorFacingAngle sampgdk_SetActorFacingAngle
+
+#undef  GetActorFacingAngle
+#define GetActorFacingAngle sampgdk_GetActorFacingAngle
+
+#undef  SetActorHealth
+#define SetActorHealth sampgdk_SetActorHealth
+
+#undef  GetActorHealth
+#define GetActorHealth sampgdk_GetActorHealth
+
+#undef  SetActorInvulnerable
+#define SetActorInvulnerable sampgdk_SetActorInvulnerable
+
+#undef  IsActorInvulnerable
+#define IsActorInvulnerable sampgdk_IsActorInvulnerable
+
+#undef  IsValidActor
+#define IsValidActor sampgdk_IsValidActor
+
+#endif /* !SAMPGDK_CPP_WRAPPERS || IN_SAMPGDK */
+#endif /* !DOXYGEN */
+
+#endif /* !SAMPGDK_A_ACTOR_H */
 
 #ifndef SAMPGDK_A_HTTP_H
 #define SAMPGDK_A_HTTP_H
@@ -2983,7 +3305,7 @@ SAMPGDK_NATIVE(float, GetVehicleDistanceFromPoint(int vehicleid, float x, float 
  * \ingroup natives
  * \see <a href="http://wiki.sa-mp.com/wiki/CreateVehicle">CreateVehicle on SA-MP Wiki</a>
  */
-SAMPGDK_NATIVE(int, CreateVehicle(int vehicletype, float x, float y, float z, float rotation, int color1, int color2, int respawn_delay));
+SAMPGDK_NATIVE(int, CreateVehicle(int vehicletype, float x, float y, float z, float rotation, int color1, int color2, int respawn_delay, bool addsiren));
 
 /**
  * \ingroup natives
@@ -3049,7 +3371,37 @@ SAMPGDK_NATIVE(bool, SetVehicleParamsEx(int vehicleid, bool engine, bool lights,
  * \ingroup natives
  * \see <a href="http://wiki.sa-mp.com/wiki/GetVehicleParamsEx">GetVehicleParamsEx on SA-MP Wiki</a>
  */
-SAMPGDK_NATIVE(bool, GetVehicleParamsEx(int vehicleid, bool * engine, bool * lights, bool * alarm, bool * doors, bool * bonnet, bool * boot, bool * objective));
+SAMPGDK_NATIVE(bool, GetVehicleParamsEx(int vehicleid, int * engine, int * lights, int * alarm, int * doors, int * bonnet, int * boot, int * objective));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetVehicleParamsSirenState">GetVehicleParamsSirenState on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(int, GetVehicleParamsSirenState(int vehicleid));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/SetVehicleParamsCarDoors">SetVehicleParamsCarDoors on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, SetVehicleParamsCarDoors(int vehicleid, bool driver, bool passenger, bool backleft, bool backright));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetVehicleParamsCarDoors">GetVehicleParamsCarDoors on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, GetVehicleParamsCarDoors(int vehicleid, int * driver, int * passenger, int * backleft, int * backright));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/SetVehicleParamsCarWindows">SetVehicleParamsCarWindows on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, SetVehicleParamsCarWindows(int vehicleid, bool driver, bool passenger, bool backleft, bool backright));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetVehicleParamsCarWindows">GetVehicleParamsCarWindows on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, GetVehicleParamsCarWindows(int vehicleid, int * driver, int * passenger, int * backleft, int * backright));
 
 /**
  * \ingroup natives
@@ -3215,8 +3567,8 @@ inline float GetVehicleDistanceFromPoint(int vehicleid, float x, float y, float 
   return sampgdk_GetVehicleDistanceFromPoint(vehicleid, x, y, z);
 }
 
-inline int CreateVehicle(int vehicletype, float x, float y, float z, float rotation, int color1, int color2, int respawn_delay) {
-  return sampgdk_CreateVehicle(vehicletype, x, y, z, rotation, color1, color2, respawn_delay);
+inline int CreateVehicle(int vehicletype, float x, float y, float z, float rotation, int color1, int color2, int respawn_delay, bool addsiren = false) {
+  return sampgdk_CreateVehicle(vehicletype, x, y, z, rotation, color1, color2, respawn_delay, addsiren);
 }
 
 inline bool DestroyVehicle(int vehicleid) {
@@ -3259,8 +3611,28 @@ inline bool SetVehicleParamsEx(int vehicleid, bool engine, bool lights, bool ala
   return sampgdk_SetVehicleParamsEx(vehicleid, engine, lights, alarm, doors, bonnet, boot, objective);
 }
 
-inline bool GetVehicleParamsEx(int vehicleid, bool * engine, bool * lights, bool * alarm, bool * doors, bool * bonnet, bool * boot, bool * objective) {
+inline bool GetVehicleParamsEx(int vehicleid, int * engine, int * lights, int * alarm, int * doors, int * bonnet, int * boot, int * objective) {
   return sampgdk_GetVehicleParamsEx(vehicleid, engine, lights, alarm, doors, bonnet, boot, objective);
+}
+
+inline int GetVehicleParamsSirenState(int vehicleid) {
+  return sampgdk_GetVehicleParamsSirenState(vehicleid);
+}
+
+inline bool SetVehicleParamsCarDoors(int vehicleid, bool driver, bool passenger, bool backleft, bool backright) {
+  return sampgdk_SetVehicleParamsCarDoors(vehicleid, driver, passenger, backleft, backright);
+}
+
+inline bool GetVehicleParamsCarDoors(int vehicleid, int * driver, int * passenger, int * backleft, int * backright) {
+  return sampgdk_GetVehicleParamsCarDoors(vehicleid, driver, passenger, backleft, backright);
+}
+
+inline bool SetVehicleParamsCarWindows(int vehicleid, bool driver, bool passenger, bool backleft, bool backright) {
+  return sampgdk_SetVehicleParamsCarWindows(vehicleid, driver, passenger, backleft, backright);
+}
+
+inline bool GetVehicleParamsCarWindows(int vehicleid, int * driver, int * passenger, int * backleft, int * backright) {
+  return sampgdk_GetVehicleParamsCarWindows(vehicleid, driver, passenger, backleft, backright);
 }
 
 inline bool SetVehicleToRespawn(int vehicleid) {
@@ -3408,6 +3780,21 @@ inline bool GetVehicleModelInfo(int model, int infotype, float * X, float * Y, f
 
 #undef  GetVehicleParamsEx
 #define GetVehicleParamsEx sampgdk_GetVehicleParamsEx
+
+#undef  GetVehicleParamsSirenState
+#define GetVehicleParamsSirenState sampgdk_GetVehicleParamsSirenState
+
+#undef  SetVehicleParamsCarDoors
+#define SetVehicleParamsCarDoors sampgdk_SetVehicleParamsCarDoors
+
+#undef  GetVehicleParamsCarDoors
+#define GetVehicleParamsCarDoors sampgdk_GetVehicleParamsCarDoors
+
+#undef  SetVehicleParamsCarWindows
+#define SetVehicleParamsCarWindows sampgdk_SetVehicleParamsCarWindows
+
+#undef  GetVehicleParamsCarWindows
+#define GetVehicleParamsCarWindows sampgdk_GetVehicleParamsCarWindows
 
 #undef  SetVehicleToRespawn
 #define SetVehicleToRespawn sampgdk_SetVehicleToRespawn
@@ -3564,6 +3951,18 @@ SAMPGDK_NATIVE(bool, GetObjectRot(int objectid, float * rotX, float * rotY, floa
 
 /**
  * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetObjectModel">GetObjectModel on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(int, GetObjectModel(int objectid));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/SetObjectNoCameraCol">SetObjectNoCameraCol on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, SetObjectNoCameraCol(int objectid));
+
+/**
+ * \ingroup natives
  * \see <a href="http://wiki.sa-mp.com/wiki/IsValidObject">IsValidObject on SA-MP Wiki</a>
  */
 SAMPGDK_NATIVE(bool, IsValidObject(int objectid));
@@ -3660,6 +4059,18 @@ SAMPGDK_NATIVE(bool, GetPlayerObjectRot(int playerid, int objectid, float * rotX
 
 /**
  * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetPlayerObjectModel">GetPlayerObjectModel on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(int, GetPlayerObjectModel(int playerid, int objectid));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/SetPlayerObjectNoCameraCol">SetPlayerObjectNoCameraCol on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, SetPlayerObjectNoCameraCol(int playerid, int objectid));
+
+/**
+ * \ingroup natives
  * \see <a href="http://wiki.sa-mp.com/wiki/IsValidPlayerObject">IsValidPlayerObject on SA-MP Wiki</a>
  */
 SAMPGDK_NATIVE(bool, IsValidPlayerObject(int playerid, int objectid));
@@ -3712,6 +4123,12 @@ SAMPGDK_NATIVE(bool, SetObjectMaterialText(int objectid, const char * text, int 
  */
 SAMPGDK_NATIVE(bool, SetPlayerObjectMaterialText(int playerid, int objectid, const char * text, int materialindex, int materialsize, const char * fontface, int fontsize, bool bold, int fontcolor, int backcolor, int textalignment));
 
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/SetObjectsDefaultCameraCol">SetObjectsDefaultCameraCol on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, SetObjectsDefaultCameraCol(bool disable));
+
 #ifndef DOXYGEN
 
 #if defined SAMPGDK_CPP_WRAPPERS && !defined IN_SAMPGDK
@@ -3748,6 +4165,14 @@ inline bool SetObjectRot(int objectid, float rotX, float rotY, float rotZ) {
 
 inline bool GetObjectRot(int objectid, float * rotX, float * rotY, float * rotZ) {
   return sampgdk_GetObjectRot(objectid, rotX, rotY, rotZ);
+}
+
+inline int GetObjectModel(int objectid) {
+  return sampgdk_GetObjectModel(objectid);
+}
+
+inline bool SetObjectNoCameraCol(int objectid) {
+  return sampgdk_SetObjectNoCameraCol(objectid);
 }
 
 inline bool IsValidObject(int objectid) {
@@ -3814,6 +4239,14 @@ inline bool GetPlayerObjectRot(int playerid, int objectid, float * rotX, float *
   return sampgdk_GetPlayerObjectRot(playerid, objectid, rotX, rotY, rotZ);
 }
 
+inline int GetPlayerObjectModel(int playerid, int objectid) {
+  return sampgdk_GetPlayerObjectModel(playerid, objectid);
+}
+
+inline bool SetPlayerObjectNoCameraCol(int playerid, int objectid) {
+  return sampgdk_SetPlayerObjectNoCameraCol(playerid, objectid);
+}
+
 inline bool IsValidPlayerObject(int playerid, int objectid) {
   return sampgdk_IsValidPlayerObject(playerid, objectid);
 }
@@ -3850,6 +4283,10 @@ inline bool SetPlayerObjectMaterialText(int playerid, int objectid, const char *
   return sampgdk_SetPlayerObjectMaterialText(playerid, objectid, text, materialindex, materialsize, fontface, fontsize, bold, fontcolor, backcolor, textalignment);
 }
 
+inline bool SetObjectsDefaultCameraCol(bool disable) {
+  return sampgdk_SetObjectsDefaultCameraCol(disable);
+}
+
 } // namespace sampgdk
 
 #else /* SAMPGDK_CPP_WRAPPERS && !IN_SAMPGDK */
@@ -3877,6 +4314,12 @@ inline bool SetPlayerObjectMaterialText(int playerid, int objectid, const char *
 
 #undef  GetObjectRot
 #define GetObjectRot sampgdk_GetObjectRot
+
+#undef  GetObjectModel
+#define GetObjectModel sampgdk_GetObjectModel
+
+#undef  SetObjectNoCameraCol
+#define SetObjectNoCameraCol sampgdk_SetObjectNoCameraCol
 
 #undef  IsValidObject
 #define IsValidObject sampgdk_IsValidObject
@@ -3926,6 +4369,12 @@ inline bool SetPlayerObjectMaterialText(int playerid, int objectid, const char *
 #undef  GetPlayerObjectRot
 #define GetPlayerObjectRot sampgdk_GetPlayerObjectRot
 
+#undef  GetPlayerObjectModel
+#define GetPlayerObjectModel sampgdk_GetPlayerObjectModel
+
+#undef  SetPlayerObjectNoCameraCol
+#define SetPlayerObjectNoCameraCol sampgdk_SetPlayerObjectNoCameraCol
+
 #undef  IsValidPlayerObject
 #define IsValidPlayerObject sampgdk_IsValidPlayerObject
 
@@ -3953,6 +4402,9 @@ inline bool SetPlayerObjectMaterialText(int playerid, int objectid, const char *
 #undef  SetPlayerObjectMaterialText
 #define SetPlayerObjectMaterialText sampgdk_SetPlayerObjectMaterialText
 
+#undef  SetObjectsDefaultCameraCol
+#define SetObjectsDefaultCameraCol sampgdk_SetObjectsDefaultCameraCol
+
 #endif /* !SAMPGDK_CPP_WRAPPERS || IN_SAMPGDK */
 #endif /* !DOXYGEN */
 
@@ -3967,10 +4419,12 @@ inline bool SetPlayerObjectMaterialText(int playerid, int objectid, const char *
 
 #define MAX_PLAYER_NAME (24)
 #define MAX_CLIENT_MESSAGE (144)
-#define MAX_PLAYERS (500)
+#define MAX_PLAYERS (1000)
 #define MAX_VEHICLES (2000)
+#define MAX_ACTORS (1000)
 #define INVALID_PLAYER_ID (0xFFFF)
 #define INVALID_VEHICLE_ID (0xFFFF)
+#define INVALID_ACTOR_ID (0xFFFF)
 #define NO_TEAM (255)
 #define MAX_OBJECTS (1000)
 #define INVALID_OBJECT_ID (0xFFFF)
@@ -3991,6 +4445,8 @@ inline bool SetPlayerObjectMaterialText(int playerid, int objectid, const char *
 #define DIALOG_STYLE_INPUT (1)
 #define DIALOG_STYLE_LIST (2)
 #define DIALOG_STYLE_PASSWORD (3)
+#define DIALOG_STYLE_TABLIST (4)
+#define DIALOG_STYLE_TABLIST_HEADERS (5)
 #define PLAYER_STATE_NONE (0)
 #define PLAYER_STATE_ONFOOT (1)
 #define PLAYER_STATE_DRIVER (2)
@@ -4160,6 +4616,24 @@ SAMPGDK_NATIVE(float, VectorSize(float x, float y, float z));
 
 /**
  * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetPlayerPoolSize">GetPlayerPoolSize on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(int, GetPlayerPoolSize());
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetVehiclePoolSize">GetVehiclePoolSize on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(int, GetVehiclePoolSize());
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetActorPoolSize">GetActorPoolSize on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(int, GetActorPoolSize());
+
+/**
+ * \ingroup natives
  * \see <a href="http://wiki.sa-mp.com/wiki/SetGameModeText">SetGameModeText on SA-MP Wiki</a>
  */
 SAMPGDK_NATIVE(bool, SetGameModeText(const char * text));
@@ -4192,7 +4666,7 @@ SAMPGDK_NATIVE(int, AddStaticVehicle(int modelid, float spawn_x, float spawn_y, 
  * \ingroup natives
  * \see <a href="http://wiki.sa-mp.com/wiki/AddStaticVehicleEx">AddStaticVehicleEx on SA-MP Wiki</a>
  */
-SAMPGDK_NATIVE(int, AddStaticVehicleEx(int modelid, float spawn_x, float spawn_y, float spawn_z, float z_angle, int color1, int color2, int respawn_delay));
+SAMPGDK_NATIVE(int, AddStaticVehicleEx(int modelid, float spawn_x, float spawn_y, float spawn_z, float z_angle, int color1, int color2, int respawn_delay, bool addsiren));
 
 /**
  * \ingroup natives
@@ -4271,6 +4745,12 @@ SAMPGDK_NATIVE(bool, SetWeather(int weatherid));
  * \see <a href="http://wiki.sa-mp.com/wiki/SetGravity">SetGravity on SA-MP Wiki</a>
  */
 SAMPGDK_NATIVE(bool, SetGravity(float gravity));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetGravity">GetGravity on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(float, GetGravity());
 
 /**
  * \ingroup natives
@@ -4868,6 +5348,18 @@ inline float VectorSize(float x, float y, float z) {
   return sampgdk_VectorSize(x, y, z);
 }
 
+inline int GetPlayerPoolSize() {
+  return sampgdk_GetPlayerPoolSize();
+}
+
+inline int GetVehiclePoolSize() {
+  return sampgdk_GetVehiclePoolSize();
+}
+
+inline int GetActorPoolSize() {
+  return sampgdk_GetActorPoolSize();
+}
+
 inline bool SetGameModeText(const char * text) {
   return sampgdk_SetGameModeText(text);
 }
@@ -4888,8 +5380,8 @@ inline int AddStaticVehicle(int modelid, float spawn_x, float spawn_y, float spa
   return sampgdk_AddStaticVehicle(modelid, spawn_x, spawn_y, spawn_z, z_angle, color1, color2);
 }
 
-inline int AddStaticVehicleEx(int modelid, float spawn_x, float spawn_y, float spawn_z, float z_angle, int color1, int color2, int respawn_delay) {
-  return sampgdk_AddStaticVehicleEx(modelid, spawn_x, spawn_y, spawn_z, z_angle, color1, color2, respawn_delay);
+inline int AddStaticVehicleEx(int modelid, float spawn_x, float spawn_y, float spawn_z, float z_angle, int color1, int color2, int respawn_delay, bool addsiren = false) {
+  return sampgdk_AddStaticVehicleEx(modelid, spawn_x, spawn_y, spawn_z, z_angle, color1, color2, respawn_delay, addsiren);
 }
 
 inline int AddStaticPickup(int model, int type, float x, float y, float z, int virtualworld = 0) {
@@ -4942,6 +5434,10 @@ inline bool SetWeather(int weatherid) {
 
 inline bool SetGravity(float gravity) {
   return sampgdk_SetGravity(gravity);
+}
+
+inline float GetGravity() {
+  return sampgdk_GetGravity();
 }
 
 inline bool AllowAdminTeleport(bool allow) {
@@ -5345,6 +5841,15 @@ inline bool gpci(int playerid, char * buffer, int size) {
 #undef  VectorSize
 #define VectorSize sampgdk_VectorSize
 
+#undef  GetPlayerPoolSize
+#define GetPlayerPoolSize sampgdk_GetPlayerPoolSize
+
+#undef  GetVehiclePoolSize
+#define GetVehiclePoolSize sampgdk_GetVehiclePoolSize
+
+#undef  GetActorPoolSize
+#define GetActorPoolSize sampgdk_GetActorPoolSize
+
 #undef  SetGameModeText
 #define SetGameModeText sampgdk_SetGameModeText
 
@@ -5401,6 +5906,9 @@ inline bool gpci(int playerid, char * buffer, int size) {
 
 #undef  SetGravity
 #define SetGravity sampgdk_SetGravity
+
+#undef  GetGravity
+#define GetGravity sampgdk_GetGravity
 
 #undef  AllowAdminTeleport
 #define AllowAdminTeleport sampgdk_AllowAdminTeleport
@@ -5914,6 +6422,18 @@ SAMPGDK_CALLBACK(bool, OnVehicleStreamOut(int vehicleid, int forplayerid));
 
 /**
  * \ingroup callbacks
+ * \see <a href="http://wiki.sa-mp.com/wiki/OnActorStreamIn">OnActorStreamIn on SA-MP Wiki</a>
+ */
+SAMPGDK_CALLBACK(bool, OnActorStreamIn(int actorid, int forplayerid));
+
+/**
+ * \ingroup callbacks
+ * \see <a href="http://wiki.sa-mp.com/wiki/OnActorStreamOut">OnActorStreamOut on SA-MP Wiki</a>
+ */
+SAMPGDK_CALLBACK(bool, OnActorStreamOut(int actorid, int forplayerid));
+
+/**
+ * \ingroup callbacks
  * \see <a href="http://wiki.sa-mp.com/wiki/OnDialogResponse">OnDialogResponse on SA-MP Wiki</a>
  */
 SAMPGDK_CALLBACK(bool, OnDialogResponse(int playerid, int dialogid, int response, int listitem, const char * inputtext));
@@ -5929,6 +6449,12 @@ SAMPGDK_CALLBACK(bool, OnPlayerTakeDamage(int playerid, int issuerid, float amou
  * \see <a href="http://wiki.sa-mp.com/wiki/OnPlayerGiveDamage">OnPlayerGiveDamage on SA-MP Wiki</a>
  */
 SAMPGDK_CALLBACK(bool, OnPlayerGiveDamage(int playerid, int damagedid, float amount, int weaponid, int bodypart));
+
+/**
+ * \ingroup callbacks
+ * \see <a href="http://wiki.sa-mp.com/wiki/OnPlayerGiveDamageActor">OnPlayerGiveDamageActor on SA-MP Wiki</a>
+ */
+SAMPGDK_CALLBACK(bool, OnPlayerGiveDamageActor(int playerid, int damaged_actorid, float amount, int weaponid, int bodypart));
 
 /**
  * \ingroup callbacks
@@ -5959,6 +6485,12 @@ SAMPGDK_CALLBACK(bool, OnIncomingConnection(int playerid, const char * ip_addres
  * \see <a href="http://wiki.sa-mp.com/wiki/OnTrailerUpdate">OnTrailerUpdate on SA-MP Wiki</a>
  */
 SAMPGDK_CALLBACK(bool, OnTrailerUpdate(int playerid, int vehicleid));
+
+/**
+ * \ingroup callbacks
+ * \see <a href="http://wiki.sa-mp.com/wiki/OnVehicleSirenStateChange">OnVehicleSirenStateChange on SA-MP Wiki</a>
+ */
+SAMPGDK_CALLBACK(bool, OnVehicleSirenStateChange(int playerid, int vehicleid, bool newstate));
 
 /**
  * \ingroup callbacks
