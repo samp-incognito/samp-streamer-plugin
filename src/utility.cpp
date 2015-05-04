@@ -486,7 +486,7 @@ float Utility::getRadiusMultiplier(int type, int playerid)
 		if (playerid >= 0 && playerid < MAX_PLAYERS)
 		{
 			boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
-			if (p == core->getData()->players.end())
+			if (p != core->getData()->players.end())
 			{
 				return p->second.radiusMultipliers[type];
 			}
@@ -502,7 +502,7 @@ bool Utility::setRadiusMultiplier(int type, float value, int playerid)
 		if (playerid >= 0 && playerid < MAX_PLAYERS)
 		{
 			boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
-			if (p == core->getData()->players.end())
+			if (p != core->getData()->players.end())
 			{
 				p->second.radiusMultipliers[type] = value;
 				return true;
