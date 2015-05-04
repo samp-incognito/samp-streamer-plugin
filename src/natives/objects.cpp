@@ -273,11 +273,17 @@ cell AMX_NATIVE_CALL Natives::AttachCameraToDynamicObject(AMX *amx, cell *params
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
-		boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(static_cast<int>(params[2]));
-		if (i != p->second.internalObjects.end())
+		boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
+		if (o != core->getData()->objects.end())
 		{
-			AttachCameraToPlayerObject(p->first, i->second);
-			return 1;
+			p->second.position = Eigen::Vector3f(o->second->position[0], o->second->position[1], o->second->position[2]);
+			core->getStreamer()->startManualUpdate(p->second, STREAMER_TYPE_OBJECT);
+			boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(static_cast<int>(params[2]));
+			if (i != p->second.internalObjects.end())
+			{
+				AttachCameraToPlayerObject(p->first, i->second);
+				return 1;
+			}
 		}
 	}
 	return 0;
@@ -465,12 +471,17 @@ cell AMX_NATIVE_CALL Natives::EditDynamicObject(AMX *amx, cell *params)
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
-		core->getStreamer()->startManualUpdate(p->second, STREAMER_TYPE_OBJECT);
-		boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(static_cast<int>(params[2]));
-		if (i != p->second.internalObjects.end())
+		boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
+		if (o != core->getData()->objects.end())
 		{
-			EditPlayerObject(p->first, i->second);
-			return 1;
+			p->second.position = Eigen::Vector3f(o->second->position[0], o->second->position[1], o->second->position[2]);
+			core->getStreamer()->startManualUpdate(p->second, STREAMER_TYPE_OBJECT);
+			boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(static_cast<int>(params[2]));
+			if (i != p->second.internalObjects.end())
+			{
+				EditPlayerObject(p->first, i->second);
+				return 1;
+			}
 		}
 	}
 	return 0;
