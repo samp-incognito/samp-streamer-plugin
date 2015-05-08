@@ -73,7 +73,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetRadiusMultiplier(AMX *amx, cell *param
 cell AMX_NATIVE_CALL Natives::Streamer_SetRadiusMultiplier(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(3, "Streamer_SetRadiusMultiplier");
-	return static_cast<cell>(Utility::setRadiusMultiplier(static_cast<int>(params[1]), static_cast<float>(params[2]), static_cast<int>(params[3])) != 0);
+	return static_cast<cell>(Utility::setRadiusMultiplier(static_cast<int>(params[1]), amx_ctof(params[2]), static_cast<int>(params[3])) != 0);
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetCellDistance(AMX *amx, cell *params)
