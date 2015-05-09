@@ -848,7 +848,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					{
 						if (o->second->move)
 						{
-							Utility::logError("Streamer_SetFloatData: Object must be stopped first");
+							Utility::logError("Streamer_SetFloatData: Object is currently moving and must be stopped first");
 							return 0;
 						}
 						o->second->position[0] = amx_ctof(params[4]);
@@ -863,7 +863,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					{
 						if (o->second->move)
 						{
-							Utility::logError("Streamer_SetFloatData: Object must be stopped first");
+							Utility::logError("Streamer_SetFloatData: Object is currently moving and must be stopped first");
 							return 0;
 						}
 						o->second->position[1] = amx_ctof(params[4]);
@@ -878,7 +878,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					{
 						if (o->second->move)
 						{
-							Utility::logError("Streamer_SetFloatData: Object must be stopped first");
+							Utility::logError("Streamer_SetFloatData: Object is currently moving and must be stopped first");
 							return 0;
 						}
 						o->second->position[2] = amx_ctof(params[4]);
@@ -2017,52 +2017,62 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 				switch (static_cast<int>(params[3]))
 				{
 					case AttachedObject:
-					case AttachedPlayer:
-					case AttachedVehicle:
 					{
-						if ((static_cast<int>(params[3]) == AttachedObject && static_cast<int>(params[4]) != INVALID_STREAMER_ID) || (static_cast<int>(params[3]) != AttachedObject && static_cast<int>(params[4]) != INVALID_GENERIC_ID))
+						if (static_cast<int>(params[4]) != INVALID_STREAMER_ID)
 						{
 							if (o->second->move)
 							{
-								sampgdk::logprintf("Streamer_SetIntData: Object is currently moving and cannot be attached");
+								sampgdk::logprintf("Streamer_SetIntData: Object is currently moving and must be stopped first");
+								return 0;
+							}
+							if (sampgdk::FindNative("SetPlayerGravity") == NULL)
+							{
+								sampgdk::logprintf("Streamer_SetIntData: YSF plugin must be loaded to attach objects to objects");
 								return 0;
 							}
 							o->second->attach = boost::intrusive_ptr<Item::Object::Attach>(new Item::Object::Attach);
-							switch (static_cast<int>(params[3]))
+							o->second->attach->player = INVALID_GENERIC_ID;
+							o->second->attach->vehicle = INVALID_GENERIC_ID;
+							o->second->attach->object = static_cast<int>(params[4]);
+							o->second->attach->offset.setZero();
+							o->second->attach->rotation.setZero();
+							o->second->attach->syncRotation = true;
+							core->getStreamer()->attachedObjects.insert(o->second);
+							update = true;
+						}
+						else
+						{
+							if (o->second->attach)
 							{
-								case AttachedObject:
+								if (o->second->attach->object != INVALID_STREAMER_ID)
 								{
-									if (sampgdk::FindNative("SetPlayerGravity") == NULL)
-									{
-										sampgdk::logprintf("Streamer_SetIntData: YSF plugin must be loaded to attach objects to objects");
-										return 0;
-									}
-									o->second->attach->player = INVALID_GENERIC_ID;
-									o->second->attach->vehicle = INVALID_GENERIC_ID;
-									o->second->attach->object = static_cast<int>(params[4]);
-									o->second->attach->syncRotation = true;
-									break;
-								}
-								case AttachedPlayer:
-								{
-									if (sampgdk::FindNative("SetPlayerGravity") == NULL)
-									{
-										sampgdk::logprintf("Streamer_SetIntData: YSF plugin must be loaded to attach objects to players");
-										return 0;
-									}
-									o->second->attach->object = INVALID_STREAMER_ID;
-									o->second->attach->vehicle = INVALID_GENERIC_ID;
-									o->second->attach->player = static_cast<int>(params[4]);
-									break;
-								}
-								case AttachedVehicle:
-								{
-									o->second->attach->object = INVALID_STREAMER_ID;
-									o->second->attach->player = INVALID_GENERIC_ID;
-									o->second->attach->vehicle = static_cast<int>(params[4]);
-									break;
+									o->second->attach.reset();
+									core->getStreamer()->attachedObjects.erase(o->second);
+									core->getGrid()->removeObject(o->second, true);
+									update = true;
 								}
 							}
+						}
+						break;
+					}
+					case AttachedPlayer:
+					{
+						if (static_cast<int>(params[4]) != INVALID_GENERIC_ID)
+						{
+							if (o->second->move)
+							{
+								sampgdk::logprintf("Streamer_SetIntData: Object is currently moving and must be stopped first");
+								return 0;
+							}
+							if (sampgdk::FindNative("SetPlayerGravity") == NULL)
+							{
+								sampgdk::logprintf("Streamer_SetIntData: YSF plugin must be loaded to attach objects to players");
+								return 0;
+							}
+							o->second->attach = boost::intrusive_ptr<Item::Object::Attach>(new Item::Object::Attach);
+							o->second->attach->object = INVALID_STREAMER_ID;
+							o->second->attach->vehicle = INVALID_GENERIC_ID;
+							o->second->attach->player = static_cast<int>(params[4]);
 							o->second->attach->offset.setZero();
 							o->second->attach->rotation.setZero();
 							core->getStreamer()->attachedObjects.insert(o->second);
@@ -2072,7 +2082,40 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 						{
 							if (o->second->attach)
 							{
-								if (o->second->attach->object != INVALID_STREAMER_ID || o->second->attach->player != INVALID_GENERIC_ID || o->second->attach->vehicle != INVALID_GENERIC_ID)
+								if (o->second->attach->player != INVALID_GENERIC_ID)
+								{
+									o->second->attach.reset();
+									core->getStreamer()->attachedObjects.erase(o->second);
+									core->getGrid()->removeObject(o->second, true);
+									update = true;
+								}
+							}
+						}
+						break;
+					}
+					case AttachedVehicle:
+					{
+						if (static_cast<int>(params[4]) != INVALID_GENERIC_ID)
+						{
+							if (o->second->move)
+							{
+								sampgdk::logprintf("Streamer_SetIntData: Object is currently moving and must be stopped first");
+								return 0;
+							}
+							o->second->attach = boost::intrusive_ptr<Item::Object::Attach>(new Item::Object::Attach);
+							o->second->attach->object = INVALID_STREAMER_ID;
+							o->second->attach->player = INVALID_GENERIC_ID;
+							o->second->attach->vehicle = static_cast<int>(params[4]);
+							o->second->attach->offset.setZero();
+							o->second->attach->rotation.setZero();
+							core->getStreamer()->attachedObjects.insert(o->second);
+							update = true;
+						}
+						else
+						{
+							if (o->second->attach)
+							{
+								if (o->second->attach->vehicle != INVALID_GENERIC_ID)
 								{
 									o->second->attach.reset();
 									core->getStreamer()->attachedObjects.erase(o->second);
@@ -2177,11 +2220,8 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 							}
 						}
 					}
-					if (update)
-					{
-						return 1;
-					}
 				}
+				return 1;
 			}
 			else
 			{
@@ -2239,10 +2279,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 						i->second = CreatePickup(p->second->modelID, p->second->type, p->second->position[0], p->second->position[1], p->second->position[2], p->second->worldID);
 					}
 				}
-				if (update)
-				{
-					return 1;
-				}
+				return 1;
 			}
 			else
 			{
@@ -2334,10 +2371,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 						}
 					}
 				}
-				if (update)
-				{
-					return 1;
-				}
+				return 1;
 			}
 			else
 			{
@@ -2404,10 +2438,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 						}
 					}
 				}
-				if (update)
-				{
-					return 1;
-				}
+				return 1;
 			}
 			else
 			{
@@ -2525,10 +2556,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 						}
 					}
 				}
-				if (update)
-				{
-					return 1;
-				}
+				return 1;
 			}
 			else
 			{
@@ -2545,7 +2573,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 				{
 					case AttachedObject:
 					{
-						Utility::logError("Streamer_SetFloatData: Use AttachDynamicAreaToObject to adjust attached area data");
+						Utility::logError("Streamer_SetIntData: Use AttachDynamicAreaToObject to adjust attached area data");
 						return 0;
 					}
 					case AttachedPlayer:
@@ -2553,9 +2581,9 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 						if (static_cast<int>(params[4]) != INVALID_GENERIC_ID)
 						{
 							a->second->attach = boost::intrusive_ptr<Item::Area::Attach>(new Item::Area::Attach);
-							a->second->attach->object.get<0>() = INVALID_GENERIC_ID;
-							a->second->attach->player = static_cast<int>(params[4]);
+							a->second->attach->object = boost::make_tuple(INVALID_STREAMER_ID, STREAMER_OBJECT_TYPE_DYNAMIC, INVALID_PLAYER_ID);
 							a->second->attach->vehicle = INVALID_GENERIC_ID;
+							a->second->attach->player = static_cast<int>(params[4]);
 							core->getStreamer()->attachedAreas.insert(a->second);
 							return 1;
 						}
@@ -2579,7 +2607,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 						if (static_cast<int>(params[4]) != INVALID_GENERIC_ID)
 						{
 							a->second->attach = boost::intrusive_ptr<Item::Area::Attach>(new Item::Area::Attach);
-							a->second->attach->object.get<0>() = INVALID_GENERIC_ID;
+							a->second->attach->object = boost::make_tuple(INVALID_STREAMER_ID, STREAMER_OBJECT_TYPE_DYNAMIC, INVALID_PLAYER_ID);
 							a->second->attach->player = INVALID_GENERIC_ID;
 							a->second->attach->vehicle = static_cast<int>(params[4]);
 							core->getStreamer()->attachedAreas.insert(a->second);

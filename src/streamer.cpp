@@ -542,7 +542,7 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 		SetPlayerObjectPos(player.playerID, internalID, d->second->position[0], d->second->position[1], d->second->position[2]);
 		if (d->second->attach)
 		{
-			if (d->second->attach->object != INVALID_GENERIC_ID)
+			if (d->second->attach->object != INVALID_STREAMER_ID)
 			{
 				boost::unordered_map<int, int>::iterator i = player.internalObjects.find(d->second->attach->object);
 				if (i != player.internalObjects.end())
@@ -872,7 +872,7 @@ void Streamer::processAttachedAreas()
 		if ((*a)->attach)
 		{
 			bool adjust = false;
-			if ((*a)->attach->object.get<0>() != INVALID_STREAMER_ID)
+			if (((*a)->attach->object.get<0>() != INVALID_GENERIC_ID && (*a)->attach->object.get<1>() != STREAMER_OBJECT_TYPE_DYNAMIC) || ((*a)->attach->object.get<0>() != INVALID_STREAMER_ID && (*a)->attach->object.get<1>() == STREAMER_OBJECT_TYPE_DYNAMIC))
 			{
 				switch ((*a)->attach->object.get<1>())
 				{
@@ -928,7 +928,7 @@ void Streamer::processAttachedObjects()
 		if ((*o)->attach)
 		{
 			bool adjust = false;
-			if ((*o)->attach->object != INVALID_GENERIC_ID)
+			if ((*o)->attach->object != INVALID_STREAMER_ID)
 			{
 				boost::unordered_map<int, Item::SharedObject>::iterator p = core->getData()->objects.find((*o)->attach->object);
 				if (p != core->getData()->objects.end())
