@@ -376,10 +376,23 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToObject(AMX *amx, cell *params
 		}
 		if (static_cast<int>(params[2]) != INVALID_STREAMER_ID)
 		{
+			boost::unordered_map<int, Item::SharedObject>::iterator p = core->getData()->objects.find(static_cast<int>(params[2]));
+			if (p != core->getData()->objects.end())
+			{
+				if (o->second->streamDistance > STREAMER_STATIC_DISTANCE_CUTOFF && p->second->streamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
+				{
+					o->second->originalStreamDistance = o->second->streamDistance;
+					o->second->streamDistance = p->second->streamDistance + static_cast<float>(boost::geometry::distance(o->second->position, p->second->position));
+				}
+			}
 			core->getStreamer()->attachedObjects.insert(o->second);
 		}
 		else
 		{
+			if (o->second->originalStreamDistance > STREAMER_STATIC_DISTANCE_CUTOFF && o->second->streamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
+			{
+				o->second->streamDistance = o->second->originalStreamDistance;
+			}
 			o->second->attach.reset();
 			core->getStreamer()->attachedObjects.erase(o->second);
 			core->getGrid()->removeObject(o->second, true);
