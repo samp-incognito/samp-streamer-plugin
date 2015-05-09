@@ -947,6 +947,10 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 									SetPlayerObjectMaterialText(p->first, i->second, m->second.text->materialText.c_str(), m->first, m->second.text->materialSize, m->second.text->fontFace.c_str(), m->second.text->fontSize, m->second.text->bold, m->second.text->fontColor, m->second.text->backColor, m->second.text->textAlignment);
 								}
 							}
+							if (o->second->noCameraCollision)
+							{
+								SetPlayerObjectNoCameraCol(p->first, i->second);
+							}
 						}
 					}
 				}
@@ -2217,6 +2221,10 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 								{
 									SetPlayerObjectMaterialText(p->first, i->second, m->second.text->materialText.c_str(), m->first, m->second.text->materialSize, m->second.text->fontFace.c_str(), m->second.text->fontSize, m->second.text->bold, m->second.text->fontColor, m->second.text->backColor, m->second.text->textAlignment);
 								}
+							}
+							if (o->second->noCameraCollision)
+							{
+								SetPlayerObjectNoCameraCol(p->first, i->second);
 							}
 						}
 					}
