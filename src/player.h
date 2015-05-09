@@ -47,6 +47,7 @@ struct Player
 	Eigen::Vector3f position;
 	float radiusMultipliers[STREAMER_MAX_TYPES];
 	int references;
+	bool updateUsingCameraPosition;
 	bool updateWhenIdle;
 	SharedCell visibleCell;
 	int visibleCheckpoint;

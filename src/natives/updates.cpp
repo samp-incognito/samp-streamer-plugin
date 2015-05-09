@@ -56,6 +56,29 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleIdleUpdate(AMX *amx, cell *params
 	return 0;
 }
 
+cell AMX_NATIVE_CALL Natives::Streamer_ToggleCameraUpdate(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "Streamer_ToggleCameraUpdate");
+	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
+	if (p != core->getData()->players.end())
+	{
+		p->second.updateUsingCameraPosition = static_cast<int>(params[2]) != 0;
+		return 1;
+	}
+	return 0;
+}
+
+cell AMX_NATIVE_CALL Natives::Streamer_IsToggleCameraUpdate(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "Streamer_IsToggleCameraUpdate");
+	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
+	if (p != core->getData()->players.end())
+	{
+		return static_cast<cell>(p->second.updateUsingCameraPosition != 0);
+	}
+	return 0;
+}
+
 cell AMX_NATIVE_CALL Natives::Streamer_ToggleItemUpdate(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(3, "Streamer_ToggleItemUpdate");

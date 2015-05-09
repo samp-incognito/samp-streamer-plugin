@@ -47,6 +47,7 @@ Player::Player(int id)
 	radiusMultipliers[STREAMER_TYPE_MAP_ICON] = core->getData()->getGlobalRadiusMultiplier(STREAMER_TYPE_MAP_ICON);
 	radiusMultipliers[STREAMER_TYPE_3D_TEXT_LABEL] = core->getData()->getGlobalRadiusMultiplier(STREAMER_TYPE_3D_TEXT_LABEL);
 	radiusMultipliers[STREAMER_TYPE_AREA] = core->getData()->getGlobalRadiusMultiplier(STREAMER_TYPE_AREA);
+	updateUsingCameraPosition = false;
 	updateWhenIdle = false;
 	visibleCell = SharedCell(new Cell());
 	visibleCheckpoint = 0;

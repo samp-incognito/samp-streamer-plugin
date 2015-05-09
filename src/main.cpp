@@ -68,6 +68,8 @@ AMX_NATIVE_INFO natives[] =
 	{ "Streamer_ProcessActiveItems", Natives::Streamer_ProcessActiveItems },
 	{ "Streamer_ToggleIdleUpdate", Natives::Streamer_ToggleIdleUpdate },
 	{ "Streamer_IsToggleIdleUpdate", Natives::Streamer_IsToggleIdleUpdate },
+	{ "Streamer_ToggleCameraUpdate", Natives::Streamer_ToggleCameraUpdate },
+	{ "Streamer_IsToggleCameraUpdate", Natives::Streamer_IsToggleCameraUpdate },
 	{ "Streamer_ToggleItemUpdate", Natives::Streamer_ToggleItemUpdate },
 	{ "Streamer_IsToggleItemUpdate", Natives::Streamer_IsToggleItemUpdate },
 	{ "Streamer_Update", Natives::Streamer_Update },

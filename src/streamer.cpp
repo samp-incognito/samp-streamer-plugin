@@ -111,7 +111,14 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 		int state = GetPlayerState(player.playerID);
 		player.interiorID = GetPlayerInterior(player.playerID);
 		player.worldID = GetPlayerVirtualWorld(player.playerID);
-		GetPlayerPos(player.playerID, &player.position[0], &player.position[1], &player.position[2]);
+		if (!player.updateUsingCameraPosition)
+		{
+			GetPlayerPos(player.playerID, &player.position[0], &player.position[1], &player.position[2]);
+		}
+		else
+		{
+			GetPlayerCameraPos(player.playerID, &player.position[0], &player.position[1], &player.position[2]);
+		}
 		if (state != PLAYER_STATE_NONE && state != PLAYER_STATE_WASTED)
 		{
 			if (player.position != position)

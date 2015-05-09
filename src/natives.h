@@ -59,6 +59,8 @@ namespace Natives
 	cell AMX_NATIVE_CALL Streamer_ProcessActiveItems(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_ToggleIdleUpdate(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_IsToggleIdleUpdate(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_ToggleCameraUpdate(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_IsToggleCameraUpdate(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_ToggleItemUpdate(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_IsToggleItemUpdate(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_Update(AMX *amx, cell *params);
