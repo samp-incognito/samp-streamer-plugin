@@ -1622,7 +1622,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 						{
 							return o->second->attach->object;
 						}
-						return INVALID_GENERIC_ID;
+						return INVALID_STREAMER_ID;
 					}
 					case AttachedPlayer:
 					{
@@ -1660,7 +1660,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					{
 						if (o->second->attach)
 						{
-							if (o->second->attach->object != INVALID_GENERIC_ID)
+							if (o->second->attach->object != INVALID_STREAMER_ID)
 							{
 								return o->second->attach->syncRotation != 0;
 							}
@@ -1925,7 +1925,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 						{
 							return a->second->attach->object.get<0>();
 						}
-						return INVALID_GENERIC_ID;
+						return INVALID_STREAMER_ID;
 					}
 					case AttachedPlayer:
 					{
@@ -2020,7 +2020,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					case AttachedPlayer:
 					case AttachedVehicle:
 					{
-						if (static_cast<int>(params[4]) != INVALID_GENERIC_ID)
+						if ((static_cast<int>(params[3]) == AttachedObject && static_cast<int>(params[4]) != INVALID_STREAMER_ID) || (static_cast<int>(params[3]) != AttachedObject && static_cast<int>(params[4]) != INVALID_GENERIC_ID))
 						{
 							if (o->second->move)
 							{
@@ -2050,14 +2050,14 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 										sampgdk::logprintf("Streamer_SetIntData: YSF plugin must be loaded to attach objects to players");
 										return 0;
 									}
-									o->second->attach->object = INVALID_GENERIC_ID;
+									o->second->attach->object = INVALID_STREAMER_ID;
 									o->second->attach->vehicle = INVALID_GENERIC_ID;
 									o->second->attach->player = static_cast<int>(params[4]);
 									break;
 								}
 								case AttachedVehicle:
 								{
-									o->second->attach->object = INVALID_GENERIC_ID;
+									o->second->attach->object = INVALID_STREAMER_ID;
 									o->second->attach->player = INVALID_GENERIC_ID;
 									o->second->attach->vehicle = static_cast<int>(params[4]);
 									break;
@@ -2072,7 +2072,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 						{
 							if (o->second->attach)
 							{
-								if (o->second->attach->vehicle != INVALID_GENERIC_ID)
+								if (o->second->attach->object != INVALID_STREAMER_ID || o->second->attach->player != INVALID_GENERIC_ID || o->second->attach->vehicle != INVALID_GENERIC_ID)
 								{
 									o->second->attach.reset();
 									core->getStreamer()->attachedObjects.erase(o->second);

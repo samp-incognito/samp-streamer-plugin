@@ -865,7 +865,7 @@ void Streamer::processAttachedAreas()
 		if ((*a)->attach)
 		{
 			bool adjust = false;
-			if ((*a)->attach->object.get<0>() != INVALID_GENERIC_ID)
+			if ((*a)->attach->object.get<0>() != INVALID_STREAMER_ID)
 			{
 				switch ((*a)->attach->object.get<1>())
 				{
