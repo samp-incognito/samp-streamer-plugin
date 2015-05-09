@@ -307,7 +307,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToObject(AMX *amx, cell *params
 	CHECK_PARAMS(9, "AttachDynamicObjectToObject");
 	if (sampgdk::FindNative("SetPlayerGravity") == NULL)
 	{
-		sampgdk::logprintf("AttachDynamicObjectToObject: YSF plugin must be loaded to use this native");
+		sampgdk::logprintf("AttachDynamicObjectToObject: YSF plugin must be loaded to attach objects to objects");
 		return 0;
 	}
 	boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[1]));
@@ -372,7 +372,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToPlayer(AMX *amx, cell *params
 	CHECK_PARAMS(8, "AttachDynamicObjectToPlayer");
 	if (sampgdk::FindNative("SetPlayerGravity") == NULL)
 	{
-		sampgdk::logprintf("AttachDynamicObjectToPlayer: YSF plugin must be loaded to use this native");
+		sampgdk::logprintf("AttachDynamicObjectToPlayer: YSF plugin must be loaded to attach objects to players");
 		return 0;
 	}
 	boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[1]));

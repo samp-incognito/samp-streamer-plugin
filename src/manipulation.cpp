@@ -1616,6 +1616,22 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 			{
 				switch (static_cast<int>(params[3]))
 				{
+					case AttachedObject:
+					{
+						if (o->second->attach)
+						{
+							return o->second->attach->object;
+						}
+						return INVALID_GENERIC_ID;
+					}
+					case AttachedPlayer:
+					{
+						if (o->second->attach)
+						{
+							return o->second->attach->player;
+						}
+						return INVALID_GENERIC_ID;
+					}
 					case AttachedVehicle:
 					{
 						if (o->second->attach)
@@ -1989,12 +2005,52 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 			{
 				switch (static_cast<int>(params[3]))
 				{
+					case AttachedObject:
+					case AttachedPlayer:
 					case AttachedVehicle:
 					{
 						if (static_cast<int>(params[4]) != INVALID_GENERIC_ID)
 						{
+							if (o->second->move)
+							{
+								sampgdk::logprintf("Streamer_SetIntData: Object is currently moving and cannot be attached");
+								return 0;
+							}
 							o->second->attach = boost::intrusive_ptr<Item::Object::Attach>(new Item::Object::Attach);
-							o->second->attach->vehicle = static_cast<int>(params[4]);
+							switch (static_cast<int>(params[3]))
+							{
+								case AttachedObject:
+								{
+									if (sampgdk::FindNative("SetPlayerGravity") == NULL)
+									{
+										sampgdk::logprintf("Streamer_SetIntData: YSF plugin must be loaded to attach objects to objects");
+										return 0;
+									}
+									o->second->attach->player = INVALID_GENERIC_ID;
+									o->second->attach->vehicle = INVALID_GENERIC_ID;
+									o->second->attach->object = static_cast<int>(params[4]);
+									break;
+								}
+								case AttachedPlayer:
+								{
+									if (sampgdk::FindNative("SetPlayerGravity") == NULL)
+									{
+										sampgdk::logprintf("Streamer_SetIntData: YSF plugin must be loaded to attach objects to players");
+										return 0;
+									}
+									o->second->attach->object = INVALID_GENERIC_ID;
+									o->second->attach->vehicle = INVALID_GENERIC_ID;
+									o->second->attach->player = static_cast<int>(params[4]);
+									break;
+								}
+								case AttachedVehicle:
+								{
+									o->second->attach->object = INVALID_GENERIC_ID;
+									o->second->attach->player = INVALID_GENERIC_ID;
+									o->second->attach->vehicle = static_cast<int>(params[4]);
+									break;
+								}
+							}
 							o->second->attach->offset.setZero();
 							o->second->attach->rotation.setZero();
 							core->getStreamer()->attachedObjects.insert(o->second);
