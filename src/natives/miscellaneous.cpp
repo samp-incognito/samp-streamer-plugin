@@ -205,10 +205,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleStaticItem(AMX *amx, cell *params)
 			{
 				if (static_cast<int>(params[3]))
 				{
-					if (o->second->streamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
+					if (o->second->streamDistance > STREAMER_STATIC_DISTANCE_CUTOFF && o->second->originalStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
 					{
 						o->second->originalStreamDistance = o->second->streamDistance;
-						o->second->streamDistance = -1.0f;
+						o->second->streamDistance = std::numeric_limits<float>::infinity() * -1.0f;
 					}
 				}
 				else
@@ -216,6 +216,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleStaticItem(AMX *amx, cell *params)
 					if (o->second->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF && o->second->originalStreamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
 					{
 						o->second->streamDistance = o->second->originalStreamDistance;
+						o->second->originalStreamDistance = std::numeric_limits<float>::infinity() * -1.0f;
 					}
 				}
 				return 1;
@@ -229,10 +230,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleStaticItem(AMX *amx, cell *params)
 			{
 				if (static_cast<int>(params[3]))
 				{
-					if (p->second->streamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
+					if (p->second->streamDistance > STREAMER_STATIC_DISTANCE_CUTOFF && p->second->originalStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
 					{
 						p->second->originalStreamDistance = p->second->streamDistance;
-						p->second->streamDistance = -1.0f;
+						p->second->streamDistance = std::numeric_limits<float>::infinity() * -1.0f;
 					}
 				}
 				else
@@ -240,6 +241,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleStaticItem(AMX *amx, cell *params)
 					if (p->second->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF && p->second->originalStreamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
 					{
 						p->second->streamDistance = p->second->originalStreamDistance;
+						p->second->originalStreamDistance = std::numeric_limits<float>::infinity() * -1.0f;
 					}
 				}
 				return 1;
@@ -253,10 +255,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleStaticItem(AMX *amx, cell *params)
 			{
 				if (static_cast<int>(params[3]))
 				{
-					if (c->second->streamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
+					if (c->second->streamDistance > STREAMER_STATIC_DISTANCE_CUTOFF && c->second->originalStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
 					{
 						c->second->originalStreamDistance = c->second->streamDistance;
-						c->second->streamDistance = -1.0f;
+						c->second->streamDistance = std::numeric_limits<float>::infinity() * -1.0f;
 					}
 				}
 				else
@@ -264,6 +266,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleStaticItem(AMX *amx, cell *params)
 					if (c->second->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF && c->second->originalStreamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
 					{
 						c->second->streamDistance = c->second->originalStreamDistance;
+						c->second->originalStreamDistance = std::numeric_limits<float>::infinity() * -1.0f;
 					}
 				}
 				return 1;
@@ -277,10 +280,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleStaticItem(AMX *amx, cell *params)
 			{
 				if (static_cast<int>(params[3]))
 				{
-					if (r->second->streamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
+					if (r->second->streamDistance > STREAMER_STATIC_DISTANCE_CUTOFF && r->second->originalStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
 					{
 						r->second->originalStreamDistance = r->second->streamDistance;
-						r->second->streamDistance = -1.0f;
+						r->second->streamDistance = std::numeric_limits<float>::infinity() * -1.0f;
 					}
 				}
 				else
@@ -288,6 +291,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleStaticItem(AMX *amx, cell *params)
 					if (r->second->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF && r->second->originalStreamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
 					{
 						r->second->streamDistance = r->second->originalStreamDistance;
+						r->second->originalStreamDistance = std::numeric_limits<float>::infinity() * -1.0f;
 					}
 				}
 				return 1;
@@ -301,10 +305,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleStaticItem(AMX *amx, cell *params)
 			{
 				if (static_cast<int>(params[3]))
 				{
-					if (m->second->streamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
+					if (m->second->streamDistance > STREAMER_STATIC_DISTANCE_CUTOFF && m->second->originalStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
 					{
 						m->second->originalStreamDistance = m->second->streamDistance;
-						m->second->streamDistance = -1.0f;
+						m->second->streamDistance = std::numeric_limits<float>::infinity() * -1.0f;
 					}
 				}
 				else
@@ -312,6 +316,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleStaticItem(AMX *amx, cell *params)
 					if (m->second->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF && m->second->originalStreamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
 					{
 						m->second->streamDistance = m->second->originalStreamDistance;
+						m->second->originalStreamDistance = std::numeric_limits<float>::infinity() * -1.0f;
 					}
 				}
 				return 1;
@@ -325,10 +330,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleStaticItem(AMX *amx, cell *params)
 			{
 				if (static_cast<int>(params[3]))
 				{
-					if (t->second->streamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
+					if (t->second->streamDistance > STREAMER_STATIC_DISTANCE_CUTOFF && t->second->originalStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
 					{
 						t->second->originalStreamDistance = t->second->streamDistance;
-						t->second->streamDistance = -1.0f;
+						t->second->streamDistance = std::numeric_limits<float>::infinity() * -1.0f;
 					}
 				}
 				else
@@ -336,6 +341,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleStaticItem(AMX *amx, cell *params)
 					if (t->second->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF && t->second->originalStreamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
 					{
 						t->second->streamDistance = t->second->originalStreamDistance;
+						t->second->originalStreamDistance = std::numeric_limits<float>::infinity() * -1.0f;
 					}
 				}
 				return 1;
@@ -361,7 +367,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleStaticItem(AMX *amx, cell *params
 			boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
 			if (o != core->getData()->objects.end())
 			{
-				if (o->second->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
+				if (o->second->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF && o->second->originalStreamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
 				{
 					return 1;
 				}
@@ -373,7 +379,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleStaticItem(AMX *amx, cell *params
 			boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[2]));
 			if (p != core->getData()->pickups.end())
 			{
-				if (p->second->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
+				if (p->second->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF && p->second->originalStreamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
 				{
 					return 1;
 				}
@@ -385,7 +391,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleStaticItem(AMX *amx, cell *params
 			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[2]));
 			if (c != core->getData()->checkpoints.end())
 			{
-				if (c->second->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
+				if (c->second->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF && c->second->originalStreamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
 				{
 					return 1;
 				}
@@ -397,7 +403,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleStaticItem(AMX *amx, cell *params
 			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[2]));
 			if (r != core->getData()->raceCheckpoints.end())
 			{
-				if (r->second->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
+				if (r->second->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF && r->second->originalStreamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
 				{
 					return 1;
 				}
@@ -409,7 +415,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleStaticItem(AMX *amx, cell *params
 			boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[2]));
 			if (m != core->getData()->mapIcons.end())
 			{
-				if (m->second->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
+				if (m->second->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF && m->second->originalStreamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
 				{
 					return 1;
 				}
@@ -421,7 +427,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleStaticItem(AMX *amx, cell *params
 			boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[2]));
 			if (t != core->getData()->textLabels.end())
 			{
-				if (t->second->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
+				if (t->second->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF && t->second->originalStreamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
 				{
 					return 1;
 				}

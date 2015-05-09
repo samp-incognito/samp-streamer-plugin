@@ -40,6 +40,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPickup(AMX *amx, cell *params)
 	pickup->amx = amx;
 	pickup->pickupID = pickupID;
 	pickup->worldID = 0;
+	pickup->originalStreamDistance = std::numeric_limits<float>::infinity() * -1.0f;
 	pickup->modelID = static_cast<int>(params[1]);
 	pickup->type = static_cast<int>(params[2]);
 	pickup->position = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));

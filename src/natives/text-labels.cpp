@@ -42,6 +42,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabel(AMX *amx, cell *params)
 	Item::SharedTextLabel textLabel(new Item::TextLabel);
 	textLabel->amx = amx;
 	textLabel->textLabelID = textLabelID;
+	textLabel->originalStreamDistance = std::numeric_limits<float>::infinity() * -1.0f;
 	textLabel->text = Utility::convertNativeStringToString(amx, params[1]);
 	textLabel->color = static_cast<int>(params[2]);
 	textLabel->position = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));

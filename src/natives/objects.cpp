@@ -44,8 +44,9 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicObject(AMX *amx, cell *params)
 	Item::SharedObject object(new Item::Object);
 	object->amx = amx;
 	object->objectID = objectID;
-	object->modelID = static_cast<int>(params[1]);
 	object->noCameraCollision = false;
+	object->originalStreamDistance = std::numeric_limits<float>::infinity() * -1.0f;
+	object->modelID = static_cast<int>(params[1]);
 	object->position = Eigen::Vector3f(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
 	object->rotation = Eigen::Vector3f(amx_ctof(params[5]), amx_ctof(params[6]), amx_ctof(params[7]));
 	Utility::addToContainer(object->worlds, static_cast<int>(params[8]));
