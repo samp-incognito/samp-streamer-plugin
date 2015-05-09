@@ -95,6 +95,7 @@ namespace Natives
 	cell AMX_NATIVE_CALL GetDynamicObjectPos(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL SetDynamicObjectRot(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL GetDynamicObjectRot(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL SetDynamicObjectNoCameraCol(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL MoveDynamicObject(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL StopDynamicObject(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL IsDynamicObjectMoving(AMX *amx, cell *params);

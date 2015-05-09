@@ -132,6 +132,7 @@ namespace Item
 		SharedCell cell;
 		float drawDistance;
 		int modelID;
+		bool noCameraCollision;
 		int objectID;
 		float originalStreamDistance;
 		Eigen::Vector3f position;

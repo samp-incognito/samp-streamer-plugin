@@ -582,6 +582,10 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 				SetPlayerObjectMaterialText(player.playerID, internalID, m->second.text->materialText.c_str(), m->first, m->second.text->materialSize, m->second.text->fontFace.c_str(), m->second.text->fontSize, m->second.text->bold, m->second.text->fontColor, m->second.text->backColor, m->second.text->textAlignment);
 			}
 		}
+		if (d->second->noCameraCollision)
+		{
+			SetPlayerObjectNoCameraCol(player.playerID, internalID);
+		}
 		player.internalObjects.insert(std::make_pair(d->second->objectID, internalID));
 		if (d->second->cell)
 		{

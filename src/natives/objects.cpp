@@ -45,6 +45,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicObject(AMX *amx, cell *params)
 	object->amx = amx;
 	object->objectID = objectID;
 	object->modelID = static_cast<int>(params[1]);
+	object->noCameraCollision = false;
 	object->position = Eigen::Vector3f(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
 	object->rotation = Eigen::Vector3f(amx_ctof(params[5]), amx_ctof(params[6]), amx_ctof(params[7]));
 	Utility::addToContainer(object->worlds, static_cast<int>(params[8]));
@@ -179,6 +180,26 @@ cell AMX_NATIVE_CALL Natives::GetDynamicObjectRot(AMX *amx, cell *params)
 		Utility::storeFloatInNative(amx, params[2], o->second->rotation[0]);
 		Utility::storeFloatInNative(amx, params[3], o->second->rotation[1]);
 		Utility::storeFloatInNative(amx, params[4], o->second->rotation[2]);
+		return 1;
+	}
+	return 0;
+}
+
+cell AMX_NATIVE_CALL Natives::SetDynamicObjectNoCameraCol(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "SetDynamicObjectNoCameraCol");
+	boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[1]));
+	if (o != core->getData()->objects.end())
+	{
+		o->second->noCameraCollision = true;
+		for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+		{
+			boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
+			if (i != p->second.internalObjects.end())
+			{
+				SetPlayerObjectNoCameraCol(p->first, i->second);
+			}
+		}
 		return 1;
 	}
 	return 0;
