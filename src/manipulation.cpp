@@ -1656,6 +1656,17 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					{
 						return Utility::getFirstValueInContainer(o->second->players);
 					}
+					case SyncRotation:
+					{
+						if (o->second->attach)
+						{
+							if (o->second->attach->object != INVALID_GENERIC_ID)
+							{
+								return o->second->attach->syncRotation != 0;
+							}
+						}
+						return 0;
+					}
 					case WorldID:
 					{
 						return Utility::getFirstValueInContainer(o->second->worlds);
@@ -2029,6 +2040,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 									o->second->attach->player = INVALID_GENERIC_ID;
 									o->second->attach->vehicle = INVALID_GENERIC_ID;
 									o->second->attach->object = static_cast<int>(params[4]);
+									o->second->attach->syncRotation = true;
 									break;
 								}
 								case AttachedPlayer:
@@ -2088,6 +2100,18 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					case PlayerID:
 					{
 						return Utility::setFirstValueInContainer(o->second->players, static_cast<int>(params[4])) != 0;
+					}
+					case SyncRotation:
+					{
+						if (o->second->attach)
+						{
+							if (o->second->attach->object != INVALID_GENERIC_ID)
+							{
+								o->second->attach->syncRotation = static_cast<int>(params[4]) != 0;
+								update = true;
+							}
+						}
+						break;
 					}
 					case WorldID:
 					{

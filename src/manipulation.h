@@ -64,6 +64,7 @@ namespace Manipulation
 		Size,
 		StreamDistance,
 		Style,
+		SyncRotation,
 		TestLOS,
 		Type,
 		WorldID,
