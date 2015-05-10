@@ -40,7 +40,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicMapIcon(AMX *amx, cell *params)
 	Item::SharedMapIcon mapIcon(new Item::MapIcon);
 	mapIcon->amx = amx;
 	mapIcon->mapIconID = mapIconID;
-	mapIcon->originalStreamDistance = std::numeric_limits<float>::infinity() * -1.0f;
+	mapIcon->originalStreamDistance = -1.0f;
 	mapIcon->position = Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]));
 	mapIcon->type = static_cast<int>(params[4]);
 	mapIcon->color = static_cast<int>(params[5]);

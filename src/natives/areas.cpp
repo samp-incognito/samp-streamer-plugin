@@ -428,9 +428,9 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToObject(AMX *amx, cell *params)
 		if ((static_cast<int>(params[2]) != INVALID_GENERIC_ID && static_cast<int>(params[3]) != STREAMER_OBJECT_TYPE_DYNAMIC) || static_cast<int>(params[2]) != INVALID_STREAMER_ID && static_cast<int>(params[3]) == STREAMER_OBJECT_TYPE_DYNAMIC)
 		{
 			a->second->attach = boost::intrusive_ptr<Item::Area::Attach>(new Item::Area::Attach);
-			a->second->attach->object = boost::make_tuple(static_cast<int>(params[2]), static_cast<int>(params[3]), static_cast<int>(params[4]));
 			a->second->attach->player = INVALID_GENERIC_ID;
 			a->second->attach->vehicle = INVALID_GENERIC_ID;
+			a->second->attach->object = boost::make_tuple(static_cast<int>(params[2]), static_cast<int>(params[3]), static_cast<int>(params[4]));
 			core->getStreamer()->attachedAreas.insert(a->second);
 		}
 		else
@@ -465,8 +465,8 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToPlayer(AMX *amx, cell *params)
 		{
 			a->second->attach = boost::intrusive_ptr<Item::Area::Attach>(new Item::Area::Attach);
 			a->second->attach->object = boost::make_tuple(INVALID_STREAMER_ID, STREAMER_OBJECT_TYPE_DYNAMIC, INVALID_PLAYER_ID);
-			a->second->attach->player = static_cast<int>(params[2]);
 			a->second->attach->vehicle = INVALID_GENERIC_ID;
+			a->second->attach->player = static_cast<int>(params[2]);
 			core->getStreamer()->attachedAreas.insert(a->second);
 		}
 		else
