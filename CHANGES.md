@@ -1,5 +1,15 @@
 SA-MP Streamer Plugin
 =====================
+v2.7.6
+------
+- Fixed various bugs
+- Added a delay to setting checkpoints in an attempt to fix the
+  checkpoint size bug
+- Made some improvements to EditDynamicObject and
+  AttachCameraToDynamicObject for non-streamed objects
+- Added SetDynamicObjectNoCameraCol, Streamer_(Is)ToggleCameraUpdate,
+  and Streamer_(Is)ToggleStaticItem
+
 v2.7.5.2
 --------
 - Added Streamer_OnPluginError, Streamer_ToggleErrorCallback, and
