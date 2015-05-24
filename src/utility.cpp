@@ -409,7 +409,7 @@ std::size_t Utility::getGlobalMaxVisibleItems(int type, int playerid)
 	if (playerid >= 0 && playerid < MAX_PLAYERS)
 	{
 		boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
-		if (p == core->getData()->players.end())
+		if (p != core->getData()->players.end())
 		{
 			switch (type)
 			{
@@ -436,7 +436,7 @@ bool Utility::setMaxVisibleItems(int type, std::size_t value, int playerid)
 	if (playerid >= 0 && playerid < MAX_PLAYERS)
 	{
 		boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
-		if (p == core->getData()->players.end())
+		if (p != core->getData()->players.end())
 		{
 			switch (type)
 			{
