@@ -1,7 +1,9 @@
 SA-MP Streamer Plugin
 =====================
+
 v2.7.6
 ------
+
 - Fixed various bugs
 - Added a delay to setting checkpoints in an attempt to fix the
   checkpoint size bug
@@ -12,16 +14,19 @@ v2.7.6
 
 v2.7.5.2
 --------
+
 - Added Streamer_OnPluginError, Streamer_ToggleErrorCallback, and
   Streamer_IsToggleErrorCallback
 
 v2.7.5.1
 --------
+
 - Fixed pickup crash
 - Fixed moving object rotation bug
 
 v2.7.5
 ------
+
 - Updated sampgdk, resolving some issues with callbacks
 - Added type parameter to Streamer_Update(Ex)
 - Added AttachDynamicObjectToObject and AttachDynamicObjectToPlayer
@@ -32,6 +37,7 @@ v2.7.5
 
 v2.7.4
 ------
+
 - Made OnPlayerLeaveDynamicArea callbacks execute when areas are
   destroyed
 - Made OnPlayerLeaveDynamicArea callbacks execute before
@@ -41,6 +47,7 @@ v2.7.4
 
 v2.7.3
 ------
+
 - Allowed moving object rotations to be set
 - Added integrated callback hooks from sampgdk
 - Renamed CreateDynamicCube to CreateDynamicCuboid
@@ -48,6 +55,7 @@ v2.7.3
 
 v2.7.2
 ------
+
 - Made E_STREAMER_EXTRA_ID data sequential and allowed multiple
   amounts of the same value to be used
 - Allowed Streamer_(Get/Set)IntData to be used with
@@ -56,6 +64,7 @@ v2.7.2
 
 v2.7.1
 ------
+
 - Fixed some minor bugs
 - Updated sampgdk version
 
@@ -272,6 +281,7 @@ v2.1
 
 v2.0
 ----
+
 - Numerous bug fixes and optimizations
 - Added support for pickups, checkpoints, race checkpoints,
   map icons, and 3D text labels
