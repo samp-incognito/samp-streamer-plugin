@@ -398,7 +398,69 @@ cell AMX_NATIVE_CALL Natives::GetPlayerDynamicAreas(AMX *amx, cell *params)
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
-		return static_cast<cell>(Utility::convertContainerToArray(amx, params[2], params[3], p->second.internalAreas) != 0);
+		std::vector<int> finalAreas;
+		std::map<float, int> orderedAreas;
+		for (boost::unordered_set<int>::iterator i = p->second.internalAreas.begin(); i != p->second.internalAreas.end(); ++i)
+		{
+			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(*i);
+			if (a != core->getData()->areas.end())
+			{
+				float distance = 0.0f;
+				switch (a->second->type)
+				{
+					case STREAMER_AREA_TYPE_CIRCLE:
+					case STREAMER_AREA_TYPE_CYLINDER:
+					{
+						if (a->second->attach)
+						{
+							distance = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), Eigen::Vector2f(a->second->attach->position[0], a->second->attach->position[1])));
+						}
+						else
+						{
+							distance = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), boost::get<Eigen::Vector2f>(a->second->position)));
+						}
+						break;
+					}
+					case STREAMER_AREA_TYPE_SPHERE:
+					{
+						if (a->second->attach)
+						{
+							distance = static_cast<float>(boost::geometry::comparable_distance(p->second.position, a->second->attach->position));
+						}
+						else
+						{
+							distance = static_cast<float>(boost::geometry::comparable_distance(p->second.position, boost::get<Eigen::Vector3f>(a->second->position)));
+						}
+						break;
+					}
+					case STREAMER_AREA_TYPE_RECTANGLE:
+					{
+						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Box2D>(a->second->position));
+						distance = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), centroid));
+						break;
+					}
+					case STREAMER_AREA_TYPE_CUBOID:
+					{
+						Eigen::Vector3f centroid = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3D>(a->second->position));
+						distance = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), centroid));
+						break;
+					
+					}
+					case STREAMER_AREA_TYPE_POLYGON:
+					{
+						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2D>(a->second->position));
+						distance = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), centroid));
+						break;
+					}
+				}
+				orderedAreas.insert(std::pair<float, int>(distance, a->first));
+			}
+		}
+		for (std::map<float, int>::iterator i = orderedAreas.begin(); i != orderedAreas.end(); ++i)
+		{
+			finalAreas.push_back(i->second);
+		}
+		return static_cast<cell>(Utility::convertContainerToArray(amx, params[2], params[3], finalAreas) != 0);
 	}
 	return 0;
 }
