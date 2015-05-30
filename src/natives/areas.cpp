@@ -284,7 +284,10 @@ cell AMX_NATIVE_CALL Natives::IsPlayerInDynamicArea(AMX *amx, cell *params)
 		else
 		{
 			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[2]));
-			return static_cast<cell>(Utility::isPointInArea(p->second.position, a->second)) != 0;
+			if (a != core->getData()->areas.end())
+			{
+				return static_cast<cell>(Utility::isPointInArea(p->second.position, a->second)) != 0;
+			}
 		}
 	}
 	return 0;
@@ -335,7 +338,10 @@ cell AMX_NATIVE_CALL Natives::IsAnyPlayerInDynamicArea(AMX *amx, cell *params)
 		else
 		{
 			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
-			return static_cast<cell>(Utility::isPointInArea(p->second.position, a->second)) != 0;
+			if (a != core->getData()->areas.end())
+			{
+				return static_cast<cell>(Utility::isPointInArea(p->second.position, a->second)) != 0;
+			}
 		}
 	}
 	return 0;
