@@ -173,7 +173,7 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 	std::vector<SharedCell> cells;
 	if (update)
 	{
-		core->getGrid()->findAllCells(player, cells);
+		core->getGrid()->findAllCellsForPlayer(player, cells);
 		if (!cells.empty())
 		{
 			if (!core->getData()->objects.empty() && player.enabledItems[STREAMER_TYPE_OBJECT] && !IsPlayerNPC(player.playerID))
@@ -216,7 +216,7 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 		{
 			if (!update)
 			{
-				core->getGrid()->findMinimalCells(player, cells);
+				core->getGrid()->findMinimalCellsForPlayer(player, cells);
 			}
 			processPickups(player, cells);
 		}

@@ -534,7 +534,7 @@ CellID Grid::getCellID(const Eigen::Vector2f &position, bool insert)
 	return cellID;
 }
 
-void Grid::processDiscoveredCells(Player &player, std::vector<SharedCell> &playerCells, const boost::unordered_set<CellID> &discoveredCells)
+void Grid::processDiscoveredCellsForPlayer(Player &player, std::vector<SharedCell> &playerCells, const boost::unordered_set<CellID> &discoveredCells)
 {
 	playerCells.push_back(SharedCell(new Cell()));;
 	if (player.enabledItems[STREAMER_TYPE_OBJECT])
@@ -641,7 +641,7 @@ void Grid::processDiscoveredCells(Player &player, std::vector<SharedCell> &playe
 	}
 }
 
-void Grid::findAllCells(Player &player, std::vector<SharedCell> &playerCells)
+void Grid::findAllCellsForPlayer(Player &player, std::vector<SharedCell> &playerCells)
 {
 	boost::unordered_set<CellID> discoveredCells;
 	for (int i = 0; i < translationMatrix.cols(); ++i)
@@ -654,11 +654,11 @@ void Grid::findAllCells(Player &player, std::vector<SharedCell> &playerCells)
 			playerCells.push_back(c->second);
 		}
 	}
-	processDiscoveredCells(player, playerCells, discoveredCells);
+	processDiscoveredCellsForPlayer(player, playerCells, discoveredCells);
 	playerCells.push_back(globalCell);
 }
 
-void Grid::findMinimalCells(Player &player, std::vector<SharedCell> &playerCells)
+void Grid::findMinimalCellsForPlayer(Player &player, std::vector<SharedCell> &playerCells)
 {
 	for (int i = 0; i < translationMatrix.cols(); ++i)
 	{
@@ -670,4 +670,18 @@ void Grid::findMinimalCells(Player &player, std::vector<SharedCell> &playerCells
 		}
 	}
 	playerCells.push_back(globalCell);
+}
+
+void Grid::findMinimalCellsForPoint(Eigen::Vector2f &point, std::vector<SharedCell> &pointCells)
+{
+	for (int i = 0; i < translationMatrix.cols(); ++i)
+	{
+		Eigen::Vector2f position = Eigen::Vector2f(point[0], point[1]) + translationMatrix.col(i);
+		boost::unordered_map<CellID, SharedCell>::iterator c = cells.find(getCellID(position, false));
+		if (c != cells.end())
+		{
+			pointCells.push_back(c->second);
+		}
+	}
+	pointCells.push_back(globalCell);
 }
