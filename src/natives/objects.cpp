@@ -548,6 +548,24 @@ cell AMX_NATIVE_CALL Natives::EditDynamicObject(AMX *amx, cell *params)
 	return 0;
 }
 
+cell AMX_NATIVE_CALL Natives::IsDynamicObjectMaterialUsed(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "IsDynamicObjectMaterialUsed");
+	boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[1]));
+	if (o != core->getData()->objects.end())
+	{
+		boost::unordered_map<int, Item::Object::Material>::iterator m = o->second->materials.find(static_cast<int>(params[2]));
+		if (m != o->second->materials.end())
+		{
+			if (m->second.main)
+			{
+				return 1;
+			}
+		}
+	}
+	return 0;
+}
+
 cell AMX_NATIVE_CALL Natives::GetDynamicObjectMaterial(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(8, "GetDynamicObjectMaterial");
@@ -592,6 +610,24 @@ cell AMX_NATIVE_CALL Natives::SetDynamicObjectMaterial(AMX *amx, cell *params)
 		}
 		o->second->materials[index].text.reset();
 		return 1;
+	}
+	return 0;
+}
+
+cell AMX_NATIVE_CALL Natives::IsDynamicObjectMaterialTextUsed(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "IsDynamicObjectMaterialTextUsed");
+	boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[1]));
+	if (o != core->getData()->objects.end())
+	{
+		boost::unordered_map<int, Item::Object::Material>::iterator m = o->second->materials.find(static_cast<int>(params[2]));
+		if (m != o->second->materials.end())
+		{
+			if (m->second.text)
+			{
+				return 1;
+			}
+		}
 	}
 	return 0;
 }

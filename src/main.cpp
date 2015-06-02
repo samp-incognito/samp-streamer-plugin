@@ -113,8 +113,10 @@ AMX_NATIVE_INFO natives[] =
 	{ "AttachDynamicObjectToPlayer", Natives::AttachDynamicObjectToPlayer },
 	{ "AttachDynamicObjectToVehicle", Natives::AttachDynamicObjectToVehicle },
 	{ "EditDynamicObject", Natives::EditDynamicObject },
+	{ "IsDynamicObjectMaterialUsed", Natives::IsDynamicObjectMaterialUsed },
 	{ "GetDynamicObjectMaterial", Natives::GetDynamicObjectMaterial },
 	{ "SetDynamicObjectMaterial", Natives::SetDynamicObjectMaterial },
+	{ "IsDynamicObjectMaterialTextUsed", Natives::IsDynamicObjectMaterialTextUsed },
 	{ "GetDynamicObjectMaterialText", Natives::GetDynamicObjectMaterialText },
 	{ "SetDynamicObjectMaterialText", Natives::SetDynamicObjectMaterialText },
 	// Pickups

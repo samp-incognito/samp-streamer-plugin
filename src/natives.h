@@ -104,8 +104,10 @@ namespace Natives
 	cell AMX_NATIVE_CALL AttachDynamicObjectToPlayer(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL AttachDynamicObjectToVehicle(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL EditDynamicObject(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL IsDynamicObjectMaterialUsed(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL GetDynamicObjectMaterial(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL SetDynamicObjectMaterial(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL IsDynamicObjectMaterialTextUsed(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL GetDynamicObjectMaterialText(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL SetDynamicObjectMaterialText(AMX *amx, cell *params);
 	// Pickups
