@@ -672,11 +672,11 @@ void Grid::findMinimalCellsForPlayer(Player &player, std::vector<SharedCell> &pl
 	playerCells.push_back(globalCell);
 }
 
-void Grid::findMinimalCellsForPoint(Eigen::Vector2f &point, std::vector<SharedCell> &pointCells)
+void Grid::findMinimalCellsForPoint(const Eigen::Vector2f &point, std::vector<SharedCell> &pointCells)
 {
 	for (int i = 0; i < translationMatrix.cols(); ++i)
 	{
-		Eigen::Vector2f position = Eigen::Vector2f(point[0], point[1]) + translationMatrix.col(i);
+		Eigen::Vector2f position = point + translationMatrix.col(i);
 		boost::unordered_map<CellID, SharedCell>::iterator c = cells.find(getCellID(position, false));
 		if (c != cells.end())
 		{
