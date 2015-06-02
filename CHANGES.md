@@ -1,6 +1,21 @@
 SA-MP Streamer Plugin
 =====================
 
+v2.7.7
+------
+
+- Fixed bugs with Streamer_(Get/Set)MaxItems and
+  IsPlayerIn(Any)DynamicArea
+- Ordered the results stored in the GetPlayerDynamicAreas array by
+  player distance from the area
+- Added GetDynamicAreasForPoint (also ordered by distance) and
+  GetNumberDynamicAreasForPoint
+- Added IsDynamicObjectMaterialUsed and
+  IsDynamicObjectMaterialTextUsed
+- Added "STREAMER_ENABLE_TAGS" definition to include file which
+  turns on tags for all types of items (in the format of
+  "DynamicObject:", for example)
+
 v2.7.6
 ------
 
