@@ -218,7 +218,7 @@ cell AMX_NATIVE_CALL Natives::MoveDynamicObject(AMX *amx, cell *params)
 	{
 		if (o->second->attach)
 		{
-			sampgdk::logprintf("MoveDynamicObject: Object is currently attached and cannot be moved");
+			Utility::logError("MoveDynamicObject: Object is currently attached and cannot be moved");
 			return 0;
 		}
 		Eigen::Vector3f position(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
@@ -329,7 +329,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToObject(AMX *amx, cell *params
 	CHECK_PARAMS(9, "AttachDynamicObjectToObject");
 	if (sampgdk::FindNative("SetPlayerGravity") == NULL)
 	{
-		sampgdk::logprintf("AttachDynamicObjectToObject: YSF plugin must be loaded to attach objects to objects");
+		Utility::logError("AttachDynamicObjectToObject: YSF plugin must be loaded to attach objects to objects");
 		return 0;
 	}
 	boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[1]));
@@ -337,7 +337,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToObject(AMX *amx, cell *params
 	{
 		if (o->second->move)
 		{
-			sampgdk::logprintf("AttachDynamicObjectToObject: Object is currently moving and must be stopped first");
+			Utility::logError("AttachDynamicObjectToObject: Object is currently moving and must be stopped first");
 			return 0;
 		}
 		o->second->attach = boost::intrusive_ptr<Item::Object::Attach>(new Item::Object::Attach);
@@ -407,7 +407,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToPlayer(AMX *amx, cell *params
 	CHECK_PARAMS(8, "AttachDynamicObjectToPlayer");
 	if (sampgdk::FindNative("SetPlayerGravity") == NULL)
 	{
-		sampgdk::logprintf("AttachDynamicObjectToPlayer: YSF plugin must be loaded to attach objects to players");
+		Utility::logError("AttachDynamicObjectToPlayer: YSF plugin must be loaded to attach objects to players");
 		return 0;
 	}
 	boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[1]));
@@ -415,7 +415,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToPlayer(AMX *amx, cell *params
 	{
 		if (o->second->move)
 		{
-			sampgdk::logprintf("AttachDynamicObjectToPlayer: Object is currently moving and must be stopped first");
+			Utility::logError("AttachDynamicObjectToPlayer: Object is currently moving and must be stopped first");
 			return 0;
 		}
 		o->second->attach = boost::intrusive_ptr<Item::Object::Attach>(new Item::Object::Attach);
@@ -470,7 +470,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToVehicle(AMX *amx, cell *param
 	{
 		if (o->second->move)
 		{
-			sampgdk::logprintf("AttachDynamicObjectToVehicle: Object is currently moving and must be stopped first");
+			Utility::logError("AttachDynamicObjectToVehicle: Object is currently moving and must be stopped first");
 			return 0;
 		}
 		o->second->attach = boost::intrusive_ptr<Item::Object::Attach>(new Item::Object::Attach);
