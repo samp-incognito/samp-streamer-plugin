@@ -105,6 +105,7 @@ AMX_NATIVE_INFO natives[] =
 	{ "SetDynamicObjectRot", Natives::SetDynamicObjectRot },
 	{ "GetDynamicObjectRot", Natives::GetDynamicObjectRot },
 	{ "SetDynamicObjectNoCameraCol", Natives::SetDynamicObjectNoCameraCol },
+	{ "GetDynamicObjectNoCameraCol", Natives::GetDynamicObjectNoCameraCol },
 	{ "MoveDynamicObject", Natives::MoveDynamicObject },
 	{ "StopDynamicObject", Natives::StopDynamicObject },
 	{ "IsDynamicObjectMoving", Natives::IsDynamicObjectMoving },

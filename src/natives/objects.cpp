@@ -206,6 +206,17 @@ cell AMX_NATIVE_CALL Natives::SetDynamicObjectNoCameraCol(AMX *amx, cell *params
 	return 0;
 }
 
+cell AMX_NATIVE_CALL Natives::GetDynamicObjectNoCameraCol(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "GetDynamicObjectNoCameraCol");
+	boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[1]));
+	if (o != core->getData()->objects.end())
+	{
+		return o->second->noCameraCollision != 0;
+	}
+	return 0;
+}
+
 cell AMX_NATIVE_CALL Natives::MoveDynamicObject(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(8, "MoveDynamicObject");
