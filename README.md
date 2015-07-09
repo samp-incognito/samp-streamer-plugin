@@ -11,4 +11,4 @@ Documentation can  be found on the [wiki](https://github.com/samp-incognito/samp
 Download
 --------
 
-The latest binaries for Windows and Linux can be found on the [releases](https://github.com/samp-incognito/samp-streamer-plugin/releases) page.
+The latest binaries for Windows and Linux can be found on the [releases page](https://github.com/samp-incognito/samp-streamer-plugin/releases).
