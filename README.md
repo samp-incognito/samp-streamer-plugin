@@ -6,9 +6,9 @@ This plugin streams objects, pickups, checkpoints, race checkpoints, map icons, 
 Documentation
 -------------
 
-Visit the [wiki](https://github.com/samp-incognito/samp-streamer-plugin/wiki) for documentation.
+Documentation can  be found on the [wiki](https://github.com/samp-incognito/samp-streamer-plugin/wiki).
 
 Download
 --------
 
-The latest binaries for Windows and Linux can be found [here](https://github.com/samp-incognito/samp-streamer-plugin/releases).
+The latest binaries for Windows and Linux can be found on the [releases](https://github.com/samp-incognito/samp-streamer-plugin/releases) page.
