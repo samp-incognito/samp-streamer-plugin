@@ -471,7 +471,7 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 				{
 					if (o->second->attach)
 					{
-						distance = static_cast<float>(boost::geometry::comparable_distance(player.position, o->second->attach->position));
+						distance = static_cast<float>(boost::geometry::comparable_distance(player.position, o->second->attach->position)) + 0.01f;
 					}
 					else
 					{
