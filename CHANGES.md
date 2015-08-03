@@ -1,6 +1,16 @@
 SA-MP Streamer Plugin
 =====================
 
+v2.7.8
+------
+
+- Added GetDynamicObjectNoCameraCol
+- Made attached objects stream in after base objects (thanks uint32)
+- Added definitions to include file for default draw distances and
+  streaming distances
+- Fixed a bug with area callbacks that could cause a server crash
+  under certain conditions
+
 v2.7.7
 ------
 
