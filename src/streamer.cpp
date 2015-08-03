@@ -78,8 +78,8 @@ void Streamer::startAutomaticUpdate()
 		{
 			processingFinalPlayer = isLastPlayer(p, core->getData()->players);
 			performPlayerUpdate(p->second, true);
-			executeCallbacks();
 		}
+		executeCallbacks();
 		processingFinalPlayer = false;
 		tickCount = 0;
 	}
