@@ -56,6 +56,7 @@ namespace Item
 			Attach();
 
 			boost::tuple<int, int, int> object;
+			Eigen::Vector3f offset;
 			int player;
 			Eigen::Vector3f position;
 			int references;

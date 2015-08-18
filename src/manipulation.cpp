@@ -539,6 +539,33 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 						}
 						return 0;
 					}
+					case AttachOffsetX:
+					{
+						if (a->second->attach)
+						{
+							Utility::storeFloatInNative(amx, params[4], a->second->attach->offset[0]);
+							return 1;
+						}
+						return 0;
+					}
+					case AttachOffsetY:
+					{
+						if (a->second->attach)
+						{
+							Utility::storeFloatInNative(amx, params[4], a->second->attach->offset[1]);
+							return 1;
+						}
+						return 0;
+					}
+					case AttachOffsetZ:
+					{
+						if (a->second->attach)
+						{
+							Utility::storeFloatInNative(amx, params[4], a->second->attach->offset[2]);
+							return 1;
+						}
+						return 0;
+					}
 					case MaxX:
 					{
 						switch (a->second->type)
@@ -1366,6 +1393,30 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 			{
 				switch (static_cast<int>(params[3]))
 				{
+					case AttachOffsetX:
+					{
+						if (a->second->attach)
+						{
+							a->second->attach->offset[0] = amx_ctof(params[4]);
+						}
+						break;
+					}
+					case AttachOffsetY:
+					{
+						if (a->second->attach)
+						{
+							a->second->attach->offset[1] = amx_ctof(params[4]);
+						}
+						break;
+					}
+					case AttachOffsetZ:
+					{
+						if (a->second->attach)
+						{
+							a->second->attach->offset[2] = amx_ctof(params[4]);
+						}
+						break;
+					}
 					case MaxX:
 					{
 						switch (a->second->type)

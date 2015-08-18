@@ -910,6 +910,7 @@ void Streamer::processAttachedAreas()
 			{
 				adjust = GetVehiclePos((*a)->attach->vehicle, &(*a)->attach->position[0], &(*a)->attach->position[1], &(*a)->attach->position[2]);
 			}
+			(*a)->attach->position += (*a)->attach->offset;
 			if (adjust)
 			{
 				if ((*a)->cell)
