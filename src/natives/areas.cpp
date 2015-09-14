@@ -649,7 +649,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToPlayer(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToVehicle(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(5, "AttachDynamicAreaToVehicle");
+	CHECK_PARAMS(3, "AttachDynamicAreaToVehicle");
 	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
 	if (a != core->getData()->areas.end())
 	{
@@ -664,7 +664,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToVehicle(AMX *amx, cell *params)
 			a->second->attach->object = boost::make_tuple(INVALID_STREAMER_ID, STREAMER_OBJECT_TYPE_DYNAMIC, INVALID_PLAYER_ID);
 			a->second->attach->player = INVALID_GENERIC_ID;
 			a->second->attach->vehicle = static_cast<int>(params[2]);
-			a->second->attach->offset = a->second->attach->offset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
+			a->second->attach->vehicleType = static_cast<int>(params[3]);
 			core->getStreamer()->attachedAreas.insert(a->second);
 		}
 		else
@@ -683,3 +683,4 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToVehicle(AMX *amx, cell *params)
 	}
 	return 0;
 }
+

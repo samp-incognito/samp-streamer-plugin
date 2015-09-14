@@ -164,6 +164,24 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 			}
 			return 0;
 		}
+		case STREAMER_TYPE_VEHICLE:
+		{
+			boost::unordered_map<int, Item::SharedVehicle>::iterator v = core->getData()->vehicles.find(static_cast<int>(params[5]));
+			if (v != core->getData()->vehicles.end())
+			{
+				boost::unordered_map<int, int>::iterator i = core->getData()->internalVehicles.find(v->first);
+				if (i != core->getData()->internalVehicles.end())
+				{
+					GetVehiclePos(i->second, &position[0], &position[1], &position[2]);
+				}
+				else
+				{
+					position = v->second->position;
+				}
+				break;
+			}
+			return 0;
+		}
 		default:
 		{
 			Utility::logError("Streamer_GetDistanceToItem: Invalid type specified");
@@ -348,6 +366,31 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleStaticItem(AMX *amx, cell *params)
 			}
 			break;
 		}
+		case STREAMER_TYPE_VEHICLE:
+		{
+			boost::unordered_map<int, Item::SharedVehicle>::iterator v = core->getData()->vehicles.find(static_cast<int>(params[2]));
+			if (v != core->getData()->vehicles.end())
+			{
+				if (static_cast<int>(params[3]))
+				{
+					if (v->second->streamDistance > STREAMER_STATIC_DISTANCE_CUTOFF && v->second->originalStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
+					{
+						v->second->originalStreamDistance = v->second->streamDistance;
+						v->second->streamDistance = -1.0f;
+					}
+				}
+				else
+				{
+					if (v->second->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF && v->second->originalStreamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
+					{
+						v->second->streamDistance = v->second->originalStreamDistance;
+						v->second->originalStreamDistance = -1.0f;
+					}
+				}
+				return 1;
+			}
+			break;
+		}
 		default:
 		{
 			Utility::logError("Streamer_ToggleStaticItem: Invalid type specified");
@@ -434,6 +477,18 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleStaticItem(AMX *amx, cell *params
 			}
 			return 0;
 		}
+		case STREAMER_TYPE_VEHICLE:
+		{
+			boost::unordered_map<int, Item::SharedVehicle>::iterator v = core->getData()->vehicles.find(static_cast<int>(params[2]));
+			if (v != core->getData()->vehicles.end())
+			{
+				if (v->second->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF && v->second->originalStreamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
+				{
+					return 1;
+				}
+			}
+			return 0;
+		}
 		default:
 		{
 			Utility::logError("Streamer_IsToggleStaticItem: Invalid type specified");
@@ -446,14 +501,26 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleStaticItem(AMX *amx, cell *params
 cell AMX_NATIVE_CALL Natives::Streamer_GetItemInternalID(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(3, "Streamer_GetItemInternalID");
-	if (static_cast<int>(params[2]) == STREAMER_TYPE_PICKUP)
+	switch(static_cast<int>(params[2]))
 	{
-		boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.find(static_cast<int>(params[3]));
-		if (i != core->getData()->internalPickups.end())
+		case STREAMER_TYPE_PICKUP:
 		{
-			return static_cast<cell>(i->second);
+			boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.find(static_cast<int>(params[3]));
+			if (i != core->getData()->internalPickups.end())
+			{
+				return static_cast<cell>(i->second);
+			}
+			return 0;
 		}
-		return 0;
+		case STREAMER_TYPE_VEHICLE:
+		{
+			boost::unordered_map<int, int>::iterator i = core->getData()->internalVehicles.find(static_cast<int>(params[3]));
+			if (i != core->getData()->internalVehicles.end())
+			{
+				return static_cast<cell>(i->second);
+			}
+			return 0;
+		}
 	}
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
@@ -524,16 +591,30 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemInternalID(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::Streamer_GetItemStreamerID(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(3, "Streamer_GetItemStreamerID");
-	if (static_cast<int>(params[2]) == STREAMER_TYPE_PICKUP)
+	switch(static_cast<int>(params[2]))
 	{
-		for (boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.begin(); i != core->getData()->internalPickups.end(); ++i)
+		case STREAMER_TYPE_PICKUP:
 		{
-			if (i->second == static_cast<int>(params[3]))
+			for (boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.begin(); i != core->getData()->internalPickups.end(); ++i)
 			{
-				return i->first;
+				if (i->second == static_cast<int>(params[3]))
+				{
+					return i->first;
+				}
 			}
+			return 0;
 		}
-		return 0;
+		case STREAMER_TYPE_VEHICLE:
+		{
+			for (boost::unordered_map<int, int>::iterator i = core->getData()->internalVehicles.begin(); i != core->getData()->internalVehicles.end(); ++i)
+			{
+				if (i->second == static_cast<int>(params[3]))
+				{
+					return i->first;
+				}
+			}
+			return 0;
+		}
 	}
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
@@ -611,14 +692,26 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemStreamerID(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::Streamer_IsItemVisible(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(3, "Streamer_IsItemVisible");
-	if (static_cast<int>(params[2]) == STREAMER_TYPE_PICKUP)
+	switch(static_cast<int>(params[2]))
 	{
-		boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.find(static_cast<int>(params[3]));
-		if (i != core->getData()->internalPickups.end())
+		case STREAMER_TYPE_PICKUP:
 		{
-			return 1;
+			boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.find(static_cast<int>(params[3]));
+			if (i != core->getData()->internalPickups.end())
+			{
+				return 1;
+			}
+			return 0;
 		}
-		return 0;
+		case STREAMER_TYPE_VEHICLE:
+		{
+			boost::unordered_map<int, int>::iterator i = core->getData()->internalVehicles.find(static_cast<int>(params[3]));
+			if (i != core->getData()->internalVehicles.end())
+			{
+				return 1;
+			}
+			return 0;	
+		}
 	}
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
@@ -690,23 +783,44 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 {
 	CHECK_PARAMS(3, "Streamer_DestroyAllVisibleItems");
 	bool serverWide = static_cast<int>(params[3]) != 0;
-	if (static_cast<int>(params[2]) == STREAMER_TYPE_PICKUP)
+	switch (static_cast<int>(params[2]))
 	{
-		boost::unordered_map<int, int>::iterator p = core->getData()->internalPickups.begin();
-		while (p != core->getData()->internalPickups.end())
+		case STREAMER_TYPE_PICKUP:
 		{
-			boost::unordered_map<int, Item::SharedPickup>::iterator q = core->getData()->pickups.find(p->first);
-			if (serverWide || (q != core->getData()->pickups.end() && q->second->amx == amx))
+			boost::unordered_map<int, int>::iterator p = core->getData()->internalPickups.begin();
+			while (p != core->getData()->internalPickups.end())
 			{
-				DestroyPickup(p->second);
-				p = core->getData()->internalPickups.erase(p);
+				boost::unordered_map<int, Item::SharedPickup>::iterator q = core->getData()->pickups.find(p->first);
+				if (serverWide || (q != core->getData()->pickups.end() && q->second->amx == amx))
+				{
+					DestroyPickup(p->second);
+					p = core->getData()->internalPickups.erase(p);
+				}
+				else
+				{
+					++p;
+				}
 			}
-			else
-			{
-				++p;
-			}
+			return 1;
 		}
-		return 1;
+		case STREAMER_TYPE_VEHICLE:
+		{
+			boost::unordered_map<int, int>::iterator p = core->getData()->internalVehicles.begin();
+			while (p != core->getData()->internalPickups.end())
+			{
+				boost::unordered_map<int, Item::SharedVehicle>::iterator q = core->getData()->vehicles.find(p->first);
+				if (serverWide || (q != core->getData()->vehicles.end() && q->second->amx == amx))
+				{
+					DestroyVehicle(p->second);
+					p = core->getData()->internalVehicles.erase(p);
+				}
+				else
+				{
+					++p;
+				}
+			}
+			return 1;
+		}
 	}
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
@@ -828,9 +942,17 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountVisibleItems(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(3, "Streamer_CountVisibleItems");
 	bool serverWide = static_cast<int>(params[3]) != 0;
-	if (static_cast<int>(params[2]) == STREAMER_TYPE_PICKUP)
+
+	switch (static_cast<int>(params[2]))
 	{
-		return static_cast<cell>(core->getData()->internalPickups.size());
+		case STREAMER_TYPE_PICKUP:
+		{
+			return static_cast<cell>(core->getData()->internalPickups.size());
+		}
+		case STREAMER_TYPE_VEHICLE:
+		{
+			return static_cast<cell>(core->getData()->internalVehicles.size());
+		}
 	}
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
@@ -1069,6 +1191,22 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllItems(AMX *amx, cell *params)
 			}
 			return 1;
 		}
+		case STREAMER_TYPE_VEHICLE:
+		{
+			boost::unordered_map<int, Item::SharedVehicle>::iterator v = core->getData()->vehicles.begin();
+			while (v != core->getData()->vehicles.end())
+			{
+				if (serverWide || v->second->amx == amx)
+				{
+					v = Utility::destroyVehicle(v);
+				}
+				else
+				{
+					++v;
+				}
+			}
+			return 1;
+		}
 		default:
 		{
 			Utility::logError("Streamer_DestroyAllItems: Invalid type specified");
@@ -1210,6 +1348,25 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountItems(AMX *amx, cell *params)
 				for (boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.begin(); a != core->getData()->areas.end(); ++a)
 				{
 					if (a->second->amx == amx)
+					{
+						++count;
+					}
+				}
+				return static_cast<cell>(count);
+			}
+		}
+		case STREAMER_TYPE_VEHICLE:
+		{
+			if (serverWide)
+			{
+				return static_cast<cell>(core->getData()->vehicles.size());
+			}
+			else
+			{
+				int count = 0;
+				for (boost::unordered_map<int, Item::SharedVehicle>::iterator v = core->getData()->vehicles.begin(); v != core->getData()->vehicles.end(); ++v)
+				{
+					if (v->second->amx == amx)
 					{
 						++count;
 					}

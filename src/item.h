@@ -61,6 +61,7 @@ namespace Item
 			Eigen::Vector3f position;
 			int references;
 			int vehicle;
+			char vehicleType;
 
 			EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 		};
@@ -153,6 +154,7 @@ namespace Item
 			Eigen::Vector3f rotation;
 			bool syncRotation;
 			int vehicle;
+			char vehicleType;
 
 			EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 		};
@@ -294,6 +296,7 @@ namespace Item
 			Eigen::Vector3f position;
 			int references;
 			int vehicle;
+			char vehicleType;
 		};
 
 		boost::intrusive_ptr<Attach> attach;
@@ -303,6 +306,79 @@ namespace Item
 		std::bitset<MAX_PLAYERS> players;
 		boost::unordered_set<int> worlds;
 
+		static Identifier identifier;
+
+		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+	};
+
+	struct Vehicle
+	{
+		Vehicle();
+
+		AMX *amx;
+		SharedCell cell;
+		
+		int modelID;
+		
+		struct Spawn
+		{
+			Eigen::Vector3f position;
+			float angle;
+			int color1, color2;
+			bool addsiren;
+		} spawn;
+
+		Eigen::Vector3f position;
+		float qw, qx, qy, qz;
+		float angle;
+		int color1;
+		int color2;
+		int respawnDelay;
+		int paintjob;
+		int interior;
+		int worldID;
+		float health;
+
+		std::vector<int> carmods;
+		std::string numberplate;
+		
+		int panels, doors, lights, tires;
+		
+		struct Params
+		{
+			char engine, lights, alarm, doors, bonnet, boot, objective;
+			char siren;
+			struct Doors
+			{
+				char driver, passenger, backleft, backright;
+			} cardoors;
+			struct Windows
+			{
+				char driver, passenger, backleft, backright;
+			} carwindows;
+		} params;
+
+		int vehicleID;
+		boost::intrusive_ptr<Vehicle> trailer;
+
+		float originalStreamDistance;
+		float streamDistance;
+		bool touched;
+		bool used;
+		
+		int spawnedTick;
+		int lastUpdatedTick;
+
+		// Attached items
+		boost::unordered_set<Item::SharedObject> attachedObjects;
+		boost::unordered_set<Item::SharedTextLabel> attachedTextlabels;
+		
+		std::vector<int> extras;
+		boost::unordered_set<int> interiors;
+		std::bitset<MAX_PLAYERS> players;
+		boost::unordered_set<int> worlds;
+
+		int references;
 		static Identifier identifier;
 
 		EIGEN_MAKE_ALIGNED_OPERATOR_NEW

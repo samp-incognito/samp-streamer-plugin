@@ -33,7 +33,7 @@
 
 cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabel(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(13, "CreateDynamic3DTextLabel");
+	CHECK_PARAMS(14, "CreateDynamic3DTextLabel");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_3D_TEXT_LABEL) == core->getData()->textLabels.size())
 	{
 		return 0;
@@ -52,17 +52,18 @@ cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabel(AMX *amx, cell *params)
 		textLabel->attach = boost::intrusive_ptr<Item::TextLabel::Attach>(new Item::TextLabel::Attach);
 		textLabel->attach->player = static_cast<int>(params[7]);
 		textLabel->attach->vehicle = static_cast<int>(params[8]);
+		textLabel->attach->vehicleType = static_cast<char>(params[9]);
 		if (textLabel->position.cwiseAbs().maxCoeff() > 50.0f)
 		{
 			textLabel->position.setZero();
 		}
 		core->getStreamer()->attachedTextLabels.insert(textLabel);
 	}
-	textLabel->testLOS = static_cast<int>(params[9]) != 0;
-	Utility::addToContainer(textLabel->worlds, static_cast<int>(params[10]));
-	Utility::addToContainer(textLabel->interiors, static_cast<int>(params[11]));
-	Utility::addToContainer(textLabel->players, static_cast<int>(params[12]));
-	textLabel->streamDistance = amx_ctof(params[13]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[13]) : amx_ctof(params[13]) * amx_ctof(params[13]);
+	textLabel->testLOS = static_cast<int>(params[10]) != 0;
+	Utility::addToContainer(textLabel->worlds, static_cast<int>(params[11]));
+	Utility::addToContainer(textLabel->interiors, static_cast<int>(params[12]));
+	Utility::addToContainer(textLabel->players, static_cast<int>(params[13]));
+	textLabel->streamDistance = amx_ctof(params[14]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[14]) : amx_ctof(params[14]) * amx_ctof(params[14]);
 	core->getGrid()->addTextLabel(textLabel);
 	core->getData()->textLabels.insert(std::make_pair(textLabelID, textLabel));
 	return static_cast<cell>(textLabelID);

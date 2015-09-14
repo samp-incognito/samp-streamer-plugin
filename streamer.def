@@ -17,3 +17,16 @@ EXPORTS
 	OnPlayerEditObject
 	OnPlayerSelectObject
 	OnPlayerWeaponShot
+	OnVehicleSpawn
+	OnVehicleDeath
+	OnPlayerEnterVehicle
+	OnPlayerExitVehicle
+	OnVehicleMod
+	OnVehiclePaintjob
+	OnVehicleRespray
+	OnVehicleDamageStatusUpdate
+	OnUnoccupiedVehicleUpdate
+	OnTrailerUpdate
+	OnVehicleStreamIn
+	OnVehicleStreamOut
+	OnVehicleSirenStateChange

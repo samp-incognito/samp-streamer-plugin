@@ -55,6 +55,7 @@ namespace Natives
 	cell AMX_NATIVE_CALL Streamer_SetCellSize(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_ToggleErrorCallback(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_IsToggleErrorCallback(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_EnableDefaultVehicleRespawn(AMX *amx, cell *params);
 	// Updates
 	cell AMX_NATIVE_CALL Streamer_ProcessActiveItems(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_ToggleIdleUpdate(AMX *amx, cell *params);
@@ -167,6 +168,62 @@ namespace Natives
 	cell AMX_NATIVE_CALL AttachDynamicAreaToObject(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL AttachDynamicAreaToPlayer(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL AttachDynamicAreaToVehicle(AMX *amx, cell *params);
+	// Vehicles
+	cell AMX_NATIVE_CALL CreateDynamicVehicle(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL DestroyDynamicVehicle(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL IsValidDynamicVehicle(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL IsDynamicVehicleStreamedIn(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetDynamicVehicleSpawnInfo(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL SetDynamicVehicleSpawnInfo(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetDynamicVehiclePos(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL SetDynamicVehiclePos(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetDynamicVehicleZAngle(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetDynamicVehicleRotationQuat(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetDynamicVehDistanceFromPoint(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL SetDynamicVehicleZAngle(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL SetDynamicVehParamsForPlayer(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL SetDynamicVehicleParamsEx(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetDynamicVehicleParamsEx(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetDynamicVehParamsSirenState(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL SetDynamicVehParamsCarDoors(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetDynamicVehParamsCarDoors(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL SetDynamicVehParamsCarWindows(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetDynamicVehParamsCarWindows(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL SetDynamicVehicleToRespawn(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL LinkDynamicVehicleToInterior(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetDynamicVehicleInterior(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL AddDynamicVehicleComponent(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL RemoveDynamicVehicleComponent(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL ChangeDynamicVehicleColor(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetDynamicVehicleColor(AMX *amx, cell *params); // *
+	cell AMX_NATIVE_CALL ChangeDynamicVehiclePaintjob(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetDynamicVehiclePaintjob(AMX *amx, cell *params); // *
+	cell AMX_NATIVE_CALL SetDynamicVehicleHealth(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetDynamicVehicleHealth(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL AttachTrailerToDynamicVehicle(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL DetachTrailerFromDynamicVeh(AMX *amx, cell *params); //
+	cell AMX_NATIVE_CALL IsTrailerAttachedToDynamicVeh(AMX *amx, cell *params); //
+	cell AMX_NATIVE_CALL GetDynamicVehicleTrailer(AMX *amx, cell *params); 
+	cell AMX_NATIVE_CALL SetDynamicVehicleNumberPlate(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetDynamicVehicleNumberPlate(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetDynamicVehicleModel(AMX *amx, cell *params); 
+	cell AMX_NATIVE_CALL GetDynamicVehComponentInSlot(AMX *amx, cell *params); //
+	cell AMX_NATIVE_CALL GetDynamicVehComponentType(AMX *amx, cell *params); //
+	cell AMX_NATIVE_CALL RepairDynamicVehicle(AMX *amx, cell *params); 
+	cell AMX_NATIVE_CALL GetDynamicVehicleVelocity(AMX *amx, cell *params); 
+	cell AMX_NATIVE_CALL SetDynamicVehicleVelocity(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL SetDynamicVehAngularVelocity(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetDynamicVehicleDamageStatus(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL UpdateDynamicVehDamageStatus(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL SetDynamicVehicleVirtualWorld(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetDynamicVehicleVirtualWorld(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetPlayerSurfingDynamicVehID(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL PutPlayerInDynamicVehicle(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetPlayerDynamicVehicleID(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL IsPlayerInDynamicVehicle(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL IsPlayerInAnyDynamicVehicle(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL IsDynamicVehicleOccupied(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL PlayerSpectateDynamicVehicle(AMX *amx, cell *params);
 	// Extended
 	cell AMX_NATIVE_CALL CreateDynamicObjectEx(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL CreateDynamicPickupEx(AMX *amx, cell *params);
@@ -197,6 +254,8 @@ namespace Natives
 	cell AMX_NATIVE_CALL CountDynamic3DTextLabels(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL DestroyAllDynamicAreas(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL CountDynamicAreas(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL DestroyAllDynamicVehicles(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL CountDynamicVehicles(AMX *amx, cell *params);
 }
 
 #endif

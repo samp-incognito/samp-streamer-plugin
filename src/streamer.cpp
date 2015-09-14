@@ -44,6 +44,7 @@ Streamer::Streamer()
 	processingFinalPlayer = false;
 	tickCount = 0;
 	tickRate = 50;
+	defaultVehicleRespawn = true;
 	velocityBoundaries = boost::make_tuple(0.25f, 25.0f);
 }
 
@@ -212,13 +213,17 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 	}
 	if (automatic)
 	{
+		if (!update)
+		{
+			core->getGrid()->findMinimalCellsForPlayer(player, cells);
+		}
 		if (!core->getData()->pickups.empty())
 		{
-			if (!update)
-			{
-				core->getGrid()->findMinimalCellsForPlayer(player, cells);
-			}
 			processPickups(player, cells);
+		}
+		if (!core->getData()->vehicles.empty())
+		{
+			processVehicles(player, cells);
 		}
 		if (!delta.isZero())
 		{
@@ -564,7 +569,18 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 			}
 			else if (d->second->attach->vehicle != INVALID_GENERIC_ID)
 			{
-				AttachPlayerObjectToVehicle(player.playerID, internalID, d->second->attach->vehicle, d->second->attach->offset[0], d->second->attach->offset[1], d->second->attach->offset[2], d->second->attach->rotation[0], d->second->attach->rotation[1], d->second->attach->rotation[2]);
+				if (d->second->attach->vehicleType == STREAMER_VEHICLE_TYPE_DYNAMIC) 
+				{
+					boost::unordered_map<int, int>::iterator v = core->getData()->internalVehicles.find(d->second->attach->vehicle);
+					if (v != core->getData()->internalVehicles.end())
+					{
+						AttachPlayerObjectToVehicle(player.playerID, internalID, v->second, d->second->attach->offset[0], d->second->attach->offset[1], d->second->attach->offset[2], d->second->attach->rotation[0], d->second->attach->rotation[1], d->second->attach->rotation[2]);
+					}
+				}
+				else 
+				{
+					AttachPlayerObjectToVehicle(player.playerID, internalID, d->second->attach->vehicle, d->second->attach->offset[0], d->second->attach->offset[1], d->second->attach->offset[2], d->second->attach->rotation[0], d->second->attach->rotation[1], d->second->attach->rotation[2]);
+				}
 			}
 		}
 		else if (d->second->move)
@@ -790,17 +806,164 @@ void Streamer::processTextLabels(Player &player, const std::vector<SharedCell> &
 			player.currentVisibleTextLabels = player.internalTextLabels.size();
 			break;
 		}
-		int internalID = CreatePlayer3DTextLabel(player.playerID, d->second->text.c_str(), d->second->color, d->second->position[0], d->second->position[1], d->second->position[2], d->second->drawDistance, d->second->attach ? d->second->attach->player : INVALID_GENERIC_ID, d->second->attach ? d->second->attach->vehicle : INVALID_GENERIC_ID, d->second->testLOS);
-		if (internalID == INVALID_GENERIC_ID)
+		bool createText = true;
+		int attachedVehicle = d->second->attach ? d->second->attach->vehicle : INVALID_GENERIC_ID;
+		if(attachedVehicle != INVALID_GENERIC_ID)
 		{
-			player.currentVisibleTextLabels = player.internalTextLabels.size();
-			break;
+			if(d->second->attach->vehicleType = STREAMER_VEHICLE_TYPE_DYNAMIC)
+			{
+				boost::unordered_map<int, int>::iterator i = core->getData()->internalVehicles.find(attachedVehicle);
+				if (i == core->getData()->internalVehicles.end())
+				{
+					createText = false;
+				}
+				else
+				{
+					attachedVehicle = i->second;
+				}
+			}
 		}
-		player.internalTextLabels.insert(std::make_pair(d->second->textLabelID, internalID));
-		if (d->second->cell)
+
+		if(createText)
 		{
-			player.visibleCell->textLabels.insert(std::make_pair(d->second->textLabelID, d->second));
+			int internalID = CreatePlayer3DTextLabel(player.playerID, d->second->text.c_str(), d->second->color, d->second->position[0], d->second->position[1], d->second->position[2], d->second->drawDistance, d->second->attach ? d->second->attach->player : INVALID_GENERIC_ID, attachedVehicle, d->second->testLOS);
+			if (internalID == INVALID_GENERIC_ID)
+			{
+				player.currentVisibleTextLabels = player.internalTextLabels.size();
+				break;
+			}
+			player.internalTextLabels.insert(std::make_pair(d->second->textLabelID, internalID));
+			if (d->second->cell)
+			{
+				player.visibleCell->textLabels.insert(std::make_pair(d->second->textLabelID, d->second));
+			}
 		}
+	}
+}
+
+void Streamer::processVehicles(Player &player, const std::vector<SharedCell> &cells)
+{
+	static boost::unordered_map<int, Item::SharedVehicle> discoveredVehicles;
+	for (std::vector<SharedCell>::const_iterator c = cells.begin(); c != cells.end(); ++c)
+	{
+		for (boost::unordered_map<int, Item::SharedVehicle>::const_iterator p = (*c)->vehicles.begin(); p != (*c)->vehicles.end(); ++p)
+		{
+			boost::unordered_map<int, Item::SharedVehicle>::iterator d = discoveredVehicles.find(p->first);
+			if (d == discoveredVehicles.end())
+			{
+				if(p->second->interior == GetPlayerInterior(player.playerID) && p->second->worldID == GetPlayerVirtualWorld(player.playerID))		
+				{
+					if (p->second->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF || boost::geometry::comparable_distance(player.position, p->second->position) < (p->second->streamDistance * player.radiusMultipliers[STREAMER_TYPE_VEHICLE]))
+					{
+						discoveredVehicles.insert(*p);
+					}
+				}
+			}
+		}
+	}
+	if (processingFinalPlayer)
+	{
+		boost::unordered_map<int, int>::iterator i = core->getData()->internalVehicles.begin();
+		while (i != core->getData()->internalVehicles.end())
+		{
+			boost::unordered_map<int, Item::SharedVehicle>::iterator d = discoveredVehicles.find(i->first);
+			if (d == discoveredVehicles.end())
+			{
+				boost::unordered_map<int, Item::SharedVehicle>::iterator v = core->getData()->vehicles.find(i->second);
+				if (v != core->getData()->vehicles.end())
+				{
+					GetVehiclePos(i->second, &v->second->position[0], &v->second->position[1], &v->second->position[2]);
+					GetVehicleRotationQuat(i->second, &v->second->qw, &v->second->qx, &v->second->qy, &v->second->qz);
+					GetVehicleZAngle(i->second, &v->second->angle);
+					GetVehicleHealth(i->second, &v->second->health);
+				}
+
+				//sampgdk_logprintf("d == discoveredVehicles.end() internal: %d, streamer: %d", i->first, i->second);
+				DestroyVehicle(i->second);
+				i = core->getData()->internalVehicles.erase(i);
+			}
+			else
+			{
+				//sampgdk_logprintf("discoveredVehicles.erase(d) %d", d->second->vehicleID);
+				discoveredVehicles.erase(d);
+				++i;
+			}
+		}
+		for (boost::unordered_map<int, Item::SharedVehicle>::iterator d = discoveredVehicles.begin(); d != discoveredVehicles.end(); ++d)
+		{
+			if (core->getData()->internalVehicles.size() == core->getData()->getGlobalMaxVisibleItems(STREAMER_TYPE_PICKUP))
+			{
+				sampgdk_logprintf("limit reached");
+				break;
+			}
+			int internalID = INVALID_VEHICLE_ID;
+			switch(d->second->modelID)
+			{
+				case 537:
+				case 538:
+				{
+					//internalID = AddStaticVehicle(d->second->modelID, d->second->position[0], d->second->position[1], d->second->position[2], d->second->angle, d->second->color1, d->second->color2);
+					// TODO - This won't work properly without modifing train handling in samp server
+					// If you create train, then you create 4 vehicle - the base model ID has been returned, but the last 3 trailer not and you can't get these IDs - only when these ids are in sequence
+					// but these IDs won't be in sequence when server randomly destroy and create vehicles at different ids - for more info: http://pastebin.com/wZsiVHBr
+					break;
+				}
+				default:
+				{
+					internalID = CreateVehicle(d->second->modelID, d->second->position[0], d->second->position[1], d->second->position[2], d->second->angle, d->second->color1, d->second->color2, -1, d->second->spawn.addsiren);
+					break;
+				}
+			}
+			if (internalID == INVALID_VEHICLE_ID)
+			{
+				break;
+			}
+			if (!d->second->numberplate.empty())
+			{
+				SetVehicleNumberPlate(internalID, d->second->numberplate.c_str());
+			}
+			if(d->second->interior)
+			{
+				LinkVehicleToInterior(internalID, d->second->interior);
+			}
+			if(d->second->worldID)
+			{
+				SetVehicleVirtualWorld(internalID, d->second->worldID);
+			}
+			if (!d->second->carmods.empty())
+			{
+				for (std::vector<int>::iterator c = d->second->carmods.begin(); c != d->second->carmods.end(); c++)
+				{
+					AddVehicleComponent(internalID, *c);
+				}
+			}
+			if (d->second->paintjob != 4)
+			{
+				ChangeVehiclePaintjob(internalID, d->second->paintjob);
+			}
+			if(d->second->panels != 0 || d->second->doors != 0 || d->second->lights != 0|| d->second->tires != 0)
+			{
+				UpdateVehicleDamageStatus(internalID, d->second->panels, d->second->doors, d->second->lights, d->second->tires);
+			}
+			if (d->second->health != 1000.0f)
+			{
+				SetVehicleHealth(internalID, d->second->health);
+			}
+			if(d->second->params.engine != VEHICLE_PARAMS_UNSET || d->second->params.lights != VEHICLE_PARAMS_UNSET || d->second->params.alarm != VEHICLE_PARAMS_UNSET || d->second->params.doors != VEHICLE_PARAMS_UNSET || d->second->params.bonnet != VEHICLE_PARAMS_UNSET || d->second->params.boot != VEHICLE_PARAMS_UNSET || d->second->params.objective != VEHICLE_PARAMS_UNSET)
+			{
+				SetVehicleParamsEx(internalID, d->second->params.engine, d->second->params.lights, d->second->params.alarm, d->second->params.doors, d->second->params.bonnet, d->second->params.boot, d->second->params.objective);
+			}
+			if(d->second->params.cardoors.driver != VEHICLE_PARAMS_UNSET || d->second->params.cardoors.passenger != VEHICLE_PARAMS_UNSET || d->second->params.cardoors.backleft != VEHICLE_PARAMS_UNSET || d->second->params.cardoors.backright != VEHICLE_PARAMS_UNSET)
+			{
+				SetVehicleParamsCarDoors(internalID, d->second->params.cardoors.driver, d->second->params.cardoors.passenger, d->second->params.cardoors.backleft, d->second->params.cardoors.backright);
+			}
+			if(d->second->params.carwindows.driver != VEHICLE_PARAMS_UNSET || d->second->params.carwindows.passenger != VEHICLE_PARAMS_UNSET || d->second->params.carwindows.backleft != VEHICLE_PARAMS_UNSET || d->second->params.carwindows.backright != VEHICLE_PARAMS_UNSET)
+			{
+				SetVehicleParamsCarWindows(internalID, d->second->params.carwindows.driver, d->second->params.carwindows.passenger, d->second->params.carwindows.backleft, d->second->params.carwindows.backright);
+			}
+			core->getData()->internalVehicles.insert(std::make_pair(d->second->vehicleID, internalID));
+		}
+		discoveredVehicles.clear();
 	}
 }
 
@@ -821,6 +984,10 @@ void Streamer::processActiveItems()
 	if (!attachedTextLabels.empty())
 	{
 		processAttachedTextLabels();
+	}
+	if (!movingVehicles.empty())
+	{
+		processMovingVehicles();
 	}
 }
 
@@ -908,7 +1075,27 @@ void Streamer::processAttachedAreas()
 			}
 			else if ((*a)->attach->vehicle != INVALID_GENERIC_ID)
 			{
-				adjust = GetVehiclePos((*a)->attach->vehicle, &(*a)->attach->position[0], &(*a)->attach->position[1], &(*a)->attach->position[2]);
+				if((*a)->attach->vehicleType == STREAMER_VEHICLE_TYPE_STATIC)
+				{			
+					adjust = GetVehiclePos((*a)->attach->vehicle, &(*a)->attach->position[0], &(*a)->attach->position[1], &(*a)->attach->position[2]);
+				}
+				else
+				{					
+					boost::unordered_map<int, Item::SharedVehicle>::iterator v = core->getData()->vehicles.find((*a)->attach->vehicle);
+					if (v != core->getData()->vehicles.end())
+					{
+						boost::unordered_map<int, int>::iterator i = core->getData()->internalVehicles.find(v->first);
+						if (i != core->getData()->internalVehicles.end())
+						{
+							adjust = GetVehiclePos(i->second, &(*a)->attach->position[0], &(*a)->attach->position[1], &(*a)->attach->position[2]);
+						}
+						else
+						{
+							(*a)->attach->position = v->second->position;
+							adjust = true;
+						}
+					}
+				}
 			}
 			(*a)->attach->position += (*a)->attach->offset;
 			if (adjust)
@@ -948,7 +1135,27 @@ void Streamer::processAttachedObjects()
 			}
 			else if ((*o)->attach->vehicle != INVALID_GENERIC_ID)
 			{
-				adjust = GetVehiclePos((*o)->attach->vehicle, &(*o)->attach->position[0], &(*o)->attach->position[1], &(*o)->attach->position[2]);
+				if((*o)->attach->vehicleType == STREAMER_VEHICLE_TYPE_STATIC)
+				{
+					adjust = GetVehiclePos((*o)->attach->vehicle, &(*o)->attach->position[0], &(*o)->attach->position[1], &(*o)->attach->position[2]);
+				}
+				else
+				{
+					boost::unordered_map<int, Item::SharedVehicle>::iterator v = core->getData()->vehicles.find((*o)->attach->vehicle);
+					if (v != core->getData()->vehicles.end())
+					{
+						boost::unordered_map<int, int>::iterator i = core->getData()->internalVehicles.find(v->first);
+						if (i != core->getData()->internalVehicles.end())
+						{
+							adjust = GetVehiclePos(i->second, &(*o)->attach->position[0], &(*o)->attach->position[1], &(*o)->attach->position[2]);
+						}
+						else
+						{
+							(*o)->attach->position = v->second->position;
+							adjust = true;
+						}
+					}
+				}
 			}
 			if (adjust)
 			{
@@ -978,7 +1185,27 @@ void Streamer::processAttachedTextLabels()
 			}
 			else if ((*t)->attach->vehicle != INVALID_GENERIC_ID)
 			{
-				adjust = GetVehiclePos((*t)->attach->vehicle, &(*t)->attach->position[0], &(*t)->attach->position[1], &(*t)->attach->position[2]);
+				if((*t)->attach->vehicleType == STREAMER_VEHICLE_TYPE_STATIC)
+				{
+					adjust = GetVehiclePos((*t)->attach->vehicle, &(*t)->attach->position[0], &(*t)->attach->position[1], &(*t)->attach->position[2]);
+				}
+				else
+				{
+					boost::unordered_map<int, Item::SharedVehicle>::iterator v = core->getData()->vehicles.find((*t)->attach->vehicle);
+					if (v != core->getData()->vehicles.end())
+					{
+						boost::unordered_map<int, int>::iterator i = core->getData()->internalVehicles.find(v->first);
+						if (i != core->getData()->internalVehicles.end())
+						{
+							adjust = GetVehiclePos(i->second, &(*t)->attach->position[0], &(*t)->attach->position[1], &(*t)->attach->position[2]);
+						}
+						else
+						{
+							(*t)->attach->position = v->second->position;
+							adjust = true;
+						}
+					}
+				}
 			}
 			if (adjust)
 			{
@@ -992,5 +1219,130 @@ void Streamer::processAttachedTextLabels()
 				(*t)->attach->position.fill(std::numeric_limits<float>::infinity());
 			}
 		}
+	}
+}
+
+void Streamer::processMovingVehicles()
+{
+	boost::unordered_set<Item::SharedVehicle>::iterator v = movingVehicles.begin();
+	while (v != movingVehicles.end())
+	{
+		bool adjust = false;
+		if ((*v)->touched)
+		{
+			// Custom vehicle respawn
+			if((*v)->respawnDelay != -1)
+			{
+				int tick = GetTickCount();
+				
+				bool respawnVehicle;
+				if(core->getStreamer()->defaultVehicleRespawn)
+				{
+					// Do not check for respawn in first 10 second after spawned
+					respawnVehicle = static_cast<int>(tick - (*v)->spawnedTick > 10000);
+				}
+				else
+				{
+					// Do not check for respawn in first 10 second after spawned, and respawn only if vehicle was used at least one time.
+					respawnVehicle = static_cast<int>((tick - (*v)->spawnedTick > 10000) && (*v)->used);
+				}
+
+				if(respawnVehicle)
+				{
+					// If respawnDelay time passed since last update, then respawn
+					if(tick - (*v)->lastUpdatedTick >=  (*v)->respawnDelay)
+					{
+						(*v)->position = (*v)->spawn.position;
+						(*v)->angle = (*v)->spawn.angle;
+						(*v)->color1 = (*v)->spawn.color1;
+						(*v)->color2 = (*v)->spawn.color2;
+						(*v)->paintjob = 4; // In GTA, you can use 0 - 3 IDs for paintjobs, 4 is invalid
+						(*v)->health = 1000.0f;
+
+						(*v)->carmods.clear();
+						(*v)->touched = false;
+						(*v)->spawnedTick = GetTickCount();
+						(*v)->lastUpdatedTick = 0;
+
+						// Reset vehicle damage
+						(*v)->panels = 0;
+						(*v)->doors = 0;
+						(*v)->lights = 0;
+						(*v)->tires = 0;
+
+						// Set vehicle parameters as unset
+						(*v)->params.engine = VEHICLE_PARAMS_UNSET;
+						(*v)->params.lights = VEHICLE_PARAMS_UNSET;
+						(*v)->params.alarm = VEHICLE_PARAMS_UNSET;
+						(*v)->params.doors = VEHICLE_PARAMS_UNSET;
+						(*v)->params.bonnet = VEHICLE_PARAMS_UNSET;
+						(*v)->params.boot = VEHICLE_PARAMS_UNSET;
+						(*v)->params.objective = VEHICLE_PARAMS_UNSET;
+						(*v)->params.siren = VEHICLE_PARAMS_UNSET;
+						(*v)->params.cardoors.driver = VEHICLE_PARAMS_UNSET;
+						(*v)->params.cardoors.passenger = VEHICLE_PARAMS_UNSET;
+						(*v)->params.cardoors.backleft = VEHICLE_PARAMS_UNSET;
+						(*v)->params.cardoors.backright = VEHICLE_PARAMS_UNSET;
+						(*v)->params.carwindows.driver = VEHICLE_PARAMS_UNSET;
+						(*v)->params.carwindows.passenger = VEHICLE_PARAMS_UNSET;
+						(*v)->params.carwindows.backleft = VEHICLE_PARAMS_UNSET;
+						(*v)->params.carwindows.backright = VEHICLE_PARAMS_UNSET;
+
+						if((*v)->cell)
+						{
+							core->getGrid()->removeVehicle(*v, true);
+						}
+
+						boost::unordered_map<int, int>::iterator i = core->getData()->internalVehicles.find((*v)->vehicleID);
+						if (i != core->getData()->internalVehicles.end())
+						{
+							SetVehicleToRespawn(i->second);
+						}
+						else
+						{
+							for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
+							{
+								int amxIndex = 0;
+								if (!amx_FindPublic(*a, "OnDynamicVehicleSpawn", &amxIndex))
+								{
+									amx_Push(*a, static_cast<cell>((*v)->vehicleID));
+									amx_Exec(*a, NULL, amxIndex);
+								}
+							}
+						}
+						//sampgdk_logprintf("respawn occupied: %d", (*v)->vehicleID);
+						v = movingVehicles.erase(v);
+						continue;
+					}
+				}
+			}
+	
+			boost::unordered_map<int, int>::iterator i = core->getData()->internalVehicles.find((*v)->vehicleID);
+			if(i != core->getData()->internalVehicles.end())
+			{
+				if ((*v)->vehicleID)
+				{
+					adjust = GetVehiclePos(i->second, &(*v)->position[0], &(*v)->position[1], &(*v)->position[2]);
+					GetVehicleZAngle(i->second, &(*v)->angle);
+					GetVehicleHealth(i->second, &(*v)->health);
+					GetVehicleRotationQuat(i->second, &(*v)->qw, &(*v)->qx, &(*v)->qy, &(*v)->qz);
+					(*v)->lastUpdatedTick = GetTickCount();
+				}
+
+				if (adjust)
+				{
+					if ((*v)->cell)
+					{
+						core->getGrid()->removeVehicle(*v, true);
+					}
+				}
+				else
+				{
+					sampgdk_logprintf("fill infinity: %d", (*v)->vehicleID);
+					(*v)->position.fill(std::numeric_limits<float>::infinity());
+				}
+			}
+		}
+		v++;
 	}
 }

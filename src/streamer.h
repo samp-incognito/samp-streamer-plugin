@@ -56,9 +56,11 @@ public:
 	boost::unordered_set<Item::SharedObject> attachedObjects;
 	boost::unordered_set<Item::SharedTextLabel> attachedTextLabels;
 	boost::unordered_set<Item::SharedObject> movingObjects;
+	boost::unordered_set<Item::SharedVehicle> movingVehicles;
 
 	std::vector<boost::tuple<int, int> > areaEnterCallbacks;
 	std::vector<boost::tuple<int, int> > areaLeaveCallbacks;
+	bool defaultVehicleRespawn;
 private:
 	void calculateAverageUpdateTime();
 
@@ -72,11 +74,13 @@ private:
 	void processPickups(Player &player, const std::vector<SharedCell> &cells);
 	void processRaceCheckpoints(Player &player, const std::vector<SharedCell> &cells);
 	void processTextLabels(Player &player, const std::vector<SharedCell> &cells);
+	void processVehicles(Player &player, const std::vector<SharedCell> &cells);
 
 	void processMovingObjects();
 	void processAttachedAreas();
 	void processAttachedObjects();
 	void processAttachedTextLabels();
+	void processMovingVehicles();
 
 	std::size_t tickCount;
 	std::size_t tickRate;

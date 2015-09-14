@@ -208,6 +208,23 @@ void Grid::addTextLabel(const Item::SharedTextLabel &textLabel)
 	}
 }
 
+void Grid::addVehicle(const Item::SharedVehicle &vehicle)
+{
+	if (vehicle->streamDistance > cellDistance || vehicle->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
+	{
+		globalCell->vehicles.insert(std::make_pair(vehicle->vehicleID, vehicle));
+		vehicle->cell.reset();
+	}
+	else
+	{
+		Eigen::Vector2f position = Eigen::Vector2f::Zero();
+		position = Eigen::Vector2f(vehicle->position[0], vehicle->position[1]);
+		CellID cellID = getCellID(position);
+		cells[cellID]->vehicles.insert(std::make_pair(vehicle->vehicleID, vehicle));
+		vehicle->cell = cells[cellID];
+	}
+}
+
 void Grid::rebuildGrid()
 {
 	cells.clear();
@@ -240,6 +257,10 @@ void Grid::rebuildGrid()
 	for (boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.begin(); t != core->getData()->textLabels.end(); ++t)
 	{
 		addTextLabel(t->second);
+	}
+	for (boost::unordered_map<int, Item::SharedVehicle>::iterator p = core->getData()->vehicles.begin(); p != core->getData()->vehicles.end(); ++p)
+	{
+		addVehicle(p->second);
 	}
 }
 
@@ -508,6 +529,48 @@ void Grid::removeTextLabel(const Item::SharedTextLabel &textLabel, bool reassign
 			if (textLabel->attach)
 			{
 				core->getStreamer()->attachedTextLabels.erase(textLabel);
+			}
+		}
+	}
+}
+
+void Grid::removeVehicle(const Item::SharedVehicle &vehicle, bool reassign)
+{
+	bool found = false;
+	if (vehicle->cell)
+	{
+		boost::unordered_map<CellID, SharedCell>::iterator c = cells.find(vehicle->cell->cellID);
+		if (c != cells.end())
+		{
+			boost::unordered_map<int, Item::SharedVehicle>::iterator p = c->second->vehicles.find(vehicle->vehicleID);
+			if (p != c->second->vehicles.end())
+			{
+				c->second->vehicles.quick_erase(p);
+				eraseCellIfEmpty(c->second);
+				found = true;
+			}
+		}
+	}
+	else
+	{
+		boost::unordered_map<int, Item::SharedVehicle>::iterator p = globalCell->vehicles.find(vehicle->vehicleID);
+		if (p != globalCell->vehicles.end())
+		{
+			globalCell->vehicles.quick_erase(p);
+			found = true;
+		}
+	}
+	if (found)
+	{
+		if (reassign)
+		{
+			addVehicle(vehicle);
+		}
+		else
+		{
+			if (vehicle->touched)
+			{
+				core->getStreamer()->movingVehicles.erase(vehicle);
 			}
 		}
 	}

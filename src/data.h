@@ -44,6 +44,7 @@ public:
 	std::set<AMX*> interfaces;
 
 	boost::unordered_map<int, int> internalPickups;
+	boost::unordered_map<int, int> internalVehicles;
 
 	boost::unordered_map<int, Item::SharedArea> areas;
 	boost::unordered_map<int, Item::SharedCheckpoint> checkpoints;
@@ -52,6 +53,7 @@ public:
 	boost::unordered_map<int, Item::SharedPickup> pickups;
 	boost::unordered_map<int, Item::SharedRaceCheckpoint> raceCheckpoints;
 	boost::unordered_map<int, Item::SharedTextLabel> textLabels;
+	boost::unordered_map<int, Item::SharedVehicle> vehicles;
 
 	boost::unordered_map<int, Player> players;
 private:

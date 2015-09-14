@@ -120,3 +120,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleErrorCallback(AMX *amx, cell *par
 	CHECK_PARAMS(1, "Streamer_IsToggleErrorCallback");
 	return static_cast<cell>(core->getData()->errorCallbackEnabled != 0);
 }
+
+cell AMX_NATIVE_CALL Natives::Streamer_EnableDefaultVehicleRespawn(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "Streamer_EnableDefaultVehicleRespawn");
+	core->getStreamer()->defaultVehicleRespawn = static_cast<int>(params[1]) != 0;
+	return 1;
+}

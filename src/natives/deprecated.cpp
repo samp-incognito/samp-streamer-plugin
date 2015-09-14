@@ -109,3 +109,15 @@ cell AMX_NATIVE_CALL Natives::CountDynamicAreas(AMX *amx, cell *params)
 	cell newParams[3] = { sizeof(cell) * 2, STREAMER_TYPE_AREA, 1 };
 	return Natives::Streamer_CountItems(amx, newParams);
 }
+
+cell AMX_NATIVE_CALL Natives::DestroyAllDynamicVehicles(AMX *amx, cell *params)
+{
+	cell newParams[3] = { sizeof(cell) * 2, STREAMER_TYPE_VEHICLE, 1 };
+	return Natives::Streamer_DestroyAllItems(amx, newParams);
+}
+
+cell AMX_NATIVE_CALL Natives::CountDynamicVehicles(AMX *amx, cell *params)
+{
+	cell newParams[3] = { sizeof(cell) * 2, STREAMER_TYPE_VEHICLE, 1 };
+	return Natives::Streamer_CountItems(amx, newParams);
+}

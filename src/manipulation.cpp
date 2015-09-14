@@ -736,6 +736,91 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 			}
 			break;
 		}
+		case STREAMER_TYPE_VEHICLE:
+		{
+			boost::unordered_map<int, Item::SharedVehicle>::iterator v = core->getData()->vehicles.find(static_cast<int>(params[2]));
+			if (v != core->getData()->vehicles.end())
+			{
+				switch (static_cast<int>(params[3]))
+				{
+					case Health:
+					{
+						Utility::storeFloatInNative(amx, params[4], v->second->health);
+						return 1;
+					}
+					case QuatW:
+					{
+						Utility::storeFloatInNative(amx, params[4], v->second->qw);
+						return 1;
+					}
+					case QuatX:
+					{
+						Utility::storeFloatInNative(amx, params[4], v->second->qx);
+						return 1;
+					}
+					case QuatY:
+					{
+						Utility::storeFloatInNative(amx, params[4], v->second->qy);
+						return 1;
+					}
+					case QuatZ:
+					{
+						Utility::storeFloatInNative(amx, params[4], v->second->qz);
+						return 1;
+					}
+					case SpawnAngle:
+					{
+						Utility::storeFloatInNative(amx, params[4], v->second->spawn.angle);
+						return 1;
+					}
+					case SpawnX:
+					{
+						Utility::storeFloatInNative(amx, params[4], v->second->spawn.position[0]);
+						return 1;
+					}
+					case SpawnY:
+					{
+						Utility::storeFloatInNative(amx, params[4], v->second->spawn.position[1]);
+						return 1;
+					}
+					case SpawnZ:
+					{
+						Utility::storeFloatInNative(amx, params[4], v->second->spawn.position[2]);
+						return 1;
+					}
+					case StreamDistance:
+					{
+						Utility::storeFloatInNative(amx, params[4], std::sqrt(v->second->streamDistance));
+						return 1;
+					}
+					case X:
+					{
+						Utility::storeFloatInNative(amx, params[4], v->second->position[0]);
+						return 1;
+					}
+					case Y:
+					{
+						Utility::storeFloatInNative(amx, params[4], v->second->position[1]);
+						return 1;
+					}
+					case Z:
+					{
+						Utility::storeFloatInNative(amx, params[4], v->second->position[2]);
+						return 1;
+					}
+					default:
+					{
+						error = InvalidData;
+						break;
+					}
+				}
+			}
+			else
+			{
+				error = InvalidID;
+			}
+			break;
+		}
 		default:
 		{
 			error = InvalidType;
@@ -956,8 +1041,19 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 								}
 								else if (o->second->attach->vehicle != INVALID_GENERIC_ID)
 								{
-									AttachPlayerObjectToVehicle(p->first, i->second, o->second->attach->vehicle, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
-								}
+									if (o->second->attach->vehicleType == STREAMER_VEHICLE_TYPE_DYNAMIC) 
+									{
+										boost::unordered_map<int, int>::iterator j = core->getData()->internalVehicles.find(o->second->attach->vehicle);
+										if (j != core->getData()->internalVehicles.end())
+										{
+											AttachPlayerObjectToVehicle(p->first, i->second, j->second, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
+										}
+									}
+									else 
+									{
+										AttachPlayerObjectToVehicle(p->first, i->second, o->second->attach->vehicle, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
+									}
+								}	
 							}
 							else if (o->second->move)
 							{
@@ -1632,6 +1728,160 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 			}
 			break;
 		}
+		case STREAMER_TYPE_VEHICLE:
+		{
+			boost::unordered_map<int, Item::SharedVehicle>::iterator v = core->getData()->vehicles.find(static_cast<int>(params[2]));
+			if (v != core->getData()->vehicles.end())
+			{
+				boost::unordered_map<int, int>::iterator i = core->getData()->internalVehicles.find(v->first);
+				switch (static_cast<int>(params[3]))
+				{
+					case Health:
+					{
+						v->second->health = amx_ctof(params[4]);
+						if(i != core->getData()->internalVehicles.end())
+						{
+							SetVehicleHealth(i->second, v->second->health);
+						}
+						break;
+					}
+					case SpawnAngle:
+					{
+						v->second->spawn.angle = amx_ctof(params[4]);
+						update = true;
+						break;
+					}
+					case SpawnX:
+					{
+						v->second->spawn.position[0] = amx_ctof(params[4]);
+						update = true;
+						break;
+					}
+					case SpawnY:
+					{
+						v->second->spawn.position[1] = amx_ctof(params[4]);
+
+						update = true;
+						break;
+					}
+					case SpawnZ:
+					{
+						v->second->spawn.position[2] = amx_ctof(params[4]);
+						update = true;
+						break;
+					}
+					case StreamDistance:
+					{
+						v->second->streamDistance = amx_ctof(params[4]) * amx_ctof(params[4]);
+						reassign = true;
+						break;
+					}
+					case X:
+					{
+						v->second->position[0] = amx_ctof(params[4]);
+						reassign = true;
+						update = true;
+						break;
+					}
+					case Y:
+					{
+						v->second->position[1] = amx_ctof(params[4]);
+						reassign = true;
+						update = true;
+						break;
+					}
+					case Z:
+					{
+						v->second->position[2] = amx_ctof(params[4]);
+						reassign = true;
+						update = true;
+						break;
+					}
+					case RZ:
+					{
+						v->second->angle = amx_ctof(params[4]);
+						if(i != core->getData()->internalVehicles.end())
+						{
+							SetVehicleZAngle(i->second, v->second->angle);
+						}
+						break;
+					}
+					default:
+					{
+						error = InvalidData;
+						break;
+					}
+				}
+				if (reassign)
+				{
+					core->getGrid()->removeVehicle(v->second, true);
+				}
+				if (update)
+				{
+					boost::unordered_map<int, int>::iterator i = core->getData()->internalVehicles.find(v->first);
+					if(i != core->getData()->internalVehicles.end())
+					{
+						DestroyVehicle(i->second);
+						i->second = CreateVehicle(v->second->modelID, v->second->position[0], v->second->position[1], v->second->position[2], v->second->angle, v->second->color1, v->second->color2, -1, v->second->spawn.addsiren);
+						if(i->second == INVALID_VEHICLE_ID)
+						{
+							return 0;
+						}
+						if(!v->second->numberplate.empty())
+						{
+							SetVehicleNumberPlate(i->second, v->second->numberplate.c_str());
+						}
+						if(v->second->interior)
+						{
+							LinkVehicleToInterior(i->second, v->second->interior);
+						}
+						if(v->second->worldID)
+						{
+							SetVehicleVirtualWorld(i->second, v->second->worldID);
+						}
+						if(!v->second->carmods.empty())
+						{
+							for(std::vector<int>::iterator c = v->second->carmods.begin(); c != v->second->carmods.end(); c++)
+							{
+								AddVehicleComponent(i->second, *c);
+							}
+						}
+						if(v->second->paintjob != 4)
+						{
+							ChangeVehiclePaintjob(i->second, v->second->paintjob);
+						}
+						if(v->second->panels != 0 || v->second->doors != 0 || v->second->lights != 0 || v->second->tires != 0)
+						{
+							UpdateVehicleDamageStatus(i->second, v->second->panels, v->second->doors, v->second->lights, v->second->tires);
+						}
+						if(v->second->health != 1000.0f)
+						{
+							SetVehicleHealth(i->second, v->second->health);
+						}
+						if(v->second->params.engine != VEHICLE_PARAMS_UNSET || v->second->params.lights != VEHICLE_PARAMS_UNSET || v->second->params.alarm != VEHICLE_PARAMS_UNSET || v->second->params.doors != VEHICLE_PARAMS_UNSET || v->second->params.bonnet != VEHICLE_PARAMS_UNSET || v->second->params.boot != VEHICLE_PARAMS_UNSET || v->second->params.objective != VEHICLE_PARAMS_UNSET)
+						{
+							SetVehicleParamsEx(i->second, v->second->params.engine, v->second->params.lights, v->second->params.alarm, v->second->params.doors, v->second->params.bonnet, v->second->params.boot, v->second->params.objective);
+						}
+						if(v->second->params.cardoors.driver != VEHICLE_PARAMS_UNSET || v->second->params.cardoors.passenger != VEHICLE_PARAMS_UNSET || v->second->params.cardoors.backleft != VEHICLE_PARAMS_UNSET || v->second->params.cardoors.backright != VEHICLE_PARAMS_UNSET)
+						{
+							SetVehicleParamsCarDoors(i->second, v->second->params.cardoors.driver, v->second->params.cardoors.passenger, v->second->params.cardoors.backleft, v->second->params.cardoors.backright);
+						}
+						if(v->second->params.carwindows.driver != VEHICLE_PARAMS_UNSET || v->second->params.carwindows.passenger != VEHICLE_PARAMS_UNSET || v->second->params.carwindows.backleft != VEHICLE_PARAMS_UNSET || v->second->params.carwindows.backright != VEHICLE_PARAMS_UNSET)
+						{
+							SetVehicleParamsCarWindows(i->second, v->second->params.carwindows.driver, v->second->params.carwindows.passenger, v->second->params.carwindows.backleft, v->second->params.carwindows.backright);
+						}
+					}
+				}
+				if (reassign || update)
+				{
+					return 1;
+				}
+			}
+			else
+			{
+				error = InvalidID;
+			}			
+		}
 		default:
 		{
 			error = InvalidType;
@@ -2017,6 +2267,62 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					case WorldID:
 					{
 						return Utility::getFirstValueInContainer(a->second->worlds);
+					}
+					default:
+					{
+						error = InvalidData;
+						break;
+					}
+				}
+			}
+			else
+			{
+				error = InvalidID;
+			}
+			break;
+		}
+		case STREAMER_TYPE_VEHICLE:
+		{
+			boost::unordered_map<int, Item::SharedVehicle>::iterator v = core->getData()->vehicles.find(static_cast<int>(params[2]));
+			if (v != core->getData()->vehicles.end())
+			{
+				switch (static_cast<int>(params[3]))
+				{
+					case Color:
+					{
+						return v->second->color1;
+					}
+					case Color2:
+					{
+						return v->second->color2;
+					}
+					case ExtraID:
+					{
+						return Utility::getFirstValueInContainer(v->second->extras);
+					}
+					case InteriorID:
+					{
+						return v->second->interior;
+					}
+					case PaintJob:
+					{
+						return v->second->paintjob;
+					}
+					case RespawnTime:
+					{
+						return v->second->respawnDelay;
+					}
+					case SpawnColor1:
+					{
+						return v->second->spawn.color1;
+					}
+					case SpawnColor2:
+					{
+						return v->second->spawn.color2;
+					}
+					case WorldID:
+					{
+						return v->second->worldID;
 					}
 					default:
 					{
@@ -2716,6 +3022,132 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 			}
 			break;
 		}
+		case STREAMER_TYPE_VEHICLE:
+		{
+			boost::unordered_map<int, Item::SharedVehicle>::iterator v = core->getData()->vehicles.find(static_cast<int>(params[2]));
+			if (v != core->getData()->vehicles.end())
+			{
+				boost::unordered_map<int, int>::iterator i = core->getData()->internalVehicles.find(v->first);
+				switch (static_cast<int>(params[3]))
+				{
+					case Color:
+					{
+						v->second->color1 = static_cast<int>(params[4]);
+						if(i != core->getData()->internalVehicles.end())
+						{
+							ChangeVehicleColor(i->second, v->second->color1, v->second->color2);
+						}
+					}
+					case Color2:
+					{
+						v->second->color2 = static_cast<int>(params[4]);
+						if(i != core->getData()->internalVehicles.end())
+						{
+							ChangeVehicleColor(i->second, v->second->color1, v->second->color2);
+						}
+					}
+					case ExtraID:
+					{
+						return Utility::setFirstValueInContainer(v->second->extras, static_cast<int>(params[4])) != 0;
+					}
+					case InteriorID:
+					{
+						v->second->interior = static_cast<int>(params[4]);
+						if(i != core->getData()->internalVehicles.end())
+						{
+							LinkVehicleToInterior(i->second, v->second->interior);
+						}
+					}
+					case ModelID:
+					{
+						v->second->modelID = static_cast<int>(params[4]);
+						update = true;
+					}
+					case PaintJob:
+					{
+						v->second->paintjob = static_cast<int>(params[4]);
+						if(i != core->getData()->internalVehicles.end())
+						{
+							ChangeVehiclePaintjob(i->second, v->second->paintjob);
+						}
+					}
+					case Siren:
+					{
+						v->second->spawn.addsiren = static_cast<int>(params[4]) != 0;
+						update = true;
+					}
+					default:
+					{
+						error = InvalidData;
+						break;
+					}
+				}
+				if(update)
+				{
+					boost::unordered_map<int, int>::iterator i = core->getData()->internalVehicles.find(v->first);
+					if(i != core->getData()->internalVehicles.end())
+					{
+						DestroyVehicle(i->second);
+						i->second = CreateVehicle(v->second->modelID, v->second->position[0], v->second->position[1], v->second->position[2], v->second->angle, v->second->color1, v->second->color2, -1, v->second->spawn.addsiren);
+						if(i->second == INVALID_VEHICLE_ID)
+						{
+							return 0;
+						}
+						if(!v->second->numberplate.empty())
+						{
+							SetVehicleNumberPlate(i->second, v->second->numberplate.c_str());
+						}
+						if(v->second->interior)
+						{
+							LinkVehicleToInterior(i->second, v->second->interior);
+						}
+						if(v->second->worldID)
+						{
+							SetVehicleVirtualWorld(i->second, v->second->worldID);
+						}
+						if(!v->second->carmods.empty())
+						{
+							for(std::vector<int>::iterator c = v->second->carmods.begin(); c != v->second->carmods.end(); c++)
+							{
+								AddVehicleComponent(i->second, *c);
+							}
+						}
+						if(v->second->paintjob != 4)
+						{
+							ChangeVehiclePaintjob(i->second, v->second->paintjob);
+						}
+						if(v->second->panels != 0 || v->second->doors != 0 || v->second->lights != 0 || v->second->tires != 0)
+						{
+							UpdateVehicleDamageStatus(i->second, v->second->panels, v->second->doors, v->second->lights, v->second->tires);
+						}
+						if(v->second->health != 1000.0f)
+						{
+							SetVehicleHealth(i->second, v->second->health);
+						}
+						if(v->second->params.engine != VEHICLE_PARAMS_UNSET || v->second->params.lights != VEHICLE_PARAMS_UNSET || v->second->params.alarm != VEHICLE_PARAMS_UNSET || v->second->params.doors != VEHICLE_PARAMS_UNSET || v->second->params.bonnet != VEHICLE_PARAMS_UNSET || v->second->params.boot != VEHICLE_PARAMS_UNSET || v->second->params.objective != VEHICLE_PARAMS_UNSET)
+						{
+							SetVehicleParamsEx(i->second, v->second->params.engine, v->second->params.lights, v->second->params.alarm, v->second->params.doors, v->second->params.bonnet, v->second->params.boot, v->second->params.objective);
+						}
+						if(v->second->params.cardoors.driver != VEHICLE_PARAMS_UNSET || v->second->params.cardoors.passenger != VEHICLE_PARAMS_UNSET || v->second->params.cardoors.backleft != VEHICLE_PARAMS_UNSET || v->second->params.cardoors.backright != VEHICLE_PARAMS_UNSET)
+						{
+							SetVehicleParamsCarDoors(i->second, v->second->params.cardoors.driver, v->second->params.cardoors.passenger, v->second->params.cardoors.backleft, v->second->params.cardoors.backright);
+						}
+						if(v->second->params.carwindows.driver != VEHICLE_PARAMS_UNSET || v->second->params.carwindows.passenger != VEHICLE_PARAMS_UNSET || v->second->params.carwindows.backleft != VEHICLE_PARAMS_UNSET || v->second->params.carwindows.backright != VEHICLE_PARAMS_UNSET)
+						{
+							SetVehicleParamsCarWindows(i->second, v->second->params.carwindows.driver, v->second->params.carwindows.passenger, v->second->params.carwindows.backleft, v->second->params.carwindows.backright);
+						}
+					}
+				}
+				if(update)
+				{
+					return 1;
+				}
+			}
+			else
+			{
+				error = InvalidID;
+			}
+		}
 		default:
 		{
 			error = InvalidType;
@@ -2781,6 +3213,11 @@ int Manipulation::getArrayData(AMX *amx, cell *params)
 		case STREAMER_TYPE_AREA:
 		{
 			result = getArrayDataForItem(core->getData()->areas, amx, static_cast<int>(params[2]), static_cast<int>(params[3]), params[4], params[5], error);
+			break;
+		}
+		case STREAMER_TYPE_VEHICLE:
+		{
+			result = getArrayDataForItem(core->getData()->vehicles, amx, static_cast<int>(params[2]), static_cast<int>(params[3]), params[4], params[5], error);
 			break;
 		}
 		default:
@@ -2854,6 +3291,11 @@ int Manipulation::setArrayData(AMX *amx, cell *params)
 			result = setArrayDataForItem(core->getData()->areas, amx, static_cast<int>(params[2]), static_cast<int>(params[3]), params[4], params[5], error);
 			break;
 		}
+		case STREAMER_TYPE_VEHICLE:
+		{
+			result = setArrayDataForItem(core->getData()->vehicles, amx, static_cast<int>(params[2]), static_cast<int>(params[3]), params[4], params[5], error);
+			break;
+		}
 		default:
 		{
 			error = InvalidType;
@@ -2923,6 +3365,11 @@ int Manipulation::isInArrayData(AMX *amx, cell *params)
 		case STREAMER_TYPE_AREA:
 		{
 			result = isInArrayDataForItem(core->getData()->areas, static_cast<int>(params[2]), static_cast<int>(params[3]), static_cast<int>(params[4]), error);
+			break;
+		}
+		case STREAMER_TYPE_VEHICLE:
+		{
+			result = isInArrayDataForItem(core->getData()->vehicles, static_cast<int>(params[2]), static_cast<int>(params[3]), static_cast<int>(params[4]), error);
 			break;
 		}
 		default:
@@ -2996,6 +3443,11 @@ int Manipulation::appendArrayData(AMX *amx, cell *params)
 			result = appendArrayDataForItem(core->getData()->areas, static_cast<int>(params[2]), static_cast<int>(params[3]), static_cast<int>(params[4]), error);
 			break;
 		}
+		case STREAMER_TYPE_VEHICLE:
+		{
+			result = appendArrayDataForItem(core->getData()->vehicles, static_cast<int>(params[2]), static_cast<int>(params[3]), static_cast<int>(params[4]), error);
+			break;
+		}
 		default:
 		{
 			error = InvalidType;
@@ -3065,6 +3517,11 @@ int Manipulation::removeArrayData(AMX *amx, cell *params)
 		case STREAMER_TYPE_AREA:
 		{
 			result = removeArrayDataForItem(core->getData()->areas, static_cast<int>(params[2]), static_cast<int>(params[3]), static_cast<int>(params[4]), error);
+			break;
+		}
+		case STREAMER_TYPE_VEHICLE:
+		{
+			result = removeArrayDataForItem(core->getData()->vehicles, static_cast<int>(params[2]), static_cast<int>(params[3]), static_cast<int>(params[4]), error);
 			break;
 		}
 		default:

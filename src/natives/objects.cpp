@@ -475,7 +475,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToPlayer(AMX *amx, cell *params
 
 cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToVehicle(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(8, "AttachDynamicObjectToVehicle");
+	CHECK_PARAMS(9, "AttachDynamicObjectToVehicle");
 	boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[1]));
 	if (o != core->getData()->objects.end())
 	{
@@ -488,6 +488,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToVehicle(AMX *amx, cell *param
 		o->second->attach->object = INVALID_STREAMER_ID;
 		o->second->attach->player = INVALID_GENERIC_ID;
 		o->second->attach->vehicle = static_cast<int>(params[2]);
+		o->second->attach->vehicleType = static_cast<char>(params[9]);
 		o->second->attach->offset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
 		o->second->attach->rotation = Eigen::Vector3f(amx_ctof(params[6]), amx_ctof(params[7]), amx_ctof(params[8]));
 		for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
@@ -495,7 +496,22 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToVehicle(AMX *amx, cell *param
 			boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
 			if (i != p->second.internalObjects.end())
 			{
-				AttachPlayerObjectToVehicle(p->first, i->second, o->second->attach->vehicle, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
+				if (o->second->attach->vehicleType == STREAMER_VEHICLE_TYPE_DYNAMIC) 
+				{
+					boost::unordered_map<int, Item::SharedVehicle>::iterator q = core->getData()->vehicles.find(static_cast<int>(params[2]));
+					if (q != core->getData()->vehicles.end()) 
+					{
+						boost::unordered_map<int, int>::iterator v = core->getData()->internalVehicles.find(q->first);
+						if (v != core->getData()->internalVehicles.end())
+						{
+							AttachPlayerObjectToVehicle(p->first, i->second, v->second, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
+						}
+					}
+				}
+				else 
+				{
+					AttachPlayerObjectToVehicle(p->first, i->second, o->second->attach->vehicle, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
+				}
 				for (boost::unordered_map<int, Item::Object::Material>::iterator m = o->second->materials.begin(); m != o->second->materials.end(); ++m)
 				{
 					if (m->second.main)

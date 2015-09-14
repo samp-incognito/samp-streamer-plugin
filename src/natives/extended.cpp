@@ -157,7 +157,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicMapIconEx(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabelEx(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(16, "CreateDynamic3DTextLabelEx");
+	CHECK_PARAMS(17, "CreateDynamic3DTextLabelEx");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_3D_TEXT_LABEL) == core->getData()->textLabels.size())
 	{
 		return 0;
@@ -176,17 +176,18 @@ cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabelEx(AMX *amx, cell *params)
 		textLabel->attach = boost::intrusive_ptr<Item::TextLabel::Attach>(new Item::TextLabel::Attach);
 		textLabel->attach->player = static_cast<int>(params[7]);
 		textLabel->attach->vehicle = static_cast<int>(params[8]);
+		textLabel->attach->vehicleType = static_cast<int>(params[9]);
 		if (textLabel->position.cwiseAbs().maxCoeff() > 50.0f)
 		{
 			textLabel->position.setZero();
 		}
 		core->getStreamer()->attachedTextLabels.insert(textLabel);
 	}
-	textLabel->testLOS = static_cast<int>(params[9]) != 0;
-	textLabel->streamDistance = amx_ctof(params[10]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[10]) : amx_ctof(params[10]) * amx_ctof(params[10]);
-	Utility::convertArrayToContainer(amx, params[11], params[14], textLabel->worlds);
-	Utility::convertArrayToContainer(amx, params[12], params[15], textLabel->interiors);
-	Utility::convertArrayToContainer(amx, params[13], params[16], textLabel->players);
+	textLabel->testLOS = static_cast<int>(params[10]) != 0;
+	textLabel->streamDistance = amx_ctof(params[11]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[1]) : amx_ctof(params[11]) * amx_ctof(params[11]);
+	Utility::convertArrayToContainer(amx, params[13], params[15], textLabel->worlds);
+	Utility::convertArrayToContainer(amx, params[13], params[16], textLabel->interiors);
+	Utility::convertArrayToContainer(amx, params[14], params[17], textLabel->players);
 	core->getGrid()->addTextLabel(textLabel);
 	core->getData()->textLabels.insert(std::make_pair(textLabelID, textLabel));
 	return static_cast<cell>(textLabelID);

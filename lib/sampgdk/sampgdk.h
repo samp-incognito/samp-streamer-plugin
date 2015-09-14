@@ -3365,7 +3365,7 @@ SAMPGDK_NATIVE(bool, ManualVehicleEngineAndLights());
  * \ingroup natives
  * \see <a href="http://wiki.sa-mp.com/wiki/SetVehicleParamsEx">SetVehicleParamsEx on SA-MP Wiki</a>
  */
-SAMPGDK_NATIVE(bool, SetVehicleParamsEx(int vehicleid, bool engine, bool lights, bool alarm, bool doors, bool bonnet, bool boot, bool objective));
+SAMPGDK_NATIVE(bool, SetVehicleParamsEx(int vehicleid, int engine, int lights, int alarm, int doors, int bonnet, int boot, int objective));
 
 /**
  * \ingroup natives
@@ -3383,7 +3383,7 @@ SAMPGDK_NATIVE(int, GetVehicleParamsSirenState(int vehicleid));
  * \ingroup natives
  * \see <a href="http://wiki.sa-mp.com/wiki/SetVehicleParamsCarDoors">SetVehicleParamsCarDoors on SA-MP Wiki</a>
  */
-SAMPGDK_NATIVE(bool, SetVehicleParamsCarDoors(int vehicleid, bool driver, bool passenger, bool backleft, bool backright));
+SAMPGDK_NATIVE(bool, SetVehicleParamsCarDoors(int vehicleid, int driver, int passenger, int backleft, int backright));
 
 /**
  * \ingroup natives
@@ -3395,7 +3395,7 @@ SAMPGDK_NATIVE(bool, GetVehicleParamsCarDoors(int vehicleid, int * driver, int *
  * \ingroup natives
  * \see <a href="http://wiki.sa-mp.com/wiki/SetVehicleParamsCarWindows">SetVehicleParamsCarWindows on SA-MP Wiki</a>
  */
-SAMPGDK_NATIVE(bool, SetVehicleParamsCarWindows(int vehicleid, bool driver, bool passenger, bool backleft, bool backright));
+SAMPGDK_NATIVE(bool, SetVehicleParamsCarWindows(int vehicleid, int driver, int passenger, int backleft, int backright));
 
 /**
  * \ingroup natives

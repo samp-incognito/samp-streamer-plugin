@@ -167,6 +167,18 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetUpperBound(AMX *amx, cell *params)
 			}
 			return static_cast<cell>(areaID + 1);
 		}
+		case STREAMER_TYPE_VEHICLE:
+		{
+			int vehicleID = 0;
+			for (boost::unordered_map<int, Item::SharedVehicle>::iterator v = core->getData()->vehicles.begin(); v != core->getData()->vehicles.end(); ++v)
+			{
+				if (v->first > vehicleID)
+				{
+					vehicleID = v->first;
+				}
+			}
+			return static_cast<cell>(vehicleID + 1);
+		}
 		default:
 		{
 			Utility::logError("Streamer_GetUpperBound: Invalid type specified");
