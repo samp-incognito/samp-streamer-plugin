@@ -50,6 +50,10 @@ namespace Utility
 
 	bool isPointInArea(const Eigen::Vector3f &point, const Item::SharedArea &area);
 
+	void projectPoint(const Eigen::Vector3f &point, const float &heading, Eigen::Vector3f &position);
+	void projectPoint(const Eigen::Vector3f &point, const Eigen::Vector3f &rotation, Eigen::Vector3f &position);
+	void projectPoint(const Eigen::Vector3f &point, const Eigen::Vector4f &quaternion, Eigen::Vector3f &position);
+
 	std::size_t getGlobalMaxVisibleItems(int type, int playerid);
 	bool setMaxVisibleItems(int type, std::size_t value, int playerid);
 

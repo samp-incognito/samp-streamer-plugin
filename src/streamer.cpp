@@ -883,11 +883,23 @@ void Streamer::processAttachedAreas()
 					case STREAMER_OBJECT_TYPE_GLOBAL:
 					{
 						adjust = GetObjectPos((*a)->attach->object.get<0>(), &(*a)->attach->position[0], &(*a)->attach->position[1], &(*a)->attach->position[2]);
+						if (!(*a)->attach->offset.isZero())
+						{
+							Eigen::Vector3f rotation = Eigen::Vector3f::Zero();
+							GetObjectRot((*a)->attach->object.get<0>(), &rotation[0], &rotation[1], &rotation[2]);
+							Utility::projectPoint((*a)->attach->offset, rotation, (*a)->attach->position);
+						}
 						break;
 					}
 					case STREAMER_OBJECT_TYPE_PLAYER:
 					{
 						adjust = GetPlayerObjectPos((*a)->attach->object.get<2>(), (*a)->attach->object.get<0>(), &(*a)->attach->position[0], &(*a)->attach->position[1], &(*a)->attach->position[2]);
+						if (!(*a)->attach->offset.isZero())
+						{
+							Eigen::Vector3f rotation = Eigen::Vector3f::Zero();
+							GetPlayerObjectPos((*a)->attach->object.get<2>(), (*a)->attach->object.get<0>(), &rotation[0], &rotation[1], &rotation[2]);
+							Utility::projectPoint((*a)->attach->offset, rotation, (*a)->attach->position);
+						}
 						break;
 					}
 					case STREAMER_OBJECT_TYPE_DYNAMIC:
@@ -896,6 +908,11 @@ void Streamer::processAttachedAreas()
 						if (o != core->getData()->objects.end())
 						{
 							(*a)->attach->position = o->second->position;
+							if (!(*a)->attach->offset.isZero())
+							{
+								Eigen::Vector3f rotation =  o->second->rotation;
+								Utility::projectPoint((*a)->attach->offset, rotation, (*a)->attach->position);
+							}
 							adjust = true;
 						}
 						break;
@@ -905,12 +922,23 @@ void Streamer::processAttachedAreas()
 			else if ((*a)->attach->player != INVALID_GENERIC_ID)
 			{
 				adjust = GetPlayerPos((*a)->attach->player, &(*a)->attach->position[0], &(*a)->attach->position[1], &(*a)->attach->position[2]);
+				if (!(*a)->attach->offset.isZero())
+				{
+					float heading = 0.0f;
+					GetPlayerFacingAngle((*a)->attach->player, &heading);
+					Utility::projectPoint((*a)->attach->offset, heading, (*a)->attach->position);
+				}
 			}
 			else if ((*a)->attach->vehicle != INVALID_GENERIC_ID)
 			{
 				adjust = GetVehiclePos((*a)->attach->vehicle, &(*a)->attach->position[0], &(*a)->attach->position[1], &(*a)->attach->position[2]);
+				if (!(*a)->attach->offset.isZero())
+				{
+					Eigen::Vector4f quaternion = Eigen::Vector4f::Zero();
+					GetVehicleRotationQuat((*a)->attach->vehicle, &quaternion[0], &quaternion[1], &quaternion[2], &quaternion[3]);
+					Utility::projectPoint((*a)->attach->offset, quaternion, (*a)->attach->position);
+				}
 			}
-			(*a)->attach->position += (*a)->attach->offset;
 			if (adjust)
 			{
 				if ((*a)->cell)
