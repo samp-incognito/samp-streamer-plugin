@@ -234,6 +234,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerSelectObject(int playerid, int type, int 
 
 PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerWeaponShot(int playerid, int weaponid, int hittype, int hitid, float x, float y, float z)
 {
+	bool retVal = true;
 	if (hittype == BULLET_HIT_TYPE_PLAYER_OBJECT)
 	{
 		boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
@@ -247,6 +248,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerWeaponShot(int playerid, int weaponid, in
 					for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
 					{
 						int amxIndex = 0;
+						cell amxRetVal = 0;
 						if (!amx_FindPublic(*a, "OnPlayerShootDynamicObject", &amxIndex))
 						{
 							amx_Push(*a, amx_ftoc(z));
@@ -255,7 +257,11 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerWeaponShot(int playerid, int weaponid, in
 							amx_Push(*a, static_cast<cell>(objectid));
 							amx_Push(*a, static_cast<cell>(weaponid));
 							amx_Push(*a, static_cast<cell>(playerid));
-							amx_Exec(*a, NULL, amxIndex);
+							amx_Exec(*a, &amxRetVal, amxIndex);
+							if (!amxRetVal)
+							{
+								retVal = false;
+							}
 						}
 					}
 					break;
@@ -263,5 +269,5 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerWeaponShot(int playerid, int weaponid, in
 			}
 		}
 	}
-	return true;
+	return retVal;
 }
