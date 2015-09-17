@@ -897,7 +897,7 @@ void Streamer::processAttachedAreas()
 						if (!(*a)->attach->offset.isZero())
 						{
 							Eigen::Vector3f rotation = Eigen::Vector3f::Zero();
-							GetPlayerObjectPos((*a)->attach->object.get<2>(), (*a)->attach->object.get<0>(), &rotation[0], &rotation[1], &rotation[2]);
+							GetPlayerObjectRot((*a)->attach->object.get<2>(), (*a)->attach->object.get<0>(), &rotation[0], &rotation[1], &rotation[2]);
 							Utility::projectPoint((*a)->attach->offset, rotation, (*a)->attach->position);
 						}
 						break;
@@ -910,8 +910,7 @@ void Streamer::processAttachedAreas()
 							(*a)->attach->position = o->second->position;
 							if (!(*a)->attach->offset.isZero())
 							{
-								Eigen::Vector3f rotation =  o->second->rotation;
-								Utility::projectPoint((*a)->attach->offset, rotation, (*a)->attach->position);
+								Utility::projectPoint((*a)->attach->offset, o->second->rotation, (*a)->attach->position);
 							}
 							adjust = true;
 						}
