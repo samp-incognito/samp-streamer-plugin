@@ -933,9 +933,30 @@ void Streamer::processAttachedAreas()
 				adjust = GetVehiclePos((*a)->attach->vehicle, &(*a)->attach->position[0], &(*a)->attach->position[1], &(*a)->attach->position[2]);
 				if (!(*a)->attach->offset.isZero())
 				{
-					Eigen::Vector4f quaternion = Eigen::Vector4f::Zero();
-					GetVehicleRotationQuat((*a)->attach->vehicle, &quaternion[0], &quaternion[1], &quaternion[2], &quaternion[3]);
-					Utility::projectPoint((*a)->attach->offset, quaternion, (*a)->attach->position);
+					bool occupied = false;
+					for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+					{
+						if (GetPlayerState(p->first) == PLAYER_STATE_DRIVER)
+						{
+							if (GetPlayerVehicleID(p->first) == (*a)->attach->vehicle)
+							{
+								occupied = true;
+								break;
+							}
+						}
+					}
+					if (!occupied)
+					{
+						float heading = 0.0f;
+						GetVehicleZAngle((*a)->attach->vehicle, &heading);
+						Utility::projectPoint((*a)->attach->offset, heading, (*a)->attach->position);
+					}
+					else
+					{
+						Eigen::Vector4f quaternion = Eigen::Vector4f::Zero();
+						GetVehicleRotationQuat((*a)->attach->vehicle, &quaternion[0], &quaternion[1], &quaternion[2], &quaternion[3]);
+						Utility::projectPoint((*a)->attach->offset, quaternion, (*a)->attach->position);
+					}
 				}
 			}
 			if (adjust)
