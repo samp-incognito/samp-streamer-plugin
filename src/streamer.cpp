@@ -108,46 +108,46 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 	bool update = true;
 	if (automatic)
 	{
-		int state = GetPlayerState(player.playerID);
 		player.interiorID = GetPlayerInterior(player.playerID);
 		player.worldID = GetPlayerVirtualWorld(player.playerID);
 		if (!player.updateUsingCameraPosition)
 		{
-			GetPlayerPos(player.playerID, &player.position[0], &player.position[1], &player.position[2]);
-		}
-		else
-		{
-			GetPlayerCameraPos(player.playerID, &player.position[0], &player.position[1], &player.position[2]);
-		}
-		if (state != PLAYER_STATE_NONE && state != PLAYER_STATE_WASTED)
-		{
-			if (player.position != position)
+			int state = GetPlayerState(player.playerID);
+			if (state != PLAYER_STATE_NONE && state != PLAYER_STATE_WASTED)
 			{
-				position = player.position;
-				Eigen::Vector3f velocity = Eigen::Vector3f::Zero();
-				if (state == PLAYER_STATE_ONFOOT)
+				GetPlayerPos(player.playerID, &player.position[0], &player.position[1], &player.position[2]);
+				if (player.position != position)
 				{
-					GetPlayerVelocity(player.playerID, &velocity[0], &velocity[1], &velocity[2]);
+					position = player.position;
+					Eigen::Vector3f velocity = Eigen::Vector3f::Zero();
+					if (state == PLAYER_STATE_ONFOOT)
+					{
+						GetPlayerVelocity(player.playerID, &velocity[0], &velocity[1], &velocity[2]);
+					}
+					else if (state == PLAYER_STATE_DRIVER || state == PLAYER_STATE_PASSENGER)
+					{
+						GetVehicleVelocity(GetPlayerVehicleID(player.playerID), &velocity[0], &velocity[1], &velocity[2]);
+					}
+					float velocityNorm = velocity.squaredNorm();
+					if (velocityNorm > velocityBoundaries.get<0>() && velocityNorm < velocityBoundaries.get<1>())
+					{
+						delta = velocity * averageUpdateTime;
+						player.position += delta;
+					}
 				}
-				else if (state == PLAYER_STATE_DRIVER || state == PLAYER_STATE_PASSENGER)
+				else
 				{
-					GetVehicleVelocity(GetPlayerVehicleID(player.playerID), &velocity[0], &velocity[1], &velocity[2]);
-				}
-				float velocityNorm = velocity.squaredNorm();
-				if (velocityNorm > velocityBoundaries.get<0>() && velocityNorm < velocityBoundaries.get<1>())
-				{
-					delta = velocity * averageUpdateTime;
-					player.position += delta;
+					update = player.updateWhenIdle;
 				}
 			}
 			else
 			{
-				update = player.updateWhenIdle;
+				update = false;
 			}
 		}
 		else
 		{
-			update = false;
+			GetPlayerCameraPos(player.playerID, &player.position[0], &player.position[1], &player.position[2]);
 		}
 		if (player.delayedCheckpoint)
 		{
