@@ -541,8 +541,8 @@ cell AMX_NATIVE_CALL Natives::GetDynamicAreasForPoint(AMX *amx, cell *params)
 						distance = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), centroid));
 						break;
 					}
-					orderedAreas.insert(std::pair<float, int>(distance, a->first));
 				}
+				orderedAreas.insert(std::pair<float, int>(distance, a->first));
 			}
 		}
 	}
