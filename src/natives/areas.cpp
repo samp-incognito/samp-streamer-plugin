@@ -202,7 +202,8 @@ cell AMX_NATIVE_CALL Natives::GetDynamicPolygonPoints(AMX *amx, cell *params)
 	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
 	if (a != core->getData()->areas.end())
 	{
-		return static_cast<cell>(Utility::convertPolygonToArray(amx, params[2], params[3], boost::get<Polygon2D>(a->second->position)) != 0);
+		Utility::convertPolygonToArray(amx, params[2], params[3], boost::get<Polygon2D>(a->second->position));
+		return static_cast<cell>(boost::get<Polygon2D>(a->second->position).outer().size());
 	}
 	return 0;
 }
@@ -466,7 +467,8 @@ cell AMX_NATIVE_CALL Natives::GetPlayerDynamicAreas(AMX *amx, cell *params)
 		{
 			finalAreas.push_back(i->second);
 		}
-		return static_cast<cell>(Utility::convertContainerToArray(amx, params[2], params[3], finalAreas) != 0);
+		Utility::convertContainerToArray(amx, params[2], params[3], finalAreas);
+		return static_cast<cell>(finalAreas.size());
 	}
 	return 0;
 }
@@ -551,7 +553,8 @@ cell AMX_NATIVE_CALL Natives::GetDynamicAreasForPoint(AMX *amx, cell *params)
 	{
 		finalAreas.push_back(i->second);
 	}
-	return static_cast<cell>(Utility::convertContainerToArray(amx, params[4], params[5], finalAreas) != 0);
+	Utility::convertContainerToArray(amx, params[4], params[5], finalAreas);
+	return static_cast<cell>(finalAreas.size());
 }
 
 cell AMX_NATIVE_CALL Natives::GetNumberDynamicAreasForPoint(AMX *amx, cell *params)
