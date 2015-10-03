@@ -173,6 +173,7 @@ void Utility::destroyAllItemsInInterface(AMX *amx)
 			++t;
 		}
 	}
+	Utility::executeFinalAreaCallbacksForAllAreas(amx, false);
 	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.begin();
 	while (a != core->getData()->areas.end())
 	{
@@ -192,11 +193,6 @@ boost::unordered_map<int, Item::SharedArea>::iterator Utility::destroyArea(boost
 	Item::Area::identifier.remove(a->first, core->getData()->areas.size());
 	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 	{
-		boost::unordered_set<int>::iterator i = p->second.internalAreas.find(a->first);
-		if (i != p->second.internalAreas.end())
-		{
-			core->getStreamer()->areaLeaveCallbacks.push_back(boost::make_tuple(a->first, p->first));
-		}
 		p->second.disabledAreas.erase(a->first);
 		p->second.internalAreas.erase(a->first);
 		p->second.visibleCell->areas.erase(a->first);
@@ -304,6 +300,69 @@ boost::unordered_map<int, Item::SharedTextLabel>::iterator Utility::destroyTextL
 	}
 	core->getGrid()->removeTextLabel(t->second);
 	return core->getData()->textLabels.erase(t);
+}
+
+void Utility::executeFinalAreaCallbacks(int areaid)
+{
+	std::vector<boost::tuple<int, int> > callbacks;
+	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(areaid);
+	if (a != core->getData()->areas.end())
+	{
+		for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+		{
+			boost::unordered_set<int>::iterator i = p->second.internalAreas.find(a->first);
+			if (i != p->second.internalAreas.end())
+			{
+				callbacks.push_back(boost::make_tuple(a->first, p->first));
+			}
+		}
+	}
+	for (std::vector<boost::tuple<int, int> >::const_iterator c = callbacks.begin(); c != callbacks.end(); ++c)
+	{
+		for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
+		{
+			int amxIndex = 0;
+			if (!amx_FindPublic(*a, "OnPlayerLeaveDynamicArea", &amxIndex))
+			{
+				amx_Push(*a, static_cast<cell>(c->get<0>()));
+				amx_Push(*a, static_cast<cell>(c->get<1>()));
+				amx_Exec(*a, NULL, amxIndex);
+			}
+		}
+	}
+}
+
+void Utility::executeFinalAreaCallbacksForAllAreas(AMX *amx, bool ignoreInterface)
+{
+	std::vector<boost::tuple<int, int> > callbacks;
+	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.begin();
+	while (a != core->getData()->areas.end())
+	{
+		if (ignoreInterface || a->second->amx == amx)
+		{
+			for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+			{
+				boost::unordered_set<int>::iterator i = p->second.internalAreas.find(a->first);
+				if (i != p->second.internalAreas.end())
+				{
+					callbacks.push_back(boost::make_tuple(a->first, p->first));
+				}
+			}
+		}
+	}
+	for (std::vector<boost::tuple<int, int> >::const_iterator c = callbacks.begin(); c != callbacks.end(); ++c)
+	{
+		for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
+		{
+			int amxIndex = 0;
+			if (!amx_FindPublic(*a, "OnPlayerLeaveDynamicArea", &amxIndex))
+			{
+				amx_Push(*a, static_cast<cell>(c->get<0>()));
+				amx_Push(*a, static_cast<cell>(c->get<1>()));
+				amx_Exec(*a, NULL, amxIndex);
+			}
+		}
+	}
 }
 
 void Utility::logError(const char *format, ...)

@@ -1055,6 +1055,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllItems(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_AREA:
 		{
+			Utility::executeFinalAreaCallbacksForAllAreas(amx, serverWide);
 			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.begin();
 			while (a != core->getData()->areas.end())
 			{

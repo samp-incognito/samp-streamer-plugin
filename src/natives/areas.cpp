@@ -176,6 +176,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPolygon(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::DestroyDynamicArea(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "DestroyDynamicArea");
+	Utility::executeFinalAreaCallbacks(static_cast<int>(params[1]));
 	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
 	if (a != core->getData()->areas.end())
 	{

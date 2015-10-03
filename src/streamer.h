@@ -56,9 +56,6 @@ public:
 	boost::unordered_set<Item::SharedObject> attachedObjects;
 	boost::unordered_set<Item::SharedTextLabel> attachedTextLabels;
 	boost::unordered_set<Item::SharedObject> movingObjects;
-
-	std::vector<boost::tuple<int, int> > areaEnterCallbacks;
-	std::vector<boost::tuple<int, int> > areaLeaveCallbacks;
 private:
 	void calculateAverageUpdateTime();
 
@@ -86,6 +83,8 @@ private:
 	float averageUpdateTime;
 	bool processingFinalPlayer;
 
+	std::vector<boost::tuple<int, int> > areaEnterCallbacks;
+	std::vector<boost::tuple<int, int> > areaLeaveCallbacks;
 	std::vector<int> objectMoveCallbacks;
 
 	template<std::size_t N, typename T>

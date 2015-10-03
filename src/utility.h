@@ -46,6 +46,9 @@ namespace Utility
 	boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator destroyRaceCheckpoint(boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r);
 	boost::unordered_map<int, Item::SharedTextLabel>::iterator destroyTextLabel(boost::unordered_map<int, Item::SharedTextLabel>::iterator t);
 
+	void executeFinalAreaCallbacks(int areaid);
+	void executeFinalAreaCallbacksForAllAreas(AMX *amx, bool ignoreInterface);
+
 	void logError(const char *format, ...);
 
 	bool isPointInArea(const Eigen::Vector3f &point, const Item::SharedArea &area);
