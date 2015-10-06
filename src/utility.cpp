@@ -335,8 +335,7 @@ void Utility::executeFinalAreaCallbacks(int areaid)
 void Utility::executeFinalAreaCallbacksForAllAreas(AMX *amx, bool ignoreInterface)
 {
 	std::vector<boost::tuple<int, int> > callbacks;
-	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.begin();
-	while (a != core->getData()->areas.end())
+	for (boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.begin(); a != core->getData()->areas.end(); ++a)
 	{
 		if (ignoreInterface || a->second->amx == amx)
 		{
