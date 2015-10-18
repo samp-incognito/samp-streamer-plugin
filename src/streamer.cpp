@@ -597,23 +597,26 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 void Streamer::processPickups(Player &player, const std::vector<SharedCell> &cells)
 {
 	static boost::unordered_map<int, Item::SharedPickup> discoveredPickups;
-	for (std::vector<SharedCell>::const_iterator c = cells.begin(); c != cells.end(); ++c)
+	if (player.enabledItems[STREAMER_TYPE_PICKUP])
 	{
-		for (boost::unordered_map<int, Item::SharedPickup>::const_iterator p = (*c)->pickups.begin(); p != (*c)->pickups.end(); ++p)
+		for (std::vector<SharedCell>::const_iterator c = cells.begin(); c != cells.end(); ++c)
 		{
-			boost::unordered_map<int, Item::SharedPickup>::iterator d = discoveredPickups.find(p->first);
-			if (d == discoveredPickups.end())
+			for (boost::unordered_map<int, Item::SharedPickup>::const_iterator p = (*c)->pickups.begin(); p != (*c)->pickups.end(); ++p)
 			{
-				if (checkPlayer(p->second->players, player.playerID, p->second->interiors, player.interiorID, p->second->worlds, player.worldID))
+				boost::unordered_map<int, Item::SharedPickup>::iterator d = discoveredPickups.find(p->first);
+				if (d == discoveredPickups.end())
 				{
-					if (p->second->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF || boost::geometry::comparable_distance(player.position, p->second->position) < (p->second->streamDistance * player.radiusMultipliers[STREAMER_TYPE_PICKUP]))
+					if (checkPlayer(p->second->players, player.playerID, p->second->interiors, player.interiorID, p->second->worlds, player.worldID))
 					{
-						boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.find(p->first);
-						if (i == core->getData()->internalPickups.end())
+						if (p->second->streamDistance < STREAMER_STATIC_DISTANCE_CUTOFF || boost::geometry::comparable_distance(player.position, p->second->position) < (p->second->streamDistance * player.radiusMultipliers[STREAMER_TYPE_PICKUP]))
 						{
-							p->second->worldID = !p->second->worlds.empty() ? player.worldID : -1;
+							boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.find(p->first);
+							if (i == core->getData()->internalPickups.end())
+							{
+								p->second->worldID = !p->second->worlds.empty() ? player.worldID : -1;
+							}
+							discoveredPickups.insert(*p);
 						}
-						discoveredPickups.insert(*p);
 					}
 				}
 			}
