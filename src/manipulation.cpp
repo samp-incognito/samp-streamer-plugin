@@ -1123,7 +1123,8 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 						if (p->second.visibleCheckpoint == c->first)
 						{
 							DisablePlayerCheckpoint(p->first);
-							p->second.delayedCheckpoint = c->first;
+							p->second.activeCheckpoint = 0;
+							p->second.visibleCheckpoint = 0;
 						}
 					}
 				}
@@ -1218,7 +1219,8 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 						if (p->second.visibleRaceCheckpoint == r->first)
 						{
 							DisablePlayerRaceCheckpoint(p->first);
-							p->second.delayedRaceCheckpoint = r->first;
+							p->second.activeRaceCheckpoint = 0;
+							p->second.visibleRaceCheckpoint = 0;
 						}
 					}
 				}
