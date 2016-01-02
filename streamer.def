@@ -9,6 +9,8 @@ EXPORTS
 	ProcessTick
 	OnPlayerConnect
 	OnPlayerDisconnect
+	OnPlayerSpawn
+	OnPlayerRequestClass
 	OnPlayerEnterCheckpoint
 	OnPlayerLeaveCheckpoint
 	OnPlayerEnterRaceCheckpoint

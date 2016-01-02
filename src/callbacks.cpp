@@ -42,6 +42,26 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerDisconnect(int playerid, int reason)
 	return true;
 }
 
+PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerSpawn(int playerid)
+{
+	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+	if (p != core->getData()->players.end())
+	{
+		p->second.requestingClass = false;
+	}
+	return true;
+}
+
+PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerRequestClass(int playerid, int classid)
+{
+	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+	if (p != core->getData()->players.end())
+	{
+		p->second.requestingClass = true;
+	}
+	return true;
+}
+
 PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerEnterCheckpoint(int playerid)
 {
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);

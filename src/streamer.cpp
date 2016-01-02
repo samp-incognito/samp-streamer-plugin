@@ -113,7 +113,7 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 		if (!player.updateUsingCameraPosition)
 		{
 			int state = GetPlayerState(player.playerID);
-			if (state != PLAYER_STATE_NONE && state != PLAYER_STATE_WASTED)
+			if ((state != PLAYER_STATE_NONE && state != PLAYER_STATE_WASTED) || (state == PLAYER_STATE_SPECTATING && !player.requestingClass))
 			{
 				GetPlayerPos(player.playerID, &player.position[0], &player.position[1], &player.position[2]);
 				if (player.position != position)
