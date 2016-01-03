@@ -3,6 +3,7 @@ SA-MP Streamer Plugin
 
 v2.7.9
 ------
+
 - Added offsets to attached area natives
 - Made OnPlayerShootDynamicObject handle return values
 - Made GetDynamicPolygonPoints, GetPlayerDynamicAreas, and
