@@ -1,5 +1,9 @@
 #define IN_SAMPGDK
 
+#ifndef SAMPGDK_AMALGAMATION
+  #define SAMPGDK_AMALGAMATION
+#endif
+
 #include "sampgdk.h"
 
 #if SAMPGDK_WINDOWS
@@ -210,7 +214,9 @@ void sampgdk_log_error(const char *format, ...);
 
 #include <stdarg.h>
 
-extern void *sampgdk_logprintf_impl;
+typedef void (*logprintf_t)(const char *format, ...);
+
+extern logprintf_t sampgdk_logprintf_impl;
 
 void sampgdk_do_vlogprintf(const char *format, va_list va);
 
@@ -334,6 +340,416 @@ void sampgdk_module_cleanup(void) {
   sampgdk_amxhooks_cleanup();
 }
 
+
+struct sampgdk_api {
+  bool (SAMPGDK_CALL *sampgdk_Load)(void **ppData, sampgdk_hidden_t hidden);
+  void (SAMPGDK_CALL *sampgdk_logprintf)(const char *format, ...);
+  void (SAMPGDK_CALL *sampgdk_ProcessTick)(sampgdk_hidden_t hidden);
+  unsigned int (SAMPGDK_CALL *sampgdk_Supports)(void);
+  void (SAMPGDK_CALL *sampgdk_Unload)(sampgdk_hidden_t hidden);
+  void (SAMPGDK_CALL *sampgdk_vlogprintf)(const char *format, va_list args);
+  cell (SAMPGDK_CALL *sampgdk_CallNative)(AMX_NATIVE native, cell *params);
+  AMX_NATIVE (SAMPGDK_CALL *sampgdk_FindNative)(const char *name);
+  const AMX_NATIVE_INFO *(SAMPGDK_CALL *sampgdk_GetNatives)(int *number);
+  cell (SAMPGDK_CALL *sampgdk_InvokeNative)(AMX_NATIVE native, const char *format, ...);
+  cell (SAMPGDK_CALL *sampgdk_InvokeNativeArray)(AMX_NATIVE native, const char *format, void **args);
+  cell (SAMPGDK_CALL *sampgdk_InvokeNativeV)(AMX_NATIVE native, const char *format, va_list args);
+  int (SAMPGDK_CALL *sampgdk_GetVersion)(void);
+  const char * (SAMPGDK_CALL *sampgdk_GetVersionString)(void);
+  int (SAMPGDK_CALL *sampgdk_CreateActor)(int modelid, float x, float y, float z, float rotation);
+  bool (SAMPGDK_CALL *sampgdk_DestroyActor)(int actorid);
+  bool (SAMPGDK_CALL *sampgdk_IsActorStreamedIn)(int actorid, int forplayerid);
+  bool (SAMPGDK_CALL *sampgdk_SetActorVirtualWorld)(int actorid, int vworld);
+  int (SAMPGDK_CALL *sampgdk_GetActorVirtualWorld)(int actorid);
+  bool (SAMPGDK_CALL *sampgdk_ApplyActorAnimation)(int actorid, const char * animlib, const char * animname, float fDelta, bool loop, bool lockx, bool locky, bool freeze, int time);
+  bool (SAMPGDK_CALL *sampgdk_ClearActorAnimations)(int actorid);
+  bool (SAMPGDK_CALL *sampgdk_SetActorPos)(int actorid, float x, float y, float z);
+  bool (SAMPGDK_CALL *sampgdk_GetActorPos)(int actorid, float * x, float * y, float * z);
+  bool (SAMPGDK_CALL *sampgdk_SetActorFacingAngle)(int actorid, float angle);
+  bool (SAMPGDK_CALL *sampgdk_GetActorFacingAngle)(int actorid, float * angle);
+  bool (SAMPGDK_CALL *sampgdk_SetActorHealth)(int actorid, float health);
+  bool (SAMPGDK_CALL *sampgdk_GetActorHealth)(int actorid, float * health);
+  bool (SAMPGDK_CALL *sampgdk_SetActorInvulnerable)(int actorid, bool invulnerable);
+  bool (SAMPGDK_CALL *sampgdk_IsActorInvulnerable)(int actorid);
+  bool (SAMPGDK_CALL *sampgdk_IsValidActor)(int actorid);
+  bool (SAMPGDK_CALL *sampgdk_HTTP)(int index, int type, const char * url, const char * data);
+  int (SAMPGDK_CALL *sampgdk_CreateObject)(int modelid, float x, float y, float z, float rX, float rY, float rZ, float DrawDistance);
+  bool (SAMPGDK_CALL *sampgdk_AttachObjectToVehicle)(int objectid, int vehicleid, float fOffsetX, float fOffsetY, float fOffsetZ, float fRotX, float fRotY, float fRotZ);
+  bool (SAMPGDK_CALL *sampgdk_AttachObjectToObject)(int objectid, int attachtoid, float fOffsetX, float fOffsetY, float fOffsetZ, float fRotX, float fRotY, float fRotZ, bool SyncRotation);
+  bool (SAMPGDK_CALL *sampgdk_AttachObjectToPlayer)(int objectid, int playerid, float fOffsetX, float fOffsetY, float fOffsetZ, float fRotX, float fRotY, float fRotZ);
+  bool (SAMPGDK_CALL *sampgdk_SetObjectPos)(int objectid, float x, float y, float z);
+  bool (SAMPGDK_CALL *sampgdk_GetObjectPos)(int objectid, float * x, float * y, float * z);
+  bool (SAMPGDK_CALL *sampgdk_SetObjectRot)(int objectid, float rotX, float rotY, float rotZ);
+  bool (SAMPGDK_CALL *sampgdk_GetObjectRot)(int objectid, float * rotX, float * rotY, float * rotZ);
+  int (SAMPGDK_CALL *sampgdk_GetObjectModel)(int objectid);
+  bool (SAMPGDK_CALL *sampgdk_SetObjectNoCameraCol)(int objectid);
+  bool (SAMPGDK_CALL *sampgdk_IsValidObject)(int objectid);
+  bool (SAMPGDK_CALL *sampgdk_DestroyObject)(int objectid);
+  int (SAMPGDK_CALL *sampgdk_MoveObject)(int objectid, float X, float Y, float Z, float Speed, float RotX, float RotY, float RotZ);
+  bool (SAMPGDK_CALL *sampgdk_StopObject)(int objectid);
+  bool (SAMPGDK_CALL *sampgdk_IsObjectMoving)(int objectid);
+  bool (SAMPGDK_CALL *sampgdk_EditObject)(int playerid, int objectid);
+  bool (SAMPGDK_CALL *sampgdk_EditPlayerObject)(int playerid, int objectid);
+  bool (SAMPGDK_CALL *sampgdk_SelectObject)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_CancelEdit)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_CreatePlayerObject)(int playerid, int modelid, float x, float y, float z, float rX, float rY, float rZ, float DrawDistance);
+  bool (SAMPGDK_CALL *sampgdk_AttachPlayerObjectToPlayer)(int objectplayer, int objectid, int attachplayer, float OffsetX, float OffsetY, float OffsetZ, float rX, float rY, float rZ);
+  bool (SAMPGDK_CALL *sampgdk_AttachPlayerObjectToVehicle)(int playerid, int objectid, int vehicleid, float fOffsetX, float fOffsetY, float fOffsetZ, float fRotX, float fRotY, float RotZ);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerObjectPos)(int playerid, int objectid, float x, float y, float z);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerObjectPos)(int playerid, int objectid, float * x, float * y, float * z);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerObjectRot)(int playerid, int objectid, float rotX, float rotY, float rotZ);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerObjectRot)(int playerid, int objectid, float * rotX, float * rotY, float * rotZ);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerObjectModel)(int playerid, int objectid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerObjectNoCameraCol)(int playerid, int objectid);
+  bool (SAMPGDK_CALL *sampgdk_IsValidPlayerObject)(int playerid, int objectid);
+  bool (SAMPGDK_CALL *sampgdk_DestroyPlayerObject)(int playerid, int objectid);
+  int (SAMPGDK_CALL *sampgdk_MovePlayerObject)(int playerid, int objectid, float x, float y, float z, float Speed, float RotX, float RotY, float RotZ);
+  bool (SAMPGDK_CALL *sampgdk_StopPlayerObject)(int playerid, int objectid);
+  bool (SAMPGDK_CALL *sampgdk_IsPlayerObjectMoving)(int playerid, int objectid);
+  bool (SAMPGDK_CALL *sampgdk_SetObjectMaterial)(int objectid, int materialindex, int modelid, const char * txdname, const char * texturename, int materialcolor);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerObjectMaterial)(int playerid, int objectid, int materialindex, int modelid, const char * txdname, const char * texturename, int materialcolor);
+  bool (SAMPGDK_CALL *sampgdk_SetObjectMaterialText)(int objectid, const char * text, int materialindex, int materialsize, const char * fontface, int fontsize, bool bold, int fontcolor, int backcolor, int textalignment);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerObjectMaterialText)(int playerid, int objectid, const char * text, int materialindex, int materialsize, const char * fontface, int fontsize, bool bold, int fontcolor, int backcolor, int textalignment);
+  bool (SAMPGDK_CALL *sampgdk_SetObjectsDefaultCameraCol)(bool disable);
+  bool (SAMPGDK_CALL *sampgdk_SetSpawnInfo)(int playerid, int team, int skin, float x, float y, float z, float rotation, int weapon1, int weapon1_ammo, int weapon2, int weapon2_ammo, int weapon3, int weapon3_ammo);
+  bool (SAMPGDK_CALL *sampgdk_SpawnPlayer)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerPos)(int playerid, float x, float y, float z);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerPosFindZ)(int playerid, float x, float y, float z);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerPos)(int playerid, float * x, float * y, float * z);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerFacingAngle)(int playerid, float angle);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerFacingAngle)(int playerid, float * angle);
+  bool (SAMPGDK_CALL *sampgdk_IsPlayerInRangeOfPoint)(int playerid, float range, float x, float y, float z);
+  float (SAMPGDK_CALL *sampgdk_GetPlayerDistanceFromPoint)(int playerid, float x, float y, float z);
+  bool (SAMPGDK_CALL *sampgdk_IsPlayerStreamedIn)(int playerid, int forplayerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerInterior)(int playerid, int interiorid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerInterior)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerHealth)(int playerid, float health);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerHealth)(int playerid, float * health);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerArmour)(int playerid, float armour);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerArmour)(int playerid, float * armour);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerAmmo)(int playerid, int weaponid, int ammo);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerAmmo)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerWeaponState)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerTargetPlayer)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerTargetActor)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerTeam)(int playerid, int teamid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerTeam)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerScore)(int playerid, int score);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerScore)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerDrunkLevel)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerDrunkLevel)(int playerid, int level);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerColor)(int playerid, int color);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerColor)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerSkin)(int playerid, int skinid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerSkin)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_GivePlayerWeapon)(int playerid, int weaponid, int ammo);
+  bool (SAMPGDK_CALL *sampgdk_ResetPlayerWeapons)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerArmedWeapon)(int playerid, int weaponid);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerWeaponData)(int playerid, int slot, int * weapon, int * ammo);
+  bool (SAMPGDK_CALL *sampgdk_GivePlayerMoney)(int playerid, int money);
+  bool (SAMPGDK_CALL *sampgdk_ResetPlayerMoney)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_SetPlayerName)(int playerid, const char * name);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerMoney)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerState)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerIp)(int playerid, char * ip, int size);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerPing)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerWeapon)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerKeys)(int playerid, int * keys, int * updown, int * leftright);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerName)(int playerid, char * name, int size);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerTime)(int playerid, int hour, int minute);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerTime)(int playerid, int * hour, int * minute);
+  bool (SAMPGDK_CALL *sampgdk_TogglePlayerClock)(int playerid, bool toggle);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerWeather)(int playerid, int weather);
+  bool (SAMPGDK_CALL *sampgdk_ForceClassSelection)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerWantedLevel)(int playerid, int level);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerWantedLevel)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerFightingStyle)(int playerid, int style);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerFightingStyle)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerVelocity)(int playerid, float x, float y, float z);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerVelocity)(int playerid, float * x, float * y, float * z);
+  bool (SAMPGDK_CALL *sampgdk_PlayCrimeReportForPlayer)(int playerid, int suspectid, int crime);
+  bool (SAMPGDK_CALL *sampgdk_PlayAudioStreamForPlayer)(int playerid, const char * url, float posX, float posY, float posZ, float distance, bool usepos);
+  bool (SAMPGDK_CALL *sampgdk_StopAudioStreamForPlayer)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerShopName)(int playerid, const char * shopname);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerSkillLevel)(int playerid, int skill, int level);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerSurfingVehicleID)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerSurfingObjectID)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_RemoveBuildingForPlayer)(int playerid, int modelid, float fX, float fY, float fZ, float fRadius);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerLastShotVectors)(int playerid, float * fOriginX, float * fOriginY, float * fOriginZ, float * fHitPosX, float * fHitPosY, float * fHitPosZ);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerAttachedObject)(int playerid, int index, int modelid, int bone, float fOffsetX, float fOffsetY, float fOffsetZ, float fRotX, float fRotY, float fRotZ, float fScaleX, float fScaleY, float fScaleZ, int materialcolor1, int materialcolor2);
+  bool (SAMPGDK_CALL *sampgdk_RemovePlayerAttachedObject)(int playerid, int index);
+  bool (SAMPGDK_CALL *sampgdk_IsPlayerAttachedObjectSlotUsed)(int playerid, int index);
+  bool (SAMPGDK_CALL *sampgdk_EditAttachedObject)(int playerid, int index);
+  int (SAMPGDK_CALL *sampgdk_CreatePlayerTextDraw)(int playerid, float x, float y, const char * text);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawDestroy)(int playerid, int text);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawLetterSize)(int playerid, int text, float x, float y);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawTextSize)(int playerid, int text, float x, float y);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawAlignment)(int playerid, int text, int alignment);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawColor)(int playerid, int text, int color);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawUseBox)(int playerid, int text, bool use);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawBoxColor)(int playerid, int text, int color);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawSetShadow)(int playerid, int text, int size);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawSetOutline)(int playerid, int text, int size);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawBackgroundColor)(int playerid, int text, int color);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawFont)(int playerid, int text, int font);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawSetProportional)(int playerid, int text, bool set);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawSetSelectable)(int playerid, int text, bool set);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawShow)(int playerid, int text);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawHide)(int playerid, int text);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawSetString)(int playerid, int text, const char * string);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawSetPreviewModel)(int playerid, int text, int modelindex);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawSetPreviewRot)(int playerid, int text, float fRotX, float fRotY, float fRotZ, float fZoom);
+  bool (SAMPGDK_CALL *sampgdk_PlayerTextDrawSetPreviewVehCol)(int playerid, int text, int color1, int color2);
+  bool (SAMPGDK_CALL *sampgdk_SetPVarInt)(int playerid, const char * varname, int value);
+  int (SAMPGDK_CALL *sampgdk_GetPVarInt)(int playerid, const char * varname);
+  bool (SAMPGDK_CALL *sampgdk_SetPVarString)(int playerid, const char * varname, const char * value);
+  bool (SAMPGDK_CALL *sampgdk_GetPVarString)(int playerid, const char * varname, char * value, int size);
+  bool (SAMPGDK_CALL *sampgdk_SetPVarFloat)(int playerid, const char * varname, float value);
+  float (SAMPGDK_CALL *sampgdk_GetPVarFloat)(int playerid, const char * varname);
+  bool (SAMPGDK_CALL *sampgdk_DeletePVar)(int playerid, const char * varname);
+  int (SAMPGDK_CALL *sampgdk_GetPVarsUpperIndex)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_GetPVarNameAtIndex)(int playerid, int index, char * varname, int size);
+  int (SAMPGDK_CALL *sampgdk_GetPVarType)(int playerid, const char * varname);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerChatBubble)(int playerid, const char * text, int color, float drawdistance, int expiretime);
+  bool (SAMPGDK_CALL *sampgdk_PutPlayerInVehicle)(int playerid, int vehicleid, int seatid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerVehicleID)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerVehicleSeat)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_RemovePlayerFromVehicle)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_TogglePlayerControllable)(int playerid, bool toggle);
+  bool (SAMPGDK_CALL *sampgdk_PlayerPlaySound)(int playerid, int soundid, float x, float y, float z);
+  bool (SAMPGDK_CALL *sampgdk_ApplyAnimation)(int playerid, const char * animlib, const char * animname, float fDelta, bool loop, bool lockx, bool locky, bool freeze, int time, bool forcesync);
+  bool (SAMPGDK_CALL *sampgdk_ClearAnimations)(int playerid, bool forcesync);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerAnimationIndex)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_GetAnimationName)(int index, char * animlib, int animlib_size, char * animname, int animname_size);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerSpecialAction)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerSpecialAction)(int playerid, int actionid);
+  bool (SAMPGDK_CALL *sampgdk_DisableRemoteVehicleCollisions)(int playerid, bool disable);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerCheckpoint)(int playerid, float x, float y, float z, float size);
+  bool (SAMPGDK_CALL *sampgdk_DisablePlayerCheckpoint)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerRaceCheckpoint)(int playerid, int type, float x, float y, float z, float nextx, float nexty, float nextz, float size);
+  bool (SAMPGDK_CALL *sampgdk_DisablePlayerRaceCheckpoint)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerWorldBounds)(int playerid, float x_max, float x_min, float y_max, float y_min);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerMarkerForPlayer)(int playerid, int showplayerid, int color);
+  bool (SAMPGDK_CALL *sampgdk_ShowPlayerNameTagForPlayer)(int playerid, int showplayerid, bool show);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerMapIcon)(int playerid, int iconid, float x, float y, float z, int markertype, int color, int style);
+  bool (SAMPGDK_CALL *sampgdk_RemovePlayerMapIcon)(int playerid, int iconid);
+  bool (SAMPGDK_CALL *sampgdk_AllowPlayerTeleport)(int playerid, bool allow);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerCameraPos)(int playerid, float x, float y, float z);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerCameraLookAt)(int playerid, float x, float y, float z, int cut);
+  bool (SAMPGDK_CALL *sampgdk_SetCameraBehindPlayer)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerCameraPos)(int playerid, float * x, float * y, float * z);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerCameraFrontVector)(int playerid, float * x, float * y, float * z);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerCameraMode)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_EnablePlayerCameraTarget)(int playerid, bool enable);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerCameraTargetObject)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerCameraTargetVehicle)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerCameraTargetPlayer)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerCameraTargetActor)(int playerid);
+  float (SAMPGDK_CALL *sampgdk_GetPlayerCameraAspectRatio)(int playerid);
+  float (SAMPGDK_CALL *sampgdk_GetPlayerCameraZoom)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_AttachCameraToObject)(int playerid, int objectid);
+  bool (SAMPGDK_CALL *sampgdk_AttachCameraToPlayerObject)(int playerid, int playerobjectid);
+  bool (SAMPGDK_CALL *sampgdk_InterpolateCameraPos)(int playerid, float FromX, float FromY, float FromZ, float ToX, float ToY, float ToZ, int time, int cut);
+  bool (SAMPGDK_CALL *sampgdk_InterpolateCameraLookAt)(int playerid, float FromX, float FromY, float FromZ, float ToX, float ToY, float ToZ, int time, int cut);
+  bool (SAMPGDK_CALL *sampgdk_IsPlayerConnected)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_IsPlayerInVehicle)(int playerid, int vehicleid);
+  bool (SAMPGDK_CALL *sampgdk_IsPlayerInAnyVehicle)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_IsPlayerInCheckpoint)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_IsPlayerInRaceCheckpoint)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_SetPlayerVirtualWorld)(int playerid, int worldid);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerVirtualWorld)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_EnableStuntBonusForPlayer)(int playerid, bool enable);
+  bool (SAMPGDK_CALL *sampgdk_EnableStuntBonusForAll)(bool enable);
+  bool (SAMPGDK_CALL *sampgdk_TogglePlayerSpectating)(int playerid, bool toggle);
+  bool (SAMPGDK_CALL *sampgdk_PlayerSpectatePlayer)(int playerid, int targetplayerid, int mode);
+  bool (SAMPGDK_CALL *sampgdk_PlayerSpectateVehicle)(int playerid, int targetvehicleid, int mode);
+  bool (SAMPGDK_CALL *sampgdk_StartRecordingPlayerData)(int playerid, int recordtype, const char * recordname);
+  bool (SAMPGDK_CALL *sampgdk_StopRecordingPlayerData)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_CreateExplosionForPlayer)(int playerid, float X, float Y, float Z, int type, float Radius);
+  bool (SAMPGDK_CALL *sampgdk_SendClientMessage)(int playerid, int color, const char * message);
+  bool (SAMPGDK_CALL *sampgdk_SendClientMessageToAll)(int color, const char * message);
+  bool (SAMPGDK_CALL *sampgdk_SendPlayerMessageToPlayer)(int playerid, int senderid, const char * message);
+  bool (SAMPGDK_CALL *sampgdk_SendPlayerMessageToAll)(int senderid, const char * message);
+  bool (SAMPGDK_CALL *sampgdk_SendDeathMessage)(int killer, int killee, int weapon);
+  bool (SAMPGDK_CALL *sampgdk_SendDeathMessageToPlayer)(int playerid, int killer, int killee, int weapon);
+  bool (SAMPGDK_CALL *sampgdk_GameTextForAll)(const char * text, int time, int style);
+  bool (SAMPGDK_CALL *sampgdk_GameTextForPlayer)(int playerid, const char * text, int time, int style);
+  int (SAMPGDK_CALL *sampgdk_GetTickCount)();
+  int (SAMPGDK_CALL *sampgdk_GetMaxPlayers)();
+  float (SAMPGDK_CALL *sampgdk_VectorSize)(float x, float y, float z);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerPoolSize)();
+  int (SAMPGDK_CALL *sampgdk_GetVehiclePoolSize)();
+  int (SAMPGDK_CALL *sampgdk_GetActorPoolSize)();
+  bool (SAMPGDK_CALL *sampgdk_SHA256_PassHash)(const char * password, const char * salt, char * ret_hash, int ret_hash_len);
+  bool (SAMPGDK_CALL *sampgdk_SetSVarInt)(const char * varname, int int_value);
+  int (SAMPGDK_CALL *sampgdk_GetSVarInt)(const char * varname);
+  bool (SAMPGDK_CALL *sampgdk_SetSVarString)(const char * varname, const char * string_value);
+  bool (SAMPGDK_CALL *sampgdk_GetSVarString)(const char * varname, char * string_return, int len);
+  bool (SAMPGDK_CALL *sampgdk_SetSVarFloat)(const char * varname, float float_value);
+  float (SAMPGDK_CALL *sampgdk_GetSVarFloat)(const char * varname);
+  bool (SAMPGDK_CALL *sampgdk_DeleteSVar)(const char * varname);
+  int (SAMPGDK_CALL *sampgdk_GetSVarsUpperIndex)();
+  bool (SAMPGDK_CALL *sampgdk_GetSVarNameAtIndex)(int index, char * ret_varname, int ret_len);
+  int (SAMPGDK_CALL *sampgdk_GetSVarType)(const char * varname);
+  bool (SAMPGDK_CALL *sampgdk_SetGameModeText)(const char * text);
+  bool (SAMPGDK_CALL *sampgdk_SetTeamCount)(int count);
+  int (SAMPGDK_CALL *sampgdk_AddPlayerClass)(int modelid, float spawn_x, float spawn_y, float spawn_z, float z_angle, int weapon1, int weapon1_ammo, int weapon2, int weapon2_ammo, int weapon3, int weapon3_ammo);
+  int (SAMPGDK_CALL *sampgdk_AddPlayerClassEx)(int teamid, int modelid, float spawn_x, float spawn_y, float spawn_z, float z_angle, int weapon1, int weapon1_ammo, int weapon2, int weapon2_ammo, int weapon3, int weapon3_ammo);
+  int (SAMPGDK_CALL *sampgdk_AddStaticVehicle)(int modelid, float spawn_x, float spawn_y, float spawn_z, float z_angle, int color1, int color2);
+  int (SAMPGDK_CALL *sampgdk_AddStaticVehicleEx)(int modelid, float spawn_x, float spawn_y, float spawn_z, float z_angle, int color1, int color2, int respawn_delay, bool addsiren);
+  int (SAMPGDK_CALL *sampgdk_AddStaticPickup)(int model, int type, float x, float y, float z, int virtualworld);
+  int (SAMPGDK_CALL *sampgdk_CreatePickup)(int model, int type, float x, float y, float z, int virtualworld);
+  bool (SAMPGDK_CALL *sampgdk_DestroyPickup)(int pickup);
+  bool (SAMPGDK_CALL *sampgdk_ShowNameTags)(bool show);
+  bool (SAMPGDK_CALL *sampgdk_ShowPlayerMarkers)(int mode);
+  bool (SAMPGDK_CALL *sampgdk_GameModeExit)();
+  bool (SAMPGDK_CALL *sampgdk_SetWorldTime)(int hour);
+  bool (SAMPGDK_CALL *sampgdk_GetWeaponName)(int weaponid, char * name, int size);
+  bool (SAMPGDK_CALL *sampgdk_EnableTirePopping)(bool enable);
+  bool (SAMPGDK_CALL *sampgdk_EnableVehicleFriendlyFire)();
+  bool (SAMPGDK_CALL *sampgdk_AllowInteriorWeapons)(bool allow);
+  bool (SAMPGDK_CALL *sampgdk_SetWeather)(int weatherid);
+  bool (SAMPGDK_CALL *sampgdk_SetGravity)(float gravity);
+  float (SAMPGDK_CALL *sampgdk_GetGravity)();
+  bool (SAMPGDK_CALL *sampgdk_AllowAdminTeleport)(bool allow);
+  bool (SAMPGDK_CALL *sampgdk_SetDeathDropAmount)(int amount);
+  bool (SAMPGDK_CALL *sampgdk_CreateExplosion)(float x, float y, float z, int type, float radius);
+  bool (SAMPGDK_CALL *sampgdk_EnableZoneNames)(bool enable);
+  bool (SAMPGDK_CALL *sampgdk_UsePlayerPedAnims)();
+  bool (SAMPGDK_CALL *sampgdk_DisableInteriorEnterExits)();
+  bool (SAMPGDK_CALL *sampgdk_SetNameTagDrawDistance)(float distance);
+  bool (SAMPGDK_CALL *sampgdk_DisableNameTagLOS)();
+  bool (SAMPGDK_CALL *sampgdk_LimitGlobalChatRadius)(float chat_radius);
+  bool (SAMPGDK_CALL *sampgdk_LimitPlayerMarkerRadius)(float marker_radius);
+  bool (SAMPGDK_CALL *sampgdk_ConnectNPC)(const char * name, const char * script);
+  bool (SAMPGDK_CALL *sampgdk_IsPlayerNPC)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_IsPlayerAdmin)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_Kick)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_Ban)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_BanEx)(int playerid, const char * reason);
+  bool (SAMPGDK_CALL *sampgdk_SendRconCommand)(const char * command);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerNetworkStats)(int playerid, char * retstr, int size);
+  bool (SAMPGDK_CALL *sampgdk_GetNetworkStats)(char * retstr, int size);
+  bool (SAMPGDK_CALL *sampgdk_GetPlayerVersion)(int playerid, char * version, int len);
+  bool (SAMPGDK_CALL *sampgdk_BlockIpAddress)(const char * ip_address, int timems);
+  bool (SAMPGDK_CALL *sampgdk_UnBlockIpAddress)(const char * ip_address);
+  bool (SAMPGDK_CALL *sampgdk_GetServerVarAsString)(const char * varname, char * value, int size);
+  int (SAMPGDK_CALL *sampgdk_GetServerVarAsInt)(const char * varname);
+  bool (SAMPGDK_CALL *sampgdk_GetServerVarAsBool)(const char * varname);
+  bool (SAMPGDK_CALL *sampgdk_GetConsoleVarAsString)(const char * varname, char * buffer, int len);
+  int (SAMPGDK_CALL *sampgdk_GetConsoleVarAsInt)(const char * varname);
+  bool (SAMPGDK_CALL *sampgdk_GetConsoleVarAsBool)(const char * varname);
+  int (SAMPGDK_CALL *sampgdk_GetServerTickRate)();
+  int (SAMPGDK_CALL *sampgdk_NetStats_GetConnectedTime)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_NetStats_MessagesReceived)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_NetStats_BytesReceived)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_NetStats_MessagesSent)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_NetStats_BytesSent)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_NetStats_MessagesRecvPerSecond)(int playerid);
+  float (SAMPGDK_CALL *sampgdk_NetStats_PacketLossPercent)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_NetStats_ConnectionStatus)(int playerid);
+  bool (SAMPGDK_CALL *sampgdk_NetStats_GetIpPort)(int playerid, char * ip_port, int ip_port_len);
+  int (SAMPGDK_CALL *sampgdk_CreateMenu)(const char * title, int columns, float x, float y, float col1width, float col2width);
+  bool (SAMPGDK_CALL *sampgdk_DestroyMenu)(int menuid);
+  int (SAMPGDK_CALL *sampgdk_AddMenuItem)(int menuid, int column, const char * menutext);
+  bool (SAMPGDK_CALL *sampgdk_SetMenuColumnHeader)(int menuid, int column, const char * columnheader);
+  bool (SAMPGDK_CALL *sampgdk_ShowMenuForPlayer)(int menuid, int playerid);
+  bool (SAMPGDK_CALL *sampgdk_HideMenuForPlayer)(int menuid, int playerid);
+  bool (SAMPGDK_CALL *sampgdk_IsValidMenu)(int menuid);
+  bool (SAMPGDK_CALL *sampgdk_DisableMenu)(int menuid);
+  bool (SAMPGDK_CALL *sampgdk_DisableMenuRow)(int menuid, int row);
+  int (SAMPGDK_CALL *sampgdk_GetPlayerMenu)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_TextDrawCreate)(float x, float y, const char * text);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawDestroy)(int text);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawLetterSize)(int text, float x, float y);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawTextSize)(int text, float x, float y);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawAlignment)(int text, int alignment);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawColor)(int text, int color);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawUseBox)(int text, bool use);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawBoxColor)(int text, int color);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawSetShadow)(int text, int size);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawSetOutline)(int text, int size);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawBackgroundColor)(int text, int color);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawFont)(int text, int font);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawSetProportional)(int text, bool set);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawSetSelectable)(int text, bool set);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawShowForPlayer)(int playerid, int text);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawHideForPlayer)(int playerid, int text);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawShowForAll)(int text);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawHideForAll)(int text);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawSetString)(int text, const char * string);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawSetPreviewModel)(int text, int modelindex);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawSetPreviewRot)(int text, float fRotX, float fRotY, float fRotZ, float fZoom);
+  bool (SAMPGDK_CALL *sampgdk_TextDrawSetPreviewVehCol)(int text, int color1, int color2);
+  bool (SAMPGDK_CALL *sampgdk_SelectTextDraw)(int playerid, int hovercolor);
+  bool (SAMPGDK_CALL *sampgdk_CancelSelectTextDraw)(int playerid);
+  int (SAMPGDK_CALL *sampgdk_GangZoneCreate)(float minx, float miny, float maxx, float maxy);
+  bool (SAMPGDK_CALL *sampgdk_GangZoneDestroy)(int zone);
+  bool (SAMPGDK_CALL *sampgdk_GangZoneShowForPlayer)(int playerid, int zone, int color);
+  bool (SAMPGDK_CALL *sampgdk_GangZoneShowForAll)(int zone, int color);
+  bool (SAMPGDK_CALL *sampgdk_GangZoneHideForPlayer)(int playerid, int zone);
+  bool (SAMPGDK_CALL *sampgdk_GangZoneHideForAll)(int zone);
+  bool (SAMPGDK_CALL *sampgdk_GangZoneFlashForPlayer)(int playerid, int zone, int flashcolor);
+  bool (SAMPGDK_CALL *sampgdk_GangZoneFlashForAll)(int zone, int flashcolor);
+  bool (SAMPGDK_CALL *sampgdk_GangZoneStopFlashForPlayer)(int playerid, int zone);
+  bool (SAMPGDK_CALL *sampgdk_GangZoneStopFlashForAll)(int zone);
+  int (SAMPGDK_CALL *sampgdk_Create3DTextLabel)(const char * text, int color, float x, float y, float z, float DrawDistance, int virtualworld, bool testLOS);
+  bool (SAMPGDK_CALL *sampgdk_Delete3DTextLabel)(int id);
+  bool (SAMPGDK_CALL *sampgdk_Attach3DTextLabelToPlayer)(int id, int playerid, float OffsetX, float OffsetY, float OffsetZ);
+  bool (SAMPGDK_CALL *sampgdk_Attach3DTextLabelToVehicle)(int id, int vehicleid, float OffsetX, float OffsetY, float OffsetZ);
+  bool (SAMPGDK_CALL *sampgdk_Update3DTextLabelText)(int id, int color, const char * text);
+  int (SAMPGDK_CALL *sampgdk_CreatePlayer3DTextLabel)(int playerid, const char * text, int color, float x, float y, float z, float DrawDistance, int attachedplayer, int attachedvehicle, bool testLOS);
+  bool (SAMPGDK_CALL *sampgdk_DeletePlayer3DTextLabel)(int playerid, int id);
+  bool (SAMPGDK_CALL *sampgdk_UpdatePlayer3DTextLabelText)(int playerid, int id, int color, const char * text);
+  bool (SAMPGDK_CALL *sampgdk_ShowPlayerDialog)(int playerid, int dialogid, int style, const char * caption, const char * info, const char * button1, const char * button2);
+  int (SAMPGDK_CALL *sampgdk_SetTimer)(int interval, bool repeat, TimerCallback callback, void * param);
+  bool (SAMPGDK_CALL *sampgdk_KillTimer)(int timerid);
+  bool (SAMPGDK_CALL *sampgdk_gpci)(int playerid, char * buffer, int size);
+  bool (SAMPGDK_CALL *sampgdk_IsValidVehicle)(int vehicleid);
+  float (SAMPGDK_CALL *sampgdk_GetVehicleDistanceFromPoint)(int vehicleid, float x, float y, float z);
+  int (SAMPGDK_CALL *sampgdk_CreateVehicle)(int vehicletype, float x, float y, float z, float rotation, int color1, int color2, int respawn_delay, bool addsiren);
+  bool (SAMPGDK_CALL *sampgdk_DestroyVehicle)(int vehicleid);
+  bool (SAMPGDK_CALL *sampgdk_IsVehicleStreamedIn)(int vehicleid, int forplayerid);
+  bool (SAMPGDK_CALL *sampgdk_GetVehiclePos)(int vehicleid, float * x, float * y, float * z);
+  bool (SAMPGDK_CALL *sampgdk_SetVehiclePos)(int vehicleid, float x, float y, float z);
+  bool (SAMPGDK_CALL *sampgdk_GetVehicleZAngle)(int vehicleid, float * z_angle);
+  bool (SAMPGDK_CALL *sampgdk_GetVehicleRotationQuat)(int vehicleid, float * w, float * x, float * y, float * z);
+  bool (SAMPGDK_CALL *sampgdk_SetVehicleZAngle)(int vehicleid, float z_angle);
+  bool (SAMPGDK_CALL *sampgdk_SetVehicleParamsForPlayer)(int vehicleid, int playerid, int objective, int doorslocked);
+  bool (SAMPGDK_CALL *sampgdk_ManualVehicleEngineAndLights)();
+  bool (SAMPGDK_CALL *sampgdk_SetVehicleParamsEx)(int vehicleid, int engine, int lights, int alarm, int doors, int bonnet, int boot, int objective);
+  bool (SAMPGDK_CALL *sampgdk_GetVehicleParamsEx)(int vehicleid, int * engine, int * lights, int * alarm, int * doors, int * bonnet, int * boot, int * objective);
+  int (SAMPGDK_CALL *sampgdk_GetVehicleParamsSirenState)(int vehicleid);
+  bool (SAMPGDK_CALL *sampgdk_SetVehicleParamsCarDoors)(int vehicleid, int driver, int passenger, int backleft, int backright);
+  bool (SAMPGDK_CALL *sampgdk_GetVehicleParamsCarDoors)(int vehicleid, int * driver, int * passenger, int * backleft, int * backright);
+  bool (SAMPGDK_CALL *sampgdk_SetVehicleParamsCarWindows)(int vehicleid, int driver, int passenger, int backleft, int backright);
+  bool (SAMPGDK_CALL *sampgdk_GetVehicleParamsCarWindows)(int vehicleid, int * driver, int * passenger, int * backleft, int * backright);
+  bool (SAMPGDK_CALL *sampgdk_SetVehicleToRespawn)(int vehicleid);
+  bool (SAMPGDK_CALL *sampgdk_LinkVehicleToInterior)(int vehicleid, int interiorid);
+  bool (SAMPGDK_CALL *sampgdk_AddVehicleComponent)(int vehicleid, int componentid);
+  bool (SAMPGDK_CALL *sampgdk_RemoveVehicleComponent)(int vehicleid, int componentid);
+  bool (SAMPGDK_CALL *sampgdk_ChangeVehicleColor)(int vehicleid, int color1, int color2);
+  bool (SAMPGDK_CALL *sampgdk_ChangeVehiclePaintjob)(int vehicleid, int paintjobid);
+  bool (SAMPGDK_CALL *sampgdk_SetVehicleHealth)(int vehicleid, float health);
+  bool (SAMPGDK_CALL *sampgdk_GetVehicleHealth)(int vehicleid, float * health);
+  bool (SAMPGDK_CALL *sampgdk_AttachTrailerToVehicle)(int trailerid, int vehicleid);
+  bool (SAMPGDK_CALL *sampgdk_DetachTrailerFromVehicle)(int vehicleid);
+  bool (SAMPGDK_CALL *sampgdk_IsTrailerAttachedToVehicle)(int vehicleid);
+  int (SAMPGDK_CALL *sampgdk_GetVehicleTrailer)(int vehicleid);
+  bool (SAMPGDK_CALL *sampgdk_SetVehicleNumberPlate)(int vehicleid, const char * numberplate);
+  int (SAMPGDK_CALL *sampgdk_GetVehicleModel)(int vehicleid);
+  int (SAMPGDK_CALL *sampgdk_GetVehicleComponentInSlot)(int vehicleid, int slot);
+  int (SAMPGDK_CALL *sampgdk_GetVehicleComponentType)(int component);
+  bool (SAMPGDK_CALL *sampgdk_RepairVehicle)(int vehicleid);
+  bool (SAMPGDK_CALL *sampgdk_GetVehicleVelocity)(int vehicleid, float * X, float * Y, float * Z);
+  bool (SAMPGDK_CALL *sampgdk_SetVehicleVelocity)(int vehicleid, float X, float Y, float Z);
+  bool (SAMPGDK_CALL *sampgdk_SetVehicleAngularVelocity)(int vehicleid, float X, float Y, float Z);
+  bool (SAMPGDK_CALL *sampgdk_GetVehicleDamageStatus)(int vehicleid, int * panels, int * doors, int * lights, int * tires);
+  bool (SAMPGDK_CALL *sampgdk_UpdateVehicleDamageStatus)(int vehicleid, int panels, int doors, int lights, int tires);
+  bool (SAMPGDK_CALL *sampgdk_SetVehicleVirtualWorld)(int vehicleid, int worldid);
+  int (SAMPGDK_CALL *sampgdk_GetVehicleVirtualWorld)(int vehicleid);
+  bool (SAMPGDK_CALL *sampgdk_GetVehicleModelInfo)(int model, int infotype, float * X, float * Y, float * Z);
+};
 
 /* Copyright (C) 2012-2015 Zeex
  *
@@ -839,30 +1255,35 @@ void **sampgdk_plugin_get_plugins(int *number);
 
 /* #include "logprintf.h" */
 
-#define _SAMPGDK_LOGPRINTF_BUF_SIZE 1024
+#define _SAMPGDK_LOGPRINTF_BUFFER_SIZE 1024
 
 #ifdef _MSC_VER
   #define vsnprintf vsprintf_s
 #endif
 
-typedef void (SAMPGDK_CDECL *logprintf_t)(const char *format, ...);
-
-/* Gets called before the library is initialized. */
+/*
+ * Gets called instead of the real logprintf when the library has not been
+ * initialized yet. See the declaration of sampgdk_logprintf_impl.
+ */
 static void _sampgdk_logprintf_stub(const char *format, ...) {
   va_list va;
+
   va_start(va, format);
   vprintf(format, va);
-  printf("\n");
   va_end(va);
+
+  printf("\n");
 }
 
-void *sampgdk_logprintf_impl = &_sampgdk_logprintf_stub;
+logprintf_t sampgdk_logprintf_impl = &_sampgdk_logprintf_stub;
 
 void sampgdk_do_vlogprintf(const char *format, va_list va) {
-  char buffer[_SAMPGDK_LOGPRINTF_BUF_SIZE];
+  char buffer[_SAMPGDK_LOGPRINTF_BUFFER_SIZE];
+
   vsnprintf(buffer, sizeof(buffer), format, va);
   buffer[sizeof(buffer) - 1] = '\0';
-  ((logprintf_t)sampgdk_logprintf_impl)("%s", buffer);
+
+  sampgdk_logprintf_impl("%s", buffer);
 }
 
 /* Copyright (C) 2012-2015 Zeex
@@ -1437,52 +1858,52 @@ struct sampgdk_amx_api {
   int (AMXAPI *UTF8Put)(char *string, char **endptr, int maxchars, cell value);
 };
 
-extern struct sampgdk_amx_api *sampgdk_amx_api_ptr;
+extern struct sampgdk_amx_api *sampgdk_amx_api;
 
-#define amx_Align16      sampgdk_amx_api_ptr->Align16
-#define amx_Align32      sampgdk_amx_api_ptr->Align32
-#define amx_Align64      sampgdk_amx_api_ptr->Align64
-#define amx_Allot        sampgdk_amx_api_ptr->Allot
-#define amx_Callback     sampgdk_amx_api_ptr->Callback
-#define amx_Cleanup      sampgdk_amx_api_ptr->Cleanup
-#define amx_Clone        sampgdk_amx_api_ptr->Clone
-#define amx_Exec         sampgdk_amx_api_ptr->Exec
-#define amx_FindNative   sampgdk_amx_api_ptr->FindNative
-#define amx_FindPublic   sampgdk_amx_api_ptr->FindPublic
-#define amx_FindPubVar   sampgdk_amx_api_ptr->FindPubVar
-#define amx_FindTagId    sampgdk_amx_api_ptr->FindTagId
-#define amx_Flags        sampgdk_amx_api_ptr->Flags
-#define amx_GetAddr      sampgdk_amx_api_ptr->GetAddr
-#define amx_GetNative    sampgdk_amx_api_ptr->GetNative
-#define amx_GetPublic    sampgdk_amx_api_ptr->GetPublic
-#define amx_GetPubVar    sampgdk_amx_api_ptr->GetPubVar
-#define amx_GetString    sampgdk_amx_api_ptr->GetString
-#define amx_GetTag       sampgdk_amx_api_ptr->GetTag
-#define amx_GetUserData  sampgdk_amx_api_ptr->GetUserData
-#define amx_Init         sampgdk_amx_api_ptr->Init
-#define amx_InitJIT      sampgdk_amx_api_ptr->InitJIT
-#define amx_MemInfo      sampgdk_amx_api_ptr->MemInfo
-#define amx_NameLength   sampgdk_amx_api_ptr->NameLength
-#define amx_NativeInfo   sampgdk_amx_api_ptr->NativeInfo
-#define amx_NumNatives   sampgdk_amx_api_ptr->NumNatives
-#define amx_NumPublics   sampgdk_amx_api_ptr->NumPublics
-#define amx_NumPubVars   sampgdk_amx_api_ptr->NumPubVars
-#define amx_NumTags      sampgdk_amx_api_ptr->NumTags
-#define amx_Push         sampgdk_amx_api_ptr->Push
-#define amx_PushArray    sampgdk_amx_api_ptr->PushArray
-#define amx_PushString   sampgdk_amx_api_ptr->PushString
-#define amx_RaiseError   sampgdk_amx_api_ptr->RaiseError
-#define amx_Register     sampgdk_amx_api_ptr->Register
-#define amx_Release      sampgdk_amx_api_ptr->Release
-#define amx_SetCallback  sampgdk_amx_api_ptr->SetCallback
-#define amx_SetDebugHook sampgdk_amx_api_ptr->SetDebugHook
-#define amx_SetString    sampgdk_amx_api_ptr->SetString
-#define amx_SetUserData  sampgdk_amx_api_ptr->SetUserData
-#define amx_StrLen       sampgdk_amx_api_ptr->StrLen
-#define amx_UTF8Check    sampgdk_amx_api_ptr->UTF8Check
-#define amx_UTF8Get      sampgdk_amx_api_ptr->UTF8Get
-#define amx_UTF8Len      sampgdk_amx_api_ptr->UTF8Len
-#define amx_UTF8Put      sampgdk_amx_api_ptr->UTF8Put
+#define amx_Align16      sampgdk_amx_api->Align16
+#define amx_Align32      sampgdk_amx_api->Align32
+#define amx_Align64      sampgdk_amx_api->Align64
+#define amx_Allot        sampgdk_amx_api->Allot
+#define amx_Callback     sampgdk_amx_api->Callback
+#define amx_Cleanup      sampgdk_amx_api->Cleanup
+#define amx_Clone        sampgdk_amx_api->Clone
+#define amx_Exec         sampgdk_amx_api->Exec
+#define amx_FindNative   sampgdk_amx_api->FindNative
+#define amx_FindPublic   sampgdk_amx_api->FindPublic
+#define amx_FindPubVar   sampgdk_amx_api->FindPubVar
+#define amx_FindTagId    sampgdk_amx_api->FindTagId
+#define amx_Flags        sampgdk_amx_api->Flags
+#define amx_GetAddr      sampgdk_amx_api->GetAddr
+#define amx_GetNative    sampgdk_amx_api->GetNative
+#define amx_GetPublic    sampgdk_amx_api->GetPublic
+#define amx_GetPubVar    sampgdk_amx_api->GetPubVar
+#define amx_GetString    sampgdk_amx_api->GetString
+#define amx_GetTag       sampgdk_amx_api->GetTag
+#define amx_GetUserData  sampgdk_amx_api->GetUserData
+#define amx_Init         sampgdk_amx_api->Init
+#define amx_InitJIT      sampgdk_amx_api->InitJIT
+#define amx_MemInfo      sampgdk_amx_api->MemInfo
+#define amx_NameLength   sampgdk_amx_api->NameLength
+#define amx_NativeInfo   sampgdk_amx_api->NativeInfo
+#define amx_NumNatives   sampgdk_amx_api->NumNatives
+#define amx_NumPublics   sampgdk_amx_api->NumPublics
+#define amx_NumPubVars   sampgdk_amx_api->NumPubVars
+#define amx_NumTags      sampgdk_amx_api->NumTags
+#define amx_Push         sampgdk_amx_api->Push
+#define amx_PushArray    sampgdk_amx_api->PushArray
+#define amx_PushString   sampgdk_amx_api->PushString
+#define amx_RaiseError   sampgdk_amx_api->RaiseError
+#define amx_Register     sampgdk_amx_api->Register
+#define amx_Release      sampgdk_amx_api->Release
+#define amx_SetCallback  sampgdk_amx_api->SetCallback
+#define amx_SetDebugHook sampgdk_amx_api->SetDebugHook
+#define amx_SetString    sampgdk_amx_api->SetString
+#define amx_SetUserData  sampgdk_amx_api->SetUserData
+#define amx_StrLen       sampgdk_amx_api->StrLen
+#define amx_UTF8Check    sampgdk_amx_api->UTF8Check
+#define amx_UTF8Get      sampgdk_amx_api->UTF8Get
+#define amx_UTF8Len      sampgdk_amx_api->UTF8Len
+#define amx_UTF8Put      sampgdk_amx_api->UTF8Put
 
 #endif /* !SAMPGDK_INTERNAL_AMX_H */
 
@@ -2110,7 +2531,7 @@ void sampgdk_fakeamx_pop(cell address) {
 
 /* #include "amx.h" */
 
-struct sampgdk_amx_api *sampgdk_amx_api_ptr;
+struct sampgdk_amx_api *sampgdk_amx_api;
 
 /* Copyright (C) 2013-2015 Zeex
  *
@@ -2665,9 +3086,9 @@ static int AMXAPI _sampgdk_amxhooks_FindPublic(AMX *amx,
     return AMX_ERR_NONE;
   }
 
-  /* OK, this public officially doesn't exist here. Register it in our
-   * internal callback table and return success. The table will allow
-   * us to keep track of forged publics in amx_Exec().
+  /* OK, this public officially doesn't exist. Register it in our internal
+   * callback table and return success. The table will allow us to keep track
+   * of forged publics in amx_Exec().
    */
   index_internal = sampgdk_callback_register(name, NULL);
   index_real = AMX_EXEC_GDK - index_internal;
@@ -2718,7 +3139,7 @@ static int AMXAPI _sampgdk_amxhooks_Exec(AMX *amx, cell *retval, int index) {
     if (amx != NULL && _sampgdk_amxhooks_main_amx != amx) {
       _sampgdk_amxhooks_main_amx = amx;
 
-      sampgdk_log_info("Found main AMX, callbacks work now");
+      sampgdk_log_info("Found main AMX, callbacks should work now");
       sampgdk_log_debug("Main AMX instance: %p", amx);
 
       /* For some odd reason OnGameModeInit() is called before main().
@@ -2823,7 +3244,7 @@ static int AMXAPI _sampgdk_amxhooks_Allot(AMX *amx,
 static int _sampgdk_amxhooks_create(void) {
   #define _SAMPGDK_AMXHOOKS_CREATE_HOOK(name) \
     if ((_sampgdk_amxhooks_##name##_hook = \
-        sampgdk_hook_new((void *)sampgdk_amx_api_ptr->name, \
+        sampgdk_hook_new((void *)sampgdk_amx_api->name, \
                          (void *)_sampgdk_amxhooks_##name)) == NULL) \
       goto no_memory;
   _SAMPGDK_AMXHOOKS_FUNC_LIST(_SAMPGDK_AMXHOOKS_CREATE_HOOK)
@@ -2930,12 +3351,14 @@ static void _sampgdk_init(void **plugin_data) {
   int error;
 
   sampgdk_logprintf_impl = plugin_data[PLUGIN_DATA_LOGPRINTF];
-  sampgdk_amx_api_ptr = plugin_data[PLUGIN_DATA_AMX_EXPORTS];
+  sampgdk_amx_api = plugin_data[PLUGIN_DATA_AMX_EXPORTS];
 
   error = sampgdk_module_init();
   if (error  < 0) {
     sampgdk_log_error("Initialization failed: %s", error);
   }
+
+  sampgdk_log_info("Version: " SAMPGDK_VERSION_STRING);
 }
 
 static int _sampgdk_init_plugin(void *plugin, void **plugin_data) {
@@ -6088,7 +6511,7 @@ SAMPGDK_NATIVE(bool, SetVehicleZAngle(int vehicleid, float z_angle)) {
   return !!(retval);
 }
 
-SAMPGDK_NATIVE(bool, SetVehicleParamsForPlayer(int vehicleid, int playerid, bool objective, bool doorslocked)) {
+SAMPGDK_NATIVE(bool, SetVehicleParamsForPlayer(int vehicleid, int playerid, int objective, int doorslocked)) {
   static AMX_NATIVE native;
   cell retval;
   cell params[5];
@@ -6112,7 +6535,7 @@ SAMPGDK_NATIVE(bool, ManualVehicleEngineAndLights()) {
   return !!(retval);
 }
 
-SAMPGDK_NATIVE(bool, SetVehicleParamsEx(int vehicleid, bool engine, bool lights, bool alarm, bool doors, bool bonnet, bool boot, bool objective)) {
+SAMPGDK_NATIVE(bool, SetVehicleParamsEx(int vehicleid, int engine, int lights, int alarm, int doors, int bonnet, int boot, int objective)) {
   static AMX_NATIVE native;
   cell retval;
   cell params[9];
@@ -6190,7 +6613,7 @@ SAMPGDK_NATIVE(int, GetVehicleParamsSirenState(int vehicleid)) {
   return (int)(retval);
 }
 
-SAMPGDK_NATIVE(bool, SetVehicleParamsCarDoors(int vehicleid, bool driver, bool passenger, bool backleft, bool backright)) {
+SAMPGDK_NATIVE(bool, SetVehicleParamsCarDoors(int vehicleid, int driver, int passenger, int backleft, int backright)) {
   static AMX_NATIVE native;
   cell retval;
   cell params[6];
@@ -6238,7 +6661,7 @@ SAMPGDK_NATIVE(bool, GetVehicleParamsCarDoors(int vehicleid, int * driver, int *
   return !!(retval);
 }
 
-SAMPGDK_NATIVE(bool, SetVehicleParamsCarWindows(int vehicleid, bool driver, bool passenger, bool backleft, bool backright)) {
+SAMPGDK_NATIVE(bool, SetVehicleParamsCarWindows(int vehicleid, int driver, int passenger, int backleft, int backright)) {
   static AMX_NATIVE native;
   cell retval;
   cell params[6];
@@ -7579,6 +8002,190 @@ SAMPGDK_NATIVE(int, GetActorPoolSize()) {
   return (int)(retval);
 }
 
+SAMPGDK_NATIVE(bool, SHA256_PassHash(const char * password, const char * salt, char * ret_hash, int ret_hash_len)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[5];
+  cell password_;
+  cell salt_;
+  cell ret_hash_;
+  sampgdk_log_debug("SHA256_PassHash(\"%s\", \"%s\", \"%s\", %d)", password, salt, ret_hash, ret_hash_len);
+  native = sampgdk_native_find_flexible("SHA256_PassHash", native);
+  sampgdk_fakeamx_push_string(password, NULL, &password_);
+  sampgdk_fakeamx_push_string(salt, NULL, &salt_);
+  sampgdk_fakeamx_push(ret_hash_len, &ret_hash_);
+  params[0] = 4 * sizeof(cell);
+  params[1] = password_;
+  params[2] = salt_;
+  params[3] = ret_hash_;
+  params[4] = (cell)ret_hash_len;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_get_string(ret_hash_, ret_hash, ret_hash_len);
+  sampgdk_fakeamx_pop(ret_hash_);
+  sampgdk_fakeamx_pop(salt_);
+  sampgdk_fakeamx_pop(password_);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(bool, SetSVarInt(const char * varname, int int_value)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[3];
+  cell varname_;
+  sampgdk_log_debug("SetSVarInt(\"%s\", %d)", varname, int_value);
+  native = sampgdk_native_find_flexible("SetSVarInt", native);
+  sampgdk_fakeamx_push_string(varname, NULL, &varname_);
+  params[0] = 2 * sizeof(cell);
+  params[1] = varname_;
+  params[2] = (cell)int_value;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_pop(varname_);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(int, GetSVarInt(const char * varname)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[2];
+  cell varname_;
+  sampgdk_log_debug("GetSVarInt(\"%s\")", varname);
+  native = sampgdk_native_find_flexible("GetSVarInt", native);
+  sampgdk_fakeamx_push_string(varname, NULL, &varname_);
+  params[0] = 1 * sizeof(cell);
+  params[1] = varname_;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_pop(varname_);
+  return (int)(retval);
+}
+
+SAMPGDK_NATIVE(bool, SetSVarString(const char * varname, const char * string_value)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[3];
+  cell varname_;
+  cell string_value_;
+  sampgdk_log_debug("SetSVarString(\"%s\", \"%s\")", varname, string_value);
+  native = sampgdk_native_find_flexible("SetSVarString", native);
+  sampgdk_fakeamx_push_string(varname, NULL, &varname_);
+  sampgdk_fakeamx_push_string(string_value, NULL, &string_value_);
+  params[0] = 2 * sizeof(cell);
+  params[1] = varname_;
+  params[2] = string_value_;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_pop(string_value_);
+  sampgdk_fakeamx_pop(varname_);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(bool, GetSVarString(const char * varname, char * string_return, int len)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[4];
+  cell varname_;
+  cell string_return_;
+  sampgdk_log_debug("GetSVarString(\"%s\", \"%s\", %d)", varname, string_return, len);
+  native = sampgdk_native_find_flexible("GetSVarString", native);
+  sampgdk_fakeamx_push_string(varname, NULL, &varname_);
+  sampgdk_fakeamx_push(len, &string_return_);
+  params[0] = 3 * sizeof(cell);
+  params[1] = varname_;
+  params[2] = string_return_;
+  params[3] = (cell)len;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_get_string(string_return_, string_return, len);
+  sampgdk_fakeamx_pop(string_return_);
+  sampgdk_fakeamx_pop(varname_);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(bool, SetSVarFloat(const char * varname, float float_value)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[3];
+  cell varname_;
+  sampgdk_log_debug("SetSVarFloat(\"%s\", %f)", varname, float_value);
+  native = sampgdk_native_find_flexible("SetSVarFloat", native);
+  sampgdk_fakeamx_push_string(varname, NULL, &varname_);
+  params[0] = 2 * sizeof(cell);
+  params[1] = varname_;
+  params[2] = amx_ftoc(float_value);
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_pop(varname_);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(float, GetSVarFloat(const char * varname)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[2];
+  cell varname_;
+  sampgdk_log_debug("GetSVarFloat(\"%s\")", varname);
+  native = sampgdk_native_find_flexible("GetSVarFloat", native);
+  sampgdk_fakeamx_push_string(varname, NULL, &varname_);
+  params[0] = 1 * sizeof(cell);
+  params[1] = varname_;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_pop(varname_);
+  return amx_ctof(retval);
+}
+
+SAMPGDK_NATIVE(bool, DeleteSVar(const char * varname)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[2];
+  cell varname_;
+  sampgdk_log_debug("DeleteSVar(\"%s\")", varname);
+  native = sampgdk_native_find_flexible("DeleteSVar", native);
+  sampgdk_fakeamx_push_string(varname, NULL, &varname_);
+  params[0] = 1 * sizeof(cell);
+  params[1] = varname_;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_pop(varname_);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(int, GetSVarsUpperIndex()) {
+  static AMX_NATIVE native;
+  cell retval;
+  sampgdk_log_debug("GetSVarsUpperIndex()");
+  native = sampgdk_native_find_flexible("GetSVarsUpperIndex", native);
+  retval = native(sampgdk_fakeamx_amx(), NULL);
+  return (int)(retval);
+}
+
+SAMPGDK_NATIVE(bool, GetSVarNameAtIndex(int index, char * ret_varname, int ret_len)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[4];
+  cell ret_varname_;
+  sampgdk_log_debug("GetSVarNameAtIndex(%d, \"%s\", %d)", index, ret_varname, ret_len);
+  native = sampgdk_native_find_flexible("GetSVarNameAtIndex", native);
+  sampgdk_fakeamx_push(ret_len, &ret_varname_);
+  params[0] = 3 * sizeof(cell);
+  params[1] = (cell)index;
+  params[2] = ret_varname_;
+  params[3] = (cell)ret_len;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_get_string(ret_varname_, ret_varname, ret_len);
+  sampgdk_fakeamx_pop(ret_varname_);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(int, GetSVarType(const char * varname)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[2];
+  cell varname_;
+  sampgdk_log_debug("GetSVarType(\"%s\")", varname);
+  native = sampgdk_native_find_flexible("GetSVarType", native);
+  sampgdk_fakeamx_push_string(varname, NULL, &varname_);
+  params[0] = 1 * sizeof(cell);
+  params[1] = varname_;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_pop(varname_);
+  return (int)(retval);
+}
+
 SAMPGDK_NATIVE(bool, SetGameModeText(const char * text)) {
   static AMX_NATIVE native;
   cell retval;
@@ -8077,57 +8684,6 @@ SAMPGDK_NATIVE(bool, SendRconCommand(const char * command)) {
   return !!(retval);
 }
 
-SAMPGDK_NATIVE(bool, GetServerVarAsString(const char * varname, char * value, int size)) {
-  static AMX_NATIVE native;
-  cell retval;
-  cell params[4];
-  cell varname_;
-  cell value_;
-  sampgdk_log_debug("GetServerVarAsString(\"%s\", \"%s\", %d)", varname, value, size);
-  native = sampgdk_native_find_flexible("GetServerVarAsString", native);
-  sampgdk_fakeamx_push_string(varname, NULL, &varname_);
-  sampgdk_fakeamx_push(size, &value_);
-  params[0] = 3 * sizeof(cell);
-  params[1] = varname_;
-  params[2] = value_;
-  params[3] = (cell)size;
-  retval = native(sampgdk_fakeamx_amx(), params);
-  sampgdk_fakeamx_get_string(value_, value, size);
-  sampgdk_fakeamx_pop(value_);
-  sampgdk_fakeamx_pop(varname_);
-  return !!(retval);
-}
-
-SAMPGDK_NATIVE(int, GetServerVarAsInt(const char * varname)) {
-  static AMX_NATIVE native;
-  cell retval;
-  cell params[2];
-  cell varname_;
-  sampgdk_log_debug("GetServerVarAsInt(\"%s\")", varname);
-  native = sampgdk_native_find_flexible("GetServerVarAsInt", native);
-  sampgdk_fakeamx_push_string(varname, NULL, &varname_);
-  params[0] = 1 * sizeof(cell);
-  params[1] = varname_;
-  retval = native(sampgdk_fakeamx_amx(), params);
-  sampgdk_fakeamx_pop(varname_);
-  return (int)(retval);
-}
-
-SAMPGDK_NATIVE(bool, GetServerVarAsBool(const char * varname)) {
-  static AMX_NATIVE native;
-  cell retval;
-  cell params[2];
-  cell varname_;
-  sampgdk_log_debug("GetServerVarAsBool(\"%s\")", varname);
-  native = sampgdk_native_find_flexible("GetServerVarAsBool", native);
-  sampgdk_fakeamx_push_string(varname, NULL, &varname_);
-  params[0] = 1 * sizeof(cell);
-  params[1] = varname_;
-  retval = native(sampgdk_fakeamx_amx(), params);
-  sampgdk_fakeamx_pop(varname_);
-  return !!(retval);
-}
-
 SAMPGDK_NATIVE(bool, GetPlayerNetworkStats(int playerid, char * retstr, int size)) {
   static AMX_NATIVE native;
   cell retval;
@@ -8209,6 +8765,108 @@ SAMPGDK_NATIVE(bool, UnBlockIpAddress(const char * ip_address)) {
   params[1] = ip_address_;
   retval = native(sampgdk_fakeamx_amx(), params);
   sampgdk_fakeamx_pop(ip_address_);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(bool, GetServerVarAsString(const char * varname, char * value, int size)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[4];
+  cell varname_;
+  cell value_;
+  sampgdk_log_debug("GetServerVarAsString(\"%s\", \"%s\", %d)", varname, value, size);
+  native = sampgdk_native_find_flexible("GetServerVarAsString", native);
+  sampgdk_fakeamx_push_string(varname, NULL, &varname_);
+  sampgdk_fakeamx_push(size, &value_);
+  params[0] = 3 * sizeof(cell);
+  params[1] = varname_;
+  params[2] = value_;
+  params[3] = (cell)size;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_get_string(value_, value, size);
+  sampgdk_fakeamx_pop(value_);
+  sampgdk_fakeamx_pop(varname_);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(int, GetServerVarAsInt(const char * varname)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[2];
+  cell varname_;
+  sampgdk_log_debug("GetServerVarAsInt(\"%s\")", varname);
+  native = sampgdk_native_find_flexible("GetServerVarAsInt", native);
+  sampgdk_fakeamx_push_string(varname, NULL, &varname_);
+  params[0] = 1 * sizeof(cell);
+  params[1] = varname_;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_pop(varname_);
+  return (int)(retval);
+}
+
+SAMPGDK_NATIVE(bool, GetServerVarAsBool(const char * varname)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[2];
+  cell varname_;
+  sampgdk_log_debug("GetServerVarAsBool(\"%s\")", varname);
+  native = sampgdk_native_find_flexible("GetServerVarAsBool", native);
+  sampgdk_fakeamx_push_string(varname, NULL, &varname_);
+  params[0] = 1 * sizeof(cell);
+  params[1] = varname_;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_pop(varname_);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(bool, GetConsoleVarAsString(const char * varname, char * buffer, int len)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[4];
+  cell varname_;
+  cell buffer_;
+  sampgdk_log_debug("GetConsoleVarAsString(\"%s\", \"%s\", %d)", varname, buffer, len);
+  native = sampgdk_native_find_flexible("GetConsoleVarAsString", native);
+  sampgdk_fakeamx_push_string(varname, NULL, &varname_);
+  sampgdk_fakeamx_push(len, &buffer_);
+  params[0] = 3 * sizeof(cell);
+  params[1] = varname_;
+  params[2] = buffer_;
+  params[3] = (cell)len;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_get_string(buffer_, buffer, len);
+  sampgdk_fakeamx_pop(buffer_);
+  sampgdk_fakeamx_pop(varname_);
+  return !!(retval);
+}
+
+SAMPGDK_NATIVE(int, GetConsoleVarAsInt(const char * varname)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[2];
+  cell varname_;
+  sampgdk_log_debug("GetConsoleVarAsInt(\"%s\")", varname);
+  native = sampgdk_native_find_flexible("GetConsoleVarAsInt", native);
+  sampgdk_fakeamx_push_string(varname, NULL, &varname_);
+  params[0] = 1 * sizeof(cell);
+  params[1] = varname_;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_pop(varname_);
+  return (int)(retval);
+}
+
+SAMPGDK_NATIVE(bool, GetConsoleVarAsBool(const char * varname)) {
+  static AMX_NATIVE native;
+  cell retval;
+  cell params[2];
+  cell varname_;
+  sampgdk_log_debug("GetConsoleVarAsBool(\"%s\")", varname);
+  native = sampgdk_native_find_flexible("GetConsoleVarAsBool", native);
+  sampgdk_fakeamx_push_string(varname, NULL, &varname_);
+  params[0] = 1 * sizeof(cell);
+  params[1] = varname_;
+  retval = native(sampgdk_fakeamx_amx(), params);
+  sampgdk_fakeamx_pop(varname_);
   return !!(retval);
 }
 
@@ -9797,14 +10455,14 @@ static bool _OnTrailerUpdate(AMX *amx, void *callback, cell *retval) {
   return !!retval_ != false;
 }
 
-typedef bool (SAMPGDK_CALLBACK_CALL *OnVehicleSirenStateChange_callback)(int playerid, int vehicleid, bool newstate);
+typedef bool (SAMPGDK_CALLBACK_CALL *OnVehicleSirenStateChange_callback)(int playerid, int vehicleid, int newstate);
 static bool _OnVehicleSirenStateChange(AMX *amx, void *callback, cell *retval) {
   int playerid;
   int vehicleid;
-  bool newstate;
+  int newstate;
   sampgdk_param_get_cell(amx, 0, (void *)&playerid);
   sampgdk_param_get_cell(amx, 1, (void *)&vehicleid);
-  sampgdk_param_get_bool(amx, 2, (void *)&newstate);
+  sampgdk_param_get_cell(amx, 2, (void *)&newstate);
   sampgdk_log_debug("OnVehicleSirenStateChange(%d, %d, %d)", playerid, vehicleid, newstate);
   ((OnVehicleSirenStateChange_callback)callback)(playerid, vehicleid, newstate);
   return true;

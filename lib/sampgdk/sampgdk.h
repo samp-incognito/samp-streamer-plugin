@@ -61,6 +61,10 @@
   #error Unsupported architecture
 #endif
 
+#if (defined __CYGWIN32__ || defined RC_INVOKED) && !defined WIN32
+  #define WIN32
+#endif
+
 #if defined WIN32 || defined _WIN32 || defined __WIN32__
   #define SAMPGDK_LINUX 0
   #define SAMPGDK_WINDOWS 1
@@ -429,8 +433,8 @@ SAMPGDK_API(cell, sampgdk_CallNative(AMX_NATIVE native, cell *params));
  * R         | cell *        | non-const reference (both input and output)
  * s         | const char *  | const string (input only)
  * S         | char *        | non-const string (both input and output)
- * a         | const cell *  | const string (input only)
- * A         | cell *        | non-const string (both input and output)
+ * a         | const cell *  | const array (input only)
+ * A         | cell *        | non-const array (both input and output)
  *
  * \remarks For the 'S', 'a' and 'A' specifiers you have to specify the size
  * of the string/array in square brackets, e.g. "a[100]" (fixed size)
@@ -788,7 +792,7 @@ inline void vlogprintf(const char *format, va_list args) {
 /**
  * \brief Minor version
  */
-#define SAMPGDK_VERSION_MINOR 3
+#define SAMPGDK_VERSION_MINOR 4
 
 /**
  * \brief Patch version
@@ -799,13 +803,13 @@ inline void vlogprintf(const char *format, va_list args) {
  * \brief Library version number in the form of \c 0xAABBCC00 where
  * \c AA, \c BB and \c CC are the major, minor and patch numbers
  */
-#define SAMPGDK_VERSION_ID 67305472
+#define SAMPGDK_VERSION_ID 67371008
 
 /**
  * \brief Library version string in the form of \c x.y.z where \c x,
  * \c y and \c z are the major, minor and patch numbers
  */
-#define SAMPGDK_VERSION_STRING "4.3.0"
+#define SAMPGDK_VERSION_STRING "4.4.0"
 
 /**
  * \brief Gets library version number
@@ -3353,7 +3357,7 @@ SAMPGDK_NATIVE(bool, SetVehicleZAngle(int vehicleid, float z_angle));
  * \ingroup natives
  * \see <a href="http://wiki.sa-mp.com/wiki/SetVehicleParamsForPlayer">SetVehicleParamsForPlayer on SA-MP Wiki</a>
  */
-SAMPGDK_NATIVE(bool, SetVehicleParamsForPlayer(int vehicleid, int playerid, bool objective, bool doorslocked));
+SAMPGDK_NATIVE(bool, SetVehicleParamsForPlayer(int vehicleid, int playerid, int objective, int doorslocked));
 
 /**
  * \ingroup natives
@@ -3365,7 +3369,7 @@ SAMPGDK_NATIVE(bool, ManualVehicleEngineAndLights());
  * \ingroup natives
  * \see <a href="http://wiki.sa-mp.com/wiki/SetVehicleParamsEx">SetVehicleParamsEx on SA-MP Wiki</a>
  */
-SAMPGDK_NATIVE(bool, SetVehicleParamsEx(int vehicleid, bool engine, bool lights, bool alarm, bool doors, bool bonnet, bool boot, bool objective));
+SAMPGDK_NATIVE(bool, SetVehicleParamsEx(int vehicleid, int engine, int lights, int alarm, int doors, int bonnet, int boot, int objective));
 
 /**
  * \ingroup natives
@@ -3383,7 +3387,7 @@ SAMPGDK_NATIVE(int, GetVehicleParamsSirenState(int vehicleid));
  * \ingroup natives
  * \see <a href="http://wiki.sa-mp.com/wiki/SetVehicleParamsCarDoors">SetVehicleParamsCarDoors on SA-MP Wiki</a>
  */
-SAMPGDK_NATIVE(bool, SetVehicleParamsCarDoors(int vehicleid, bool driver, bool passenger, bool backleft, bool backright));
+SAMPGDK_NATIVE(bool, SetVehicleParamsCarDoors(int vehicleid, int driver, int passenger, int backleft, int backright));
 
 /**
  * \ingroup natives
@@ -3395,7 +3399,7 @@ SAMPGDK_NATIVE(bool, GetVehicleParamsCarDoors(int vehicleid, int * driver, int *
  * \ingroup natives
  * \see <a href="http://wiki.sa-mp.com/wiki/SetVehicleParamsCarWindows">SetVehicleParamsCarWindows on SA-MP Wiki</a>
  */
-SAMPGDK_NATIVE(bool, SetVehicleParamsCarWindows(int vehicleid, bool driver, bool passenger, bool backleft, bool backright));
+SAMPGDK_NATIVE(bool, SetVehicleParamsCarWindows(int vehicleid, int driver, int passenger, int backleft, int backright));
 
 /**
  * \ingroup natives
@@ -3599,7 +3603,7 @@ inline bool SetVehicleZAngle(int vehicleid, float z_angle) {
   return sampgdk_SetVehicleZAngle(vehicleid, z_angle);
 }
 
-inline bool SetVehicleParamsForPlayer(int vehicleid, int playerid, bool objective, bool doorslocked) {
+inline bool SetVehicleParamsForPlayer(int vehicleid, int playerid, int objective, int doorslocked) {
   return sampgdk_SetVehicleParamsForPlayer(vehicleid, playerid, objective, doorslocked);
 }
 
@@ -3607,7 +3611,7 @@ inline bool ManualVehicleEngineAndLights() {
   return sampgdk_ManualVehicleEngineAndLights();
 }
 
-inline bool SetVehicleParamsEx(int vehicleid, bool engine, bool lights, bool alarm, bool doors, bool bonnet, bool boot, bool objective) {
+inline bool SetVehicleParamsEx(int vehicleid, int engine, int lights, int alarm, int doors, int bonnet, int boot, int objective) {
   return sampgdk_SetVehicleParamsEx(vehicleid, engine, lights, alarm, doors, bonnet, boot, objective);
 }
 
@@ -3619,7 +3623,7 @@ inline int GetVehicleParamsSirenState(int vehicleid) {
   return sampgdk_GetVehicleParamsSirenState(vehicleid);
 }
 
-inline bool SetVehicleParamsCarDoors(int vehicleid, bool driver, bool passenger, bool backleft, bool backright) {
+inline bool SetVehicleParamsCarDoors(int vehicleid, int driver, int passenger, int backleft, int backright) {
   return sampgdk_SetVehicleParamsCarDoors(vehicleid, driver, passenger, backleft, backright);
 }
 
@@ -3627,7 +3631,7 @@ inline bool GetVehicleParamsCarDoors(int vehicleid, int * driver, int * passenge
   return sampgdk_GetVehicleParamsCarDoors(vehicleid, driver, passenger, backleft, backright);
 }
 
-inline bool SetVehicleParamsCarWindows(int vehicleid, bool driver, bool passenger, bool backleft, bool backright) {
+inline bool SetVehicleParamsCarWindows(int vehicleid, int driver, int passenger, int backleft, int backright) {
   return sampgdk_SetVehicleParamsCarWindows(vehicleid, driver, passenger, backleft, backright);
 }
 
@@ -4439,6 +4443,10 @@ inline bool SetObjectsDefaultCameraCol(bool disable) {
 #define INVALID_TEXT_DRAW (0xFFFF)
 #define INVALID_GANG_ZONE (-1)
 #define INVALID_3DTEXT_ID (0xFFFF)
+#define SERVER_VARTYPE_NONE (0)
+#define SERVER_VARTYPE_INT (1)
+#define SERVER_VARTYPE_STRING (2)
+#define SERVER_VARTYPE_FLOAT (3)
 #define TEXT_DRAW_FONT_SPRITE_DRAW (4)
 #define TEXT_DRAW_FONT_MODEL_PREVIEW (5)
 #define DIALOG_STYLE_MSGBOX (0)
@@ -4631,6 +4639,72 @@ SAMPGDK_NATIVE(int, GetVehiclePoolSize());
  * \see <a href="http://wiki.sa-mp.com/wiki/GetActorPoolSize">GetActorPoolSize on SA-MP Wiki</a>
  */
 SAMPGDK_NATIVE(int, GetActorPoolSize());
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/SHA256_PassHash">SHA256_PassHash on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, SHA256_PassHash(const char * password, const char * salt, char * ret_hash, int ret_hash_len));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/SetSVarInt">SetSVarInt on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, SetSVarInt(const char * varname, int int_value));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetSVarInt">GetSVarInt on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(int, GetSVarInt(const char * varname));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/SetSVarString">SetSVarString on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, SetSVarString(const char * varname, const char * string_value));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetSVarString">GetSVarString on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, GetSVarString(const char * varname, char * string_return, int len));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/SetSVarFloat">SetSVarFloat on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, SetSVarFloat(const char * varname, float float_value));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetSVarFloat">GetSVarFloat on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(float, GetSVarFloat(const char * varname));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/DeleteSVar">DeleteSVar on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, DeleteSVar(const char * varname));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetSVarsUpperIndex">GetSVarsUpperIndex on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(int, GetSVarsUpperIndex());
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetSVarNameAtIndex">GetSVarNameAtIndex on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, GetSVarNameAtIndex(int index, char * ret_varname, int ret_len));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetSVarType">GetSVarType on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(int, GetSVarType(const char * varname));
 
 /**
  * \ingroup natives
@@ -4856,24 +4930,6 @@ SAMPGDK_NATIVE(bool, SendRconCommand(const char * command));
 
 /**
  * \ingroup natives
- * \see <a href="http://wiki.sa-mp.com/wiki/GetServerVarAsString">GetServerVarAsString on SA-MP Wiki</a>
- */
-SAMPGDK_NATIVE(bool, GetServerVarAsString(const char * varname, char * value, int size));
-
-/**
- * \ingroup natives
- * \see <a href="http://wiki.sa-mp.com/wiki/GetServerVarAsInt">GetServerVarAsInt on SA-MP Wiki</a>
- */
-SAMPGDK_NATIVE(int, GetServerVarAsInt(const char * varname));
-
-/**
- * \ingroup natives
- * \see <a href="http://wiki.sa-mp.com/wiki/GetServerVarAsBool">GetServerVarAsBool on SA-MP Wiki</a>
- */
-SAMPGDK_NATIVE(bool, GetServerVarAsBool(const char * varname));
-
-/**
- * \ingroup natives
  * \see <a href="http://wiki.sa-mp.com/wiki/GetPlayerNetworkStats">GetPlayerNetworkStats on SA-MP Wiki</a>
  */
 SAMPGDK_NATIVE(bool, GetPlayerNetworkStats(int playerid, char * retstr, int size));
@@ -4901,6 +4957,42 @@ SAMPGDK_NATIVE(bool, BlockIpAddress(const char * ip_address, int timems));
  * \see <a href="http://wiki.sa-mp.com/wiki/UnBlockIpAddress">UnBlockIpAddress on SA-MP Wiki</a>
  */
 SAMPGDK_NATIVE(bool, UnBlockIpAddress(const char * ip_address));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetServerVarAsString">GetServerVarAsString on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, GetServerVarAsString(const char * varname, char * value, int size));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetServerVarAsInt">GetServerVarAsInt on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(int, GetServerVarAsInt(const char * varname));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetServerVarAsBool">GetServerVarAsBool on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, GetServerVarAsBool(const char * varname));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetConsoleVarAsString">GetConsoleVarAsString on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, GetConsoleVarAsString(const char * varname, char * buffer, int len));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetConsoleVarAsInt">GetConsoleVarAsInt on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(int, GetConsoleVarAsInt(const char * varname));
+
+/**
+ * \ingroup natives
+ * \see <a href="http://wiki.sa-mp.com/wiki/GetConsoleVarAsBool">GetConsoleVarAsBool on SA-MP Wiki</a>
+ */
+SAMPGDK_NATIVE(bool, GetConsoleVarAsBool(const char * varname));
 
 /**
  * \ingroup natives
@@ -5360,6 +5452,50 @@ inline int GetActorPoolSize() {
   return sampgdk_GetActorPoolSize();
 }
 
+inline bool SHA256_PassHash(const char * password, const char * salt, char * ret_hash, int ret_hash_len) {
+  return sampgdk_SHA256_PassHash(password, salt, ret_hash, ret_hash_len);
+}
+
+inline bool SetSVarInt(const char * varname, int int_value) {
+  return sampgdk_SetSVarInt(varname, int_value);
+}
+
+inline int GetSVarInt(const char * varname) {
+  return sampgdk_GetSVarInt(varname);
+}
+
+inline bool SetSVarString(const char * varname, const char * string_value) {
+  return sampgdk_SetSVarString(varname, string_value);
+}
+
+inline bool GetSVarString(const char * varname, char * string_return, int len) {
+  return sampgdk_GetSVarString(varname, string_return, len);
+}
+
+inline bool SetSVarFloat(const char * varname, float float_value) {
+  return sampgdk_SetSVarFloat(varname, float_value);
+}
+
+inline float GetSVarFloat(const char * varname) {
+  return sampgdk_GetSVarFloat(varname);
+}
+
+inline bool DeleteSVar(const char * varname) {
+  return sampgdk_DeleteSVar(varname);
+}
+
+inline int GetSVarsUpperIndex() {
+  return sampgdk_GetSVarsUpperIndex();
+}
+
+inline bool GetSVarNameAtIndex(int index, char * ret_varname, int ret_len) {
+  return sampgdk_GetSVarNameAtIndex(index, ret_varname, ret_len);
+}
+
+inline int GetSVarType(const char * varname) {
+  return sampgdk_GetSVarType(varname);
+}
+
 inline bool SetGameModeText(const char * text) {
   return sampgdk_SetGameModeText(text);
 }
@@ -5508,18 +5644,6 @@ inline bool SendRconCommand(const char * command) {
   return sampgdk_SendRconCommand(command);
 }
 
-inline bool GetServerVarAsString(const char * varname, char * value, int size) {
-  return sampgdk_GetServerVarAsString(varname, value, size);
-}
-
-inline int GetServerVarAsInt(const char * varname) {
-  return sampgdk_GetServerVarAsInt(varname);
-}
-
-inline bool GetServerVarAsBool(const char * varname) {
-  return sampgdk_GetServerVarAsBool(varname);
-}
-
 inline bool GetPlayerNetworkStats(int playerid, char * retstr, int size) {
   return sampgdk_GetPlayerNetworkStats(playerid, retstr, size);
 }
@@ -5538,6 +5662,30 @@ inline bool BlockIpAddress(const char * ip_address, int timems) {
 
 inline bool UnBlockIpAddress(const char * ip_address) {
   return sampgdk_UnBlockIpAddress(ip_address);
+}
+
+inline bool GetServerVarAsString(const char * varname, char * value, int size) {
+  return sampgdk_GetServerVarAsString(varname, value, size);
+}
+
+inline int GetServerVarAsInt(const char * varname) {
+  return sampgdk_GetServerVarAsInt(varname);
+}
+
+inline bool GetServerVarAsBool(const char * varname) {
+  return sampgdk_GetServerVarAsBool(varname);
+}
+
+inline bool GetConsoleVarAsString(const char * varname, char * buffer, int len) {
+  return sampgdk_GetConsoleVarAsString(varname, buffer, len);
+}
+
+inline int GetConsoleVarAsInt(const char * varname) {
+  return sampgdk_GetConsoleVarAsInt(varname);
+}
+
+inline bool GetConsoleVarAsBool(const char * varname) {
+  return sampgdk_GetConsoleVarAsBool(varname);
 }
 
 inline int GetServerTickRate() {
@@ -5850,6 +5998,39 @@ inline bool gpci(int playerid, char * buffer, int size) {
 #undef  GetActorPoolSize
 #define GetActorPoolSize sampgdk_GetActorPoolSize
 
+#undef  SHA256_PassHash
+#define SHA256_PassHash sampgdk_SHA256_PassHash
+
+#undef  SetSVarInt
+#define SetSVarInt sampgdk_SetSVarInt
+
+#undef  GetSVarInt
+#define GetSVarInt sampgdk_GetSVarInt
+
+#undef  SetSVarString
+#define SetSVarString sampgdk_SetSVarString
+
+#undef  GetSVarString
+#define GetSVarString sampgdk_GetSVarString
+
+#undef  SetSVarFloat
+#define SetSVarFloat sampgdk_SetSVarFloat
+
+#undef  GetSVarFloat
+#define GetSVarFloat sampgdk_GetSVarFloat
+
+#undef  DeleteSVar
+#define DeleteSVar sampgdk_DeleteSVar
+
+#undef  GetSVarsUpperIndex
+#define GetSVarsUpperIndex sampgdk_GetSVarsUpperIndex
+
+#undef  GetSVarNameAtIndex
+#define GetSVarNameAtIndex sampgdk_GetSVarNameAtIndex
+
+#undef  GetSVarType
+#define GetSVarType sampgdk_GetSVarType
+
 #undef  SetGameModeText
 #define SetGameModeText sampgdk_SetGameModeText
 
@@ -5961,15 +6142,6 @@ inline bool gpci(int playerid, char * buffer, int size) {
 #undef  SendRconCommand
 #define SendRconCommand sampgdk_SendRconCommand
 
-#undef  GetServerVarAsString
-#define GetServerVarAsString sampgdk_GetServerVarAsString
-
-#undef  GetServerVarAsInt
-#define GetServerVarAsInt sampgdk_GetServerVarAsInt
-
-#undef  GetServerVarAsBool
-#define GetServerVarAsBool sampgdk_GetServerVarAsBool
-
 #undef  GetPlayerNetworkStats
 #define GetPlayerNetworkStats sampgdk_GetPlayerNetworkStats
 
@@ -5984,6 +6156,24 @@ inline bool gpci(int playerid, char * buffer, int size) {
 
 #undef  UnBlockIpAddress
 #define UnBlockIpAddress sampgdk_UnBlockIpAddress
+
+#undef  GetServerVarAsString
+#define GetServerVarAsString sampgdk_GetServerVarAsString
+
+#undef  GetServerVarAsInt
+#define GetServerVarAsInt sampgdk_GetServerVarAsInt
+
+#undef  GetServerVarAsBool
+#define GetServerVarAsBool sampgdk_GetServerVarAsBool
+
+#undef  GetConsoleVarAsString
+#define GetConsoleVarAsString sampgdk_GetConsoleVarAsString
+
+#undef  GetConsoleVarAsInt
+#define GetConsoleVarAsInt sampgdk_GetConsoleVarAsInt
+
+#undef  GetConsoleVarAsBool
+#define GetConsoleVarAsBool sampgdk_GetConsoleVarAsBool
 
 #undef  GetServerTickRate
 #define GetServerTickRate sampgdk_GetServerTickRate
@@ -6490,7 +6680,7 @@ SAMPGDK_CALLBACK(bool, OnTrailerUpdate(int playerid, int vehicleid));
  * \ingroup callbacks
  * \see <a href="http://wiki.sa-mp.com/wiki/OnVehicleSirenStateChange">OnVehicleSirenStateChange on SA-MP Wiki</a>
  */
-SAMPGDK_CALLBACK(bool, OnVehicleSirenStateChange(int playerid, int vehicleid, bool newstate));
+SAMPGDK_CALLBACK(bool, OnVehicleSirenStateChange(int playerid, int vehicleid, int newstate));
 
 /**
  * \ingroup callbacks
