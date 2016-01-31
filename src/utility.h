@@ -217,7 +217,7 @@ namespace Utility
 	template<typename T>
 	inline bool isContainerWithinContainer(const boost::unordered_set<T> &mainContainer, const boost::unordered_set<T> &overlappingContainer)
 	{
-		for (boost::unordered_set<T>::const_iterator o = overlappingContainer.begin(); o != overlappingContainer.end(); ++o)
+		for (typename boost::unordered_set<T>::const_iterator o = overlappingContainer.begin(); o != overlappingContainer.end(); ++o)
 		{
 			if (mainContainer.find(*o) != mainContainer.end())
 			{
