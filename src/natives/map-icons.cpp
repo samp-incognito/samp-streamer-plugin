@@ -31,7 +31,7 @@
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicMapIcon(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(10, "CreateDynamicMapIcon");
+	CHECK_PARAMS(11, "CreateDynamicMapIcon");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_MAP_ICON) == core->getData()->mapIcons.size())
 	{
 		return 0;
@@ -49,6 +49,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicMapIcon(AMX *amx, cell *params)
 	Utility::addToContainer(mapIcon->players, static_cast<int>(params[8]));
 	mapIcon->streamDistance = amx_ctof(params[9]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[9]) : amx_ctof(params[9]) * amx_ctof(params[9]);
 	mapIcon->style = static_cast<int>(params[10]);
+	Utility::addToContainer(mapIcon->areas, static_cast<int>(params[11]));
 	core->getGrid()->addMapIcon(mapIcon);
 	core->getData()->mapIcons.insert(std::make_pair(mapIconID, mapIcon));
 	return static_cast<cell>(mapIconID);

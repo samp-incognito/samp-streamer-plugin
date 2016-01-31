@@ -25,6 +25,7 @@
 #include "common.h"
 #include "item.h"
 #include "player.h"
+#include "utility.h"
 
 #include <boost/tuple/tuple.hpp>
 #include <boost/unordered_set.hpp>
@@ -88,9 +89,15 @@ private:
 	std::vector<int> objectMoveCallbacks;
 
 	template<std::size_t N, typename T>
-	inline bool checkPlayer(const std::bitset<N> &a, const T &b, const boost::unordered_set<T> &c, const T &d, const boost::unordered_set<T> &e, const T &f)
+	inline bool doesPlayerSatisfyConditions(const std::bitset<N> &a, const T &b, const boost::unordered_set<T> &c, const T &d, const boost::unordered_set<T> &e, const T &f)
 	{
 		return (a[b] && (c.empty() || c.find(d) != c.end()) && (e.empty() || e.find(f) != e.end()));
+	}
+
+	template<std::size_t N, typename T>
+	inline bool doesPlayerSatisfyConditions(const std::bitset<N> &a, const T &b, const boost::unordered_set<T> &c, const T &d, const boost::unordered_set<T> &e, const T &f, const boost::unordered_set<T> &g, const boost::unordered_set<T> &h)
+	{
+		return (a[b] && (c.empty() || c.find(d) != c.end()) && (e.empty() || e.find(f) != e.end()) && (g.empty() || Utility::isContainerWithinContainer(g, h)));
 	}
 
 	template<class Iterator, class Container>

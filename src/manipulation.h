@@ -24,6 +24,7 @@ namespace Manipulation
 {
 	enum
 	{
+		AreaID,
 		AttachedObject,
 		AttachedPlayer,
 		AttachedVehicle,
@@ -91,13 +92,17 @@ namespace Manipulation
 	int removeArrayData(AMX *amx, cell *params);
 
 	template <typename T>
-	int getArrayDataForItem(T &container, AMX *amx, int id, int type, cell output, cell size, int &error)
+	int getArrayDataForItem(T &container, AMX *amx, int id, int data, cell output, cell size, int &error)
 	{
 		typename T::iterator i = container.find(id);
 		if (i != container.end())
 		{
-			switch (type)
+			switch (data)
 			{
+				case AreaID:
+				{
+					return Utility::convertContainerToArray(amx, output, size, i->second->areas) != 0;
+				}
 				case ExtraID:
 				{
 					return Utility::convertContainerToArray(amx, output, size, i->second->extras) != 0;
@@ -129,13 +134,17 @@ namespace Manipulation
 	}
 
 	template <typename T>
-	int setArrayDataForItem(T &container, AMX *amx, int id, int type, cell input, cell size, int &error)
+	int setArrayDataForItem(T &container, AMX *amx, int id, int data, cell input, cell size, int &error)
 	{
 		typename T::iterator i = container.find(id);
 		if (i != container.end())
 		{
-			switch (type)
+			switch (data)
 			{
+				case AreaID:
+				{
+					return Utility::convertArrayToContainer(amx, input, size, i->second->areas) != 0;
+				}
 				case ExtraID:
 				{
 					return Utility::convertArrayToContainer(amx, input, size, i->second->extras) != 0;
@@ -164,13 +173,17 @@ namespace Manipulation
 	}
 
 	template <typename T>
-	int isInArrayDataForItem(T &container, int id, int type, int value, int &error)
+	int isInArrayDataForItem(T &container, int id, int data, int value, int &error)
 	{
 		typename T::iterator i = container.find(id);
 		if (i != container.end())
 		{
-			switch (type)
+			switch (data)
 			{
+				case AreaID:
+				{
+					return Utility::isInContainer(i->second->areas, value) != 0;
+				}
 				case ExtraID:
 				{
 					return Utility::isInContainer(i->second->extras, value) != 0;
@@ -202,13 +215,17 @@ namespace Manipulation
 	}
 
 	template <typename T>
-	int appendArrayDataForItem(T &container, int id, int type, int value, int &error)
+	int appendArrayDataForItem(T &container, int id, int data, int value, int &error)
 	{
 		typename T::iterator i = container.find(id);
 		if (i != container.end())
 		{
-			switch (type)
+			switch (data)
 			{
+				case AreaID:
+				{
+					return Utility::addToContainer(i->second->areas, value) != 0;
+				}
 				case ExtraID:
 				{
 					return Utility::addToContainer(i->second->extras, value) != 0;
@@ -240,13 +257,17 @@ namespace Manipulation
 	}
 
 	template <typename T>
-	int removeArrayDataForItem(T &container, int id, int type, int value, int &error)
+	int removeArrayDataForItem(T &container, int id, int data, int value, int &error)
 	{
 		typename T::iterator i = container.find(id);
 		if (i != container.end())
 		{
-			switch (type)
+			switch (data)
 			{
+				case AreaID:
+				{
+					return Utility::removeFromContainer(i->second->areas, value) != 0;
+				}
 				case ExtraID:
 				{
 					return Utility::removeFromContainer(i->second->extras, value) != 0;

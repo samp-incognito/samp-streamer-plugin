@@ -31,7 +31,7 @@
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicCP(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(8, "CreateDynamicCP");
+	CHECK_PARAMS(9, "CreateDynamicCP");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_CP) == core->getData()->checkpoints.size())
 	{
 		return 0;
@@ -47,6 +47,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCP(AMX *amx, cell *params)
 	Utility::addToContainer(checkpoint->interiors, static_cast<int>(params[6]));
 	Utility::addToContainer(checkpoint->players, static_cast<int>(params[7]));
 	checkpoint->streamDistance = amx_ctof(params[8]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[8]) : amx_ctof(params[8]) * amx_ctof(params[8]);
+	Utility::addToContainer(checkpoint->areas, static_cast<int>(params[9]));
 	core->getGrid()->addCheckpoint(checkpoint);
 	core->getData()->checkpoints.insert(std::make_pair(checkpointID, checkpoint));
 	return static_cast<cell>(checkpointID);

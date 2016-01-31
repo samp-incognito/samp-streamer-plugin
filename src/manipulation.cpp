@@ -1672,6 +1672,10 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 			{
 				switch (static_cast<int>(params[3]))
 				{
+					case AreaID:
+					{
+						return Utility::getFirstValueInContainer(o->second->areas);
+					}
 					case AttachedObject:
 					{
 						if (o->second->attach)
@@ -1747,6 +1751,10 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 			{
 				switch (static_cast<int>(params[3]))
 				{
+					case AreaID:
+					{
+						return Utility::getFirstValueInContainer(p->second->areas);
+					}
 					case ExtraID:
 					{
 						return Utility::getFirstValueInContainer(p->second->extras);
@@ -1791,6 +1799,10 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 			{
 				switch (static_cast<int>(params[3]))
 				{
+					case AreaID:
+					{
+						return Utility::getFirstValueInContainer(c->second->areas);
+					}
 					case ExtraID:
 					{
 						return Utility::getFirstValueInContainer(c->second->extras);
@@ -1827,6 +1839,10 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 			{
 				switch (static_cast<int>(params[3]))
 				{
+					case AreaID:
+					{
+						return Utility::getFirstValueInContainer(r->second->areas);
+					}
 					case ExtraID:
 					{
 						return Utility::getFirstValueInContainer(r->second->extras);
@@ -1867,6 +1883,10 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 			{
 				switch (static_cast<int>(params[3]))
 				{
+					case AreaID:
+					{
+						return Utility::getFirstValueInContainer(m->second->areas);
+					}
 					case Color:
 					{
 						return m->second->color;
@@ -1915,6 +1935,10 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 			{
 				switch (static_cast<int>(params[3]))
 				{
+					case AreaID:
+					{
+						return Utility::getFirstValueInContainer(t->second->areas);
+					}
 					case AttachedPlayer:
 					{
 						if (t->second->attach)
@@ -2072,6 +2096,10 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 			{
 				switch (static_cast<int>(params[3]))
 				{
+					case AreaID:
+					{
+						return Utility::setFirstValueInContainer(o->second->areas, static_cast<int>(params[4])) != 0;
+					}
 					case AttachedObject:
 					{
 						if (static_cast<int>(params[4]) != INVALID_STREAMER_ID)
@@ -2295,6 +2323,10 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 			{
 				switch (static_cast<int>(params[3]))
 				{
+					case AreaID:
+					{
+						return Utility::setFirstValueInContainer(p->second->areas, static_cast<int>(params[4])) != 0;
+					}
 					case ExtraID:
 					{
 						return Utility::setFirstValueInContainer(p->second->extras, static_cast<int>(params[4])) != 0;
@@ -2353,6 +2385,10 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 			{
 				switch (static_cast<int>(params[3]))
 				{
+					case AreaID:
+					{
+						return Utility::setFirstValueInContainer(c->second->areas, static_cast<int>(params[4])) != 0;
+					}
 					case ExtraID:
 					{
 						return Utility::setFirstValueInContainer(c->second->extras, static_cast<int>(params[4])) != 0;
@@ -2391,6 +2427,10 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 			{
 				switch (static_cast<int>(params[3]))
 				{
+					case AreaID:
+					{
+						return Utility::setFirstValueInContainer(r->second->areas, static_cast<int>(params[4])) != 0;
+					}
 					case ExtraID:
 					{
 						return Utility::setFirstValueInContainer(r->second->extras, static_cast<int>(params[4])) != 0;
@@ -2445,6 +2485,10 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 			{
 				switch (static_cast<int>(params[3]))
 				{
+					case AreaID:
+					{
+						return Utility::setFirstValueInContainer(m->second->areas, static_cast<int>(params[4])) != 0;
+					}
 					case Color:
 					{
 						m->second->color = static_cast<int>(params[4]);
@@ -2512,6 +2556,10 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 			{
 				switch (static_cast<int>(params[3]))
 				{
+					case AreaID:
+					{
+						return Utility::setFirstValueInContainer(t->second->areas, static_cast<int>(params[4])) != 0;
+					}
 					case AttachedPlayer:
 					{
 						if (static_cast<int>(params[4]) != INVALID_GENERIC_ID)
@@ -2780,12 +2828,19 @@ int Manipulation::getArrayData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_AREA:
 		{
-			result = getArrayDataForItem(core->getData()->areas, amx, static_cast<int>(params[2]), static_cast<int>(params[3]), params[4], params[5], error);
-			break;
-		}
-		default:
-		{
-			error = InvalidType;
+			switch (static_cast<int>(params[3]))
+			{
+				case AreaID:
+				{
+					error = InvalidData;
+					break;
+				}
+				default:
+				{
+					result = getArrayDataForItem(core->getData()->areas, amx, static_cast<int>(params[2]), static_cast<int>(params[3]), params[4], params[5], error);
+					break;
+				}
+			}
 			break;
 		}
 	}
@@ -2851,7 +2906,19 @@ int Manipulation::setArrayData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_AREA:
 		{
-			result = setArrayDataForItem(core->getData()->areas, amx, static_cast<int>(params[2]), static_cast<int>(params[3]), params[4], params[5], error);
+			switch (static_cast<int>(params[3]))
+			{
+				case AreaID:
+				{
+					error = InvalidData;
+					break;
+				}
+				default:
+				{
+					result = setArrayDataForItem(core->getData()->areas, amx, static_cast<int>(params[2]), static_cast<int>(params[3]), params[4], params[5], error);
+					break;
+				}
+			}
 			break;
 		}
 		default:
@@ -2922,7 +2989,19 @@ int Manipulation::isInArrayData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_AREA:
 		{
-			result = isInArrayDataForItem(core->getData()->areas, static_cast<int>(params[2]), static_cast<int>(params[3]), static_cast<int>(params[4]), error);
+			switch (static_cast<int>(params[3]))
+			{
+				case AreaID:
+				{
+					error = InvalidData;
+					break;
+				}
+				default:
+				{
+					result = isInArrayDataForItem(core->getData()->areas, static_cast<int>(params[2]), static_cast<int>(params[3]), static_cast<int>(params[4]), error);
+					break;
+				}
+			}
 			break;
 		}
 		default:
@@ -2993,7 +3072,19 @@ int Manipulation::appendArrayData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_AREA:
 		{
-			result = appendArrayDataForItem(core->getData()->areas, static_cast<int>(params[2]), static_cast<int>(params[3]), static_cast<int>(params[4]), error);
+			switch (static_cast<int>(params[3]))
+			{
+				case AreaID:
+				{
+					error = InvalidData;
+					break;
+				}
+				default:
+				{
+					result = appendArrayDataForItem(core->getData()->areas, static_cast<int>(params[2]), static_cast<int>(params[3]), static_cast<int>(params[4]), error);
+					break;
+				}
+			}
 			break;
 		}
 		default:
@@ -3064,7 +3155,19 @@ int Manipulation::removeArrayData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_AREA:
 		{
-			result = removeArrayDataForItem(core->getData()->areas, static_cast<int>(params[2]), static_cast<int>(params[3]), static_cast<int>(params[4]), error);
+			switch (static_cast<int>(params[3]))
+			{
+				case AreaID:
+				{
+					error = InvalidData;
+					break;
+				}
+				default:
+				{
+					result = removeArrayDataForItem(core->getData()->areas, static_cast<int>(params[2]), static_cast<int>(params[3]), static_cast<int>(params[4]), error);
+					break;
+				}
+			}
 			break;
 		}
 		default:
