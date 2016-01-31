@@ -58,6 +58,8 @@ AMX_NATIVE_INFO natives[] =
 	{ "Streamer_SetVisibleItems", Natives::Streamer_SetVisibleItems },
 	{ "Streamer_GetRadiusMultiplier", Natives::Streamer_GetRadiusMultiplier },
 	{ "Streamer_SetRadiusMultiplier", Natives::Streamer_SetRadiusMultiplier },
+	{ "Streamer_GetTypePriority", Natives::Streamer_GetTypePriority },
+	{ "Streamer_SetTypePriority", Natives::Streamer_SetTypePriority },
 	{ "Streamer_GetCellDistance", Natives::Streamer_GetCellDistance },
 	{ "Streamer_SetCellDistance", Natives::Streamer_SetCellDistance },
 	{ "Streamer_GetCellSize", Natives::Streamer_GetCellSize },

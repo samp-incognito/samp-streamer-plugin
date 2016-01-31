@@ -49,6 +49,8 @@ namespace Natives
 	cell AMX_NATIVE_CALL Streamer_SetVisibleItems(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_GetRadiusMultiplier(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_SetRadiusMultiplier(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_GetTypePriority(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_SetTypePriority(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_GetCellDistance(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_SetCellDistance(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_GetCellSize(AMX *amx, cell *params);

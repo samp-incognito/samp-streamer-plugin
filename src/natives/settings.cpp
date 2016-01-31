@@ -76,6 +76,19 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetRadiusMultiplier(AMX *amx, cell *param
 	return static_cast<cell>(Utility::setRadiusMultiplier(static_cast<int>(params[1]), amx_ctof(params[2]), static_cast<int>(params[3])) != 0);
 }
 
+
+cell AMX_NATIVE_CALL Natives::Streamer_GetTypePriority(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "Streamer_GetTypePriority");
+	return Utility::convertContainerToArray(amx, params[1], params[2], core->getData()->typePriority);
+}
+
+cell AMX_NATIVE_CALL Natives::Streamer_SetTypePriority(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "Streamer_SetTypePriority");
+	return Utility::convertArrayToContainer(amx, params[1], params[2], core->getData()->typePriority);
+}
+
 cell AMX_NATIVE_CALL Natives::Streamer_GetCellDistance(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "Streamer_GetCellDistance");

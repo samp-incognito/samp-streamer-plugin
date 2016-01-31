@@ -39,6 +39,20 @@ Data::Data()
 	globalRadiusMultipliers[STREAMER_TYPE_MAP_ICON] = 1.0f;
 	globalRadiusMultipliers[STREAMER_TYPE_3D_TEXT_LABEL] = 1.0f;
 	globalRadiusMultipliers[STREAMER_TYPE_AREA] = 1.0f;
+	static const int defaultTypePriority[] =
+	{
+		STREAMER_TYPE_AREA,
+		STREAMER_TYPE_OBJECT,
+		STREAMER_TYPE_CP,
+		STREAMER_TYPE_RACE_CP,
+		STREAMER_TYPE_MAP_ICON,
+		STREAMER_TYPE_3D_TEXT_LABEL,
+		STREAMER_TYPE_PICKUP
+	};
+	for (std::size_t i = 0; i < sizeof(defaultTypePriority) / sizeof(const int); ++i)
+	{
+		typePriority.push_back(defaultTypePriority[i]);
+	}
 }
 
 std::size_t Data::getGlobalMaxItems(int type)

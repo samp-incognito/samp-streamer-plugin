@@ -54,6 +54,8 @@ public:
 	boost::unordered_map<int, Item::SharedTextLabel> textLabels;
 
 	boost::unordered_map<int, Player> players;
+
+	std::vector<int> typePriority;
 private:
 	std::size_t globalMaxItems[STREAMER_MAX_TYPES];
 	std::size_t globalMaxVisibleItems[STREAMER_MAX_TYPES];
