@@ -406,7 +406,7 @@ cell AMX_NATIVE_CALL Natives::GetPlayerDynamicAreas(AMX *amx, cell *params)
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
-		std::map<float, int> orderedAreas;
+		std::multimap<float, int> orderedAreas;
 		for (boost::unordered_set<int>::iterator i = p->second.internalAreas.begin(); i != p->second.internalAreas.end(); ++i)
 		{
 			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(*i);
@@ -488,7 +488,7 @@ cell AMX_NATIVE_CALL Natives::GetPlayerNumberDynamicAreas(AMX *amx, cell *params
 cell AMX_NATIVE_CALL Natives::GetDynamicAreasForPoint(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(5, "GetDynamicAreasForPoint");
-	std::map<float, int> orderedAreas;
+	std::multimap<float, int> orderedAreas;
 	std::vector<SharedCell> pointCells;
 	core->getGrid()->findMinimalCellsForPoint(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), pointCells);
 	for (std::vector<SharedCell>::const_iterator p = pointCells.begin(); p != pointCells.end(); ++p)
