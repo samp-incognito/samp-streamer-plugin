@@ -268,41 +268,53 @@ void Streamer::executeCallbacks()
 {
 	for (std::vector<boost::tuple<int, int> >::const_iterator c = areaLeaveCallbacks.begin(); c != areaLeaveCallbacks.end(); ++c)
 	{
-		for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
+		boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(c->get<0>());
+		if (a != core->getData()->areas.end())
 		{
-			int amxIndex = 0;
-			if (!amx_FindPublic(*a, "OnPlayerLeaveDynamicArea", &amxIndex))
+			for (std::set<AMX*>::iterator i = core->getData()->interfaces.begin(); i != core->getData()->interfaces.end(); ++i)
 			{
-				amx_Push(*a, static_cast<cell>(c->get<0>()));
-				amx_Push(*a, static_cast<cell>(c->get<1>()));
-				amx_Exec(*a, NULL, amxIndex);
+				int amxIndex = 0;
+				if (!amx_FindPublic(*i, "OnPlayerLeaveDynamicArea", &amxIndex))
+				{
+					amx_Push(*i, static_cast<cell>(c->get<0>()));
+					amx_Push(*i, static_cast<cell>(c->get<1>()));
+					amx_Exec(*i, NULL, amxIndex);
+				}
 			}
 		}
 	}
 	areaLeaveCallbacks.clear();
 	for (std::vector<boost::tuple<int, int> >::const_iterator c = areaEnterCallbacks.begin(); c != areaEnterCallbacks.end(); ++c)
 	{
-		for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
+		boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(c->get<0>());
+		if (a != core->getData()->areas.end())
 		{
-			int amxIndex = 0;
-			if (!amx_FindPublic(*a, "OnPlayerEnterDynamicArea", &amxIndex))
+			for (std::set<AMX*>::iterator i = core->getData()->interfaces.begin(); i != core->getData()->interfaces.end(); ++i)
 			{
-				amx_Push(*a, static_cast<cell>(c->get<0>()));
-				amx_Push(*a, static_cast<cell>(c->get<1>()));
-				amx_Exec(*a, NULL, amxIndex);
+				int amxIndex = 0;
+				if (!amx_FindPublic(*i, "OnPlayerEnterDynamicArea", &amxIndex))
+				{
+					amx_Push(*i, static_cast<cell>(c->get<0>()));
+					amx_Push(*i, static_cast<cell>(c->get<1>()));
+					amx_Exec(*i, NULL, amxIndex);
+				}
 			}
 		}
 	}
 	areaEnterCallbacks.clear();
 	for (std::vector<int>::const_iterator c = objectMoveCallbacks.begin(); c != objectMoveCallbacks.end(); ++c)
 	{
-		for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
+		boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(*c);
+		if (o != core->getData()->objects.end())
 		{
-			int amxIndex = 0;
-			if (!amx_FindPublic(*a, "OnDynamicObjectMoved", &amxIndex))
+			for (std::set<AMX*>::iterator i = core->getData()->interfaces.begin(); i != core->getData()->interfaces.end(); ++i)
 			{
-				amx_Push(*a, static_cast<cell>(*c));
-				amx_Exec(*a, NULL, amxIndex);
+				int amxIndex = 0;
+				if (!amx_FindPublic(*i, "OnDynamicObjectMoved", &amxIndex))
+				{
+					amx_Push(*i, static_cast<cell>(*c));
+					amx_Exec(*i, NULL, amxIndex);
+				}
 			}
 		}
 	}
