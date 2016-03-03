@@ -1,13 +1,24 @@
 SA-MP Streamer Plugin
 =====================
 
+v2.8
+----
+
+- Added ability to stream items only in specified areas by
+  using an "areaid" parameter in the item creation natives
+- Added Streamer_(Get/Set)TypePriority
+- Reduced number of RPCs used when streaming objects
+- Fixed bug with OnPlayer(Enter/Leave)DynamicArea and
+  OnDynamicObjectMoved
+- Fixed bug with GetPlayerDynamicAreas/GetDynamicAreasForPoint
+
 v2.7.9
 ------
 
 - Added offsets to attached area natives
 - Made OnPlayerShootDynamicObject handle return values
 - Made GetDynamicPolygonPoints, GetPlayerDynamicAreas, and
-GetDynamicAreasForPoint return the size of the array
+  GetDynamicAreasForPoint return the size of the array
 - Fixed several bugs
 
 v2.7.8
