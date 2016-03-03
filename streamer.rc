@@ -2,7 +2,7 @@
 
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 1 VERSIONINFO
-	FILEVERSION 2,7,9,0
+	FILEVERSION 2,8,0,0
 {
 	BLOCK "StringFileInfo"
 	{
@@ -12,7 +12,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 			VALUE "LegalCopyright", "Copyright © 2016 Incognito"
 			VALUE "OriginalFilename", "streamer.dll"
 			VALUE "ProductName", "SA-MP Streamer Plugin"
-			VALUE "ProductVersion", "v2.7.9"
+			VALUE "ProductVersion", "v2.8"
 		}
 	}
 	BLOCK "VarFileInfo"
