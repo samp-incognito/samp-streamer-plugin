@@ -114,9 +114,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_Update(AMX *amx, cell *params)
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
-		p->second.interiorID = GetPlayerInterior(p->first);
-		p->second.worldID = GetPlayerVirtualWorld(p->first);
-		GetPlayerPos(p->first, &p->second.position[0], &p->second.position[1], &p->second.position[2]);
+		p->second.interiorID = sampgdk::GetPlayerInterior(p->first);
+		p->second.worldID = sampgdk::GetPlayerVirtualWorld(p->first);
+		sampgdk::GetPlayerPos(p->first, &p->second.position[0], &p->second.position[1], &p->second.position[2]);
 		core->getStreamer()->startManualUpdate(p->second, static_cast<int>(params[2]));
 		return 1;
 	}
@@ -136,7 +136,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_UpdateEx(AMX *amx, cell *params)
 		}
 		else
 		{
-			p->second.worldID = GetPlayerVirtualWorld(p->first);
+			p->second.worldID = sampgdk::GetPlayerVirtualWorld(p->first);
 		}
 		if (static_cast<int>(params[6]) >= 0)
 		{
@@ -144,7 +144,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_UpdateEx(AMX *amx, cell *params)
 		}
 		else
 		{
-			p->second.interiorID = GetPlayerInterior(p->first);
+			p->second.interiorID = sampgdk::GetPlayerInterior(p->first);
 		}
 		core->getStreamer()->startManualUpdate(p->second, static_cast<int>(params[7]));
 		return 1;

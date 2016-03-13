@@ -698,7 +698,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 			boost::unordered_map<int, Item::SharedPickup>::iterator q = core->getData()->pickups.find(p->first);
 			if (serverWide || (q != core->getData()->pickups.end() && q->second->amx == amx))
 			{
-				DestroyPickup(p->second);
+				sampgdk::DestroyPickup(p->second);
 				p = core->getData()->internalPickups.erase(p);
 			}
 			else
@@ -721,7 +721,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 					boost::unordered_map<int, Item::SharedObject>::iterator q = core->getData()->objects.find(o->first);
 					if (serverWide || (q != core->getData()->objects.end() && q->second->amx == amx))
 					{
-						DestroyPlayerObject(p->first, o->second);
+						sampgdk::DestroyPlayerObject(p->first, o->second);
 						o = p->second.internalObjects.erase(o);
 					}
 					else
@@ -738,7 +738,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 					boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(p->second.visibleCheckpoint);
 					if (serverWide || (c != core->getData()->checkpoints.end() && c->second->amx == amx))
 					{
-						DisablePlayerCheckpoint(p->first);
+						sampgdk::DisablePlayerCheckpoint(p->first);
 						p->second.activeCheckpoint = 0;
 						p->second.visibleCheckpoint = 0;
 						return 1;
@@ -753,7 +753,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 					boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(p->second.visibleRaceCheckpoint);
 					if (serverWide || (r != core->getData()->raceCheckpoints.end() && r->second->amx == amx))
 					{
-						DisablePlayerRaceCheckpoint(p->first);
+						sampgdk::DisablePlayerRaceCheckpoint(p->first);
 						p->second.activeRaceCheckpoint = 0;
 						p->second.visibleRaceCheckpoint = 0;
 						return 1;
@@ -769,7 +769,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 					boost::unordered_map<int, Item::SharedMapIcon>::iterator n = core->getData()->mapIcons.find(m->first);
 					if (serverWide || (n != core->getData()->mapIcons.end() && n->second->amx == amx))
 					{
-						RemovePlayerMapIcon(p->first, m->second);
+						sampgdk::RemovePlayerMapIcon(p->first, m->second);
 						m = p->second.internalMapIcons.erase(m);
 					}
 					else
@@ -787,7 +787,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 					boost::unordered_map<int, Item::SharedTextLabel>::iterator u = core->getData()->textLabels.find(t->first);
 					if (serverWide || (u != core->getData()->textLabels.end() && u->second->amx == amx))
 					{
-						DeletePlayer3DTextLabel(p->first, t->second);
+						sampgdk::DeletePlayer3DTextLabel(p->first, t->second);
 						t = p->second.internalTextLabels.erase(t);
 					}
 					else

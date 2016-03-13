@@ -108,25 +108,25 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 	bool update = true;
 	if (automatic)
 	{
-		player.interiorID = GetPlayerInterior(player.playerID);
-		player.worldID = GetPlayerVirtualWorld(player.playerID);
+		player.interiorID = sampgdk::GetPlayerInterior(player.playerID);
+		player.worldID = sampgdk::GetPlayerVirtualWorld(player.playerID);
 		if (!player.updateUsingCameraPosition)
 		{
-			int state = GetPlayerState(player.playerID);
+			int state = sampgdk::GetPlayerState(player.playerID);
 			if ((state != PLAYER_STATE_NONE && state != PLAYER_STATE_WASTED) || (state == PLAYER_STATE_SPECTATING && !player.requestingClass))
 			{
-				GetPlayerPos(player.playerID, &player.position[0], &player.position[1], &player.position[2]);
+				sampgdk::GetPlayerPos(player.playerID, &player.position[0], &player.position[1], &player.position[2]);
 				if (player.position != position)
 				{
 					position = player.position;
 					Eigen::Vector3f velocity = Eigen::Vector3f::Zero();
 					if (state == PLAYER_STATE_ONFOOT)
 					{
-						GetPlayerVelocity(player.playerID, &velocity[0], &velocity[1], &velocity[2]);
+						sampgdk::GetPlayerVelocity(player.playerID, &velocity[0], &velocity[1], &velocity[2]);
 					}
 					else if (state == PLAYER_STATE_DRIVER || state == PLAYER_STATE_PASSENGER)
 					{
-						GetVehicleVelocity(GetPlayerVehicleID(player.playerID), &velocity[0], &velocity[1], &velocity[2]);
+						sampgdk::GetVehicleVelocity(sampgdk::GetPlayerVehicleID(player.playerID), &velocity[0], &velocity[1], &velocity[2]);
 					}
 					float velocityNorm = velocity.squaredNorm();
 					if (velocityNorm > velocityBoundaries.get<0>() && velocityNorm < velocityBoundaries.get<1>())
@@ -146,14 +146,14 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 		}
 		else
 		{
-			GetPlayerCameraPos(player.playerID, &player.position[0], &player.position[1], &player.position[2]);
+			sampgdk::GetPlayerCameraPos(player.playerID, &player.position[0], &player.position[1], &player.position[2]);
 		}
 		if (player.delayedCheckpoint)
 		{
 			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(player.delayedCheckpoint);
 			if (c != core->getData()->checkpoints.end())
 			{
-				SetPlayerCheckpoint(player.playerID, c->second->position[0], c->second->position[1], c->second->position[2], c->second->size);
+				sampgdk::SetPlayerCheckpoint(player.playerID, c->second->position[0], c->second->position[1], c->second->position[2], c->second->size);
 				player.visibleCheckpoint = c->first;
 			}
 			player.delayedCheckpoint = 0;
@@ -163,7 +163,7 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(player.delayedRaceCheckpoint);
 			if (r != core->getData()->raceCheckpoints.end())
 			{
-				SetPlayerRaceCheckpoint(player.playerID, r->second->type, r->second->position[0], r->second->position[1], r->second->position[2], r->second->next[0], r->second->next[1], r->second->next[2], r->second->size);
+				sampgdk::SetPlayerRaceCheckpoint(player.playerID, r->second->type, r->second->position[0], r->second->position[1], r->second->position[2], r->second->next[0], r->second->next[1], r->second->next[2], r->second->size);
 				player.visibleRaceCheckpoint = r->first;
 			}
 			player.delayedRaceCheckpoint = 0;
@@ -193,7 +193,7 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 			{
 				case STREAMER_TYPE_OBJECT:
 				{
-					if (update && !core->getData()->objects.empty() && player.enabledItems[STREAMER_TYPE_OBJECT] && !IsPlayerNPC(player.playerID))
+					if (update && !core->getData()->objects.empty() && player.enabledItems[STREAMER_TYPE_OBJECT] && !sampgdk::IsPlayerNPC(player.playerID))
 					{
 						processObjects(player, cells);
 					}
@@ -225,7 +225,7 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 				}
 				case STREAMER_TYPE_MAP_ICON:
 				{
-					if (update && !core->getData()->mapIcons.empty() && player.enabledItems[STREAMER_TYPE_MAP_ICON] && !IsPlayerNPC(player.playerID))
+					if (update && !core->getData()->mapIcons.empty() && player.enabledItems[STREAMER_TYPE_MAP_ICON] && !sampgdk::IsPlayerNPC(player.playerID))
 					{
 						processMapIcons(player, cells);
 					}
@@ -233,7 +233,7 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 				}
 				case STREAMER_TYPE_3D_TEXT_LABEL:
 				{
-					if (update && !core->getData()->textLabels.empty() && player.enabledItems[STREAMER_TYPE_3D_TEXT_LABEL] && !IsPlayerNPC(player.playerID))
+					if (update && !core->getData()->textLabels.empty() && player.enabledItems[STREAMER_TYPE_3D_TEXT_LABEL] && !sampgdk::IsPlayerNPC(player.playerID))
 					{
 						processTextLabels(player, cells);
 					}
@@ -392,7 +392,7 @@ void Streamer::processCheckpoints(Player &player, const std::vector<SharedCell> 
 			{
 				if (d->first == player.visibleCheckpoint)
 				{
-					DisablePlayerCheckpoint(player.playerID);
+					sampgdk::DisablePlayerCheckpoint(player.playerID);
 					player.activeCheckpoint = 0;
 					player.visibleCheckpoint = 0;
 				}
@@ -406,7 +406,7 @@ void Streamer::processCheckpoints(Player &player, const std::vector<SharedCell> 
 		{
 			if (player.visibleCheckpoint)
 			{
-				DisablePlayerCheckpoint(player.playerID);
+				sampgdk::DisablePlayerCheckpoint(player.playerID);
 				player.activeCheckpoint = 0;
 			}
 			player.delayedCheckpoint = d->second->checkpointID;
@@ -457,7 +457,7 @@ void Streamer::processMapIcons(Player &player, const std::vector<SharedCell> &ce
 			{
 				if (i != player.internalMapIcons.end())
 				{
-					RemovePlayerMapIcon(player.playerID, i->second);
+					sampgdk::RemovePlayerMapIcon(player.playerID, i->second);
 					player.mapIconIdentifier.remove(i->second, player.internalMapIcons.size());
 					player.internalMapIcons.quick_erase(i);
 				}
@@ -476,7 +476,7 @@ void Streamer::processMapIcons(Player &player, const std::vector<SharedCell> &ce
 					boost::unordered_map<int, int>::iterator i = player.internalMapIcons.find(e->second->mapIconID);
 					if (i != player.internalMapIcons.end())
 					{
-						RemovePlayerMapIcon(player.playerID, i->second);
+						sampgdk::RemovePlayerMapIcon(player.playerID, i->second);
 						player.mapIconIdentifier.remove(i->second, player.internalMapIcons.size());
 						player.internalMapIcons.quick_erase(i);
 					}
@@ -493,7 +493,7 @@ void Streamer::processMapIcons(Player &player, const std::vector<SharedCell> &ce
 			}
 		}
 		int internalID = player.mapIconIdentifier.get();
-		SetPlayerMapIcon(player.playerID, internalID, d->second->position[0], d->second->position[1], d->second->position[2], d->second->type, d->second->color, d->second->style);
+		sampgdk::SetPlayerMapIcon(player.playerID, internalID, d->second->position[0], d->second->position[1], d->second->position[2], d->second->type, d->second->color, d->second->style);
 		player.internalMapIcons.insert(std::make_pair(d->second->mapIconID, internalID));
 		if (d->second->cell)
 		{
@@ -548,7 +548,7 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 			{
 				if (i != player.internalObjects.end())
 				{
-					DestroyPlayerObject(player.playerID, i->second);
+					sampgdk::DestroyPlayerObject(player.playerID, i->second);
 					player.internalObjects.quick_erase(i);
 				}
 			}
@@ -566,7 +566,7 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 					boost::unordered_map<int, int>::iterator i = player.internalObjects.find(e->second->objectID);
 					if (i != player.internalObjects.end())
 					{
-						DestroyPlayerObject(player.playerID, i->second);
+						sampgdk::DestroyPlayerObject(player.playerID, i->second);
 						player.internalObjects.quick_erase(i);
 					}
 					if (e->second->cell)
@@ -582,7 +582,7 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 			player.currentVisibleObjects = player.internalObjects.size();
 			break;
 		}
-		int internalID = CreatePlayerObject(player.playerID, d->second->modelID, d->second->position[0], d->second->position[1], d->second->position[2], d->second->rotation[0], d->second->rotation[1], d->second->rotation[2], d->second->drawDistance);
+		int internalID = sampgdk::CreatePlayerObject(player.playerID, d->second->modelID, d->second->position[0], d->second->position[1], d->second->position[2], d->second->rotation[0], d->second->rotation[1], d->second->rotation[2], d->second->drawDistance);
 		if (internalID == INVALID_GENERIC_ID)
 		{
 			player.currentVisibleObjects = player.internalObjects.size();
@@ -612,27 +612,27 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 			}
 			else if (d->second->attach->vehicle != INVALID_GENERIC_ID)
 			{
-				AttachPlayerObjectToVehicle(player.playerID, internalID, d->second->attach->vehicle, d->second->attach->offset[0], d->second->attach->offset[1], d->second->attach->offset[2], d->second->attach->rotation[0], d->second->attach->rotation[1], d->second->attach->rotation[2]);
+				sampgdk::AttachPlayerObjectToVehicle(player.playerID, internalID, d->second->attach->vehicle, d->second->attach->offset[0], d->second->attach->offset[1], d->second->attach->offset[2], d->second->attach->rotation[0], d->second->attach->rotation[1], d->second->attach->rotation[2]);
 			}
 		}
 		else if (d->second->move)
 		{
-			MovePlayerObject(player.playerID, internalID, d->second->move->position.get<0>()[0], d->second->move->position.get<0>()[1], d->second->move->position.get<0>()[2], d->second->move->speed, d->second->move->rotation.get<0>()[0], d->second->move->rotation.get<0>()[1], d->second->move->rotation.get<0>()[2]);
+			sampgdk::MovePlayerObject(player.playerID, internalID, d->second->move->position.get<0>()[0], d->second->move->position.get<0>()[1], d->second->move->position.get<0>()[2], d->second->move->speed, d->second->move->rotation.get<0>()[0], d->second->move->rotation.get<0>()[1], d->second->move->rotation.get<0>()[2]);
 		}
 		for (boost::unordered_map<int, Item::Object::Material>::iterator m = d->second->materials.begin(); m != d->second->materials.end(); ++m)
 		{
 			if (m->second.main)
 			{
-				SetPlayerObjectMaterial(player.playerID, internalID, m->first, m->second.main->modelID, m->second.main->txdFileName.c_str(), m->second.main->textureName.c_str(), m->second.main->materialColor);
+				sampgdk::SetPlayerObjectMaterial(player.playerID, internalID, m->first, m->second.main->modelID, m->second.main->txdFileName.c_str(), m->second.main->textureName.c_str(), m->second.main->materialColor);
 			}
 			else if (m->second.text)
 			{
-				SetPlayerObjectMaterialText(player.playerID, internalID, m->second.text->materialText.c_str(), m->first, m->second.text->materialSize, m->second.text->fontFace.c_str(), m->second.text->fontSize, m->second.text->bold, m->second.text->fontColor, m->second.text->backColor, m->second.text->textAlignment);
+				sampgdk::SetPlayerObjectMaterialText(player.playerID, internalID, m->second.text->materialText.c_str(), m->first, m->second.text->materialSize, m->second.text->fontFace.c_str(), m->second.text->fontSize, m->second.text->bold, m->second.text->fontColor, m->second.text->backColor, m->second.text->textAlignment);
 			}
 		}
 		if (d->second->noCameraCollision)
 		{
-			SetPlayerObjectNoCameraCol(player.playerID, internalID);
+			sampgdk::SetPlayerObjectNoCameraCol(player.playerID, internalID);
 		}
 		player.internalObjects.insert(std::make_pair(d->second->objectID, internalID));
 		if (d->second->cell)
@@ -678,7 +678,7 @@ void Streamer::processPickups(Player &player, const std::vector<SharedCell> &cel
 			boost::unordered_map<int, Item::SharedPickup>::iterator d = discoveredPickups.find(i->first);
 			if (d == discoveredPickups.end())
 			{
-				DestroyPickup(i->second);
+				sampgdk::DestroyPickup(i->second);
 				i = core->getData()->internalPickups.erase(i);
 			}
 			else
@@ -693,7 +693,7 @@ void Streamer::processPickups(Player &player, const std::vector<SharedCell> &cel
 			{
 				break;
 			}
-			int internalID = CreatePickup(d->second->modelID, d->second->type, d->second->position[0], d->second->position[1], d->second->position[2], d->second->worldID);
+			int internalID = sampgdk::CreatePickup(d->second->modelID, d->second->type, d->second->position[0], d->second->position[1], d->second->position[2], d->second->worldID);
 			if (internalID == INVALID_ALTERNATE_ID)
 			{
 				break;
@@ -735,7 +735,7 @@ void Streamer::processRaceCheckpoints(Player &player, const std::vector<SharedCe
 			{
 				if (r->first == player.visibleRaceCheckpoint)
 				{
-					DisablePlayerRaceCheckpoint(player.playerID);
+					sampgdk::DisablePlayerRaceCheckpoint(player.playerID);
 					player.activeRaceCheckpoint = 0;
 					player.visibleRaceCheckpoint = 0;
 				}
@@ -749,7 +749,7 @@ void Streamer::processRaceCheckpoints(Player &player, const std::vector<SharedCe
 		{
 			if (player.visibleRaceCheckpoint)
 			{
-				DisablePlayerRaceCheckpoint(player.playerID);
+				sampgdk::DisablePlayerRaceCheckpoint(player.playerID);
 				player.activeRaceCheckpoint = 0;
 			}
 			player.delayedRaceCheckpoint = d->second->raceCheckpointID;
@@ -807,7 +807,7 @@ void Streamer::processTextLabels(Player &player, const std::vector<SharedCell> &
 			{
 				if (i != player.internalTextLabels.end())
 				{
-					DeletePlayer3DTextLabel(player.playerID, i->second);
+					sampgdk::DeletePlayer3DTextLabel(player.playerID, i->second);
 					player.internalTextLabels.quick_erase(i);
 				}
 			}
@@ -825,7 +825,7 @@ void Streamer::processTextLabels(Player &player, const std::vector<SharedCell> &
 					boost::unordered_map<int, int>::iterator i = player.internalTextLabels.find(e->second->textLabelID);
 					if (i != player.internalTextLabels.end())
 					{
-						DeletePlayer3DTextLabel(player.playerID, i->second);
+						sampgdk::DeletePlayer3DTextLabel(player.playerID, i->second);
 						player.internalTextLabels.quick_erase(i);
 					}
 					if (e->second->cell)
@@ -841,7 +841,7 @@ void Streamer::processTextLabels(Player &player, const std::vector<SharedCell> &
 			player.currentVisibleTextLabels = player.internalTextLabels.size();
 			break;
 		}
-		int internalID = CreatePlayer3DTextLabel(player.playerID, d->second->text.c_str(), d->second->color, d->second->position[0], d->second->position[1], d->second->position[2], d->second->drawDistance, d->second->attach ? d->second->attach->player : INVALID_GENERIC_ID, d->second->attach ? d->second->attach->vehicle : INVALID_GENERIC_ID, d->second->testLOS);
+		int internalID = sampgdk::CreatePlayer3DTextLabel(player.playerID, d->second->text.c_str(), d->second->color, d->second->position[0], d->second->position[1], d->second->position[2], d->second->drawDistance, d->second->attach ? d->second->attach->player : INVALID_GENERIC_ID, d->second->attach ? d->second->attach->vehicle : INVALID_GENERIC_ID, d->second->testLOS);
 		if (internalID == INVALID_GENERIC_ID)
 		{
 			player.currentVisibleTextLabels = player.internalTextLabels.size();
@@ -933,22 +933,22 @@ void Streamer::processAttachedAreas()
 				{
 					case STREAMER_OBJECT_TYPE_GLOBAL:
 					{
-						adjust = GetObjectPos((*a)->attach->object.get<0>(), &(*a)->attach->position[0], &(*a)->attach->position[1], &(*a)->attach->position[2]);
+						adjust = sampgdk::GetObjectPos((*a)->attach->object.get<0>(), &(*a)->attach->position[0], &(*a)->attach->position[1], &(*a)->attach->position[2]);
 						if (!(*a)->attach->offset.isZero())
 						{
 							Eigen::Vector3f rotation = Eigen::Vector3f::Zero();
-							GetObjectRot((*a)->attach->object.get<0>(), &rotation[0], &rotation[1], &rotation[2]);
+							sampgdk::GetObjectRot((*a)->attach->object.get<0>(), &rotation[0], &rotation[1], &rotation[2]);
 							Utility::projectPoint((*a)->attach->offset, rotation, (*a)->attach->position);
 						}
 						break;
 					}
 					case STREAMER_OBJECT_TYPE_PLAYER:
 					{
-						adjust = GetPlayerObjectPos((*a)->attach->object.get<2>(), (*a)->attach->object.get<0>(), &(*a)->attach->position[0], &(*a)->attach->position[1], &(*a)->attach->position[2]);
+						adjust = sampgdk::GetPlayerObjectPos((*a)->attach->object.get<2>(), (*a)->attach->object.get<0>(), &(*a)->attach->position[0], &(*a)->attach->position[1], &(*a)->attach->position[2]);
 						if (!(*a)->attach->offset.isZero())
 						{
 							Eigen::Vector3f rotation = Eigen::Vector3f::Zero();
-							GetPlayerObjectRot((*a)->attach->object.get<2>(), (*a)->attach->object.get<0>(), &rotation[0], &rotation[1], &rotation[2]);
+							sampgdk::GetPlayerObjectRot((*a)->attach->object.get<2>(), (*a)->attach->object.get<0>(), &rotation[0], &rotation[1], &rotation[2]);
 							Utility::projectPoint((*a)->attach->offset, rotation, (*a)->attach->position);
 						}
 						break;
@@ -971,25 +971,25 @@ void Streamer::processAttachedAreas()
 			}
 			else if ((*a)->attach->player != INVALID_GENERIC_ID)
 			{
-				adjust = GetPlayerPos((*a)->attach->player, &(*a)->attach->position[0], &(*a)->attach->position[1], &(*a)->attach->position[2]);
+				adjust = sampgdk::GetPlayerPos((*a)->attach->player, &(*a)->attach->position[0], &(*a)->attach->position[1], &(*a)->attach->position[2]);
 				if (!(*a)->attach->offset.isZero())
 				{
 					float heading = 0.0f;
-					GetPlayerFacingAngle((*a)->attach->player, &heading);
+					sampgdk::GetPlayerFacingAngle((*a)->attach->player, &heading);
 					Utility::projectPoint((*a)->attach->offset, heading, (*a)->attach->position);
 				}
 			}
 			else if ((*a)->attach->vehicle != INVALID_GENERIC_ID)
 			{
-				adjust = GetVehiclePos((*a)->attach->vehicle, &(*a)->attach->position[0], &(*a)->attach->position[1], &(*a)->attach->position[2]);
+				adjust = sampgdk::GetVehiclePos((*a)->attach->vehicle, &(*a)->attach->position[0], &(*a)->attach->position[1], &(*a)->attach->position[2]);
 				if (!(*a)->attach->offset.isZero())
 				{
 					bool occupied = false;
 					for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 					{
-						if (GetPlayerState(p->first) == PLAYER_STATE_DRIVER)
+						if (sampgdk::GetPlayerState(p->first) == PLAYER_STATE_DRIVER)
 						{
-							if (GetPlayerVehicleID(p->first) == (*a)->attach->vehicle)
+							if (sampgdk::GetPlayerVehicleID(p->first) == (*a)->attach->vehicle)
 							{
 								occupied = true;
 								break;
@@ -999,13 +999,13 @@ void Streamer::processAttachedAreas()
 					if (!occupied)
 					{
 						float heading = 0.0f;
-						GetVehicleZAngle((*a)->attach->vehicle, &heading);
+						sampgdk::GetVehicleZAngle((*a)->attach->vehicle, &heading);
 						Utility::projectPoint((*a)->attach->offset, heading, (*a)->attach->position);
 					}
 					else
 					{
 						Eigen::Vector4f quaternion = Eigen::Vector4f::Zero();
-						GetVehicleRotationQuat((*a)->attach->vehicle, &quaternion[0], &quaternion[1], &quaternion[2], &quaternion[3]);
+						sampgdk::GetVehicleRotationQuat((*a)->attach->vehicle, &quaternion[0], &quaternion[1], &quaternion[2], &quaternion[3]);
 						Utility::projectPoint((*a)->attach->offset, quaternion, (*a)->attach->position);
 					}
 				}
@@ -1043,11 +1043,11 @@ void Streamer::processAttachedObjects()
 			}
 			else if ((*o)->attach->player != INVALID_GENERIC_ID)
 			{
-				adjust = GetPlayerPos((*o)->attach->player, &(*o)->attach->position[0], &(*o)->attach->position[1], &(*o)->attach->position[2]);
+				adjust = sampgdk::GetPlayerPos((*o)->attach->player, &(*o)->attach->position[0], &(*o)->attach->position[1], &(*o)->attach->position[2]);
 			}
 			else if ((*o)->attach->vehicle != INVALID_GENERIC_ID)
 			{
-				adjust = GetVehiclePos((*o)->attach->vehicle, &(*o)->attach->position[0], &(*o)->attach->position[1], &(*o)->attach->position[2]);
+				adjust = sampgdk::GetVehiclePos((*o)->attach->vehicle, &(*o)->attach->position[0], &(*o)->attach->position[1], &(*o)->attach->position[2]);
 			}
 			if (adjust)
 			{
@@ -1073,11 +1073,11 @@ void Streamer::processAttachedTextLabels()
 		{
 			if ((*t)->attach->player != INVALID_GENERIC_ID)
 			{
-				adjust = GetPlayerPos((*t)->attach->player, &(*t)->attach->position[0], &(*t)->attach->position[1], &(*t)->attach->position[2]);
+				adjust = sampgdk::GetPlayerPos((*t)->attach->player, &(*t)->attach->position[0], &(*t)->attach->position[1], &(*t)->attach->position[2]);
 			}
 			else if ((*t)->attach->vehicle != INVALID_GENERIC_ID)
 			{
-				adjust = GetVehiclePos((*t)->attach->vehicle, &(*t)->attach->position[0], &(*t)->attach->position[1], &(*t)->attach->position[2]);
+				adjust = sampgdk::GetVehiclePos((*t)->attach->vehicle, &(*t)->attach->position[0], &(*t)->attach->position[1], &(*t)->attach->position[2]);
 			}
 			if (adjust)
 			{

@@ -97,7 +97,7 @@ cell AMX_NATIVE_CALL Natives::TogglePlayerDynamicCP(AMX *amx, cell *params)
 			{
 				if (p->second.visibleCheckpoint == static_cast<int>(params[2]))
 				{
-					DisablePlayerCheckpoint(p->first);
+					sampgdk::DisablePlayerCheckpoint(p->first);
 					p->second.activeCheckpoint = 0;
 					p->second.visibleCheckpoint = 0;
 				}
@@ -120,7 +120,7 @@ cell AMX_NATIVE_CALL Natives::TogglePlayerAllDynamicCPs(AMX *amx, cell *params)
 		{
 			if (p->second.visibleCheckpoint != 0)
 			{
-				DisablePlayerCheckpoint(p->first);
+				sampgdk::DisablePlayerCheckpoint(p->first);
 				p->second.activeCheckpoint = 0;
 				p->second.visibleCheckpoint = 0;
 			}

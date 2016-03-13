@@ -99,7 +99,7 @@ cell AMX_NATIVE_CALL Natives::TogglePlayerDynamicRaceCP(AMX *amx, cell *params)
 			{
 				if (p->second.visibleRaceCheckpoint == static_cast<int>(params[2]))
 				{
-					DisablePlayerRaceCheckpoint(p->first);
+					sampgdk::DisablePlayerRaceCheckpoint(p->first);
 					p->second.activeRaceCheckpoint = 0;
 					p->second.visibleRaceCheckpoint = 0;
 				}
@@ -122,7 +122,7 @@ cell AMX_NATIVE_CALL Natives::TogglePlayerAllDynamicRaceCPs(AMX *amx, cell *para
 		{
 			if (p->second.visibleRaceCheckpoint != 0)
 			{
-				DisablePlayerRaceCheckpoint(p->first);
+				sampgdk::DisablePlayerRaceCheckpoint(p->first);
 				p->second.activeRaceCheckpoint = 0;
 				p->second.visibleRaceCheckpoint = 0;
 			}

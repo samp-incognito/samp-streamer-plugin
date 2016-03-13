@@ -929,8 +929,8 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 						boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
 						if (i != p->second.internalObjects.end())
 						{
-							DestroyPlayerObject(p->first, i->second);
-							i->second = CreatePlayerObject(p->first, o->second->modelID, o->second->position[0], o->second->position[1], o->second->position[2], o->second->rotation[0], o->second->rotation[1], o->second->rotation[2], o->second->drawDistance);
+							sampgdk::DestroyPlayerObject(p->first, i->second);
+							i->second = sampgdk::CreatePlayerObject(p->first, o->second->modelID, o->second->position[0], o->second->position[1], o->second->position[2], o->second->rotation[0], o->second->rotation[1], o->second->rotation[2], o->second->drawDistance);
 							if (o->second->attach)
 							{
 								if (o->second->attach->object != INVALID_GENERIC_ID)
@@ -955,27 +955,27 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 								}
 								else if (o->second->attach->vehicle != INVALID_GENERIC_ID)
 								{
-									AttachPlayerObjectToVehicle(p->first, i->second, o->second->attach->vehicle, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
+									sampgdk::AttachPlayerObjectToVehicle(p->first, i->second, o->second->attach->vehicle, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
 								}
 							}
 							else if (o->second->move)
 							{
-								MovePlayerObject(p->first, i->second, o->second->move->position.get<0>()[0], o->second->move->position.get<0>()[1], o->second->move->position.get<0>()[2], o->second->move->speed, o->second->move->rotation.get<0>()[0], o->second->move->rotation.get<0>()[1], o->second->move->rotation.get<0>()[2]);
+								sampgdk::MovePlayerObject(p->first, i->second, o->second->move->position.get<0>()[0], o->second->move->position.get<0>()[1], o->second->move->position.get<0>()[2], o->second->move->speed, o->second->move->rotation.get<0>()[0], o->second->move->rotation.get<0>()[1], o->second->move->rotation.get<0>()[2]);
 							}
 							for (boost::unordered_map<int, Item::Object::Material>::iterator m = o->second->materials.begin(); m != o->second->materials.end(); ++m)
 							{
 								if (m->second.main)
 								{
-									SetPlayerObjectMaterial(p->first, i->second, m->first, m->second.main->modelID, m->second.main->txdFileName.c_str(), m->second.main->textureName.c_str(), m->second.main->materialColor);
+									sampgdk::SetPlayerObjectMaterial(p->first, i->second, m->first, m->second.main->modelID, m->second.main->txdFileName.c_str(), m->second.main->textureName.c_str(), m->second.main->materialColor);
 								}
 								else if (m->second.text)
 								{
-									SetPlayerObjectMaterialText(p->first, i->second, m->second.text->materialText.c_str(), m->first, m->second.text->materialSize, m->second.text->fontFace.c_str(), m->second.text->fontSize, m->second.text->bold, m->second.text->fontColor, m->second.text->backColor, m->second.text->textAlignment);
+									sampgdk::SetPlayerObjectMaterialText(p->first, i->second, m->second.text->materialText.c_str(), m->first, m->second.text->materialSize, m->second.text->fontFace.c_str(), m->second.text->fontSize, m->second.text->bold, m->second.text->fontColor, m->second.text->backColor, m->second.text->textAlignment);
 								}
 							}
 							if (o->second->noCameraCollision)
 							{
-								SetPlayerObjectNoCameraCol(p->first, i->second);
+								sampgdk::SetPlayerObjectNoCameraCol(p->first, i->second);
 							}
 						}
 					}
@@ -1045,8 +1045,8 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.find(p->first);
 					if (i != core->getData()->internalPickups.end())
 					{
-						DestroyPickup(i->second);
-						i->second = CreatePickup(p->second->modelID, p->second->type, p->second->position[0], p->second->position[1], p->second->position[2], p->second->worldID);
+						sampgdk::DestroyPickup(i->second);
+						i->second = sampgdk::CreatePickup(p->second->modelID, p->second->type, p->second->position[0], p->second->position[1], p->second->position[2], p->second->worldID);
 					}
 				}
 				if (reassign || update)
@@ -1121,7 +1121,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					{
 						if (p->second.visibleCheckpoint == c->first)
 						{
-							DisablePlayerCheckpoint(p->first);
+							sampgdk::DisablePlayerCheckpoint(p->first);
 							p->second.activeCheckpoint = 0;
 							p->second.visibleCheckpoint = 0;
 						}
@@ -1217,7 +1217,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					{
 						if (p->second.visibleRaceCheckpoint == r->first)
 						{
-							DisablePlayerRaceCheckpoint(p->first);
+							sampgdk::DisablePlayerRaceCheckpoint(p->first);
 							p->second.activeRaceCheckpoint = 0;
 							p->second.visibleRaceCheckpoint = 0;
 						}
@@ -1290,8 +1290,8 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 						boost::unordered_map<int, int>::iterator i = p->second.internalMapIcons.find(m->first);
 						if (i != p->second.internalMapIcons.end())
 						{
-							RemovePlayerMapIcon(p->first, i->second);
-							SetPlayerMapIcon(p->first, i->second, m->second->position[0], m->second->position[1], m->second->position[2], m->second->type, m->second->color, m->second->style);
+							sampgdk::RemovePlayerMapIcon(p->first, i->second);
+							sampgdk::SetPlayerMapIcon(p->first, i->second, m->second->position[0], m->second->position[1], m->second->position[2], m->second->type, m->second->color, m->second->style);
 						}
 					}
 				}
@@ -1371,8 +1371,8 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 						boost::unordered_map<int, int>::iterator i = p->second.internalTextLabels.find(t->first);
 						if (i != p->second.internalTextLabels.end())
 						{
-							DeletePlayer3DTextLabel(p->first, i->second);
-							i->second = CreatePlayer3DTextLabel(p->first, t->second->text.c_str(), t->second->color, t->second->position[0], t->second->position[1], t->second->position[2], t->second->drawDistance, t->second->attach ? t->second->attach->player : INVALID_GENERIC_ID, t->second->attach ? t->second->attach->vehicle : INVALID_GENERIC_ID, t->second->testLOS);
+							sampgdk::DeletePlayer3DTextLabel(p->first, i->second);
+							i->second = sampgdk::CreatePlayer3DTextLabel(p->first, t->second->text.c_str(), t->second->color, t->second->position[0], t->second->position[1], t->second->position[2], t->second->drawDistance, t->second->attach ? t->second->attach->player : INVALID_GENERIC_ID, t->second->attach ? t->second->attach->vehicle : INVALID_GENERIC_ID, t->second->testLOS);
 						}
 					}
 				}
@@ -2257,8 +2257,8 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 						boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
 						if (i != p->second.internalObjects.end())
 						{
-							DestroyPlayerObject(p->first, i->second);
-							i->second = CreatePlayerObject(p->first, o->second->modelID, o->second->position[0], o->second->position[1], o->second->position[2], o->second->rotation[0], o->second->rotation[1], o->second->rotation[2], o->second->drawDistance);
+							sampgdk::DestroyPlayerObject(p->first, i->second);
+							i->second = sampgdk::CreatePlayerObject(p->first, o->second->modelID, o->second->position[0], o->second->position[1], o->second->position[2], o->second->rotation[0], o->second->rotation[1], o->second->rotation[2], o->second->drawDistance);
 							if (o->second->attach)
 							{
 								if (o->second->attach->object != INVALID_GENERIC_ID)
@@ -2283,27 +2283,27 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 								}
 								else if (o->second->attach->vehicle != INVALID_GENERIC_ID)
 								{
-									AttachPlayerObjectToVehicle(p->first, i->second, o->second->attach->vehicle, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
+									sampgdk::AttachPlayerObjectToVehicle(p->first, i->second, o->second->attach->vehicle, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
 								}
 							}
 							else if (o->second->move)
 							{
-								MovePlayerObject(p->first, i->second, o->second->move->position.get<0>()[0], o->second->move->position.get<0>()[1], o->second->move->position.get<0>()[2], o->second->move->speed, o->second->move->rotation.get<0>()[0], o->second->move->rotation.get<0>()[1], o->second->move->rotation.get<0>()[2]);
+								sampgdk::MovePlayerObject(p->first, i->second, o->second->move->position.get<0>()[0], o->second->move->position.get<0>()[1], o->second->move->position.get<0>()[2], o->second->move->speed, o->second->move->rotation.get<0>()[0], o->second->move->rotation.get<0>()[1], o->second->move->rotation.get<0>()[2]);
 							}
 							for (boost::unordered_map<int, Item::Object::Material>::iterator m = o->second->materials.begin(); m != o->second->materials.end(); ++m)
 							{
 								if (m->second.main)
 								{
-									SetPlayerObjectMaterial(p->first, i->second, m->first, m->second.main->modelID, m->second.main->txdFileName.c_str(), m->second.main->textureName.c_str(), m->second.main->materialColor);
+									sampgdk::SetPlayerObjectMaterial(p->first, i->second, m->first, m->second.main->modelID, m->second.main->txdFileName.c_str(), m->second.main->textureName.c_str(), m->second.main->materialColor);
 								}
 								else if (m->second.text)
 								{
-									SetPlayerObjectMaterialText(p->first, i->second, m->second.text->materialText.c_str(), m->first, m->second.text->materialSize, m->second.text->fontFace.c_str(), m->second.text->fontSize, m->second.text->bold, m->second.text->fontColor, m->second.text->backColor, m->second.text->textAlignment);
+									sampgdk::SetPlayerObjectMaterialText(p->first, i->second, m->second.text->materialText.c_str(), m->first, m->second.text->materialSize, m->second.text->fontFace.c_str(), m->second.text->fontSize, m->second.text->bold, m->second.text->fontColor, m->second.text->backColor, m->second.text->textAlignment);
 								}
 							}
 							if (o->second->noCameraCollision)
 							{
-								SetPlayerObjectNoCameraCol(p->first, i->second);
+								sampgdk::SetPlayerObjectNoCameraCol(p->first, i->second);
 							}
 						}
 					}
@@ -2366,8 +2366,8 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.find(p->first);
 					if (i != core->getData()->internalPickups.end())
 					{
-						DestroyPickup(i->second);
-						i->second = CreatePickup(p->second->modelID, p->second->type, p->second->position[0], p->second->position[1], p->second->position[2], p->second->worldID);
+						sampgdk::DestroyPickup(i->second);
+						i->second = sampgdk::CreatePickup(p->second->modelID, p->second->type, p->second->position[0], p->second->position[1], p->second->position[2], p->second->worldID);
 					}
 				}
 				return 1;
@@ -2465,7 +2465,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					{
 						if (p->second.visibleRaceCheckpoint == r->first)
 						{
-							DisablePlayerRaceCheckpoint(p->first);
+							sampgdk::DisablePlayerRaceCheckpoint(p->first);
 							p->second.delayedRaceCheckpoint = r->first;
 						}
 					}
@@ -2536,8 +2536,8 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 						boost::unordered_map<int, int>::iterator i = p->second.internalMapIcons.find(m->first);
 						if (i != p->second.internalMapIcons.end())
 						{
-							RemovePlayerMapIcon(p->first, i->second);
-							SetPlayerMapIcon(p->first, i->second, m->second->position[0], m->second->position[1], m->second->position[2], m->second->type, m->second->color, m->second->style);
+							sampgdk::RemovePlayerMapIcon(p->first, i->second);
+							sampgdk::SetPlayerMapIcon(p->first, i->second, m->second->position[0], m->second->position[1], m->second->position[2], m->second->type, m->second->color, m->second->style);
 						}
 					}
 				}
@@ -2658,8 +2658,8 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 						boost::unordered_map<int, int>::iterator i = p->second.internalTextLabels.find(t->first);
 						if (i != p->second.internalTextLabels.end())
 						{
-							DeletePlayer3DTextLabel(p->first, i->second);
-							i->second = CreatePlayer3DTextLabel(p->first, t->second->text.c_str(), t->second->color, t->second->position[0], t->second->position[1], t->second->position[2], t->second->drawDistance, t->second->attach ? t->second->attach->player : INVALID_GENERIC_ID, t->second->attach ? t->second->attach->vehicle : INVALID_GENERIC_ID, t->second->testLOS);
+							sampgdk::DeletePlayer3DTextLabel(p->first, i->second);
+							i->second = sampgdk::CreatePlayer3DTextLabel(p->first, t->second->text.c_str(), t->second->color, t->second->position[0], t->second->position[1], t->second->position[2], t->second->drawDistance, t->second->attach ? t->second->attach->player : INVALID_GENERIC_ID, t->second->attach ? t->second->attach->vehicle : INVALID_GENERIC_ID, t->second->testLOS);
 						}
 					}
 				}

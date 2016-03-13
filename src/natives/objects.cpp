@@ -96,7 +96,7 @@ cell AMX_NATIVE_CALL Natives::SetDynamicObjectPos(AMX *amx, cell *params)
 			boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
 			if (i != p->second.internalObjects.end())
 			{
-				SetPlayerObjectPos(p->first, i->second, o->second->position[0], o->second->position[1], o->second->position[2]);
+				sampgdk::SetPlayerObjectPos(p->first, i->second, o->second->position[0], o->second->position[1], o->second->position[2]);
 			}
 		}
 		if (position[0] != o->second->position[0] || position[1] != o->second->position[1])
@@ -153,7 +153,7 @@ cell AMX_NATIVE_CALL Natives::SetDynamicObjectRot(AMX *amx, cell *params)
 			boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
 			if (i != p->second.internalObjects.end())
 			{
-				SetPlayerObjectRot(p->first, i->second, o->second->rotation[0], o->second->rotation[1], o->second->rotation[2]);
+				sampgdk::SetPlayerObjectRot(p->first, i->second, o->second->rotation[0], o->second->rotation[1], o->second->rotation[2]);
 			}
 		}
 		if (o->second->move)
@@ -199,7 +199,7 @@ cell AMX_NATIVE_CALL Natives::SetDynamicObjectNoCameraCol(AMX *amx, cell *params
 			boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
 			if (i != p->second.internalObjects.end())
 			{
-				SetPlayerObjectNoCameraCol(p->first, i->second);
+				sampgdk::SetPlayerObjectNoCameraCol(p->first, i->second);
 			}
 		}
 		return 1;
@@ -253,8 +253,8 @@ cell AMX_NATIVE_CALL Natives::MoveDynamicObject(AMX *amx, cell *params)
 			boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
 			if (i != p->second.internalObjects.end())
 			{
-				StopPlayerObject(p->first, i->second);
-				MovePlayerObject(p->first, i->second, o->second->move->position.get<0>()[0], o->second->move->position.get<0>()[1], o->second->move->position.get<0>()[2], o->second->move->speed, o->second->move->rotation.get<0>()[0], o->second->move->rotation.get<0>()[1], o->second->move->rotation.get<0>()[2]);
+				sampgdk::StopPlayerObject(p->first, i->second);
+				sampgdk::MovePlayerObject(p->first, i->second, o->second->move->position.get<0>()[0], o->second->move->position.get<0>()[1], o->second->move->position.get<0>()[2], o->second->move->speed, o->second->move->rotation.get<0>()[0], o->second->move->rotation.get<0>()[1], o->second->move->rotation.get<0>()[2]);
 			}
 		}
 		core->getStreamer()->movingObjects.insert(o->second);
@@ -276,7 +276,7 @@ cell AMX_NATIVE_CALL Natives::StopDynamicObject(AMX *amx, cell *params)
 				boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
 				if (i != p->second.internalObjects.end())
 				{
-					StopPlayerObject(p->first, i->second);
+					sampgdk::StopPlayerObject(p->first, i->second);
 				}
 			}
 			o->second->move.reset();
@@ -329,7 +329,7 @@ cell AMX_NATIVE_CALL Natives::AttachCameraToDynamicObject(AMX *amx, cell *params
 		}
 		if (internalID != INVALID_GENERIC_ID)
 		{
-			AttachCameraToPlayerObject(p->first, internalID);
+			sampgdk::AttachCameraToPlayerObject(p->first, internalID);
 			return 1;
 		}
 	}
@@ -376,11 +376,11 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToObject(AMX *amx, cell *params
 					{
 						if (m->second.main)
 						{
-							SetPlayerObjectMaterial(p->first, i->second, m->first, m->second.main->modelID, m->second.main->txdFileName.c_str(), m->second.main->textureName.c_str(), m->second.main->materialColor);
+							sampgdk::SetPlayerObjectMaterial(p->first, i->second, m->first, m->second.main->modelID, m->second.main->txdFileName.c_str(), m->second.main->textureName.c_str(), m->second.main->materialColor);
 						}
 						else if (m->second.text)
 						{
-							SetPlayerObjectMaterialText(p->first, i->second, m->second.text->materialText.c_str(), m->first, m->second.text->materialSize, m->second.text->fontFace.c_str(), m->second.text->fontSize, m->second.text->bold, m->second.text->fontColor, m->second.text->backColor, m->second.text->textAlignment);
+							sampgdk::SetPlayerObjectMaterialText(p->first, i->second, m->second.text->materialText.c_str(), m->first, m->second.text->materialSize, m->second.text->fontFace.c_str(), m->second.text->fontSize, m->second.text->bold, m->second.text->fontColor, m->second.text->backColor, m->second.text->textAlignment);
 						}
 					}
 				}
@@ -450,11 +450,11 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToPlayer(AMX *amx, cell *params
 				{
 					if (m->second.main)
 					{
-						SetPlayerObjectMaterial(p->first, i->second, m->first, m->second.main->modelID, m->second.main->txdFileName.c_str(), m->second.main->textureName.c_str(), m->second.main->materialColor);
+						sampgdk::SetPlayerObjectMaterial(p->first, i->second, m->first, m->second.main->modelID, m->second.main->txdFileName.c_str(), m->second.main->textureName.c_str(), m->second.main->materialColor);
 					}
 					else if (m->second.text)
 					{
-						SetPlayerObjectMaterialText(p->first, i->second, m->second.text->materialText.c_str(), m->first, m->second.text->materialSize, m->second.text->fontFace.c_str(), m->second.text->fontSize, m->second.text->bold, m->second.text->fontColor, m->second.text->backColor, m->second.text->textAlignment);
+						sampgdk::SetPlayerObjectMaterialText(p->first, i->second, m->second.text->materialText.c_str(), m->first, m->second.text->materialSize, m->second.text->fontFace.c_str(), m->second.text->fontSize, m->second.text->bold, m->second.text->fontColor, m->second.text->backColor, m->second.text->textAlignment);
 					}
 				}
 			}
@@ -496,16 +496,16 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToVehicle(AMX *amx, cell *param
 			boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
 			if (i != p->second.internalObjects.end())
 			{
-				AttachPlayerObjectToVehicle(p->first, i->second, o->second->attach->vehicle, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
+				sampgdk::AttachPlayerObjectToVehicle(p->first, i->second, o->second->attach->vehicle, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
 				for (boost::unordered_map<int, Item::Object::Material>::iterator m = o->second->materials.begin(); m != o->second->materials.end(); ++m)
 				{
 					if (m->second.main)
 					{
-						SetPlayerObjectMaterial(p->first, i->second, m->first, m->second.main->modelID, m->second.main->txdFileName.c_str(), m->second.main->textureName.c_str(), m->second.main->materialColor);
+						sampgdk::SetPlayerObjectMaterial(p->first, i->second, m->first, m->second.main->modelID, m->second.main->txdFileName.c_str(), m->second.main->textureName.c_str(), m->second.main->materialColor);
 					}
 					else if (m->second.text)
 					{
-						SetPlayerObjectMaterialText(p->first, i->second, m->second.text->materialText.c_str(), m->first, m->second.text->materialSize, m->second.text->fontFace.c_str(), m->second.text->fontSize, m->second.text->bold, m->second.text->fontColor, m->second.text->backColor, m->second.text->textAlignment);
+						sampgdk::SetPlayerObjectMaterialText(p->first, i->second, m->second.text->materialText.c_str(), m->first, m->second.text->materialSize, m->second.text->fontFace.c_str(), m->second.text->fontSize, m->second.text->bold, m->second.text->fontColor, m->second.text->backColor, m->second.text->textAlignment);
 					}
 				}
 			}
@@ -553,7 +553,7 @@ cell AMX_NATIVE_CALL Natives::EditDynamicObject(AMX *amx, cell *params)
 		}
 		if (internalID != INVALID_GENERIC_ID)
 		{
-			EditPlayerObject(p->first, internalID);
+			sampgdk::EditPlayerObject(p->first, internalID);
 			return 1;
 		}
 	}
@@ -617,7 +617,7 @@ cell AMX_NATIVE_CALL Natives::SetDynamicObjectMaterial(AMX *amx, cell *params)
 			boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
 			if (i != p->second.internalObjects.end())
 			{
-				SetPlayerObjectMaterial(p->first, i->second, index, o->second->materials[index].main->modelID, o->second->materials[index].main->txdFileName.c_str(), o->second->materials[index].main->textureName.c_str(), o->second->materials[index].main->materialColor);
+				sampgdk::SetPlayerObjectMaterial(p->first, i->second, index, o->second->materials[index].main->modelID, o->second->materials[index].main->txdFileName.c_str(), o->second->materials[index].main->textureName.c_str(), o->second->materials[index].main->materialColor);
 			}
 		}
 		o->second->materials[index].text.reset();
@@ -691,7 +691,7 @@ cell AMX_NATIVE_CALL Natives::SetDynamicObjectMaterialText(AMX *amx, cell *param
 			boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
 			if (i != p->second.internalObjects.end())
 			{
-				SetPlayerObjectMaterialText(p->first, i->second, o->second->materials[index].text->materialText.c_str(), index, o->second->materials[index].text->materialSize, o->second->materials[index].text->fontFace.c_str(), o->second->materials[index].text->fontSize, o->second->materials[index].text->bold, o->second->materials[index].text->fontColor, o->second->materials[index].text->backColor, o->second->materials[index].text->textAlignment);
+				sampgdk::SetPlayerObjectMaterialText(p->first, i->second, o->second->materials[index].text->materialText.c_str(), index, o->second->materials[index].text->materialSize, o->second->materials[index].text->fontFace.c_str(), o->second->materials[index].text->fontSize, o->second->materials[index].text->bold, o->second->materials[index].text->fontColor, o->second->materials[index].text->backColor, o->second->materials[index].text->textAlignment);
 			}
 		}
 		o->second->materials[index].main.reset();

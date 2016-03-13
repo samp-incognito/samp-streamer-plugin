@@ -119,7 +119,7 @@ cell AMX_NATIVE_CALL Natives::UpdateDynamic3DTextLabelText(AMX *amx, cell *param
 			boost::unordered_map<int, int>::iterator i = p->second.internalTextLabels.find(t->first);
 			if (i != p->second.internalTextLabels.end())
 			{
-				UpdatePlayer3DTextLabelText(p->first, i->second, t->second->color, t->second->text.c_str());
+				sampgdk::UpdatePlayer3DTextLabelText(p->first, i->second, t->second->color, t->second->text.c_str());
 			}
 		}
 		return 1;
