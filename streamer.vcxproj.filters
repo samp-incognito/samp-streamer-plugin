@@ -19,6 +19,9 @@
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\manipulation">
+      <UniqueIdentifier>{4D4D4CDD-3946-6B2F-6278-50B44ED04A3B}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\natives">
       <UniqueIdentifier>{16CF320B-8284-AB00-0B79-A5D7772DA204}</UniqueIdentifier>
     </Filter>
@@ -53,6 +56,9 @@
     </ClInclude>
     <ClInclude Include="src\manipulation.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\manipulation\array-data.h">
+      <Filter>src\manipulation</Filter>
     </ClInclude>
     <ClInclude Include="src\natives.h">
       <Filter>src</Filter>
@@ -101,8 +107,14 @@
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\manipulation.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="src\manipulation\array-data.cpp">
+      <Filter>src\manipulation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\manipulation\float-data.cpp">
+      <Filter>src\manipulation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\manipulation\int-data.cpp">
+      <Filter>src\manipulation</Filter>
     </ClCompile>
     <ClCompile Include="src\natives\areas.cpp">
       <Filter>src\natives</Filter>
@@ -110,13 +122,13 @@
     <ClCompile Include="src\natives\checkpoints.cpp">
       <Filter>src\natives</Filter>
     </ClCompile>
-    <ClCompile Include="src\natives\data-manipulation.cpp">
-      <Filter>src\natives</Filter>
-    </ClCompile>
     <ClCompile Include="src\natives\deprecated.cpp">
       <Filter>src\natives</Filter>
     </ClCompile>
     <ClCompile Include="src\natives\extended.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
+    <ClCompile Include="src\natives\manipulation.cpp">
       <Filter>src\natives</Filter>
     </ClCompile>
     <ClCompile Include="src\natives\map-icons.cpp">

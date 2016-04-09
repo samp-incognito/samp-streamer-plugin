@@ -12,6 +12,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{0843F08F-F40F-4B9B-1D29-394309558029}</ProjectGuid>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>streamer</RootNamespace>
   </PropertyGroup>
@@ -19,14 +20,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
     <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -67,6 +68,10 @@
       <StringPooling>true</StringPooling>
       <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;BOOST_CHRONO_HEADER_ONLY;_CRT_SECURE_NO_WARNINGS;NDEBUG;NOMINMAX;SAMPGDK_AMALGAMATION;SAMPGDK_CPP_WRAPPERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include;lib;lib\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -82,12 +87,15 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;BOOST_CHRONO_HEADER_ONLY;_CRT_SECURE_NO_WARNINGS;NOMINMAX;SAMPGDK_AMALGAMATION;SAMPGDK_CPP_WRAPPERS%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;BOOST_CHRONO_HEADER_ONLY;_CRT_SECURE_NO_WARNINGS;NOMINMAX;SAMPGDK_AMALGAMATION;SAMPGDK_CPP_WRAPPERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>include;lib;lib\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <ProgramDataBaseFileName>$(OutDir)streamer.pdb</ProgramDataBaseFileName>
       <Optimization>Disabled</Optimization>
     </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;BOOST_CHRONO_HEADER_ONLY;_CRT_SECURE_NO_WARNINGS;NOMINMAX;SAMPGDK_AMALGAMATION;SAMPGDK_CPP_WRAPPERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include;lib;lib\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -106,6 +114,7 @@
     <ClInclude Include="src\item.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\manipulation.h" />
+    <ClInclude Include="src\manipulation\array-data.h" />
     <ClInclude Include="src\natives.h" />
     <ClInclude Include="src\player.h" />
     <ClInclude Include="src\streamer.h" />
@@ -123,12 +132,14 @@
     <ClCompile Include="src\identifier.cpp" />
     <ClCompile Include="src\item.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\manipulation.cpp" />
+    <ClCompile Include="src\manipulation\array-data.cpp" />
+    <ClCompile Include="src\manipulation\float-data.cpp" />
+    <ClCompile Include="src\manipulation\int-data.cpp" />
     <ClCompile Include="src\natives\areas.cpp" />
     <ClCompile Include="src\natives\checkpoints.cpp" />
-    <ClCompile Include="src\natives\data-manipulation.cpp" />
     <ClCompile Include="src\natives\deprecated.cpp" />
     <ClCompile Include="src\natives\extended.cpp" />
+    <ClCompile Include="src\natives\manipulation.cpp" />
     <ClCompile Include="src\natives\map-icons.cpp" />
     <ClCompile Include="src\natives\miscellaneous.cpp" />
     <ClCompile Include="src\natives\objects.cpp" />
