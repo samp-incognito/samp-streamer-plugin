@@ -388,7 +388,12 @@ void Utility::logError(const char *format, ...)
 	}
 	else
 	{
-		sampgdk::logprintf("*** Streamer Plugin: %s", buffer);
+		static std::string lastErrorMessage;
+		if (lastErrorMessage != buffer)
+		{
+			sampgdk::logprintf("*** Streamer Plugin: %s", buffer);
+		}
+		lastErrorMessage = buffer;
 	}
 }
 
