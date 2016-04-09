@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "array-data.h"
+#include "array.h"
 
 #include "../core.h"
 
