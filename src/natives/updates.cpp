@@ -17,7 +17,6 @@
 #include "../natives.h"
 
 #include "../core.h"
-#include "../main.h"
 
 #include <boost/intrusive_ptr.hpp>
 #include <boost/scoped_ptr.hpp>

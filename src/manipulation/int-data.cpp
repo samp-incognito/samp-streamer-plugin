@@ -17,7 +17,6 @@
 #include "../manipulation.h"
 
 #include "../core.h"
-#include "../main.h"
 #include "../utility.h"
 
 #include <boost/geometry.hpp>

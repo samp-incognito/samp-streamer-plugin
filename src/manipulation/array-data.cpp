@@ -17,8 +17,6 @@
 #include "array-data.h"
 
 #include "../core.h"
-#include "../main.h"
-#include "../utility.h"
 
 #include <boost/geometry.hpp>
 #include <boost/geometry/geometries/geometries.hpp>
