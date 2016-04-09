@@ -34,7 +34,7 @@
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicObject(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(13, "CreateDynamicObject");
+	CHECK_PARAMS(14, "CreateDynamicObject");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_OBJECT) == core->getData()->objects.size())
 	{
 		return 0;
@@ -54,6 +54,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicObject(AMX *amx, cell *params)
 	object->streamDistance = amx_ctof(params[11]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[11]) : amx_ctof(params[11]) * amx_ctof(params[11]);
 	object->drawDistance = amx_ctof(params[12]);
 	Utility::addToContainer(object->areas, static_cast<int>(params[13]));
+	object->priority = static_cast<int>(params[14]);
 	core->getGrid()->addObject(object);
 	core->getData()->objects.insert(std::make_pair(objectID, object));
 	return static_cast<cell>(objectID);

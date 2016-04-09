@@ -87,6 +87,7 @@ namespace Item
 		int checkpointID;
 		float originalStreamDistance;
 		Eigen::Vector3f position;
+		int priority;
 		int references;
 		float size;
 		float streamDistance;
@@ -112,6 +113,7 @@ namespace Item
 		int mapIconID;
 		float originalStreamDistance;
 		Eigen::Vector3f position;
+		int priority;
 		int references;
 		float streamDistance;
 		int style;
@@ -140,6 +142,7 @@ namespace Item
 		int objectID;
 		float originalStreamDistance;
 		Eigen::Vector3f position;
+		int priority;
 		int references;
 		Eigen::Vector3f rotation;
 		float streamDistance;
@@ -234,6 +237,7 @@ namespace Item
 		float originalStreamDistance;
 		int pickupID;
 		Eigen::Vector3f position;
+		int priority;
 		int references;
 		float streamDistance;
 		int type;
@@ -259,6 +263,7 @@ namespace Item
 		Eigen::Vector3f next;
 		float originalStreamDistance;
 		Eigen::Vector3f position;
+		int priority;
 		int raceCheckpointID;
 		int references;
 		float size;
@@ -286,6 +291,7 @@ namespace Item
 		float drawDistance;
 		float originalStreamDistance;
 		Eigen::Vector3f position;
+		int priority;
 		int references;
 		float streamDistance;
 		bool testLOS;

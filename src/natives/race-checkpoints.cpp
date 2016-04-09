@@ -30,7 +30,7 @@
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicRaceCP(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(13, "CreateDynamicRaceCP");
+	CHECK_PARAMS(14, "CreateDynamicRaceCP");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_RACE_CP) == core->getData()->raceCheckpoints.size())
 	{
 		return 0;
@@ -49,6 +49,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicRaceCP(AMX *amx, cell *params)
 	Utility::addToContainer(raceCheckpoint->players, static_cast<int>(params[11]));
 	raceCheckpoint->streamDistance = amx_ctof(params[12]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[12]) : amx_ctof(params[12]) * amx_ctof(params[12]);
 	Utility::addToContainer(raceCheckpoint->areas, static_cast<int>(params[13]));
+	raceCheckpoint->priority = static_cast<int>(params[14]);
 	core->getGrid()->addRaceCheckpoint(raceCheckpoint);
 	core->getData()->raceCheckpoints.insert(std::make_pair(raceCheckpointID, raceCheckpoint));
 	return static_cast<cell>(raceCheckpointID);

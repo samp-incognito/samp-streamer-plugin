@@ -32,7 +32,7 @@
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicObjectEx(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(17, "CreateDynamicObjectEx");
+	CHECK_PARAMS(18, "CreateDynamicObjectEx");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_OBJECT) == core->getData()->objects.size())
 	{
 		return 0;
@@ -48,10 +48,11 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicObjectEx(AMX *amx, cell *params)
 	object->rotation = Eigen::Vector3f(amx_ctof(params[5]), amx_ctof(params[6]), amx_ctof(params[7]));
 	object->drawDistance = amx_ctof(params[8]);
 	object->streamDistance = amx_ctof(params[9]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[9]) : amx_ctof(params[9]) * amx_ctof(params[9]);
-	Utility::convertArrayToContainer(amx, params[10], params[14], object->worlds);
-	Utility::convertArrayToContainer(amx, params[11], params[15], object->interiors);
-	Utility::convertArrayToContainer(amx, params[12], params[16], object->players);
-	Utility::convertArrayToContainer(amx, params[13], params[17], object->areas);
+	Utility::convertArrayToContainer(amx, params[10], params[15], object->worlds);
+	Utility::convertArrayToContainer(amx, params[11], params[16], object->interiors);
+	Utility::convertArrayToContainer(amx, params[12], params[17], object->players);
+	Utility::convertArrayToContainer(amx, params[13], params[18], object->areas);
+	object->priority = static_cast<int>(params[14]);
 	core->getGrid()->addObject(object);
 	core->getData()->objects.insert(std::make_pair(objectID, object));
 	return static_cast<cell>(objectID);
@@ -60,7 +61,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicObjectEx(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicPickupEx(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(14, "CreateDynamicPickupEx");
+	CHECK_PARAMS(15, "CreateDynamicPickupEx");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_PICKUP) == core->getData()->pickups.size())
 	{
 		return 0;
@@ -74,10 +75,11 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPickupEx(AMX *amx, cell *params)
 	pickup->type = static_cast<int>(params[2]);
 	pickup->position = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
 	pickup->streamDistance = amx_ctof(params[6]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[6]) : amx_ctof(params[6]) * amx_ctof(params[6]);
-	Utility::convertArrayToContainer(amx, params[7], params[11], pickup->worlds);
-	Utility::convertArrayToContainer(amx, params[8], params[12], pickup->interiors);
-	Utility::convertArrayToContainer(amx, params[9], params[13], pickup->players);
-	Utility::convertArrayToContainer(amx, params[10], params[14], pickup->areas);
+	Utility::convertArrayToContainer(amx, params[7], params[12], pickup->worlds);
+	Utility::convertArrayToContainer(amx, params[8], params[13], pickup->interiors);
+	Utility::convertArrayToContainer(amx, params[9], params[14], pickup->players);
+	Utility::convertArrayToContainer(amx, params[10], params[15], pickup->areas);
+	pickup->priority = static_cast<int>(params[11]);
 	core->getGrid()->addPickup(pickup);
 	core->getData()->pickups.insert(std::make_pair(pickupID, pickup));
 	return static_cast<cell>(pickupID);
@@ -85,7 +87,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPickupEx(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicCPEx(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(13, "CreateDynamicCPEx");
+	CHECK_PARAMS(14, "CreateDynamicCPEx");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_CP) == core->getData()->checkpoints.size())
 	{
 		return 0;
@@ -98,10 +100,11 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCPEx(AMX *amx, cell *params)
 	checkpoint->position = Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]));
 	checkpoint->size = amx_ctof(params[4]);
 	checkpoint->streamDistance = amx_ctof(params[5]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[5]) : amx_ctof(params[5]) * amx_ctof(params[5]);
-	Utility::convertArrayToContainer(amx, params[6], params[10], checkpoint->worlds);
-	Utility::convertArrayToContainer(amx, params[7], params[11], checkpoint->interiors);
-	Utility::convertArrayToContainer(amx, params[8], params[12], checkpoint->players);
-	Utility::convertArrayToContainer(amx, params[9], params[13], checkpoint->areas);
+	Utility::convertArrayToContainer(amx, params[6], params[11], checkpoint->worlds);
+	Utility::convertArrayToContainer(amx, params[7], params[12], checkpoint->interiors);
+	Utility::convertArrayToContainer(amx, params[8], params[13], checkpoint->players);
+	Utility::convertArrayToContainer(amx, params[9], params[14], checkpoint->areas);
+	checkpoint->priority = static_cast<int>(params[10]);
 	core->getGrid()->addCheckpoint(checkpoint);
 	core->getData()->checkpoints.insert(std::make_pair(checkpointID, checkpoint));
 	return static_cast<cell>(checkpointID);
@@ -109,7 +112,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCPEx(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicRaceCPEx(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(17, "CreateDynamicRaceCPEx");
+	CHECK_PARAMS(18, "CreateDynamicRaceCPEx");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_RACE_CP) == core->getData()->raceCheckpoints.size())
 	{
 		return 0;
@@ -124,10 +127,11 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicRaceCPEx(AMX *amx, cell *params)
 	raceCheckpoint->next = Eigen::Vector3f(amx_ctof(params[5]), amx_ctof(params[6]), amx_ctof(params[7]));
 	raceCheckpoint->size = amx_ctof(params[8]);
 	raceCheckpoint->streamDistance = amx_ctof(params[9]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[9]) : amx_ctof(params[9]) * amx_ctof(params[9]);
-	Utility::convertArrayToContainer(amx, params[10], params[14], raceCheckpoint->worlds);
-	Utility::convertArrayToContainer(amx, params[11], params[15], raceCheckpoint->interiors);
-	Utility::convertArrayToContainer(amx, params[12], params[16], raceCheckpoint->players);
-	Utility::convertArrayToContainer(amx, params[13], params[17], raceCheckpoint->areas);
+	Utility::convertArrayToContainer(amx, params[10], params[15], raceCheckpoint->worlds);
+	Utility::convertArrayToContainer(amx, params[11], params[16], raceCheckpoint->interiors);
+	Utility::convertArrayToContainer(amx, params[12], params[17], raceCheckpoint->players);
+	Utility::convertArrayToContainer(amx, params[13], params[18], raceCheckpoint->areas);
+	raceCheckpoint->priority = static_cast<int>(params[14]);
 	core->getGrid()->addRaceCheckpoint(raceCheckpoint);
 	core->getData()->raceCheckpoints.insert(std::make_pair(raceCheckpointID, raceCheckpoint));
 	return static_cast<cell>(raceCheckpointID);
@@ -135,7 +139,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicRaceCPEx(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicMapIconEx(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(15, "CreateDynamicMapIconEx");
+	CHECK_PARAMS(16, "CreateDynamicMapIconEx");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_MAP_ICON) == core->getData()->mapIcons.size())
 	{
 		return 0;
@@ -150,10 +154,11 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicMapIconEx(AMX *amx, cell *params)
 	mapIcon->color = static_cast<int>(params[5]);
 	mapIcon->style = static_cast<int>(params[6]);
 	mapIcon->streamDistance = amx_ctof(params[7]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[7]) : amx_ctof(params[7]) * amx_ctof(params[7]);
-	Utility::convertArrayToContainer(amx, params[8], params[12], mapIcon->worlds);
-	Utility::convertArrayToContainer(amx, params[9], params[13], mapIcon->interiors);
-	Utility::convertArrayToContainer(amx, params[10], params[14], mapIcon->players);
-	Utility::convertArrayToContainer(amx, params[11], params[15], mapIcon->areas);
+	Utility::convertArrayToContainer(amx, params[8], params[13], mapIcon->worlds);
+	Utility::convertArrayToContainer(amx, params[9], params[14], mapIcon->interiors);
+	Utility::convertArrayToContainer(amx, params[10], params[15], mapIcon->players);
+	Utility::convertArrayToContainer(amx, params[11], params[16], mapIcon->areas);
+	mapIcon->priority = static_cast<int>(params[12]);
 	core->getGrid()->addMapIcon(mapIcon);
 	core->getData()->mapIcons.insert(std::make_pair(mapIconID, mapIcon));
 	return static_cast<cell>(mapIconID);
@@ -161,7 +166,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicMapIconEx(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabelEx(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(18, "CreateDynamic3DTextLabelEx");
+	CHECK_PARAMS(19, "CreateDynamic3DTextLabelEx");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_3D_TEXT_LABEL) == core->getData()->textLabels.size())
 	{
 		return 0;
@@ -188,10 +193,11 @@ cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabelEx(AMX *amx, cell *params)
 	}
 	textLabel->testLOS = static_cast<int>(params[9]) != 0;
 	textLabel->streamDistance = amx_ctof(params[10]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[10]) : amx_ctof(params[10]) * amx_ctof(params[10]);
-	Utility::convertArrayToContainer(amx, params[11], params[15], textLabel->worlds);
-	Utility::convertArrayToContainer(amx, params[12], params[16], textLabel->interiors);
-	Utility::convertArrayToContainer(amx, params[13], params[17], textLabel->players);
-	Utility::convertArrayToContainer(amx, params[14], params[18], textLabel->areas);
+	Utility::convertArrayToContainer(amx, params[11], params[16], textLabel->worlds);
+	Utility::convertArrayToContainer(amx, params[12], params[17], textLabel->interiors);
+	Utility::convertArrayToContainer(amx, params[13], params[18], textLabel->players);
+	Utility::convertArrayToContainer(amx, params[14], params[19], textLabel->areas);
+	textLabel->priority = static_cast<int>(params[15]);
 	core->getGrid()->addTextLabel(textLabel);
 	core->getData()->textLabels.insert(std::make_pair(textLabelID, textLabel));
 	return static_cast<cell>(textLabelID);

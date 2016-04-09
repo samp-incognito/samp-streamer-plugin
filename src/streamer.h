@@ -88,6 +88,18 @@ private:
 	std::vector<boost::tuple<int, int> > areaLeaveCallbacks;
 	std::vector<int> objectMoveCallbacks;
 
+	struct CompareItem
+	{
+		bool operator()(std::pair<int, float> const &a, std::pair<int, float> const &b)
+		{
+			if (a.first != b.first)
+			{
+				return a.first > b.first;
+			}
+			return a.second < b.second;
+		}
+	};
+
 	template<std::size_t N, typename T>
 	inline bool doesPlayerSatisfyConditions(const std::bitset<N> &a, const T &b, const boost::unordered_set<T> &c, const T &d, const boost::unordered_set<T> &e, const T &f)
 	{

@@ -58,6 +58,7 @@ namespace Manipulation
 		NextY,
 		NextZ,
 		PlayerID,
+		Priority,
 		RX,
 		RY,
 		RZ,

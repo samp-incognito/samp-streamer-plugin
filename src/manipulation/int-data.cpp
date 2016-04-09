@@ -89,6 +89,10 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					{
 						return Utility::getFirstValueInContainer(o->second->players);
 					}
+					case Priority:
+					{
+						return o->second->priority;
+					}
 					case SyncRotation:
 					{
 						if (o->second->attach)
@@ -144,6 +148,10 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					{
 						return Utility::getFirstValueInContainer(p->second->players);
 					}
+					case Priority:
+					{
+						return p->second->priority;
+					}
 					case Type:
 					{
 						return p->second->type;
@@ -188,6 +196,10 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					{
 						return Utility::getFirstValueInContainer(c->second->players);
 					}
+					case Priority:
+					{
+						return c->second->priority;
+					}
 					case WorldID:
 					{
 						return Utility::getFirstValueInContainer(c->second->worlds);
@@ -227,6 +239,10 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					case PlayerID:
 					{
 						return Utility::getFirstValueInContainer(r->second->players);
+					}
+					case Priority:
+					{
+						return r->second->priority;
 					}
 					case Type:
 					{
@@ -275,6 +291,10 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					case PlayerID:
 					{
 						return Utility::getFirstValueInContainer(m->second->players);
+					}
+					case Priority:
+					{
+						return m->second->priority;
 					}
 					case Style:
 					{
@@ -343,6 +363,10 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					case PlayerID:
 					{
 						return Utility::getFirstValueInContainer(t->second->players);
+					}
+					case Priority:
+					{
+						return t->second->priority;
 					}
 					case TestLOS:
 					{
@@ -601,6 +625,11 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					{
 						return Utility::setFirstValueInContainer(o->second->players, static_cast<int>(params[4])) != 0;
 					}
+					case Priority:
+					{
+						o->second->priority = static_cast<int>(params[4]);
+						break;
+					}
 					case SyncRotation:
 					{
 						if (o->second->attach)
@@ -718,6 +747,11 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					{
 						return Utility::setFirstValueInContainer(p->second->players, static_cast<int>(params[4])) != 0;
 					}
+					case Priority:
+					{
+						p->second->priority = static_cast<int>(params[4]);
+						return 1;
+					}
 					case Type:
 					{
 						p->second->type = static_cast<int>(params[4]);
@@ -776,6 +810,11 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					{
 						return Utility::setFirstValueInContainer(c->second->players, static_cast<int>(params[4])) != 0;
 					}
+					case Priority:
+					{
+						c->second->priority = static_cast<int>(params[4]);
+						return 1;
+					}
 					case WorldID:
 					{
 						return Utility::setFirstValueInContainer(c->second->worlds, static_cast<int>(params[4])) != 0;
@@ -815,6 +854,11 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					case PlayerID:
 					{
 						return Utility::setFirstValueInContainer(r->second->players, static_cast<int>(params[4])) != 0;
+					}
+					case Priority:
+					{
+						r->second->priority = static_cast<int>(params[4]);
+						return 1;
 					}
 					case Type:
 					{
@@ -879,6 +923,11 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					case PlayerID:
 					{
 						return Utility::setFirstValueInContainer(m->second->players, static_cast<int>(params[4])) != 0;
+					}
+					case Priority:
+					{
+						m->second->priority = static_cast<int>(params[4]);
+						return 1;
 					}
 					case Style:
 					{
@@ -1000,6 +1049,11 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					case PlayerID:
 					{
 						return Utility::setFirstValueInContainer(t->second->players, static_cast<int>(params[4])) != 0;
+					}
+					case Priority:
+					{
+						t->second->priority = static_cast<int>(params[4]);
+						return 1;
 					}
 					case TestLOS:
 					{
