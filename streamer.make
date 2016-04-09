@@ -76,9 +76,9 @@ OBJECTS := \
 	$(OBJDIR)/identifier.o \
 	$(OBJDIR)/item.o \
 	$(OBJDIR)/main.o \
-	$(OBJDIR)/array-data.o \
-	$(OBJDIR)/float-data.o \
-	$(OBJDIR)/int-data.o \
+	$(OBJDIR)/array.o \
+	$(OBJDIR)/float.o \
+	$(OBJDIR)/int.o \
 	$(OBJDIR)/areas.o \
 	$(OBJDIR)/checkpoints.o \
 	$(OBJDIR)/deprecated.o \
@@ -185,13 +185,13 @@ $(OBJDIR)/item.o: src/item.cpp
 $(OBJDIR)/main.o: src/main.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/array-data.o: src/manipulation/array-data.cpp
+$(OBJDIR)/array.o: src/manipulation/array.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/float-data.o: src/manipulation/float-data.cpp
+$(OBJDIR)/float.o: src/manipulation/float.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/int-data.o: src/manipulation/int-data.cpp
+$(OBJDIR)/int.o: src/manipulation/int.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/areas.o: src/natives/areas.cpp

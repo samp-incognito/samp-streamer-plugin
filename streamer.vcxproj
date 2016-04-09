@@ -114,7 +114,7 @@
     <ClInclude Include="src\item.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\manipulation.h" />
-    <ClInclude Include="src\manipulation\array-data.h" />
+    <ClInclude Include="src\manipulation\array.h" />
     <ClInclude Include="src\natives.h" />
     <ClInclude Include="src\player.h" />
     <ClInclude Include="src\streamer.h" />
@@ -132,9 +132,9 @@
     <ClCompile Include="src\identifier.cpp" />
     <ClCompile Include="src\item.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\manipulation\array-data.cpp" />
-    <ClCompile Include="src\manipulation\float-data.cpp" />
-    <ClCompile Include="src\manipulation\int-data.cpp" />
+    <ClCompile Include="src\manipulation\array.cpp" />
+    <ClCompile Include="src\manipulation\float.cpp" />
+    <ClCompile Include="src\manipulation\int.cpp" />
     <ClCompile Include="src\natives\areas.cpp" />
     <ClCompile Include="src\natives\checkpoints.cpp" />
     <ClCompile Include="src\natives\deprecated.cpp" />
