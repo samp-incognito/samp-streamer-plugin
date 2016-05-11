@@ -501,7 +501,7 @@ void Utility::projectPoint(const Eigen::Vector3f &point, const Eigen::Vector4f &
 	position[2] += (point[2] * matrix(0, 0)) + (point[1] * matrix(0, 1)) + (point[0] * matrix(0, 2));
 }
 
-std::size_t Utility::getGlobalMaxVisibleItems(int type, int playerid)
+std::size_t Utility::getMaxVisibleItems(int type, int playerid)
 {
 	if (playerid >= 0 && playerid < MAX_PLAYERS)
 	{

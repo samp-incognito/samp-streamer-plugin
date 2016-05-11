@@ -52,7 +52,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetMaxItems(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::Streamer_GetVisibleItems(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "Streamer_GetVisibleItems");
-	return static_cast<cell>(Utility::getGlobalMaxVisibleItems(static_cast<std::size_t>(params[1]), static_cast<int>(params[2])));
+	return static_cast<cell>(Utility::getMaxVisibleItems(static_cast<std::size_t>(params[1]), static_cast<int>(params[2])));
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_SetVisibleItems(AMX *amx, cell *params)
@@ -74,7 +74,6 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetRadiusMultiplier(AMX *amx, cell *param
 	CHECK_PARAMS(3, "Streamer_SetRadiusMultiplier");
 	return static_cast<cell>(Utility::setRadiusMultiplier(static_cast<int>(params[1]), amx_ctof(params[2]), static_cast<int>(params[3])) != 0);
 }
-
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetTypePriority(AMX *amx, cell *params)
 {

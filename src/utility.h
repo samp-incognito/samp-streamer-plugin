@@ -57,7 +57,7 @@ namespace Utility
 	void projectPoint(const Eigen::Vector3f &point, const Eigen::Vector3f &rotation, Eigen::Vector3f &position);
 	void projectPoint(const Eigen::Vector3f &point, const Eigen::Vector4f &quaternion, Eigen::Vector3f &position);
 
-	std::size_t getGlobalMaxVisibleItems(int type, int playerid);
+	std::size_t getMaxVisibleItems(int type, int playerid);
 	bool setMaxVisibleItems(int type, std::size_t value, int playerid);
 
 	float getRadiusMultiplier(int type, int playerid);
