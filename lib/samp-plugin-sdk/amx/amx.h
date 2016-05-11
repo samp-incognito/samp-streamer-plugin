@@ -21,8 +21,11 @@
  *  Version: $Id: amx.h,v 1.5 2006/03/26 16:56:15 spookie Exp $
  */
 
-#if defined __linux__ || defined __FreeBSD__ || defined __OpenBSD__
-  #include "sclinux.h"
+#if defined FREEBSD && !defined __FreeBSD__
+  #define __FreeBSD__
+#endif
+#if defined LINUX || defined __FreeBSD__ || defined __OpenBSD__
+  #include <sclinux.h>
 #endif
 
 #ifndef AMX_H_INCLUDED
@@ -31,7 +34,7 @@
 #if defined HAVE_STDINT_H
   #include <stdint.h>
 #else
-  #if defined __LCC__ || defined __DMC__ || defined __linux__
+  #if defined __LCC__ || defined __DMC__ || defined LINUX
     #if defined HAVE_INTTYPES_H
       #include <inttypes.h>
     #else
@@ -57,7 +60,7 @@
         typedef long int          int32_t;
         typedef unsigned long int uint32_t;
       #endif
-      #if defined _WIN32
+      #if defined __WIN32__ || defined _WIN32 || defined WIN32
         typedef __int64	          int64_t;
         typedef unsigned __int64  uint64_t;
         #define HAVE_I64
@@ -70,7 +73,7 @@
   #endif
   #define HAVE_STDINT_H
 #endif
-#if defined _LP64 || defined _WIN64
+#if defined _LP64 || defined WIN64 || defined _WIN64
   #if !defined __64BIT__
     #define __64BIT__
   #endif
@@ -79,7 +82,7 @@
 #if HAVE_ALLOCA_H
   #include <alloca.h>
 #endif
-#if defined _WIN32
+#if defined __WIN32__ || defined _WIN32 || defined WIN32 /* || defined __MSDOS__ */
   #if !defined alloca
     #define alloca(n)   _alloca(n)
   #endif
@@ -185,7 +188,7 @@ typedef int (AMXAPI *AMX_DEBUG)(struct tagAMX *amx);
 #endif
 
 #if !defined AMX_NO_ALIGN
-  #if defined __linux__ || defined __FreeBSD__
+  #if defined LINUX || defined __FreeBSD__
     #pragma pack(1)         /* structures must be packed (byte-aligned) */
   #elif defined MACOS && defined __MWERKS__
 	#pragma options align=mac68k
@@ -209,7 +212,7 @@ typedef struct tagAMX_NATIVE_INFO {
 
 typedef struct tagAMX_FUNCSTUB {
   ucell address         PACKED;
-  char name[sEXPMAX+1];
+  char name[sEXPMAX+1]  PACKED;
 } PACKED AMX_FUNCSTUB;
 
 typedef struct tagFUNCSTUBNT {
@@ -259,8 +262,8 @@ typedef struct tagAMX {
 typedef struct tagAMX_HEADER {
   int32_t size          PACKED; /* size of the "file" */
   uint16_t magic        PACKED; /* signature */
-  char    file_version;         /* file format version */
-  char    amx_version;          /* required version of the AMX */
+  char    file_version  PACKED; /* file format version */
+  char    amx_version   PACKED; /* required version of the AMX */
   int16_t flags         PACKED;
   int16_t defsize       PACKED; /* size of a definition record */
   int32_t cod           PACKED; /* initial value of COD - code block */
@@ -420,7 +423,7 @@ int AMXAPI amx_UTF8Put(char *string, char **endptr, int maxchars, cell value);
   amx_Register((amx), amx_NativeInfo((name),(func)), 1);
 
 #if !defined AMX_NO_ALIGN
-  #if defined __linux__ || defined __FreeBSD__
+  #if defined LINUX || defined __FreeBSD__
     #pragma pack()    /* reset default packing */
   #elif defined MACOS && defined __MWERKS__
     #pragma options align=reset

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="lib">
@@ -10,11 +10,14 @@
     <Filter Include="lib\boost\system">
       <UniqueIdentifier>{A6D03907-92C9-5859-BBFB-3DDEA7533865}</UniqueIdentifier>
     </Filter>
+    <Filter Include="lib\samp-plugin-sdk">
+      <UniqueIdentifier>{671B4E38-D37C-2B46-5CEA-71F8C84A6205}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lib\samp-plugin-sdk\amx">
+      <UniqueIdentifier>{DCE7469F-481F-8F36-5129-F359BDDFB52F}</UniqueIdentifier>
+    </Filter>
     <Filter Include="lib\sampgdk">
       <UniqueIdentifier>{126A364D-7E1F-AF42-0714-A91973C8A546}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="lib\sdk">
-      <UniqueIdentifier>{8D064879-F9E5-C614-02FE-51EB6E5C2D76}</UniqueIdentifier>
     </Filter>
     <Filter Include="src">
       <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
@@ -57,6 +60,9 @@
     <ClInclude Include="src\manipulation.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\manipulation\array.h">
+      <Filter>src\manipulation</Filter>
+    </ClInclude>
     <ClInclude Include="src\natives.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -69,19 +75,19 @@
     <ClInclude Include="src\utility.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\manipulation\array.h">
-      <Filter>src\manipulation</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="lib\boost\system\error_code.cpp">
       <Filter>lib\boost\system</Filter>
     </ClCompile>
+    <ClCompile Include="lib\samp-plugin-sdk\amx\getch.c">
+      <Filter>lib\samp-plugin-sdk\amx</Filter>
+    </ClCompile>
+    <ClCompile Include="lib\samp-plugin-sdk\amxplugin.cpp">
+      <Filter>lib\samp-plugin-sdk</Filter>
+    </ClCompile>
     <ClCompile Include="lib\sampgdk\sampgdk.c">
       <Filter>lib\sampgdk</Filter>
-    </ClCompile>
-    <ClCompile Include="lib\sdk\amxplugin.cpp">
-      <Filter>lib\sdk</Filter>
     </ClCompile>
     <ClCompile Include="src\callbacks.cpp">
       <Filter>src</Filter>
@@ -106,6 +112,15 @@
     </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\manipulation\array.cpp">
+      <Filter>src\manipulation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\manipulation\float.cpp">
+      <Filter>src\manipulation</Filter>
+    </ClCompile>
+    <ClCompile Include="src\manipulation\int.cpp">
+      <Filter>src\manipulation</Filter>
     </ClCompile>
     <ClCompile Include="src\natives\areas.cpp">
       <Filter>src\natives</Filter>
@@ -154,15 +169,6 @@
     </ClCompile>
     <ClCompile Include="src\utility.cpp">
       <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\manipulation\array.cpp">
-      <Filter>src\manipulation</Filter>
-    </ClCompile>
-    <ClCompile Include="src\manipulation\float.cpp">
-      <Filter>src\manipulation</Filter>
-    </ClCompile>
-    <ClCompile Include="src\manipulation\int.cpp">
-      <Filter>src\manipulation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

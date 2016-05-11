@@ -19,7 +19,7 @@
   #define PLUGIN_EXTERN_C 
 #endif
 
-#if defined __linux__ || defined __FreeBSD__ || defined __OpenBSD__
+#if defined(LINUX) || defined(FREEBSD) || defined(__FreeBSD__) || defined(__OpenBSD__)
   #ifndef __GNUC__
     #pragma message "Warning: Not using a GNU compiler."
   #endif
@@ -30,14 +30,14 @@
   #else
     #define PLUGIN_EXPORT PLUGIN_EXTERN_C 
   #endif
-#elif defined _WIN32
+#elif defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
   #ifndef _MSC_VER
     #pragma message "Warning: Not using a VC++ compiler."
   #endif
   #define PLUGIN_CALL __stdcall
   #define PLUGIN_EXPORT PLUGIN_EXTERN_C
 #else
-  #error "Unknown operating system."
+  #error "You must define one of WIN32, LINUX or FREEBSD"
 #endif
 
 //----------------------------------------------------------

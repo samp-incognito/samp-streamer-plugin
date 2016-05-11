@@ -15,11 +15,11 @@ ifeq ($(config),release)
   TARGETDIR = bin/linux/Release
   TARGET = $(TARGETDIR)/streamer.so
   OBJDIR = obj/linux/Release
-  DEFINES += -DBOOST_CHRONO_HEADER_ONLY -DBOOST_SYSTEM_NO_DEPRECATED -DNDEBUG -DSAMPGDK_AMALGAMATION -DSAMPGDK_CPP_WRAPPERS
-  INCLUDES += -Iinclude -Ilib -Ilib/sdk
+  DEFINES += -DBOOST_CHRONO_HEADER_ONLY -DLINUX -DNDEBUG -DSAMPGDK_AMALGAMATION -DSAMPGDK_CPP_WRAPPERS
+  INCLUDES += -Iinclude -Ilib -Ilib/boost -Ilib/samp-plugin-sdk -Ilib/sampgdk -Ilib/boost/system -Ilib/samp-plugin-sdk/amx
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
-  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -ffast-math -fmerge-all-constants -fno-strict-aliasing -fPIC -fvisibility=hidden -fvisibility-inlines-hidden -m32 -O3 -Wall
+  ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -fno-strict-aliasing -fPIC -m32 -O3 -Wall
   ALL_CXXFLAGS += $(CXXFLAGS) $(ALL_CFLAGS)
   ALL_RESFLAGS += $(RESFLAGS) $(DEFINES) $(INCLUDES)
   LIBS += -lrt
@@ -42,8 +42,8 @@ ifeq ($(config),debug)
   TARGETDIR = bin/linux/Debug
   TARGET = $(TARGETDIR)/streamer.so
   OBJDIR = obj/linux/Debug
-  DEFINES += -DBOOST_CHRONO_HEADER_ONLY -DBOOST_SYSTEM_NO_DEPRECATED -DSAMPGDK_AMALGAMATION -DSAMPGDK_CPP_WRAPPERS
-  INCLUDES += -Iinclude -Ilib -Ilib/sdk
+  DEFINES += -DBOOST_CHRONO_HEADER_ONLY -DLINUX -DSAMPGDK_AMALGAMATION -DSAMPGDK_CPP_WRAPPERS
+  INCLUDES += -Iinclude -Ilib -Ilib/boost -Ilib/samp-plugin-sdk -Ilib/sampgdk -Ilib/boost/system -Ilib/samp-plugin-sdk/amx
   FORCE_INCLUDE +=
   ALL_CPPFLAGS += $(CPPFLAGS) -MMD -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS += $(CFLAGS) $(ALL_CPPFLAGS) -g -fPIC -m32 -O0 -Wall
@@ -66,8 +66,9 @@ endif
 
 OBJECTS := \
 	$(OBJDIR)/error_code.o \
-	$(OBJDIR)/sampgdk.o \
+	$(OBJDIR)/getch.o \
 	$(OBJDIR)/amxplugin.o \
+	$(OBJDIR)/sampgdk.o \
 	$(OBJDIR)/callbacks.o \
 	$(OBJDIR)/cell.o \
 	$(OBJDIR)/core.o \
@@ -155,12 +156,15 @@ endif
 $(OBJDIR)/error_code.o: lib/boost/system/error_code.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/getch.o: lib/samp-plugin-sdk/amx/getch.c
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/amxplugin.o: lib/samp-plugin-sdk/amxplugin.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/sampgdk.o: lib/sampgdk/sampgdk.c
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/amxplugin.o: lib/sdk/amxplugin.cpp
-	@echo $(notdir $<)
-	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/callbacks.o: src/callbacks.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"

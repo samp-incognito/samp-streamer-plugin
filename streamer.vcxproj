@@ -59,8 +59,8 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;BOOST_CHRONO_HEADER_ONLY;_CRT_SECURE_NO_WARNINGS;NDEBUG;NOMINMAX;SAMPGDK_AMALGAMATION;SAMPGDK_CPP_WRAPPERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>include;lib;lib\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;BOOST_CHRONO_HEADER_ONLY;NDEBUG;NOMINMAX;SAMPGDK_AMALGAMATION;SAMPGDK_CPP_WRAPPERS;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include;lib;lib\boost;lib\samp-plugin-sdk;lib\sampgdk;lib\boost\system;lib\samp-plugin-sdk\amx;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -69,8 +69,8 @@
       <BufferSecurityCheck>false</BufferSecurityCheck>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;BOOST_CHRONO_HEADER_ONLY;_CRT_SECURE_NO_WARNINGS;NDEBUG;NOMINMAX;SAMPGDK_AMALGAMATION;SAMPGDK_CPP_WRAPPERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>include;lib;lib\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;BOOST_CHRONO_HEADER_ONLY;NDEBUG;NOMINMAX;SAMPGDK_AMALGAMATION;SAMPGDK_CPP_WRAPPERS;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include;lib;lib\boost;lib\samp-plugin-sdk;lib\sampgdk;lib\boost\system;lib\samp-plugin-sdk\amx;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -87,14 +87,14 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;BOOST_CHRONO_HEADER_ONLY;_CRT_SECURE_NO_WARNINGS;NOMINMAX;SAMPGDK_AMALGAMATION;SAMPGDK_CPP_WRAPPERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>include;lib;lib\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;BOOST_CHRONO_HEADER_ONLY;NOMINMAX;SAMPGDK_AMALGAMATION;SAMPGDK_CPP_WRAPPERS;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include;lib;lib\boost;lib\samp-plugin-sdk;lib\sampgdk;lib\boost\system;lib\samp-plugin-sdk\amx;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;BOOST_CHRONO_HEADER_ONLY;_CRT_SECURE_NO_WARNINGS;NOMINMAX;SAMPGDK_AMALGAMATION;SAMPGDK_CPP_WRAPPERS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>include;lib;lib\sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>BOOST_ALL_NO_LIB;BOOST_CHRONO_HEADER_ONLY;NOMINMAX;SAMPGDK_AMALGAMATION;SAMPGDK_CPP_WRAPPERS;WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>include;lib;lib\boost;lib\samp-plugin-sdk;lib\sampgdk;lib\boost\system;lib\samp-plugin-sdk\amx;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -122,8 +122,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="lib\boost\system\error_code.cpp" />
+    <ClCompile Include="lib\samp-plugin-sdk\amx\getch.c" />
+    <ClCompile Include="lib\samp-plugin-sdk\amxplugin.cpp" />
     <ClCompile Include="lib\sampgdk\sampgdk.c" />
-    <ClCompile Include="lib\sdk\amxplugin.cpp" />
     <ClCompile Include="src\callbacks.cpp" />
     <ClCompile Include="src\cell.cpp" />
     <ClCompile Include="src\core.cpp" />
