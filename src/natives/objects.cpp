@@ -44,14 +44,15 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicObject(AMX *amx, cell *params)
 	object->amx = amx;
 	object->objectID = objectID;
 	object->noCameraCollision = false;
-	object->originalStreamDistance = -1.0f;
+	object->originalComparableStreamDistance = -1.0f;
 	object->modelID = static_cast<int>(params[1]);
 	object->position = Eigen::Vector3f(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
 	object->rotation = Eigen::Vector3f(amx_ctof(params[5]), amx_ctof(params[6]), amx_ctof(params[7]));
 	Utility::addToContainer(object->worlds, static_cast<int>(params[8]));
 	Utility::addToContainer(object->interiors, static_cast<int>(params[9]));
 	Utility::addToContainer(object->players, static_cast<int>(params[10]));
-	object->streamDistance = amx_ctof(params[11]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[11]) : amx_ctof(params[11]) * amx_ctof(params[11]);
+	object->comparableStreamDistance = amx_ctof(params[11]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[11]) : amx_ctof(params[11]) * amx_ctof(params[11]);
+	object->streamDistance = amx_ctof(params[11]);
 	object->drawDistance = amx_ctof(params[12]);
 	Utility::addToContainer(object->areas, static_cast<int>(params[13]));
 	object->priority = static_cast<int>(params[14]);
@@ -391,19 +392,19 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToObject(AMX *amx, cell *params
 			boost::unordered_map<int, Item::SharedObject>::iterator p = core->getData()->objects.find(static_cast<int>(params[2]));
 			if (p != core->getData()->objects.end())
 			{
-				if (o->second->streamDistance > STREAMER_STATIC_DISTANCE_CUTOFF && p->second->streamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
+				if (o->second->comparableStreamDistance > STREAMER_STATIC_DISTANCE_CUTOFF && p->second->comparableStreamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
 				{
-					o->second->originalStreamDistance = o->second->streamDistance;
-					o->second->streamDistance = p->second->streamDistance + static_cast<float>(boost::geometry::distance(o->second->position, p->second->position));
+					o->second->originalComparableStreamDistance = o->second->comparableStreamDistance;
+					o->second->comparableStreamDistance = p->second->comparableStreamDistance + static_cast<float>(boost::geometry::comparable_distance(o->second->position, p->second->position));
 				}
 			}
 			core->getStreamer()->attachedObjects.insert(o->second);
 		}
 		else
 		{
-			if (o->second->originalStreamDistance > STREAMER_STATIC_DISTANCE_CUTOFF && o->second->streamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
+			if (o->second->originalComparableStreamDistance > STREAMER_STATIC_DISTANCE_CUTOFF && o->second->comparableStreamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
 			{
-				o->second->streamDistance = o->second->originalStreamDistance;
+				o->second->comparableStreamDistance = o->second->originalComparableStreamDistance;
 			}
 			o->second->attach.reset();
 			core->getStreamer()->attachedObjects.erase(o->second);

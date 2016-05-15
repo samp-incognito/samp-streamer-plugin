@@ -44,6 +44,7 @@ namespace Item
 		AMX *amx;
 		int areaID;
 		SharedCell cell;
+		float comparableSize;
 		Eigen::Vector2f height;
 		int references;
 		float size;
@@ -85,7 +86,8 @@ namespace Item
 		AMX *amx;
 		SharedCell cell;
 		int checkpointID;
-		float originalStreamDistance;
+		float comparableStreamDistance;
+		float originalComparableStreamDistance;
 		Eigen::Vector3f position;
 		int priority;
 		int references;
@@ -110,8 +112,9 @@ namespace Item
 		AMX *amx;
 		SharedCell cell;
 		int color;
+		float comparableStreamDistance;
 		int mapIconID;
-		float originalStreamDistance;
+		float originalComparableStreamDistance;
 		Eigen::Vector3f position;
 		int priority;
 		int references;
@@ -136,11 +139,12 @@ namespace Item
 
 		AMX *amx;
 		SharedCell cell;
+		float comparableStreamDistance;
 		float drawDistance;
 		int modelID;
 		bool noCameraCollision;
 		int objectID;
-		float originalStreamDistance;
+		float originalComparableStreamDistance;
 		Eigen::Vector3f position;
 		int priority;
 		int references;
@@ -233,8 +237,9 @@ namespace Item
 
 		AMX *amx;
 		SharedCell cell;
+		float comparableStreamDistance;
 		int modelID;
-		float originalStreamDistance;
+		float originalComparableStreamDistance;
 		int pickupID;
 		Eigen::Vector3f position;
 		int priority;
@@ -260,8 +265,9 @@ namespace Item
 
 		AMX *amx;
 		SharedCell cell;
+		float comparableStreamDistance;
 		Eigen::Vector3f next;
-		float originalStreamDistance;
+		float originalComparableStreamDistance;
 		Eigen::Vector3f position;
 		int priority;
 		int raceCheckpointID;
@@ -288,8 +294,9 @@ namespace Item
 		AMX *amx;
 		SharedCell cell;
 		int color;
+		float comparableStreamDistance;
 		float drawDistance;
-		float originalStreamDistance;
+		float originalComparableStreamDistance;
 		Eigen::Vector3f position;
 		int priority;
 		int references;

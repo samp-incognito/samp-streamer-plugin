@@ -39,14 +39,15 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicMapIcon(AMX *amx, cell *params)
 	Item::SharedMapIcon mapIcon(new Item::MapIcon);
 	mapIcon->amx = amx;
 	mapIcon->mapIconID = mapIconID;
-	mapIcon->originalStreamDistance = -1.0f;
+	mapIcon->originalComparableStreamDistance = -1.0f;
 	mapIcon->position = Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]));
 	mapIcon->type = static_cast<int>(params[4]);
 	mapIcon->color = static_cast<int>(params[5]);
 	Utility::addToContainer(mapIcon->worlds, static_cast<int>(params[6]));
 	Utility::addToContainer(mapIcon->interiors, static_cast<int>(params[7]));
 	Utility::addToContainer(mapIcon->players, static_cast<int>(params[8]));
-	mapIcon->streamDistance = amx_ctof(params[9]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[9]) : amx_ctof(params[9]) * amx_ctof(params[9]);
+	mapIcon->comparableStreamDistance = amx_ctof(params[9]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[9]) : amx_ctof(params[9]) * amx_ctof(params[9]);
+	mapIcon->streamDistance = amx_ctof(params[9]);
 	mapIcon->style = static_cast<int>(params[10]);
 	Utility::addToContainer(mapIcon->areas, static_cast<int>(params[11]));
 	mapIcon->priority = static_cast<int>(params[12]);

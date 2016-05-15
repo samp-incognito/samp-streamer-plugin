@@ -46,7 +46,7 @@ public:
 
 	inline float getCellDistance()
 	{
-		return sqrt(cellDistance);
+		return cellDistance;
 	}
 
 	inline void setCellSize(float size)
@@ -56,7 +56,8 @@ public:
 
 	inline void setCellDistance(float distance)
 	{
-		cellDistance = distance * distance;
+		cellDistance = distance;
+		comparableCellDistance = distance * distance;
 	}
 
 	void rebuildGrid();
@@ -75,10 +76,11 @@ public:
 private:
 	float cellDistance;
 	float cellSize;
+	float comparableCellDistance;
 	SharedCell globalCell;
-	Eigen::Matrix<float, 2, 9> translationMatrix;
 
 	boost::unordered_map<CellID, SharedCell> cells;
+	Eigen::Matrix<float, 2, 9> translationMatrix;
 
 	inline void calculateTranslationMatrix()
 	{

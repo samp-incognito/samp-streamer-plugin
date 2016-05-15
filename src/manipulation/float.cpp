@@ -213,7 +213,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 					}
 					case StreamDistance:
 					{
-						Utility::storeFloatInNative(amx, params[4], std::sqrt(o->second->streamDistance));
+						Utility::storeFloatInNative(amx, params[4], o->second->streamDistance);
 						return 1;
 					}
 					case X:
@@ -253,7 +253,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 				{
 					case StreamDistance:
 					{
-						Utility::storeFloatInNative(amx, params[4], std::sqrt(p->second->streamDistance));
+						Utility::storeFloatInNative(amx, params[4], p->second->streamDistance);
 						return 1;
 					}
 					case X:
@@ -298,7 +298,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 					}
 					case StreamDistance:
 					{
-						Utility::storeFloatInNative(amx, params[4], std::sqrt(c->second->streamDistance));
+						Utility::storeFloatInNative(amx, params[4], c->second->streamDistance);
 						return 1;
 					}
 					case X:
@@ -358,7 +358,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 					}
 					case StreamDistance:
 					{
-						Utility::storeFloatInNative(amx, params[4], std::sqrt(r->second->streamDistance));
+						Utility::storeFloatInNative(amx, params[4], r->second->streamDistance);
 						return 1;
 					}
 					case X:
@@ -398,7 +398,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 				{
 					case StreamDistance:
 					{
-						Utility::storeFloatInNative(amx, params[4], std::sqrt(m->second->streamDistance));
+						Utility::storeFloatInNative(amx, params[4], m->second->streamDistance);
 						return 1;
 					}
 					case X:
@@ -470,7 +470,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 					}
 					case StreamDistance:
 					{
-						Utility::storeFloatInNative(amx, params[4], std::sqrt(t->second->streamDistance));
+						Utility::storeFloatInNative(amx, params[4], t->second->streamDistance);
 						return 1;
 					}
 					case AttachOffsetX:
@@ -671,7 +671,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 					}
 					case Size:
 					{
-						Utility::storeFloatInNative(amx, params[4], std::sqrt(a->second->size));
+						Utility::storeFloatInNative(amx, params[4], a->second->size);
 						return 1;
 					}
 					case X:
@@ -866,7 +866,8 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					}
 					case StreamDistance:
 					{
-						o->second->streamDistance = amx_ctof(params[4]) * amx_ctof(params[4]);
+						o->second->comparableStreamDistance = amx_ctof(params[4]) * amx_ctof(params[4]);
+						o->second->streamDistance = amx_ctof(params[4]);
 						reassign = true;
 						break;
 					}
@@ -999,7 +1000,8 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 				{
 					case StreamDistance:
 					{
-						p->second->streamDistance = amx_ctof(params[4]) * amx_ctof(params[4]);
+						p->second->comparableStreamDistance = amx_ctof(params[4]) * amx_ctof(params[4]);
+						p->second->streamDistance = amx_ctof(params[4]);
 						reassign = true;
 						break;
 					}
@@ -1074,7 +1076,8 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					}
 					case StreamDistance:
 					{
-						c->second->streamDistance = amx_ctof(params[4]) * amx_ctof(params[4]);
+						c->second->comparableStreamDistance = amx_ctof(params[4]) * amx_ctof(params[4]);
+						c->second->streamDistance = amx_ctof(params[4]);
 						reassign = true;
 						break;
 					}
@@ -1170,7 +1173,8 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					}
 					case StreamDistance:
 					{
-						r->second->streamDistance = amx_ctof(params[4]) * amx_ctof(params[4]);
+						r->second->comparableStreamDistance = amx_ctof(params[4]) * amx_ctof(params[4]);
+						r->second->streamDistance = amx_ctof(params[4]);
 						reassign = true;
 						break;
 					}
@@ -1242,7 +1246,8 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 				{
 					case StreamDistance:
 					{
-						m->second->streamDistance = amx_ctof(params[4]) * amx_ctof(params[4]);
+						m->second->comparableStreamDistance = amx_ctof(params[4]) * amx_ctof(params[4]);
+						m->second->streamDistance = amx_ctof(params[4]);
 						reassign = true;
 						break;
 					}
@@ -1320,7 +1325,8 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					}
 					case StreamDistance:
 					{
-						t->second->streamDistance = amx_ctof(params[4]) * amx_ctof(params[4]);
+						t->second->comparableStreamDistance = amx_ctof(params[4]) * amx_ctof(params[4]);
+						t->second->streamDistance = amx_ctof(params[4]);
 						reassign = true;
 						break;
 					}
@@ -1537,7 +1543,8 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 							case STREAMER_AREA_TYPE_CYLINDER:
 							case STREAMER_AREA_TYPE_SPHERE:
 							{
-								a->second->size = amx_ctof(params[4]) * amx_ctof(params[4]);
+								a->second->comparableSize = amx_ctof(params[4]) * amx_ctof(params[4]);
+								a->second->size = amx_ctof(params[4]);
 								reassign = true;
 								break;
 							}
@@ -1609,13 +1616,15 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 						case STREAMER_AREA_TYPE_RECTANGLE:
 						{
 							boost::geometry::correct(boost::get<Box2D>(a->second->position));
-							a->second->size = static_cast<float>(boost::geometry::comparable_distance(boost::get<Box2D>(a->second->position).min_corner(), boost::get<Box2D>(a->second->position).max_corner()));
+							a->second->comparableSize = static_cast<float>(boost::geometry::comparable_distance(boost::get<Box2D>(a->second->position).min_corner(), boost::get<Box2D>(a->second->position).max_corner()));
+							a->second->size = static_cast<float>(boost::geometry::distance(boost::get<Box2D>(a->second->position).min_corner(), boost::get<Box2D>(a->second->position).max_corner()));
 							break;
 						}
 						case STREAMER_AREA_TYPE_CUBOID:
 						{
 							boost::geometry::correct(boost::get<Box3D>(a->second->position));
-							a->second->size = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector2f(boost::get<Box3D>(a->second->position).min_corner()[0], boost::get<Box3D>(a->second->position).min_corner()[1]), Eigen::Vector2f(boost::get<Box3D>(a->second->position).max_corner()[0], boost::get<Box3D>(a->second->position).max_corner()[1])));
+							a->second->comparableSize = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector2f(boost::get<Box3D>(a->second->position).min_corner()[0], boost::get<Box3D>(a->second->position).min_corner()[1]), Eigen::Vector2f(boost::get<Box3D>(a->second->position).max_corner()[0], boost::get<Box3D>(a->second->position).max_corner()[1])));
+							a->second->size = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(boost::get<Box3D>(a->second->position).min_corner()[0], boost::get<Box3D>(a->second->position).min_corner()[1]), Eigen::Vector2f(boost::get<Box3D>(a->second->position).max_corner()[0], boost::get<Box3D>(a->second->position).max_corner()[1])));
 							break;
 						}
 					}

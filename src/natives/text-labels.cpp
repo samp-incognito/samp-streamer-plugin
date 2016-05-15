@@ -41,7 +41,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabel(AMX *amx, cell *params)
 	Item::SharedTextLabel textLabel(new Item::TextLabel);
 	textLabel->amx = amx;
 	textLabel->textLabelID = textLabelID;
-	textLabel->originalStreamDistance = -1.0f;
+	textLabel->originalComparableStreamDistance = -1.0f;
 	textLabel->text = Utility::convertNativeStringToString(amx, params[1]);
 	textLabel->color = static_cast<int>(params[2]);
 	textLabel->position = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
@@ -61,7 +61,8 @@ cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabel(AMX *amx, cell *params)
 	Utility::addToContainer(textLabel->worlds, static_cast<int>(params[10]));
 	Utility::addToContainer(textLabel->interiors, static_cast<int>(params[11]));
 	Utility::addToContainer(textLabel->players, static_cast<int>(params[12]));
-	textLabel->streamDistance = amx_ctof(params[13]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[13]) : amx_ctof(params[13]) * amx_ctof(params[13]);
+	textLabel->comparableStreamDistance = amx_ctof(params[13]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[13]) : amx_ctof(params[13]) * amx_ctof(params[13]);
+	textLabel->streamDistance = amx_ctof(params[13]);
 	Utility::addToContainer(textLabel->areas, static_cast<int>(params[14]));
 	textLabel->priority = static_cast<int>(params[15]);
 	core->getGrid()->addTextLabel(textLabel);

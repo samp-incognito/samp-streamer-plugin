@@ -39,13 +39,14 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCP(AMX *amx, cell *params)
 	Item::SharedCheckpoint checkpoint(new Item::Checkpoint);
 	checkpoint->amx = amx;
 	checkpoint->checkpointID = checkpointID;
-	checkpoint->originalStreamDistance = -1.0f;
+	checkpoint->originalComparableStreamDistance = -1.0f;
 	checkpoint->position = Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]));
 	checkpoint->size = amx_ctof(params[4]);
 	Utility::addToContainer(checkpoint->worlds, static_cast<int>(params[5]));
 	Utility::addToContainer(checkpoint->interiors, static_cast<int>(params[6]));
 	Utility::addToContainer(checkpoint->players, static_cast<int>(params[7]));
-	checkpoint->streamDistance = amx_ctof(params[8]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[8]) : amx_ctof(params[8]) * amx_ctof(params[8]);
+	checkpoint->comparableStreamDistance = amx_ctof(params[8]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[8]) : amx_ctof(params[8]) * amx_ctof(params[8]);
+	checkpoint->streamDistance = amx_ctof(params[8]);
 	Utility::addToContainer(checkpoint->areas, static_cast<int>(params[9]));
 	checkpoint->priority = static_cast<int>(params[10]);
 	core->getGrid()->addCheckpoint(checkpoint);

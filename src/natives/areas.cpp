@@ -44,7 +44,8 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCircle(AMX *amx, cell *params)
 	area->areaID = areaID;
 	area->type = STREAMER_AREA_TYPE_CIRCLE;
 	area->position = Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2]));
-	area->size = amx_ctof(params[3]) * amx_ctof(params[3]);
+	area->comparableSize = amx_ctof(params[3]) * amx_ctof(params[3]);
+	area->size = amx_ctof(params[3]);
 	Utility::addToContainer(area->worlds, static_cast<int>(params[4]));
 	Utility::addToContainer(area->interiors, static_cast<int>(params[5]));
 	Utility::addToContainer(area->players, static_cast<int>(params[6]));
@@ -67,7 +68,8 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCylinder(AMX *amx, cell *params)
 	area->type = STREAMER_AREA_TYPE_CYLINDER;
 	area->position = Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2]));
 	area->height = Eigen::Vector2f(amx_ctof(params[3]), amx_ctof(params[4]));
-	area->size = amx_ctof(params[5]) * amx_ctof(params[5]);
+	area->comparableSize = amx_ctof(params[5]) * amx_ctof(params[5]);
+	area->size = amx_ctof(params[5]);
 	Utility::addToContainer(area->worlds, static_cast<int>(params[6]));
 	Utility::addToContainer(area->interiors, static_cast<int>(params[7]));
 	Utility::addToContainer(area->players, static_cast<int>(params[8]));
@@ -89,7 +91,8 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicSphere(AMX *amx, cell *params)
 	area->areaID = areaID;
 	area->type = STREAMER_AREA_TYPE_SPHERE;
 	area->position = Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]));
-	area->size = amx_ctof(params[4]) * amx_ctof(params[4]);
+	area->comparableSize = amx_ctof(params[4]) * amx_ctof(params[4]);
+	area->size = amx_ctof(params[4]);
 	Utility::addToContainer(area->worlds, static_cast<int>(params[5]));
 	Utility::addToContainer(area->interiors, static_cast<int>(params[6]));
 	Utility::addToContainer(area->players, static_cast<int>(params[7]));
@@ -112,7 +115,8 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicRectangle(AMX *amx, cell *params)
 	area->type = STREAMER_AREA_TYPE_RECTANGLE;
 	area->position = Box2D(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), Eigen::Vector2f(amx_ctof(params[3]), amx_ctof(params[4])));
 	boost::geometry::correct(boost::get<Box2D>(area->position));
-	area->size = static_cast<float>(boost::geometry::comparable_distance(boost::get<Box2D>(area->position).min_corner(), boost::get<Box2D>(area->position).max_corner()));
+	area->comparableSize = static_cast<float>(boost::geometry::comparable_distance(boost::get<Box2D>(area->position).min_corner(), boost::get<Box2D>(area->position).max_corner()));
+	area->size = static_cast<float>(boost::geometry::distance(boost::get<Box2D>(area->position).min_corner(), boost::get<Box2D>(area->position).max_corner()));
 	Utility::addToContainer(area->worlds, static_cast<int>(params[5]));
 	Utility::addToContainer(area->interiors, static_cast<int>(params[6]));
 	Utility::addToContainer(area->players, static_cast<int>(params[7]));
@@ -135,7 +139,8 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCuboid(AMX *amx, cell *params)
 	area->type = STREAMER_AREA_TYPE_CUBOID;
 	area->position = Box3D(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), Eigen::Vector3f(amx_ctof(params[4]), amx_ctof(params[5]), amx_ctof(params[6])));
 	boost::geometry::correct(boost::get<Box3D>(area->position));
-	area->size = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector2f(boost::get<Box3D>(area->position).min_corner()[0], boost::get<Box3D>(area->position).min_corner()[1]), Eigen::Vector2f(boost::get<Box3D>(area->position).max_corner()[0], boost::get<Box3D>(area->position).max_corner()[1])));
+	area->comparableSize = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector2f(boost::get<Box3D>(area->position).min_corner()[0], boost::get<Box3D>(area->position).min_corner()[1]), Eigen::Vector2f(boost::get<Box3D>(area->position).max_corner()[0], boost::get<Box3D>(area->position).max_corner()[1])));
+	area->size = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(boost::get<Box3D>(area->position).min_corner()[0], boost::get<Box3D>(area->position).min_corner()[1]), Eigen::Vector2f(boost::get<Box3D>(area->position).max_corner()[0], boost::get<Box3D>(area->position).max_corner()[1])));
 	Utility::addToContainer(area->worlds, static_cast<int>(params[7]));
 	Utility::addToContainer(area->interiors, static_cast<int>(params[8]));
 	Utility::addToContainer(area->players, static_cast<int>(params[9]));
@@ -164,7 +169,8 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPolygon(AMX *amx, cell *params)
 	Utility::convertArrayToPolygon(amx, params[1], params[4], boost::get<Polygon2D>(area->position));
 	area->height = Eigen::Vector2f(amx_ctof(params[2]), amx_ctof(params[3]));
 	Box2D box = boost::geometry::return_envelope<Box2D>(boost::get<Polygon2D>(area->position));
-	area->size = static_cast<float>(boost::geometry::comparable_distance(box.min_corner(), box.max_corner()));
+	area->comparableSize = static_cast<float>(boost::geometry::comparable_distance(box.min_corner(), box.max_corner()));
+	area->size = static_cast<float>(boost::geometry::distance(box.min_corner(), box.max_corner()));
 	Utility::addToContainer(area->worlds, static_cast<int>(params[5]));
 	Utility::addToContainer(area->interiors, static_cast<int>(params[6]));
 	Utility::addToContainer(area->players, static_cast<int>(params[7]));
