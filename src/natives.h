@@ -164,8 +164,12 @@ namespace Natives
 	cell AMX_NATIVE_CALL GetPlayerNumberDynamicAreas(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL IsPointInDynamicArea(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL IsPointInAnyDynamicArea(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL IsLineInDynamicArea(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL IsLineInAnyDynamicArea(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL GetDynamicAreasForPoint(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL GetNumberDynamicAreasForPoint(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetDynamicAreasForLine(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetNumberDynamicAreasForLine(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL AttachDynamicAreaToObject(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL AttachDynamicAreaToPlayer(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL AttachDynamicAreaToVehicle(AMX *amx, cell *params);

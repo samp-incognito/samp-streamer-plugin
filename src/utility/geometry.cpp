@@ -33,6 +33,57 @@
 
 using namespace Utility;
 
+bool Utility::doesLineSegmentIntersectArea(const Eigen::Vector3f &lineSegmentStart, const Eigen::Vector3f &lineSegmentEnd, const Item::SharedArea &area)
+{
+	switch (area->type)
+	{
+		case STREAMER_AREA_TYPE_CIRCLE:
+		{
+			if (area->attach)
+			{
+				return doesLineSegmentIntersectCircleOrSphere(Eigen::Vector2f(lineSegmentStart[0], lineSegmentStart[1]), Eigen::Vector2f(lineSegmentEnd[0], lineSegmentEnd[1]), Eigen::Vector2f(area->attach->position[0], area->attach->position[1]), area->comparableSize);
+			}
+			else
+			{
+				return doesLineSegmentIntersectCircleOrSphere(Eigen::Vector2f(lineSegmentStart[0], lineSegmentStart[1]), Eigen::Vector2f(lineSegmentEnd[0], lineSegmentEnd[1]), boost::get<Eigen::Vector2f>(area->position), area->comparableSize);
+			}
+		}
+		case STREAMER_AREA_TYPE_CYLINDER:
+		{
+			Eigen::Vector2f position = boost::get<Eigen::Vector2f>(area->position);
+			Box2D box2D = Box2D(Eigen::Vector2f(position[0] - area->size, position[1] - area->size), Eigen::Vector2f(position[0] + area->size, position[1] + area->size));
+			Box3D box3D = Box3D(Eigen::Vector3f(box2D.min_corner()[0], box2D.min_corner()[1], area->height[0]), Eigen::Vector3f(box2D.max_corner()[0], box2D.max_corner()[1], area->height[1]));
+			return doesLineSegmentIntersectBox(lineSegmentStart, lineSegmentEnd, box3D);
+		}
+		case STREAMER_AREA_TYPE_SPHERE:
+		{
+			if (area->attach)
+			{
+				return doesLineSegmentIntersectCircleOrSphere(lineSegmentStart, lineSegmentEnd, area->attach->position, area->comparableSize);
+			}
+			else
+			{
+				return doesLineSegmentIntersectCircleOrSphere(lineSegmentStart, lineSegmentEnd, boost::get<Eigen::Vector3f>(area->position), area->comparableSize);
+			}
+		}
+		case STREAMER_AREA_TYPE_RECTANGLE:
+		{
+			return doesLineSegmentIntersectBox(lineSegmentStart, lineSegmentEnd, boost::get<Box2D>(area->position));
+		}
+		case STREAMER_AREA_TYPE_CUBOID:
+		{
+			return doesLineSegmentIntersectBox(lineSegmentStart, lineSegmentEnd, boost::get<Box3D>(area->position));
+		}
+		case STREAMER_AREA_TYPE_POLYGON:
+		{
+			Box2D box2D = boost::geometry::return_envelope<Box2D>(boost::get<Polygon2D>(area->position));
+			Box3D box3D = Box3D(Eigen::Vector3f(box2D.min_corner()[0], box2D.min_corner()[1], area->height[0]), Eigen::Vector3f(box2D.max_corner()[0], box2D.max_corner()[1], area->height[1]));
+			return doesLineSegmentIntersectBox(lineSegmentStart, lineSegmentEnd, box3D);
+		}
+	}
+	return false;
+}
+
 bool Utility::isPointInArea(const Eigen::Vector3f &point, const Item::SharedArea &area)
 {
 	switch (area->type)

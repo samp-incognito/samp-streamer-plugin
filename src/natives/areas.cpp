@@ -406,6 +406,30 @@ cell AMX_NATIVE_CALL Natives::IsPointInAnyDynamicArea(AMX *amx, cell *params)
 	return 0;
 }
 
+cell AMX_NATIVE_CALL Natives::IsLineInDynamicArea(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(7, "IsLineInDynamicArea");
+	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
+	if (a != core->getData()->areas.end())
+	{
+		return Utility::doesLineSegmentIntersectArea(Eigen::Vector3f(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4])), Eigen::Vector3f(amx_ctof(params[5]), amx_ctof(params[6]), amx_ctof(params[7])), a->second);
+	}
+	return 0;
+}
+
+cell AMX_NATIVE_CALL Natives::IsLineInAnyDynamicArea(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(6, "IsLineInAnyDynamicArea");
+	for (boost::unordered_map<int, Item::SharedArea>::const_iterator a = core->getData()->areas.begin(); a != core->getData()->areas.end(); ++a)
+	{
+		if (Utility::doesLineSegmentIntersectArea(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), Eigen::Vector3f(amx_ctof(params[4]), amx_ctof(params[5]), amx_ctof(params[6])), a->second))
+		{
+			return 1;
+		}
+	}
+	return 0;
+}
+
 cell AMX_NATIVE_CALL Natives::GetPlayerDynamicAreas(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(3, "GetPlayerDynamicAreas");
@@ -578,6 +602,88 @@ cell AMX_NATIVE_CALL Natives::GetNumberDynamicAreasForPoint(AMX *amx, cell *para
 			{
 				++areaCount;
 			}
+		}
+	}
+	return static_cast<cell>(areaCount);
+}
+
+cell AMX_NATIVE_CALL Natives::GetDynamicAreasForLine(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(8, "GetDynamicAreasForLine");
+	std::multimap<float, int> orderedAreas;
+	for (boost::unordered_map<int, Item::SharedArea>::const_iterator a = core->getData()->areas.begin(); a != core->getData()->areas.end(); ++a)
+	{
+		if (Utility::doesLineSegmentIntersectArea(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), Eigen::Vector3f(amx_ctof(params[4]), amx_ctof(params[5]), amx_ctof(params[6])), a->second))
+		{
+			float distance = 0.0f;
+			switch (a->second->type)
+			{
+				case STREAMER_AREA_TYPE_CIRCLE:
+				case STREAMER_AREA_TYPE_CYLINDER:
+				{
+					if (a->second->attach)
+					{
+						distance = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), Eigen::Vector2f(a->second->attach->position[0], a->second->attach->position[1])));
+					}
+					else
+					{
+						distance = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), boost::get<Eigen::Vector2f>(a->second->position)));
+					}
+					break;
+				}
+				case STREAMER_AREA_TYPE_SPHERE:
+				{
+					if (a->second->attach)
+					{
+						distance = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), a->second->attach->position));
+					}
+					else
+					{
+						distance = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), boost::get<Eigen::Vector3f>(a->second->position)));
+					}
+					break;
+				}
+				case STREAMER_AREA_TYPE_RECTANGLE:
+				{
+					Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Box2D>(a->second->position));
+					distance = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), centroid));
+					break;
+				}
+				case STREAMER_AREA_TYPE_CUBOID:
+				{
+					Eigen::Vector3f centroid = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3D>(a->second->position));
+					distance = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), centroid));
+					break;
+
+				}
+				case STREAMER_AREA_TYPE_POLYGON:
+				{
+					Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2D>(a->second->position));
+					distance = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), centroid));
+					break;
+				}
+			}
+			orderedAreas.insert(std::pair<float, int>(distance, a->first));
+		}
+	}
+	std::vector<int> finalAreas;
+	for (std::map<float, int>::iterator i = orderedAreas.begin(); i != orderedAreas.end(); ++i)
+	{
+		finalAreas.push_back(i->second);
+	}
+	Utility::convertContainerToArray(amx, params[7], params[8], finalAreas);
+	return static_cast<cell>(finalAreas.size());
+}
+
+cell AMX_NATIVE_CALL Natives::GetNumberDynamicAreasForLine(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(6, "GetNumberDynamicAreasForLine");
+	int areaCount = 0;
+	for (boost::unordered_map<int, Item::SharedArea>::const_iterator a = core->getData()->areas.begin(); a != core->getData()->areas.end(); ++a)
+	{
+		if (Utility::doesLineSegmentIntersectArea(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), Eigen::Vector3f(amx_ctof(params[4]), amx_ctof(params[5]), amx_ctof(params[6])), a->second))
+		{
+			++areaCount;
 		}
 	}
 	return static_cast<cell>(areaCount);

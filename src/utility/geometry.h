@@ -26,10 +26,59 @@
 
 namespace Utility
 {
+	bool doesLineSegmentIntersectArea(const Eigen::Vector3f &lineSegmentStart, const Eigen::Vector3f &lineSegmentEnd, const Item::SharedArea &area);
 	bool isPointInArea(const Eigen::Vector3f &point, const Item::SharedArea &area);
 
 	void projectPoint(const Eigen::Vector3f &point, const float &heading, Eigen::Vector3f &position);
 	void projectPoint(const Eigen::Vector3f &point, const Eigen::Vector3f &rotation, Eigen::Vector3f &position);
 	void projectPoint(const Eigen::Vector3f &point, const Eigen::Vector4f &quaternion, Eigen::Vector3f &position);
+
+	// "Fast, Branchless Ray/Bounding Box Intersections" by Tavian Barnes
+	template<typename T1, typename T2>
+	bool Utility::doesLineSegmentIntersectBox(const T1 &lineSegmentStart, const T1 &lineSegmentEnd, const T2 &box)
+	{
+		T1 intersectionInterval = T1::Zero();
+
+		#ifdef _WIN32
+			#pragma warning(push)
+			// Disable the "potential divide by zero" warning
+			#pragma warning(disable: 4723)
+		#endif
+
+		T1 lineSegmentEndInverse = lineSegmentEnd.cwiseInverse();
+
+		#ifdef _WIN32
+			#pragma warning(pop)
+		#endif
+
+		float min = 0.0f, max = 0.0f;
+		for (int i = 0; i < intersectionInterval.size(); ++i)
+		{
+			intersectionInterval[0] = (box.min_corner()[i] - lineSegmentStart[i]) * lineSegmentEndInverse[i];
+			intersectionInterval[1] = (box.max_corner()[i] - lineSegmentStart[i]) * lineSegmentEndInverse[i];
+			if (!i)
+			{
+				min = std::min(intersectionInterval[0], intersectionInterval[1]);
+				max = std::max(intersectionInterval[0], intersectionInterval[1]);
+			}
+			else
+			{
+				min = std::max(min, std::min(std::min(intersectionInterval[0], intersectionInterval[1]), max));
+				max = std::min(max, std::max(std::max(intersectionInterval[0], intersectionInterval[1]), min));
+			}
+		}
+		return max > std::max(min, 0.0f);
+	}
+
+	template<typename T>
+	bool Utility::doesLineSegmentIntersectCircleOrSphere(const T &lineSegmentStart, const T &lineSegmentEnd, const T &center, float squaredRadius)
+	{
+		T rayDirection = lineSegmentEnd - lineSegmentStart, rayDistance = lineSegmentStart - center;
+		float a = boost::geometry::dot_product(rayDirection, rayDirection);
+		float b = 2.0f * boost::geometry::dot_product(rayDirection, rayDistance);
+		float c = boost::geometry::dot_product(rayDistance, rayDistance) - squaredRadius;
+		return !(((b * b) - (4.0f * a * c)) < 0.0f);
+	}
+}
 
 #endif

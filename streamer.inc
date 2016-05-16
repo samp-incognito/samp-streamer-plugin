@@ -310,8 +310,12 @@ native GetPlayerDynamicAreas(playerid, STREAMER_TAG_AREA areas[], maxareas = siz
 native GetPlayerNumberDynamicAreas(playerid);
 native IsPointInDynamicArea(STREAMER_TAG_AREA areaid, Float:x, Float:y, Float:z);
 native IsPointInAnyDynamicArea(Float:x, Float:y, Float:z);
+native IsLineInDynamicArea(STREAMER_TAG_AREA areaid, Float:x1, Float:y1, Float:z1, Float:x2, Float:y2, Float:z2);
+native IsLineInAnyDynamicArea(Float:x1, Float:y1, Float:z1, Float:x2, Float:y2, Float:z2);
 native GetDynamicAreasForPoint(Float:x, Float:y, Float:z, STREAMER_TAG_AREA areas[], maxareas = sizeof areas);
 native GetNumberDynamicAreasForPoint(Float:x, Float:y, Float:z);
+native GetDynamicAreasForLine(Float:x1, Float:y1, Float:z1, Float:x2, Float:y2, Float:z2, STREAMER_TAG_AREA areas[], maxareas = sizeof areas);
+native GetNumberDynamicAreasForLine(Float:x1, Float:y1, Float:z1, Float:x2, Float:y2, Float:z2);
 native AttachDynamicAreaToObject(STREAMER_TAG_AREA areaid, STREAMER_TAG_OBJECT_ALT objectid, type = STREAMER_OBJECT_TYPE_DYNAMIC, playerid = INVALID_PLAYER_ID, Float:offsetx = 0.0, Float:offsety = 0.0, Float:offsetz = 0.0);
 native AttachDynamicAreaToPlayer(STREAMER_TAG_AREA areaid, playerid, Float:offsetx = 0.0, Float:offsety = 0.0, Float:offsetz = 0.0);
 native AttachDynamicAreaToVehicle(STREAMER_TAG_AREA areaid, vehicleid, Float:offsetx = 0.0, Float:offsety = 0.0, Float:offsetz = 0.0);
