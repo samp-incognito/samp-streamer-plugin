@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
-#ifndef UTILITY_H
-#define UTILITY_H
+#ifndef MANIPULATION_INT_H
+#define MANIPULATION_INT_H
 
-#include "utility/amx.h"
-#include "utility/geometry.h"
-#include "utility/misc.h"
+#include "../manipulation.h"
+
+namespace Manipulation
+{
+	int getIntData(AMX *amx, cell *params);
+	int setIntData(AMX *amx, cell *params);
+}
 
 #endif

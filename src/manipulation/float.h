@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
-#ifndef UTILITY_H
-#define UTILITY_H
+#ifndef MANIPULATION_FLOAT_H
+#define MANIPULATION_FLOAT_H
 
-#include "utility/amx.h"
-#include "utility/geometry.h"
-#include "utility/misc.h"
+#include "../manipulation.h"
+
+namespace Manipulation
+{
+	int getFloatData(AMX *amx, cell *params);
+	int setFloatData(AMX *amx, cell *params);
+}
 
 #endif

@@ -18,6 +18,9 @@
 #define MANIPULATION_H
 
 #include "common.h"
+#include "manipulation/array.h"
+#include "manipulation/float.h"
+#include "manipulation/int.h"
 
 namespace Manipulation
 {
@@ -80,16 +83,6 @@ namespace Manipulation
 		InvalidID,
 		InvalidType
 	};
-
-	int getFloatData(AMX *amx, cell *params);
-	int setFloatData(AMX *amx, cell *params);
-	int getIntData(AMX *amx, cell *params);
-	int setIntData(AMX *amx, cell *params);
-	int getArrayData(AMX *amx, cell *params);
-	int setArrayData(AMX *amx, cell *params);
-	int isInArrayData(AMX *amx, cell *params);
-	int appendArrayData(AMX *amx, cell *params);
-	int removeArrayData(AMX *amx, cell *params);
 }
 
 #endif

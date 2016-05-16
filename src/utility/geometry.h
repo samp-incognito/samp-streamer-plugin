@@ -14,11 +14,22 @@
  * limitations under the License.
  */
 
-#ifndef UTILITY_H
-#define UTILITY_H
+#ifndef UTILITY_GEOMETRY_H
+#define UTILITY_GEOMETRY_H
 
-#include "utility/amx.h"
-#include "utility/geometry.h"
-#include "utility/misc.h"
+#include "../common.h"
+#include "../item.h"
+
+#include <Eigen/Core>
+
+#define MAX_BUFFER (1024)
+
+namespace Utility
+{
+	bool isPointInArea(const Eigen::Vector3f &point, const Item::SharedArea &area);
+
+	void projectPoint(const Eigen::Vector3f &point, const float &heading, Eigen::Vector3f &position);
+	void projectPoint(const Eigen::Vector3f &point, const Eigen::Vector3f &rotation, Eigen::Vector3f &position);
+	void projectPoint(const Eigen::Vector3f &point, const Eigen::Vector4f &quaternion, Eigen::Vector3f &position);
 
 #endif

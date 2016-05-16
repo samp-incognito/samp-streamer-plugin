@@ -14,14 +14,19 @@
  * limitations under the License.
  */
 
-#ifndef ARRAY_DATA_H
-#define ARRAY_DATA_H
+#ifndef MANIPULATION_ARRAY_H
+#define MANIPULATION_ARRAY_H
 
 #include "../manipulation.h"
-#include "../utility.h"
 
 namespace Manipulation
 {
+	int getArrayData(AMX *amx, cell *params);
+	int setArrayData(AMX *amx, cell *params);
+	int isInArrayData(AMX *amx, cell *params);
+	int appendArrayData(AMX *amx, cell *params);
+	int removeArrayData(AMX *amx, cell *params);
+
 	template <typename T>
 	int getArrayDataForItem(T &container, AMX *amx, int id, int data, cell output, cell size, int &error)
 	{

@@ -17,6 +17,7 @@
 #include "array.h"
 
 #include "../core.h"
+#include "../utility/amx.h"
 
 #include <boost/geometry.hpp>
 #include <boost/geometry/geometries/geometries.hpp>
@@ -31,6 +32,8 @@
 
 #include <bitset>
 #include <cmath>
+
+using namespace Manipulation;
 
 int Manipulation::getArrayData(AMX *amx, cell *params)
 {

@@ -105,6 +105,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="lib\samp-plugin-sdk\amx\amx.h" />
+    <ClInclude Include="lib\samp-plugin-sdk\amx\getch.h" />
+    <ClInclude Include="lib\samp-plugin-sdk\amx\sclinux.h" />
+    <ClInclude Include="lib\samp-plugin-sdk\plugin.h" />
+    <ClInclude Include="lib\samp-plugin-sdk\plugincommon.h" />
+    <ClInclude Include="lib\sampgdk\sampgdk.h" />
     <ClInclude Include="src\cell.h" />
     <ClInclude Include="src\common.h" />
     <ClInclude Include="src\core.h" />
@@ -115,10 +121,15 @@
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\manipulation.h" />
     <ClInclude Include="src\manipulation\array.h" />
+    <ClInclude Include="src\manipulation\float.h" />
+    <ClInclude Include="src\manipulation\int.h" />
     <ClInclude Include="src\natives.h" />
     <ClInclude Include="src\player.h" />
     <ClInclude Include="src\streamer.h" />
     <ClInclude Include="src\utility.h" />
+    <ClInclude Include="src\utility\amx.h" />
+    <ClInclude Include="src\utility\geometry.h" />
+    <ClInclude Include="src\utility\misc.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="lib\boost\system\error_code.cpp" />
@@ -151,7 +162,9 @@
     <ClCompile Include="src\natives\updates.cpp" />
     <ClCompile Include="src\player.cpp" />
     <ClCompile Include="src\streamer.cpp" />
-    <ClCompile Include="src\utility.cpp" />
+    <ClCompile Include="src\utility\amx.cpp" />
+    <ClCompile Include="src\utility\geometry.cpp" />
+    <ClCompile Include="src\utility\misc.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="streamer.def" />

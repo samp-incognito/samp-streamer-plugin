@@ -95,7 +95,9 @@ OBJECTS := \
 	$(OBJDIR)/updates.o \
 	$(OBJDIR)/player.o \
 	$(OBJDIR)/streamer.o \
-	$(OBJDIR)/utility.o \
+	$(OBJDIR)/amx.o \
+	$(OBJDIR)/geometry.o \
+	$(OBJDIR)/misc.o \
 
 RESOURCES := \
 
@@ -243,7 +245,13 @@ $(OBJDIR)/player.o: src/player.cpp
 $(OBJDIR)/streamer.o: src/streamer.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
-$(OBJDIR)/utility.o: src/utility.cpp
+$(OBJDIR)/amx.o: src/utility/amx.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/geometry.o: src/utility/geometry.cpp
+	@echo $(notdir $<)
+	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/misc.o: src/utility/misc.cpp
 	@echo $(notdir $<)
 	$(SILENT) $(CXX) $(ALL_CXXFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 

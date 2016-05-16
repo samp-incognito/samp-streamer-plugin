@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-#include "../manipulation.h"
+#include "float.h"
 
 #include "../core.h"
-#include "../utility.h"
+#include "../utility/amx.h"
 
 #include <boost/geometry.hpp>
 #include <boost/geometry/geometries/geometries.hpp>

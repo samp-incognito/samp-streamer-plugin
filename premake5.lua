@@ -11,7 +11,7 @@ solution "streamer"
 			links "rt"
 			targetextension ".so"
 		elseif string.startswith(_ACTION, "vs") then
-			files { "**.c", "**.cpp", "**.def", "**.rc", "src/**.h" }
+			files { "**.c", "**.cpp", "**.def", "**.rc", "lib/**.h", "src/**.h" }
 			targetextension ".dll"
 		end
 

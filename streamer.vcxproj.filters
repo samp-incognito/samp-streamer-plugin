@@ -28,11 +28,32 @@
     <Filter Include="src\natives">
       <UniqueIdentifier>{16CF320B-8284-AB00-0B79-A5D7772DA204}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\utility">
+      <UniqueIdentifier>{90DE9651-FC93-0F47-8588-091EF13C064B}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="streamer.def" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="lib\samp-plugin-sdk\amx\amx.h">
+      <Filter>lib\samp-plugin-sdk\amx</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\samp-plugin-sdk\amx\getch.h">
+      <Filter>lib\samp-plugin-sdk\amx</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\samp-plugin-sdk\amx\sclinux.h">
+      <Filter>lib\samp-plugin-sdk\amx</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\samp-plugin-sdk\plugin.h">
+      <Filter>lib\samp-plugin-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\samp-plugin-sdk\plugincommon.h">
+      <Filter>lib\samp-plugin-sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="lib\sampgdk\sampgdk.h">
+      <Filter>lib\sampgdk</Filter>
+    </ClInclude>
     <ClInclude Include="src\cell.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -63,6 +84,12 @@
     <ClInclude Include="src\manipulation\array.h">
       <Filter>src\manipulation</Filter>
     </ClInclude>
+    <ClInclude Include="src\manipulation\float.h">
+      <Filter>src\manipulation</Filter>
+    </ClInclude>
+    <ClInclude Include="src\manipulation\int.h">
+      <Filter>src\manipulation</Filter>
+    </ClInclude>
     <ClInclude Include="src\natives.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -74,6 +101,15 @@
     </ClInclude>
     <ClInclude Include="src\utility.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utility\amx.h">
+      <Filter>src\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utility\geometry.h">
+      <Filter>src\utility</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utility\misc.h">
+      <Filter>src\utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -167,8 +203,14 @@
     <ClCompile Include="src\streamer.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\utility.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="src\utility\amx.cpp">
+      <Filter>src\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utility\geometry.cpp">
+      <Filter>src\utility</Filter>
+    </ClCompile>
+    <ClCompile Include="src\utility\misc.cpp">
+      <Filter>src\utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
