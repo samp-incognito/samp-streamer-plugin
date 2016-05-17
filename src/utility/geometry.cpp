@@ -92,28 +92,18 @@ bool Utility::isPointInArea(const Eigen::Vector3f &point, const Item::SharedArea
 		{
 			if (area->attach)
 			{
-				if (boost::geometry::comparable_distance(Eigen::Vector2f(point[0], point[1]), Eigen::Vector2f(area->attach->position[0], area->attach->position[1])) < area->comparableSize)
-				{
-					return true;
-				}
+				return boost::geometry::comparable_distance(Eigen::Vector2f(point[0], point[1]), Eigen::Vector2f(area->attach->position[0], area->attach->position[1])) < area->comparableSize;
 			}
 			else
 			{
-				if (boost::geometry::comparable_distance(Eigen::Vector2f(point[0], point[1]), boost::get<Eigen::Vector2f>(area->position)) < area->comparableSize)
-				{
-					return true;
-				}
+				return boost::geometry::comparable_distance(Eigen::Vector2f(point[0], point[1]), boost::get<Eigen::Vector2f>(area->position)) < area->comparableSize;
 			}
-			return false;
 		}
 		case STREAMER_AREA_TYPE_CYLINDER:
 		{
 			if ((almostEquals(point[2], area->height[0]) || (point[2] > area->height[0])) && (almostEquals(point[2], area->height[1]) || (point[2] < area->height[1])))
 			{
-				if (boost::geometry::comparable_distance(Eigen::Vector2f(point[0], point[1]), boost::get<Eigen::Vector2f>(area->position)) < area->comparableSize)
-				{
-					return true;
-				}
+				return boost::geometry::comparable_distance(Eigen::Vector2f(point[0], point[1]), boost::get<Eigen::Vector2f>(area->position)) < area->comparableSize;
 			}
 			return false;
 		}
@@ -121,17 +111,11 @@ bool Utility::isPointInArea(const Eigen::Vector3f &point, const Item::SharedArea
 		{
 			if (area->attach)
 			{
-				if (boost::geometry::comparable_distance(point, area->attach->position) < area->comparableSize)
-				{
-					return true;
-				}
+				return boost::geometry::comparable_distance(point, area->attach->position) < area->comparableSize;
 			}
 			else
 			{
-				if (boost::geometry::comparable_distance(point, boost::get<Eigen::Vector3f>(area->position)) < area->comparableSize)
-				{
-					return true;
-				}
+				return boost::geometry::comparable_distance(point, boost::get<Eigen::Vector3f>(area->position)) < area->comparableSize;
 			}
 			return false;
 		}

@@ -43,9 +43,14 @@ public:
 		return tickRate;
 	}
 
-	inline void setTickRate(std::size_t value)
+	inline bool setTickRate(std::size_t value)
 	{
-		tickRate = value;
+		if (value > 0)
+		{
+			tickRate = value;
+			return true;
+		}
+		return false;
 	}
 
 	void startAutomaticUpdate();

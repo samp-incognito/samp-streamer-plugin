@@ -64,6 +64,8 @@ AMX_NATIVE_INFO natives[] =
 	{ "Streamer_SetCellDistance", Natives::Streamer_SetCellDistance },
 	{ "Streamer_GetCellSize", Natives::Streamer_GetCellSize },
 	{ "Streamer_SetCellSize", Natives::Streamer_SetCellSize },
+	{ "Streamer_ToggleStaticItem", Natives::Streamer_ToggleStaticItem },
+	{ "Streamer_IsToggleStaticItem", Natives::Streamer_IsToggleStaticItem },
 	{ "Streamer_ToggleErrorCallback", Natives::Streamer_ToggleErrorCallback },
 	{ "Streamer_IsToggleErrorCallback", Natives::Streamer_IsToggleErrorCallback },
 	// Updates
@@ -89,8 +91,6 @@ AMX_NATIVE_INFO natives[] =
 	{ "Streamer_GetUpperBound", Natives::Streamer_GetUpperBound },
 	// Miscellaneous
 	{ "Streamer_GetDistanceToItem", Natives::Streamer_GetDistanceToItem },
-	{ "Streamer_ToggleStaticItem", Natives::Streamer_ToggleStaticItem },
-	{ "Streamer_IsToggleStaticItem", Natives::Streamer_IsToggleStaticItem },
 	{ "Streamer_GetItemInternalID", Natives::Streamer_GetItemInternalID },
 	{ "Streamer_GetItemStreamerID", Natives::Streamer_GetItemStreamerID },
 	{ "Streamer_IsItemVisible", Natives::Streamer_IsItemVisible },

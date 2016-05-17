@@ -46,6 +46,206 @@ namespace Utility
 	{
 		return std::fabs(a - b) < std::numeric_limits<T>::epsilon();
 	}
+
+	template<typename T>
+	inline bool addToContainer(std::vector<T> &container, T value)
+	{
+		container.push_back(value);
+		return true;
+	}
+
+	template<typename T>
+	inline bool addToContainer(boost::unordered_set<T> &container, T value)
+	{
+		if (value >= 0)
+		{
+			container.insert(value);
+			return true;
+		}
+		else
+		{
+			container.clear();
+		}
+		return false;
+	}
+
+	template<std::size_t N, typename T>
+	inline bool addToContainer(std::bitset<N> &container, T value)
+	{
+		if (value >= 0 && static_cast<std::size_t>(value) < N)
+		{
+			container.set(static_cast<std::size_t>(value));
+			return true;
+		}
+		else
+		{
+			container.set();
+		}
+		return false;
+	}
+
+	template<typename T>
+	inline int getFirstValueInContainer(const std::vector<T> &container)
+	{
+		if (!container.empty())
+		{
+			return container.front();
+		}
+		return 0;
+	}
+
+	template<typename T>
+	inline int getFirstValueInContainer(const boost::unordered_set<T> &container)
+	{
+		boost::unordered_set<int>::iterator i = container.begin();
+		if (i != container.end())
+		{
+			return *i;
+		}
+		return -1;
+	}
+
+	template<std::size_t N>
+	inline int getFirstValueInContainer(const std::bitset<N> &container)
+	{
+		if (container.any())
+		{
+			for (std::size_t i = 0; i < N; ++i)
+			{
+				if (container.test(i))
+				{
+					return i;
+				}
+			}
+		}
+		return -1;
+	}
+
+	template<typename T>
+	inline bool setFirstValueInContainer(std::vector<T> &container, T value)
+	{
+		container.clear();
+		return addToContainer(container, value);
+	}
+
+	template<typename T>
+	inline bool setFirstValueInContainer(boost::unordered_set<T> &container, T value)
+	{
+		container.clear();
+		return addToContainer(container, value);
+	}
+
+	template<std::size_t N, typename T>
+	inline bool setFirstValueInContainer(std::bitset<N> &container, T value)
+	{
+		container.reset();
+		return addToContainer(container, value);
+	}
+
+	template<typename T>
+	inline bool isInContainer(const std::vector<T> &container, const T value)
+	{
+		if (std::find(container.begin(), container.end(), value) != container.end())
+		{
+			return true;
+		}
+		return false;
+	}
+
+	template<typename T>
+	inline bool isInContainer(const boost::unordered_set<T> &container, const T value)
+	{
+		if (value >= 0)
+		{
+			if (container.find(value) != container.end())
+			{
+				return true;
+			}
+		}
+		else
+		{
+			if (container.empty())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	template<std::size_t N, typename T>
+	inline bool isInContainer(const std::bitset<N> &container, const T value)
+	{
+		if (value >= 0 && static_cast<std::size_t>(value) < N)
+		{
+			if (container[static_cast<std::size_t>(value)])
+			{
+				return true;
+			}
+		}
+		else
+		{
+			if (container.count() == N)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	template<typename T>
+	inline bool isContainerWithinContainer(const boost::unordered_set<T> &mainContainer, const boost::unordered_set<T> &overlappingContainer)
+	{
+		for (typename boost::unordered_set<T>::const_iterator o = overlappingContainer.begin(); o != overlappingContainer.end(); ++o)
+		{
+			if (mainContainer.find(*o) != mainContainer.end())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	template<typename T>
+	inline bool removeFromContainer(std::vector<T> &container, T value)
+	{
+		typename std::vector<T>::iterator i = std::find(container.begin(), container.end(), value);
+		if (i != container.end())
+		{
+			container.erase(i);
+			return true;
+		}
+		return false;
+	}
+
+	template<typename T>
+	inline bool removeFromContainer(boost::unordered_set<T> &container, T value)
+	{
+		if (value >= 0)
+		{
+			container.erase(value);
+			return true;
+		}
+		else
+		{
+			container.clear();
+		}
+		return false;
+	}
+
+	template<std::size_t N, typename T>
+	inline bool removeFromContainer(std::bitset<N> &container, T value)
+	{
+		if (value >= 0 && static_cast<std::size_t>(value) < N)
+		{
+			container.reset(static_cast<std::size_t>(value));
+			return true;
+		}
+		else
+		{
+			container.reset();
+		}
+		return false;
+	}
 }
 
 #endif

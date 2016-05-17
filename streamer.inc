@@ -180,6 +180,8 @@ native Streamer_GetCellDistance(&Float:distance);
 native Streamer_SetCellDistance(Float:distance);
 native Streamer_GetCellSize(&Float:size);
 native Streamer_SetCellSize(Float:size);
+native Streamer_ToggleStaticItem(type, STREAMER_ALL_TAGS id, toggle);
+native Streamer_IsToggleStaticItem(type, STREAMER_ALL_TAGS id);
 native Streamer_ToggleErrorCallback(toggle);
 native Streamer_IsToggleErrorCallback();
 
@@ -211,8 +213,6 @@ native Streamer_GetUpperBound(type);
 // Natives (Miscellaneous)
 
 native Streamer_GetDistanceToItem(Float:x, Float:y, Float:z, type, STREAMER_ALL_TAGS id, &Float:distance, dimensions = 3);
-native Streamer_ToggleStaticItem(type, STREAMER_ALL_TAGS id, toggle);
-native Streamer_IsToggleStaticItem(type, STREAMER_ALL_TAGS id);
 native Streamer_GetItemInternalID(playerid, type, STREAMER_ALL_TAGS streamerid);
 native Streamer_GetItemStreamerID(playerid, type, internalid);
 native Streamer_IsItemVisible(playerid, type, STREAMER_ALL_TAGS id);

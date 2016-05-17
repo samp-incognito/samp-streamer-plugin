@@ -73,10 +73,10 @@ namespace Utility
 	template<typename T>
 	bool Utility::doesLineSegmentIntersectCircleOrSphere(const T &lineSegmentStart, const T &lineSegmentEnd, const T &center, float squaredRadius)
 	{
-		T rayDirection = lineSegmentEnd - lineSegmentStart, rayDistance = lineSegmentStart - center;
-		float a = boost::geometry::dot_product(rayDirection, rayDirection);
-		float b = 2.0f * boost::geometry::dot_product(rayDirection, rayDistance);
-		float c = boost::geometry::dot_product(rayDistance, rayDistance) - squaredRadius;
+		T distancefromCenter = lineSegmentStart - center, length = lineSegmentEnd - lineSegmentStart;
+		float a = boost::geometry::dot_product(length, length);
+		float b = 2.0f * boost::geometry::dot_product(length, distancefromCenter);
+		float c = boost::geometry::dot_product(distancefromCenter, distancefromCenter) - squaredRadius;
 		return !(((b * b) - (4.0f * a * c)) < 0.0f);
 	}
 }
