@@ -17,7 +17,7 @@
 #include "float.h"
 
 #include "../core.h"
-#include "../utility/amx.h"
+#include "../utility.h"
 
 #include <boost/geometry.hpp>
 #include <boost/geometry/geometries/geometries.hpp>

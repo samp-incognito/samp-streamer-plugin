@@ -18,6 +18,7 @@
 #define MANIPULATION_ARRAY_H
 
 #include "../manipulation.h"
+#include "../utility.h"
 
 namespace Manipulation
 {

@@ -18,9 +18,6 @@
 #define MANIPULATION_H
 
 #include "common.h"
-#include "manipulation/array.h"
-#include "manipulation/float.h"
-#include "manipulation/int.h"
 
 namespace Manipulation
 {
@@ -84,5 +81,9 @@ namespace Manipulation
 		InvalidType
 	};
 }
+
+#include "manipulation/array.h"
+#include "manipulation/float.h"
+#include "manipulation/int.h"
 
 #endif
