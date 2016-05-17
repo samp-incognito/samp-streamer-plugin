@@ -79,64 +79,6 @@ cell AMX_NATIVE_CALL Natives::IsValidDynamicRaceCP(AMX *amx, cell *params)
 	return 0;
 }
 
-cell AMX_NATIVE_CALL Natives::TogglePlayerDynamicRaceCP(AMX *amx, cell *params)
-{
-	CHECK_PARAMS(3, "TogglePlayerDynamicRaceCP");
-	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
-	if (p != core->getData()->players.end())
-	{
-		boost::unordered_set<int>::iterator d = p->second.disabledRaceCheckpoints.find(static_cast<int>(params[2]));
-		if (static_cast<int>(params[3]))
-		{
-			if (d != p->second.disabledRaceCheckpoints.end())
-			{
-				p->second.disabledRaceCheckpoints.quick_erase(d);
-				return 1;
-			}
-		}
-		else
-		{
-			if (d == p->second.disabledRaceCheckpoints.end())
-			{
-				if (p->second.visibleRaceCheckpoint == static_cast<int>(params[2]))
-				{
-					sampgdk::DisablePlayerRaceCheckpoint(p->first);
-					p->second.activeRaceCheckpoint = 0;
-					p->second.visibleRaceCheckpoint = 0;
-				}
-				p->second.disabledRaceCheckpoints.insert(static_cast<int>(params[2]));
-				return 1;
-			}
-		}
-	}
-	return 0;
-}
-
-cell AMX_NATIVE_CALL Natives::TogglePlayerAllDynamicRaceCPs(AMX *amx, cell *params)
-{
-	CHECK_PARAMS(2, "TogglePlayerAllDynamicRaceCPs");
-	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
-	if (p != core->getData()->players.end())
-	{
-		p->second.disabledRaceCheckpoints.clear();
-		if (!static_cast<int>(params[2]))
-		{
-			if (p->second.visibleRaceCheckpoint != 0)
-			{
-				sampgdk::DisablePlayerRaceCheckpoint(p->first);
-				p->second.activeRaceCheckpoint = 0;
-				p->second.visibleRaceCheckpoint = 0;
-			}
-			for (boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.begin(); r != core->getData()->raceCheckpoints.end(); ++r)
-			{
-				p->second.disabledRaceCheckpoints.insert(r->first);
-			}
-		}
-		return 1;
-	}
-	return 0;
-}
-
 cell AMX_NATIVE_CALL Natives::IsPlayerInDynamicRaceCP(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "IsPlayerInDynamicRaceCP");

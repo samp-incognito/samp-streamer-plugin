@@ -330,11 +330,7 @@ void Streamer::processAreas(Player &player, const std::vector<SharedCell> &cells
 			bool inArea = false;
 			if (doesPlayerSatisfyConditions(a->second->players, player.playerID, a->second->interiors, player.interiorID, a->second->worlds, player.worldID))
 			{
-				boost::unordered_set<int>::iterator d = player.disabledAreas.find(a->first);
-				if (d == player.disabledAreas.end())
-				{
-					inArea = Utility::isPointInArea(player.position, a->second);
-				}
+				inArea = Utility::isPointInArea(player.position, a->second);
 			}
 			boost::unordered_set<int>::iterator i = player.internalAreas.find(a->first);
 			if (inArea)
@@ -371,17 +367,13 @@ void Streamer::processCheckpoints(Player &player, const std::vector<SharedCell> 
 			float distance = std::numeric_limits<float>::infinity();
 			if (doesPlayerSatisfyConditions(d->second->players, player.playerID, d->second->interiors, player.interiorID, d->second->worlds, player.worldID, d->second->areas, player.internalAreas))
 			{
-				boost::unordered_set<int>::iterator e = player.disabledCheckpoints.find(d->first);
-				if (e == player.disabledCheckpoints.end())
+				if (d->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
 				{
-					if (d->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
-					{
-						distance = std::numeric_limits<float>::infinity() * -1.0f;
-					}
-					else
-					{
-						distance = static_cast<float>(boost::geometry::comparable_distance(player.position, d->second->position));
-					}
+					distance = std::numeric_limits<float>::infinity() * -1.0f;
+				}
+				else
+				{
+					distance = static_cast<float>(boost::geometry::comparable_distance(player.position, d->second->position));
 				}
 			}
 			if (distance < (d->second->comparableStreamDistance * player.radiusMultipliers[STREAMER_TYPE_CP]))
@@ -719,17 +711,13 @@ void Streamer::processRaceCheckpoints(Player &player, const std::vector<SharedCe
 			float distance = std::numeric_limits<float>::infinity();
 			if (doesPlayerSatisfyConditions(r->second->players, player.playerID, r->second->interiors, player.interiorID, r->second->worlds, player.worldID, r->second->areas, player.internalAreas))
 			{
-				boost::unordered_set<int>::iterator d = player.disabledRaceCheckpoints.find(r->first);
-				if (d == player.disabledRaceCheckpoints.end())
+				if (r->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
 				{
-					if (r->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
-					{
-						distance = std::numeric_limits<float>::infinity() * -1.0f;
-					}
-					else
-					{
-						distance = static_cast<float>(boost::geometry::comparable_distance(player.position, r->second->position));
-					}
+					distance = std::numeric_limits<float>::infinity() * -1.0f;
+				}
+				else
+				{
+					distance = static_cast<float>(boost::geometry::comparable_distance(player.position, r->second->position));
 				}
 			}
 			if (distance < (r->second->comparableStreamDistance * player.radiusMultipliers[STREAMER_TYPE_RACE_CP]))

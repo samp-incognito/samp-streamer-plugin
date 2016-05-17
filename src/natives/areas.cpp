@@ -226,54 +226,6 @@ cell AMX_NATIVE_CALL Natives::GetDynamicPolygonNumberPoints(AMX *amx, cell *para
 	return 0;
 }
 
-cell AMX_NATIVE_CALL Natives::TogglePlayerDynamicArea(AMX *amx, cell *params)
-{
-	CHECK_PARAMS(3, "TogglePlayerDynamicArea");
-	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
-	if (p != core->getData()->players.end())
-	{
-		boost::unordered_set<int>::iterator d = p->second.disabledAreas.find(static_cast<int>(params[2]));
-		if (static_cast<int>(params[3]))
-		{
-			if (d != p->second.disabledAreas.end())
-			{
-				p->second.disabledAreas.quick_erase(d);
-				return 1;
-			}
-		}
-		else
-		{
-			if (d == p->second.disabledAreas.end())
-			{
-				p->second.disabledAreas.insert(static_cast<int>(params[2]));
-				p->second.internalAreas.erase(static_cast<int>(params[2]));
-				return 1;
-			}
-		}
-	}
-	return 0;
-}
-
-cell AMX_NATIVE_CALL Natives::TogglePlayerAllDynamicAreas(AMX *amx, cell *params)
-{
-	CHECK_PARAMS(2, "TogglePlayerAllDynamicAreas");
-	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
-	if (p != core->getData()->players.end())
-	{
-		p->second.disabledAreas.clear();
-		if (!static_cast<int>(params[2]))
-		{
-			for (boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.begin(); a != core->getData()->areas.end(); ++a)
-			{
-				p->second.disabledAreas.insert(a->first);
-			}
-			p->second.internalAreas.clear();
-		}
-		return 1;
-	}
-	return 0;
-}
-
 cell AMX_NATIVE_CALL Natives::IsPlayerInDynamicArea(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(3, "IsPlayerInDynamicArea");

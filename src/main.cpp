@@ -91,6 +91,9 @@ AMX_NATIVE_INFO natives[] =
 	{ "Streamer_GetUpperBound", Natives::Streamer_GetUpperBound },
 	// Miscellaneous
 	{ "Streamer_GetDistanceToItem", Natives::Streamer_GetDistanceToItem },
+	{ "Streamer_ToggleItem", Natives::Streamer_ToggleItem },
+	{ "Streamer_IsToggleItem", Natives::Streamer_IsToggleItem },
+	{ "Streamer_ToggleAllItems", Natives::Streamer_ToggleAllItems },
 	{ "Streamer_GetItemInternalID", Natives::Streamer_GetItemInternalID },
 	{ "Streamer_GetItemStreamerID", Natives::Streamer_GetItemStreamerID },
 	{ "Streamer_IsItemVisible", Natives::Streamer_IsItemVisible },

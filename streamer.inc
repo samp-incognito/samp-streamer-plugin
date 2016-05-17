@@ -213,6 +213,9 @@ native Streamer_GetUpperBound(type);
 // Natives (Miscellaneous)
 
 native Streamer_GetDistanceToItem(Float:x, Float:y, Float:z, type, STREAMER_ALL_TAGS id, &Float:distance, dimensions = 3);
+native Streamer_ToggleItem(playerid, type, STREAMER_ALL_TAGS id, toggle);
+native Streamer_IsToggleItem(playerid, type, STREAMER_ALL_TAGS id);
+native Streamer_ToggleAllItems(playerid, type, toggle, exceptions[] = { -1 }, maxexceptions = sizeof exceptions);
 native Streamer_GetItemInternalID(playerid, type, STREAMER_ALL_TAGS streamerid);
 native Streamer_GetItemStreamerID(playerid, type, internalid);
 native Streamer_IsItemVisible(playerid, type, STREAMER_ALL_TAGS id);
@@ -258,8 +261,6 @@ native IsValidDynamicPickup(STREAMER_TAG_PICKUP pickupid);
 native STREAMER_TAG_CP CreateDynamicCP(Float:x, Float:y, Float:z, Float:size, worldid = -1, interiorid = -1, playerid = -1, Float:streamdistance = STREAMER_CP_SD, STREAMER_TAG_AREA areaid = STREAMER_TAG_AREA -1, priority = 0);
 native DestroyDynamicCP(STREAMER_TAG_CP checkpointid);
 native IsValidDynamicCP(STREAMER_TAG_CP checkpointid);
-native TogglePlayerDynamicCP(playerid, STREAMER_TAG_CP checkpointid, toggle);
-native TogglePlayerAllDynamicCPs(playerid, toggle);
 native IsPlayerInDynamicCP(playerid, STREAMER_TAG_CP checkpointid);
 native GetPlayerVisibleDynamicCP(playerid);
 
@@ -268,8 +269,6 @@ native GetPlayerVisibleDynamicCP(playerid);
 native STREAMER_TAG_RACE_CP CreateDynamicRaceCP(type, Float:x, Float:y, Float:z, Float:nextx, Float:nexty, Float:nextz, Float:size, worldid = -1, interiorid = -1, playerid = -1, Float:streamdistance = STREAMER_RACE_CP_SD, STREAMER_TAG_AREA areaid = STREAMER_TAG_AREA -1, priority = 0);
 native DestroyDynamicRaceCP(STREAMER_TAG_RACE_CP checkpointid);
 native IsValidDynamicRaceCP(STREAMER_TAG_RACE_CP checkpointid);
-native TogglePlayerDynamicRaceCP(playerid, STREAMER_TAG_RACE_CP checkpointid, toggle);
-native TogglePlayerAllDynamicRaceCPs(playerid, toggle);
 native IsPlayerInDynamicRaceCP(playerid, STREAMER_TAG_RACE_CP checkpointid);
 native GetPlayerVisibleDynamicRaceCP(playerid);
 
@@ -300,8 +299,6 @@ native DestroyDynamicArea(STREAMER_TAG_AREA areaid);
 native IsValidDynamicArea(STREAMER_TAG_AREA areaid);
 native GetDynamicPolygonPoints(STREAMER_TAG_AREA areaid, Float:points[], maxpoints = sizeof points);
 native GetDynamicPolygonNumberPoints(STREAMER_TAG_AREA areaid);
-native TogglePlayerDynamicArea(playerid, STREAMER_TAG_AREA areaid, toggle);
-native TogglePlayerAllDynamicAreas(playerid, toggle);
 native IsPlayerInDynamicArea(playerid, STREAMER_TAG_AREA areaid, recheck = 0);
 native IsPlayerInAnyDynamicArea(playerid, recheck = 0);
 native IsAnyPlayerInDynamicArea(STREAMER_TAG_AREA areaid, recheck = 0);
@@ -359,6 +356,13 @@ native DestroyAllDynamic3DTextLabels();
 native CountDynamic3DTextLabels();
 native DestroyAllDynamicAreas();
 native CountDynamicAreas();
+
+native TogglePlayerDynamicCP(playerid, STREAMER_TAG_CP checkpointid, toggle);
+native TogglePlayerAllDynamicCPs(playerid, toggle, exceptions[] = { -1 }, maxexceptions = sizeof exceptions);
+native TogglePlayerDynamicRaceCP(playerid, STREAMER_TAG_RACE_CP checkpointid, toggle);
+native TogglePlayerAllDynamicRaceCPs(playerid, toggle, exceptions[] = { -1 }, maxexceptions = sizeof exceptions);
+native TogglePlayerDynamicArea(playerid, STREAMER_TAG_AREA areaid, toggle);
+native TogglePlayerAllDynamicAreas(playerid, toggle, exceptions[] = { -1 }, maxexceptions = sizeof exceptions);
 
 // Callbacks
 

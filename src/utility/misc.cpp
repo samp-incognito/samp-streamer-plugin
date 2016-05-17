@@ -37,7 +37,6 @@ boost::unordered_map<int, Item::SharedArea>::iterator Utility::destroyArea(boost
 	Item::Area::identifier.remove(a->first, core->getData()->areas.size());
 	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 	{
-		p->second.disabledAreas.erase(a->first);
 		p->second.internalAreas.erase(a->first);
 		p->second.visibleCell->areas.erase(a->first);
 	}
@@ -56,7 +55,6 @@ boost::unordered_map<int, Item::SharedCheckpoint>::iterator Utility::destroyChec
 			p->second.activeCheckpoint = 0;
 			p->second.visibleCheckpoint = 0;
 		}
-		p->second.disabledCheckpoints.erase(c->first);
 		p->second.visibleCell->checkpoints.erase(c->first);
 	}
 	core->getGrid()->removeCheckpoint(c->second);
@@ -122,7 +120,6 @@ boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator Utility::destroy
 			p->second.activeRaceCheckpoint = 0;
 			p->second.visibleRaceCheckpoint = 0;
 		}
-		p->second.disabledRaceCheckpoints.erase(r->first);
 		p->second.visibleCell->raceCheckpoints.erase(r->first);
 	}
 	core->getGrid()->removeRaceCheckpoint(r->second);

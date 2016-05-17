@@ -55,10 +55,6 @@ struct Player
 	int visibleRaceCheckpoint;
 	int worldID;
 
-	boost::unordered_set<int> disabledAreas;
-	boost::unordered_set<int> disabledCheckpoints;
-	boost::unordered_set<int> disabledRaceCheckpoints;
-
 	std::bitset<STREAMER_MAX_TYPES> enabledItems;
 
 	boost::unordered_set<int> internalAreas;
