@@ -35,7 +35,7 @@ namespace Utility
 
 	// "Fast, Branchless Ray/Bounding Box Intersections" by Tavian Barnes
 	template<typename T1, typename T2>
-	bool Utility::doesLineSegmentIntersectBox(const T1 &lineSegmentStart, const T1 &lineSegmentEnd, const T2 &box)
+	bool doesLineSegmentIntersectBox(const T1 &lineSegmentStart, const T1 &lineSegmentEnd, const T2 &box)
 	{
 		T1 intersectionInterval = T1::Zero();
 
@@ -71,7 +71,7 @@ namespace Utility
 	}
 
 	template<typename T>
-	bool Utility::doesLineSegmentIntersectCircleOrSphere(const T &lineSegmentStart, const T &lineSegmentEnd, const T &center, float squaredRadius)
+	bool doesLineSegmentIntersectCircleOrSphere(const T &lineSegmentStart, const T &lineSegmentEnd, const T &center, float squaredRadius)
 	{
 		T distanceFromCenter = lineSegmentStart - center, length = lineSegmentEnd - lineSegmentStart;
 		float a = boost::geometry::dot_product(length, length);
