@@ -40,28 +40,29 @@
 
 Streamer::Streamer()
 {
-	averageUpdateTime = 0.0f;
+	averageElapsedTime = 0.0f;
+	lastUpdateTime = 0.0f;
 	processingFinalPlayer = false;
 	tickCount = 0;
 	tickRate = 50;
 	velocityBoundaries = boost::make_tuple(0.25f, 25.0f);
 }
 
-void Streamer::calculateAverageUpdateTime()
+void Streamer::calculateAverageElapsedTime()
 {
-	static boost::chrono::steady_clock::time_point currentTime, lastRecordedTime;
+	boost::chrono::steady_clock::time_point currentTime = boost::chrono::steady_clock::now();
+	static boost::chrono::steady_clock::time_point lastRecordedTime;
 	static Eigen::Array<float, 5, 1> recordedTimes = Eigen::Array<float, 5, 1>::Zero();
-	currentTime = boost::chrono::steady_clock::now();
 	if (lastRecordedTime.time_since_epoch().count())
 	{
 		if (!(recordedTimes > 0).all())
 		{
-			boost::chrono::duration<float> elapsedTime = currentTime - lastRecordedTime;
+			boost::chrono::duration<float, boost::milli> elapsedTime = currentTime - lastRecordedTime;
 			recordedTimes[(recordedTimes > 0).count()] = elapsedTime.count();
 		}
 		else
 		{
-			averageUpdateTime = recordedTimes.mean() * 50.0f;
+			averageElapsedTime = recordedTimes.mean() * 50.0f;
 			recordedTimes.setZero();
 		}
 	}
@@ -72,7 +73,8 @@ void Streamer::startAutomaticUpdate()
 {
 	if (tickCount >= tickRate)
 	{
-		calculateAverageUpdateTime();
+		boost::chrono::steady_clock::time_point startTime = boost::chrono::steady_clock::now();
+		calculateAverageElapsedTime();
 		processActiveItems();
 		for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 		{
@@ -80,7 +82,7 @@ void Streamer::startAutomaticUpdate()
 			performPlayerUpdate(p->second, true);
 		}
 		executeCallbacks();
-		processingFinalPlayer = false;
+		lastUpdateTime = boost::chrono::duration<float, boost::milli>(boost::chrono::steady_clock::now() - startTime).count();
 		tickCount = 0;
 	}
 	if (!core->getData()->interfaces.empty())
@@ -131,7 +133,7 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 					float velocityNorm = velocity.squaredNorm();
 					if (velocityNorm > velocityBoundaries.get<0>() && velocityNorm < velocityBoundaries.get<1>())
 					{
-						delta = velocity * averageUpdateTime;
+						delta = velocity * averageElapsedTime;
 					}
 				}
 				else
@@ -261,6 +263,10 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 		{
 			player.position = position;
 		}
+	}
+	if (processingFinalPlayer)
+	{
+		processingFinalPlayer = false;
 	}
 }
 
@@ -870,14 +876,13 @@ void Streamer::processActiveItems()
 
 void Streamer::processMovingObjects()
 {
-	boost::chrono::steady_clock::time_point currentTime = boost::chrono::steady_clock::now();
 	boost::unordered_set<Item::SharedObject>::iterator o = movingObjects.begin();
 	while (o != movingObjects.end())
 	{
 		bool objectFinishedMoving = false;
 		if ((*o)->move)
 		{
-			boost::chrono::duration<float, boost::milli> elapsedTime = currentTime - (*o)->move->time;
+			boost::chrono::duration<float, boost::milli> elapsedTime = boost::chrono::steady_clock::now() - (*o)->move->time;
 			if (elapsedTime.count() < (*o)->move->duration)
 			{
 				(*o)->position = (*o)->move->position.get<1>() + ((*o)->move->position.get<2>() * elapsedTime.count());

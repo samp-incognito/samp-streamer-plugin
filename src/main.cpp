@@ -76,6 +76,7 @@ AMX_NATIVE_INFO natives[] =
 	{ "Streamer_IsToggleCameraUpdate", Natives::Streamer_IsToggleCameraUpdate },
 	{ "Streamer_ToggleItemUpdate", Natives::Streamer_ToggleItemUpdate },
 	{ "Streamer_IsToggleItemUpdate", Natives::Streamer_IsToggleItemUpdate },
+	{ "Streamer_GetLastUpdateTime", Natives::Streamer_GetLastUpdateTime },
 	{ "Streamer_Update", Natives::Streamer_Update },
 	{ "Streamer_UpdateEx", Natives::Streamer_UpdateEx },
 	// Data Manipulation

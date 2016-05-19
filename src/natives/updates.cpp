@@ -107,6 +107,13 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItemUpdate(AMX *amx, cell *params
 	return 0;
 }
 
+cell AMX_NATIVE_CALL Natives::Streamer_GetLastUpdateTime(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "Streamer_GetLastUpdateTime");
+	Utility::storeFloatInNative(amx, params[1], core->getStreamer()->getLastUpdateTime());
+	return 1;
+}
+
 cell AMX_NATIVE_CALL Natives::Streamer_Update(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "Streamer_Update");

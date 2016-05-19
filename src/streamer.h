@@ -38,6 +38,11 @@ class Streamer
 public:
 	Streamer();
 
+	inline float getLastUpdateTime()
+	{
+		return lastUpdateTime;
+	}
+\
 	inline std::size_t getTickRate()
 	{
 		return tickRate;
@@ -63,7 +68,7 @@ public:
 	boost::unordered_set<Item::SharedTextLabel> attachedTextLabels;
 	boost::unordered_set<Item::SharedObject> movingObjects;
 private:
-	void calculateAverageUpdateTime();
+	void calculateAverageElapsedTime();
 
 	void performPlayerUpdate(Player &player, bool automatic);
 	void executeCallbacks();
@@ -86,7 +91,8 @@ private:
 
 	boost::tuple<float, float> velocityBoundaries;
 
-	float averageUpdateTime;
+	float averageElapsedTime;
+	float lastUpdateTime;
 	bool processingFinalPlayer;
 
 	std::vector<boost::tuple<int, int> > areaEnterCallbacks;

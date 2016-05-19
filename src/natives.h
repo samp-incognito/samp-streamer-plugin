@@ -67,6 +67,7 @@ namespace Natives
 	cell AMX_NATIVE_CALL Streamer_IsToggleCameraUpdate(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_ToggleItemUpdate(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_IsToggleItemUpdate(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_GetLastUpdateTime(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_Update(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_UpdateEx(AMX *amx, cell *params);
 	// Data Manipulation
