@@ -65,7 +65,7 @@ AMX_NATIVE_INFO natives[] =
 	{ "Streamer_GetCellSize", Natives::Streamer_GetCellSize },
 	{ "Streamer_SetCellSize", Natives::Streamer_SetCellSize },
 	{ "Streamer_ToggleItemStatic", Natives::Streamer_ToggleItemStatic },
-	{ "Streamer_IsStreamer_ToggleItemStatic", Natives::Streamer_IsStreamer_ToggleItemStatic },
+	{ "Streamer_IsToggleItemStatic", Natives::Streamer_IsToggleItemStatic },
 	{ "Streamer_ToggleErrorCallback", Natives::Streamer_ToggleErrorCallback },
 	{ "Streamer_IsToggleErrorCallback", Natives::Streamer_IsToggleErrorCallback },
 	// Updates
