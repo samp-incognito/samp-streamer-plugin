@@ -180,8 +180,8 @@ native Streamer_GetCellDistance(&Float:distance);
 native Streamer_SetCellDistance(Float:distance);
 native Streamer_GetCellSize(&Float:size);
 native Streamer_SetCellSize(Float:size);
-native Streamer_ToggleStaticItem(type, STREAMER_ALL_TAGS id, toggle);
-native Streamer_IsToggleStaticItem(type, STREAMER_ALL_TAGS id);
+native Streamer_ToggleItemStatic(type, STREAMER_ALL_TAGS id, toggle);
+native Streamer_IsToggleItemStatic(type, STREAMER_ALL_TAGS id);
 native Streamer_ToggleErrorCallback(toggle);
 native Streamer_IsToggleErrorCallback();
 

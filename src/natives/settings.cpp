@@ -114,9 +114,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetCellSize(AMX *amx, cell *params)
 	return 1;
 }
 
-cell AMX_NATIVE_CALL Natives::Streamer_ToggleStaticItem(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL Natives::Streamer_ToggleItemStatic(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "Streamer_ToggleStaticItem");
+	CHECK_PARAMS(3, "Streamer_ToggleItemStatic");
 	switch (static_cast<int>(params[1]))
 	{
 		case STREAMER_TYPE_OBJECT:
@@ -278,9 +278,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleStaticItem(AMX *amx, cell *params)
 	return 0;
 }
 
-cell AMX_NATIVE_CALL Natives::Streamer_IsToggleStaticItem(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItemStatic(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "Streamer_IsToggleStaticItem");
+	CHECK_PARAMS(2, "Streamer_IsToggleItemStatic");
 	switch (static_cast<int>(params[1]))
 	{
 		case STREAMER_TYPE_OBJECT:

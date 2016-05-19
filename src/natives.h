@@ -55,8 +55,8 @@ namespace Natives
 	cell AMX_NATIVE_CALL Streamer_SetCellDistance(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_GetCellSize(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_SetCellSize(AMX *amx, cell *params);
-	cell AMX_NATIVE_CALL Streamer_ToggleStaticItem(AMX *amx, cell *params);
-	cell AMX_NATIVE_CALL Streamer_IsToggleStaticItem(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_ToggleItemStatic(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_IsToggleItemStatic(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_ToggleErrorCallback(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_IsToggleErrorCallback(AMX *amx, cell *params);
 	// Updates
