@@ -118,9 +118,9 @@ private:
 	}
 
 	template<std::size_t N, typename T>
-	inline bool doesPlayerSatisfyConditions(const std::bitset<N> &a, const T &b, const boost::unordered_set<T> &c, const T &d, const boost::unordered_set<T> &e, const T &f, const boost::unordered_set<T> &g, const boost::unordered_set<T> &h)
+	inline bool doesPlayerSatisfyConditions(const std::bitset<N> &a, const T &b, const boost::unordered_set<T> &c, const T &d, const boost::unordered_set<T> &e, const T &f, const boost::unordered_set<T> &g, const boost::unordered_set<T> &h, bool i)
 	{
-		return (a[b] && (c.empty() || c.find(d) != c.end()) && (e.empty() || e.find(f) != e.end()) && (g.empty() || Utility::isContainerWithinContainer(g, h)));
+		return (a[b] && (c.empty() || c.find(d) != c.end()) && (e.empty() || e.find(f) != e.end()) && (g.empty() || i ? !Utility::isContainerWithinContainer(g, h) : Utility::isContainerWithinContainer(g, h)));
 	}
 
 	template<class Iterator, class Container>

@@ -41,6 +41,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabel(AMX *amx, cell *params)
 	Item::SharedTextLabel textLabel(new Item::TextLabel);
 	textLabel->amx = amx;
 	textLabel->textLabelID = textLabelID;
+	textLabel->inverseAreaChecking = false;
 	textLabel->originalComparableStreamDistance = -1.0f;
 	textLabel->text = Utility::convertNativeStringToString(amx, params[1]);
 	textLabel->color = static_cast<int>(params[2]);

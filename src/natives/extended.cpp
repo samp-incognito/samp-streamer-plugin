@@ -41,6 +41,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicObjectEx(AMX *amx, cell *params)
 	Item::SharedObject object(new Item::Object);
 	object->amx = amx;
 	object->objectID = objectID;
+	object->inverseAreaChecking = false;
 	object->noCameraCollision = false;
 	object->originalComparableStreamDistance = -1.0f;
 	object->modelID = static_cast<int>(params[1]);
@@ -71,6 +72,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPickupEx(AMX *amx, cell *params)
 	Item::SharedPickup pickup(new Item::Pickup);
 	pickup->amx = amx;
 	pickup->pickupID = pickupID;
+	pickup->inverseAreaChecking = false;
 	pickup->originalComparableStreamDistance = -1.0f;
 	pickup->modelID = static_cast<int>(params[1]);
 	pickup->type = static_cast<int>(params[2]);
@@ -98,6 +100,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCPEx(AMX *amx, cell *params)
 	Item::SharedCheckpoint checkpoint(new Item::Checkpoint);
 	checkpoint->amx = amx;
 	checkpoint->checkpointID = checkpointID;
+	checkpoint->inverseAreaChecking = false;
 	checkpoint->originalComparableStreamDistance = -1.0f;
 	checkpoint->position = Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]));
 	checkpoint->size = amx_ctof(params[4]);
@@ -124,6 +127,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicRaceCPEx(AMX *amx, cell *params)
 	Item::SharedRaceCheckpoint raceCheckpoint(new Item::RaceCheckpoint);
 	raceCheckpoint->amx = amx;
 	raceCheckpoint->raceCheckpointID = raceCheckpointID;
+	raceCheckpoint->inverseAreaChecking = false;
 	raceCheckpoint->originalComparableStreamDistance = -1.0f;
 	raceCheckpoint->type = static_cast<int>(params[1]);
 	raceCheckpoint->position = Eigen::Vector3f(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
@@ -152,6 +156,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicMapIconEx(AMX *amx, cell *params)
 	Item::SharedMapIcon mapIcon(new Item::MapIcon);
 	mapIcon->amx = amx;
 	mapIcon->mapIconID = mapIconID;
+	mapIcon->inverseAreaChecking = false;
 	mapIcon->originalComparableStreamDistance = -1.0f;
 	mapIcon->position = Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]));
 	mapIcon->type = static_cast<int>(params[4]);
@@ -180,6 +185,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabelEx(AMX *amx, cell *params)
 	Item::SharedTextLabel textLabel(new Item::TextLabel);
 	textLabel->amx = amx;
 	textLabel->textLabelID = textLabelID;
+	textLabel->inverseAreaChecking = false;
 	textLabel->originalComparableStreamDistance = -1.0f;
 	textLabel->text = Utility::convertNativeStringToString(amx, params[1]);
 	textLabel->color = static_cast<int>(params[2]);

@@ -87,6 +87,7 @@ namespace Item
 		SharedCell cell;
 		int checkpointID;
 		float comparableStreamDistance;
+		bool inverseAreaChecking;
 		float originalComparableStreamDistance;
 		Eigen::Vector3f position;
 		int priority;
@@ -113,6 +114,7 @@ namespace Item
 		SharedCell cell;
 		int color;
 		float comparableStreamDistance;
+		bool inverseAreaChecking;
 		int mapIconID;
 		float originalComparableStreamDistance;
 		Eigen::Vector3f position;
@@ -141,6 +143,7 @@ namespace Item
 		SharedCell cell;
 		float comparableStreamDistance;
 		float drawDistance;
+		bool inverseAreaChecking;
 		int modelID;
 		bool noCameraCollision;
 		int objectID;
@@ -238,6 +241,7 @@ namespace Item
 		AMX *amx;
 		SharedCell cell;
 		float comparableStreamDistance;
+		bool inverseAreaChecking;
 		int modelID;
 		float originalComparableStreamDistance;
 		int pickupID;
@@ -266,6 +270,7 @@ namespace Item
 		AMX *amx;
 		SharedCell cell;
 		float comparableStreamDistance;
+		bool inverseAreaChecking;
 		Eigen::Vector3f next;
 		float originalComparableStreamDistance;
 		Eigen::Vector3f position;
@@ -296,6 +301,7 @@ namespace Item
 		int color;
 		float comparableStreamDistance;
 		float drawDistance;
+		bool inverseAreaChecking;
 		float originalComparableStreamDistance;
 		Eigen::Vector3f position;
 		int priority;

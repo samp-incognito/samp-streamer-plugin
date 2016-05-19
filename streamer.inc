@@ -182,6 +182,8 @@ native Streamer_GetCellSize(&Float:size);
 native Streamer_SetCellSize(Float:size);
 native Streamer_ToggleItemStatic(type, STREAMER_ALL_TAGS id, toggle);
 native Streamer_IsToggleItemStatic(type, STREAMER_ALL_TAGS id);
+native Streamer_ToggleItemAntiAreas(type, STREAMER_ALL_TAGS id, toggle);
+native Streamer_IsToggleItemAntiAreas(type, STREAMER_ALL_TAGS id);
 native Streamer_ToggleErrorCallback(toggle);
 native Streamer_IsToggleErrorCallback();
 

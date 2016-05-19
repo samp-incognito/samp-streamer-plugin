@@ -371,7 +371,7 @@ void Streamer::processCheckpoints(Player &player, const std::vector<SharedCell> 
 		for (boost::unordered_map<int, Item::SharedCheckpoint>::const_iterator d = (*c)->checkpoints.begin(); d != (*c)->checkpoints.end(); ++d)
 		{
 			float distance = std::numeric_limits<float>::infinity();
-			if (doesPlayerSatisfyConditions(d->second->players, player.playerID, d->second->interiors, player.interiorID, d->second->worlds, player.worldID, d->second->areas, player.internalAreas))
+			if (doesPlayerSatisfyConditions(d->second->players, player.playerID, d->second->interiors, player.interiorID, d->second->worlds, player.worldID, d->second->areas, player.internalAreas, d->second->inverseAreaChecking))
 			{
 				if (d->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
 				{
@@ -424,7 +424,7 @@ void Streamer::processMapIcons(Player &player, const std::vector<SharedCell> &ce
 		for (boost::unordered_map<int, Item::SharedMapIcon>::const_iterator m = (*c)->mapIcons.begin(); m != (*c)->mapIcons.end(); ++m)
 		{
 			float distance = std::numeric_limits<float>::infinity();
-			if (doesPlayerSatisfyConditions(m->second->players, player.playerID, m->second->interiors, player.interiorID, m->second->worlds, player.worldID, m->second->areas, player.internalAreas))
+			if (doesPlayerSatisfyConditions(m->second->players, player.playerID, m->second->interiors, player.interiorID, m->second->worlds, player.worldID, m->second->areas, player.internalAreas, m->second->inverseAreaChecking))
 			{
 				if (m->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
 				{
@@ -508,7 +508,7 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 		for (boost::unordered_map<int, Item::SharedObject>::const_iterator o = (*c)->objects.begin(); o != (*c)->objects.end(); ++o)
 		{
 			float distance = std::numeric_limits<float>::infinity();
-			if (doesPlayerSatisfyConditions(o->second->players, player.playerID, o->second->interiors, player.interiorID, o->second->worlds, player.worldID, o->second->areas, player.internalAreas))
+			if (doesPlayerSatisfyConditions(o->second->players, player.playerID, o->second->interiors, player.interiorID, o->second->worlds, player.worldID, o->second->areas, player.internalAreas, o->second->inverseAreaChecking))
 			{
 				if (o->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
 				{
@@ -652,7 +652,7 @@ void Streamer::processPickups(Player &player, const std::vector<SharedCell> &cel
 				boost::unordered_map<int, Item::SharedPickup>::iterator d = discoveredPickups.find(p->first);
 				if (d == discoveredPickups.end())
 				{
-					if (doesPlayerSatisfyConditions(p->second->players, player.playerID, p->second->interiors, player.interiorID, p->second->worlds, player.worldID, p->second->areas, player.internalAreas))
+					if (doesPlayerSatisfyConditions(p->second->players, player.playerID, p->second->interiors, player.interiorID, p->second->worlds, player.worldID, p->second->areas, player.internalAreas, p->second->inverseAreaChecking))
 					{
 						if (p->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF || boost::geometry::comparable_distance(player.position, p->second->position) < (p->second->comparableStreamDistance * player.radiusMultipliers[STREAMER_TYPE_PICKUP]))
 						{
@@ -715,7 +715,7 @@ void Streamer::processRaceCheckpoints(Player &player, const std::vector<SharedCe
 		for (boost::unordered_map<int, Item::SharedRaceCheckpoint>::const_iterator r = (*c)->raceCheckpoints.begin(); r != (*c)->raceCheckpoints.end(); ++r)
 		{
 			float distance = std::numeric_limits<float>::infinity();
-			if (doesPlayerSatisfyConditions(r->second->players, player.playerID, r->second->interiors, player.interiorID, r->second->worlds, player.worldID, r->second->areas, player.internalAreas))
+			if (doesPlayerSatisfyConditions(r->second->players, player.playerID, r->second->interiors, player.interiorID, r->second->worlds, player.worldID, r->second->areas, player.internalAreas, r->second->inverseAreaChecking))
 			{
 				if (r->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
 				{
@@ -768,7 +768,7 @@ void Streamer::processTextLabels(Player &player, const std::vector<SharedCell> &
 		for (boost::unordered_map<int, Item::SharedTextLabel>::const_iterator t = (*c)->textLabels.begin(); t != (*c)->textLabels.end(); ++t)
 		{
 			float distance = std::numeric_limits<float>::infinity();
-			if (doesPlayerSatisfyConditions(t->second->players, player.playerID, t->second->interiors, player.interiorID, t->second->worlds, player.worldID, t->second->areas, player.internalAreas))
+			if (doesPlayerSatisfyConditions(t->second->players, player.playerID, t->second->interiors, player.interiorID, t->second->worlds, player.worldID, t->second->areas, player.internalAreas, t->second->inverseAreaChecking))
 			{
 				if (t->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
 				{

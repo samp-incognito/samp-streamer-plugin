@@ -38,6 +38,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPickup(AMX *amx, cell *params)
 	Item::SharedPickup pickup(new Item::Pickup);
 	pickup->amx = amx;
 	pickup->pickupID = pickupID;
+	pickup->inverseAreaChecking = false;
 	pickup->originalComparableStreamDistance = -1.0f;
 	pickup->modelID = static_cast<int>(params[1]);
 	pickup->type = static_cast<int>(params[2]);
