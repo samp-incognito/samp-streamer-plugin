@@ -1,6 +1,25 @@
 SA-MP Streamer Plugin
 =====================
 
+v2.8.1
+------
+
+- Added item priority support via the new "priority" parameter for
+  most item creation natives
+- Added IsLineInDynamicArea, IsLineInAnyDynamicArea,
+  GetDynamicAreasForLine, and GetNumberDynamicAreasForLine
+- Added Streamer_ToggleItem and Streamer_IsToggleItem
+- Added Streamer_ToggleAllItems with an "exceptions" parameter which
+  allows every item except the ones specified to be toggled
+- Added Streamer_GetLastUpdateTime
+- Added Streamer_(Is)ToggleItemAntiAreas which, if toggled, allows
+  the per-item area feature to exlude items from being streamed in
+  the areas specified
+- Renamed Streamer_(Is)ToggleStaticItem to
+  Streamer_(Is)ToggleItemStatic
+- Stopped duplicate log entries from being created
+- Fixed parameter order bug with CreateDynamicObjectEx
+
 v2.8
 ----
 
