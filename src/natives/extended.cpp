@@ -47,9 +47,9 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicObjectEx(AMX *amx, cell *params)
 	object->modelID = static_cast<int>(params[1]);
 	object->position = Eigen::Vector3f(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
 	object->rotation = Eigen::Vector3f(amx_ctof(params[5]), amx_ctof(params[6]), amx_ctof(params[7]));
-	object->drawDistance = amx_ctof(params[8]);
-	object->comparableStreamDistance = amx_ctof(params[9]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[9]) : amx_ctof(params[9]) * amx_ctof(params[9]);
-	object->streamDistance = amx_ctof(params[9]);
+	object->comparableStreamDistance = amx_ctof(params[8]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[8]) : amx_ctof(params[8]) * amx_ctof(params[8]);
+	object->streamDistance = amx_ctof(params[8]);
+	object->drawDistance = amx_ctof(params[9]);
 	Utility::convertArrayToContainer(amx, params[10], params[15], object->worlds);
 	Utility::convertArrayToContainer(amx, params[11], params[16], object->interiors);
 	Utility::convertArrayToContainer(amx, params[12], params[17], object->players);
