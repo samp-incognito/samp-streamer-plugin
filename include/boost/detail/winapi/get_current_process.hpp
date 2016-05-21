@@ -1,4 +1,4 @@
-//  GetCurrentProcess.hpp  --------------------------------------------------------------//
+//  get_current_process.hpp  --------------------------------------------------------------//
 
 //  Copyright 2010 Vicente J. Botet Escriba
 //  Copyright 2015 Andrey Semashev
@@ -7,8 +7,8 @@
 //  See http://www.boost.org/LICENSE_1_0.txt
 
 
-#ifndef BOOST_DETAIL_WINAPI_GETCURRENTPROCESS_HPP
-#define BOOST_DETAIL_WINAPI_GETCURRENTPROCESS_HPP
+#ifndef BOOST_DETAIL_WINAPI_GET_CURRENT_PROCESS_HPP
+#define BOOST_DETAIL_WINAPI_GET_CURRENT_PROCESS_HPP
 
 #include <boost/detail/winapi/basic_types.hpp>
 
@@ -31,4 +31,4 @@ using ::GetCurrentProcess;
 }
 }
 
-#endif // BOOST_DETAIL_WINAPI_GETCURRENTPROCESS_HPP
+#endif // BOOST_DETAIL_WINAPI_GET_CURRENT_PROCESS_HPP

@@ -1,4 +1,4 @@
-//  GetCurrentThread.hpp  --------------------------------------------------------------//
+//  get_current_thread.hpp  --------------------------------------------------------------//
 
 //  Copyright 2010 Vicente J. Botet Escriba
 //  Copyright 2015 Andrey Semashev
@@ -7,8 +7,8 @@
 //  See http://www.boost.org/LICENSE_1_0.txt
 
 
-#ifndef BOOST_DETAIL_WINAPI_GETCURRENTTHREAD_HPP
-#define BOOST_DETAIL_WINAPI_GETCURRENTTHREAD_HPP
+#ifndef BOOST_DETAIL_WINAPI_GET_CURRENT_THREAD_HPP
+#define BOOST_DETAIL_WINAPI_GET_CURRENT_THREAD_HPP
 
 #include <boost/detail/winapi/basic_types.hpp>
 
@@ -31,4 +31,4 @@ using ::GetCurrentThread;
 }
 }
 
-#endif // BOOST_DETAIL_WINAPI_GETCURRENTTHREAD_HPP
+#endif // BOOST_DETAIL_WINAPI_GET_CURRENT_THREAD_HPP

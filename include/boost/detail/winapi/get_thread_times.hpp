@@ -1,4 +1,4 @@
-//  GetThreadTimes.hpp  --------------------------------------------------------------//
+//  get_thread_times.hpp  --------------------------------------------------------------//
 
 //  Copyright 2010 Vicente J. Botet Escriba
 //  Copyright 2015 Andrey Semashev
@@ -7,8 +7,8 @@
 //  See http://www.boost.org/LICENSE_1_0.txt
 
 
-#ifndef BOOST_DETAIL_WINAPI_GETTHREADTIMES_HPP
-#define BOOST_DETAIL_WINAPI_GETTHREADTIMES_HPP
+#ifndef BOOST_DETAIL_WINAPI_GET_THREAD_TIMES_HPP
+#define BOOST_DETAIL_WINAPI_GET_THREAD_TIMES_HPP
 
 #include <boost/detail/winapi/basic_types.hpp>
 #include <boost/detail/winapi/time.hpp>
@@ -52,4 +52,4 @@ BOOST_FORCEINLINE BOOL_ GetThreadTimes(
 }
 }
 
-#endif // BOOST_DETAIL_WINAPI_GETTHREADTIMES_HPP
+#endif // BOOST_DETAIL_WINAPI_GET_THREAD_TIMES_HPP

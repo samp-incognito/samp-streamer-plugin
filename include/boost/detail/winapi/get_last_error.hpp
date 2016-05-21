@@ -1,4 +1,4 @@
-//  GetLastError.hpp  --------------------------------------------------------------//
+//  get_last_error.hpp  --------------------------------------------------------------//
 
 //  Copyright 2010 Vicente J. Botet Escriba
 //  Copyright 2015 Andrey Semashev
@@ -7,8 +7,8 @@
 //  See http://www.boost.org/LICENSE_1_0.txt
 
 
-#ifndef BOOST_DETAIL_WINAPI_GETLASTERROR_HPP
-#define BOOST_DETAIL_WINAPI_GETLASTERROR_HPP
+#ifndef BOOST_DETAIL_WINAPI_GET_LAST_ERROR_HPP
+#define BOOST_DETAIL_WINAPI_GET_LAST_ERROR_HPP
 
 #include <boost/detail/winapi/basic_types.hpp>
 
@@ -30,4 +30,4 @@ using ::GetLastError;
 }
 }
 
-#endif // BOOST_DETAIL_WINAPI_GETLASTERROR_HPP
+#endif // BOOST_DETAIL_WINAPI_GET_LAST_ERROR_HPP

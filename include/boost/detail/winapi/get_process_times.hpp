@@ -1,4 +1,4 @@
-//  GetProcessTimes.hpp  --------------------------------------------------------------//
+//  get_process_times.hpp  --------------------------------------------------------------//
 
 //  Copyright 2010 Vicente J. Botet Escriba
 
@@ -6,8 +6,8 @@
 //  See http://www.boost.org/LICENSE_1_0.txt
 
 
-#ifndef BOOST_DETAIL_WINAPI_GETPROCESSTIMES_HPP
-#define BOOST_DETAIL_WINAPI_GETPROCESSTIMES_HPP
+#ifndef BOOST_DETAIL_WINAPI_GET_PROCESS_TIMES_HPP
+#define BOOST_DETAIL_WINAPI_GET_PROCESS_TIMES_HPP
 
 #include <boost/detail/winapi/config.hpp>
 
@@ -57,4 +57,4 @@ BOOST_FORCEINLINE BOOL_ GetProcessTimes(
 }
 
 #endif // !defined( UNDER_CE )
-#endif // BOOST_DETAIL_WINAPI_GETPROCESSTIMES_HPP
+#endif // BOOST_DETAIL_WINAPI_GET_PROCESS_TIMES_HPP
