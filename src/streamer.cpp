@@ -57,7 +57,7 @@ void Streamer::calculateAverageElapsedTime()
 	{
 		if (!(recordedTimes > 0).all())
 		{
-			boost::chrono::duration<float, boost::milli> elapsedTime = currentTime - lastRecordedTime;
+			boost::chrono::duration<float> elapsedTime = currentTime - lastRecordedTime;
 			recordedTimes[(recordedTimes > 0).count()] = elapsedTime.count();
 		}
 		else
