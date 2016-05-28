@@ -33,41 +33,11 @@ namespace Utility
 	void projectPoint(const Eigen::Vector3f &point, const Eigen::Vector3f &rotation, Eigen::Vector3f &position);
 	void projectPoint(const Eigen::Vector3f &point, const Eigen::Vector4f &quaternion, Eigen::Vector3f &position);
 
-	// "Fast, Branchless Ray/Bounding Box Intersections" by Tavian Barnes
 	template<typename T1, typename T2>
 	bool doesLineSegmentIntersectBox(const T1 &lineSegmentStart, const T1 &lineSegmentEnd, const T2 &box)
 	{
-		T1 intersectionInterval = T1::Zero();
-
-		#ifdef _WIN32
-			#pragma warning(push)
-			// Disable the "potential divide by zero" warning
-			#pragma warning(disable: 4723)
-		#endif
-
-		T1 lineSegmentEndInverse = lineSegmentEnd.cwiseInverse();
-
-		#ifdef _WIN32
-			#pragma warning(pop)
-		#endif
-
-		float min = 0.0f, max = 0.0f;
-		for (int i = 0; i < intersectionInterval.size(); ++i)
-		{
-			intersectionInterval[0] = (box.min_corner()[i] - lineSegmentStart[i]) * lineSegmentEndInverse[i];
-			intersectionInterval[1] = (box.max_corner()[i] - lineSegmentStart[i]) * lineSegmentEndInverse[i];
-			if (!i)
-			{
-				min = std::min(intersectionInterval[0], intersectionInterval[1]);
-				max = std::max(intersectionInterval[0], intersectionInterval[1]);
-			}
-			else
-			{
-				min = std::max(min, std::min(std::min(intersectionInterval[0], intersectionInterval[1]), max));
-				max = std::min(max, std::max(std::max(intersectionInterval[0], intersectionInterval[1]), min));
-			}
-		}
-		return max > std::max(min, 0.0f);
+		boost::geometry::model::segment<T1> lineSegment = boost::geometry::model::segment<T1>(lineSegmentStart, lineSegmentEnd);
+		return boost::geometry::intersects(lineSegment, box);
 	}
 
 	template<typename T>

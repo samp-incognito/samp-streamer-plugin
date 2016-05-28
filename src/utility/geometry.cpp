@@ -68,7 +68,7 @@ bool Utility::doesLineSegmentIntersectArea(const Eigen::Vector3f &lineSegmentSta
 		}
 		case STREAMER_AREA_TYPE_RECTANGLE:
 		{
-			return doesLineSegmentIntersectBox(lineSegmentStart, lineSegmentEnd, boost::get<Box2D>(area->position));
+			return doesLineSegmentIntersectBox(Eigen::Vector2f(lineSegmentStart[0], lineSegmentStart[1]), Eigen::Vector2f(lineSegmentEnd[0], lineSegmentEnd[1]), boost::get<Box2D>(area->position));
 		}
 		case STREAMER_AREA_TYPE_CUBOID:
 		{
