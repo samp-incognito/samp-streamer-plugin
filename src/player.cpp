@@ -33,6 +33,8 @@ Player::Player(int id)
 	currentVisibleTextLabels = core->getData()->getGlobalMaxVisibleItems(STREAMER_TYPE_3D_TEXT_LABEL);
 	delayedCheckpoint = 0;
 	delayedRaceCheckpoint = 0;
+	delayedUpdate = false;
+	delayedUpdateType = 0;
 	enabledItems.set();
 	interiorID = 0;
 	maxVisibleMapIcons = core->getData()->getGlobalMaxVisibleItems(STREAMER_TYPE_MAP_ICON);

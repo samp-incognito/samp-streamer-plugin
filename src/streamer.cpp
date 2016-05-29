@@ -42,7 +42,6 @@ Streamer::Streamer()
 {
 	averageElapsedTime = 0.0f;
 	lastUpdateTime = 0.0f;
-	processingFinalPlayer = false;
 	tickCount = 0;
 	tickRate = 50;
 	velocityBoundaries = boost::make_tuple(0.25f, 25.0f);
@@ -71,35 +70,51 @@ void Streamer::calculateAverageElapsedTime()
 
 void Streamer::startAutomaticUpdate()
 {
-	if (tickCount >= tickRate)
-	{
-		boost::chrono::steady_clock::time_point startTime = boost::chrono::steady_clock::now();
-		calculateAverageElapsedTime();
-		processActiveItems();
-		for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
-		{
-			processingFinalPlayer = isLastPlayer(p, core->getData()->players);
-			performPlayerUpdate(p->second, true);
-		}
-		executeCallbacks();
-		lastUpdateTime = boost::chrono::duration<float, boost::milli>(boost::chrono::steady_clock::now() - startTime).count();
-		tickCount = 0;
-	}
 	if (!core->getData()->interfaces.empty())
 	{
-		++tickCount;
+		if (++tickCount >= tickRate)
+		{
+			boost::chrono::steady_clock::time_point startTime = boost::chrono::steady_clock::now();
+			calculateAverageElapsedTime();
+			processActiveItems();
+			for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+			{
+				if (!p->second.delayedUpdate)
+				{
+					performPlayerUpdate(p->second, true);
+				}
+				else
+				{
+					startManualUpdate(p->second, p->second.delayedUpdateType);
+				}
+			}
+			if (!core->getData()->players.empty())
+			{
+				processPickups();
+			}
+			executeCallbacks();
+			lastUpdateTime = boost::chrono::duration<float, boost::milli>(boost::chrono::steady_clock::now() - startTime).count();
+			tickCount = 0;
+		}
 	}
 }
 
 void Streamer::startManualUpdate(Player &player, int type)
 {
 	std::bitset<STREAMER_MAX_TYPES> enabledItems = player.enabledItems;
+	if (player.delayedUpdate)
+	{
+		if (player.delayedUpdateTime.time_since_epoch() <= boost::chrono::steady_clock::now().time_since_epoch())
+		{
+			sampgdk::TogglePlayerControllable(player.playerID, true);
+			player.delayedUpdate = false;
+		}
+	}
 	if (type >= 0 && type < STREAMER_MAX_TYPES)
 	{
 		player.enabledItems.reset();
 		player.enabledItems.set(type);
 	}
-	processActiveItems();
 	performPlayerUpdate(player, false);
 	player.enabledItems = enabledItems;
 }
@@ -178,10 +193,7 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 	}
 	else
 	{
-		if (automatic && !core->getData()->pickups.empty())
-		{
-			core->getGrid()->findMinimalCellsForPlayer(player, cells);
-		}
+		core->getGrid()->findMinimalCellsForPlayer(player, cells);
 	}
 	if (!cells.empty())
 	{
@@ -203,7 +215,7 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 				}
 				case STREAMER_TYPE_PICKUP:
 				{
-					if (automatic && !core->getData()->pickups.empty() && (player.enabledItems[STREAMER_TYPE_PICKUP] || processingFinalPlayer))
+					if (automatic && !core->getData()->pickups.empty() && (player.enabledItems[STREAMER_TYPE_PICKUP]))
 					{
 						processPickups(player, cells);
 					}
@@ -263,10 +275,6 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 		{
 			player.position = position;
 		}
-	}
-	if (processingFinalPlayer)
-	{
-		processingFinalPlayer = false;
 	}
 }
 
@@ -642,69 +650,66 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 
 void Streamer::processPickups(Player &player, const std::vector<SharedCell> &cells)
 {
-	static boost::unordered_map<int, Item::SharedPickup> discoveredPickups;
-	if (player.enabledItems[STREAMER_TYPE_PICKUP])
+	for (std::vector<SharedCell>::const_iterator c = cells.begin(); c != cells.end(); ++c)
 	{
-		for (std::vector<SharedCell>::const_iterator c = cells.begin(); c != cells.end(); ++c)
+		for (boost::unordered_map<int, Item::SharedPickup>::const_iterator p = (*c)->pickups.begin(); p != (*c)->pickups.end(); ++p)
 		{
-			for (boost::unordered_map<int, Item::SharedPickup>::const_iterator p = (*c)->pickups.begin(); p != (*c)->pickups.end(); ++p)
+			boost::unordered_map<int, Item::SharedPickup>::iterator d = discoveredPickups.find(p->first);
+			if (d == discoveredPickups.end())
 			{
-				boost::unordered_map<int, Item::SharedPickup>::iterator d = discoveredPickups.find(p->first);
-				if (d == discoveredPickups.end())
+				if (doesPlayerSatisfyConditions(p->second->players, player.playerID, p->second->interiors, player.interiorID, p->second->worlds, player.worldID, p->second->areas, player.internalAreas, p->second->inverseAreaChecking))
 				{
-					if (doesPlayerSatisfyConditions(p->second->players, player.playerID, p->second->interiors, player.interiorID, p->second->worlds, player.worldID, p->second->areas, player.internalAreas, p->second->inverseAreaChecking))
+					if (p->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF || boost::geometry::comparable_distance(player.position, p->second->position) < (p->second->comparableStreamDistance * player.radiusMultipliers[STREAMER_TYPE_PICKUP]))
 					{
-						if (p->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF || boost::geometry::comparable_distance(player.position, p->second->position) < (p->second->comparableStreamDistance * player.radiusMultipliers[STREAMER_TYPE_PICKUP]))
+						boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.find(p->first);
+						if (i == core->getData()->internalPickups.end())
 						{
-							boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.find(p->first);
-							if (i == core->getData()->internalPickups.end())
-							{
-								p->second->worldID = !p->second->worlds.empty() ? player.worldID : -1;
-							}
-							discoveredPickups.insert(*p);
+							p->second->worldID = !p->second->worlds.empty() ? player.worldID : -1;
 						}
+						discoveredPickups.insert(*p);
 					}
 				}
 			}
 		}
 	}
-	if (processingFinalPlayer)
+}
+
+void Streamer::processPickups()
+{
+	boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.begin();
+	while (i != core->getData()->internalPickups.end())
 	{
-		boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.begin();
-		while (i != core->getData()->internalPickups.end())
+		boost::unordered_map<int, Item::SharedPickup>::iterator d = discoveredPickups.find(i->first);
+		if (d == discoveredPickups.end())
 		{
-			boost::unordered_map<int, Item::SharedPickup>::iterator d = discoveredPickups.find(i->first);
-			if (d == discoveredPickups.end())
-			{
-				sampgdk::DestroyPickup(i->second);
-				i = core->getData()->internalPickups.erase(i);
-			}
-			else
-			{
-				discoveredPickups.erase(d);
-				++i;
-			}
+			sampgdk::DestroyPickup(i->second);
+			i = core->getData()->internalPickups.erase(i);
 		}
-		std::multimap<int, Item::SharedPickup> sortedPickups;
-		for (boost::unordered_map<int, Item::SharedPickup>::iterator d = discoveredPickups.begin(); d != discoveredPickups.end(); ++d)
+		else
 		{
-			sortedPickups.insert(std::make_pair(d->second->priority, d->second));
+			discoveredPickups.erase(d);
+			++i;
 		}
-		for (std::multimap<int, Item::SharedPickup>::iterator i = sortedPickups.begin(); i != sortedPickups.end(); ++i)
-		{
-			if (core->getData()->internalPickups.size() == core->getData()->getGlobalMaxVisibleItems(STREAMER_TYPE_PICKUP))
-			{
-				break;
-			}
-			int internalID = sampgdk::CreatePickup(i->second->modelID, i->second->type, i->second->position[0], i->second->position[1], i->second->position[2], i->second->worldID);
-			if (internalID == INVALID_ALTERNATE_ID)
-			{
-				break;
-			}
-			core->getData()->internalPickups.insert(std::make_pair(i->second->pickupID, internalID));
-		}
-		discoveredPickups.clear();
 	}
+	std::multimap<int, Item::SharedPickup> sortedPickups;
+	for (boost::unordered_map<int, Item::SharedPickup>::iterator d = discoveredPickups.begin(); d != discoveredPickups.end(); ++d)
+	{
+		sortedPickups.insert(std::make_pair(d->second->priority, d->second));
+	}
+	for (std::multimap<int, Item::SharedPickup>::iterator i = sortedPickups.begin(); i != sortedPickups.end(); ++i)
+	{
+		if (core->getData()->internalPickups.size() == core->getData()->getGlobalMaxVisibleItems(STREAMER_TYPE_PICKUP))
+		{
+			break;
+		}
+		int internalID = sampgdk::CreatePickup(i->second->modelID, i->second->type, i->second->position[0], i->second->position[1], i->second->position[2], i->second->worldID);
+		if (internalID == INVALID_ALTERNATE_ID)
+		{
+			break;
+		}
+		core->getData()->internalPickups.insert(std::make_pair(i->second->pickupID, internalID));
+	}
+	discoveredPickups.clear();
 }
 
 void Streamer::processRaceCheckpoints(Player &player, const std::vector<SharedCell> &cells)

@@ -39,6 +39,9 @@ struct Player
 	std::size_t currentVisibleTextLabels;
 	int delayedCheckpoint;
 	int delayedRaceCheckpoint;
+	bool delayedUpdate;
+	boost::chrono::steady_clock::time_point delayedUpdateTime;
+	int delayedUpdateType;
 	int interiorID;
 	std::size_t maxVisibleMapIcons;
 	std::size_t maxVisibleObjects;

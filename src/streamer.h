@@ -77,9 +77,11 @@ private:
 	void processCheckpoints(Player &player, const std::vector<SharedCell> &cells);
 	void processMapIcons(Player &player, const std::vector<SharedCell> &cells);
 	void processObjects(Player &player, const std::vector<SharedCell> &cells);
-	void processPickups(Player &player, const std::vector<SharedCell> &cells);
 	void processRaceCheckpoints(Player &player, const std::vector<SharedCell> &cells);
 	void processTextLabels(Player &player, const std::vector<SharedCell> &cells);
+
+	void processPickups(Player &player, const std::vector<SharedCell> &cells);
+	void processPickups();
 
 	void processMovingObjects();
 	void processAttachedAreas();
@@ -89,15 +91,16 @@ private:
 	std::size_t tickCount;
 	std::size_t tickRate;
 
-	boost::tuple<float, float> velocityBoundaries;
-
 	float averageElapsedTime;
 	float lastUpdateTime;
-	bool processingFinalPlayer;
+
+	boost::tuple<float, float> velocityBoundaries;
 
 	std::vector<boost::tuple<int, int> > areaEnterCallbacks;
 	std::vector<boost::tuple<int, int> > areaLeaveCallbacks;
 	std::vector<int> objectMoveCallbacks;
+
+	boost::unordered_map<int, Item::SharedPickup> discoveredPickups;
 
 	struct CompareItem
 	{
@@ -121,12 +124,6 @@ private:
 	inline bool doesPlayerSatisfyConditions(const std::bitset<N> &a, const T &b, const boost::unordered_set<T> &c, const T &d, const boost::unordered_set<T> &e, const T &f, const boost::unordered_set<T> &g, const boost::unordered_set<T> &h, bool i)
 	{
 		return (a[b] && (c.empty() || c.find(d) != c.end()) && (e.empty() || e.find(f) != e.end()) && (g.empty() || i ? !Utility::isContainerWithinContainer(g, h) : Utility::isContainerWithinContainer(g, h)));
-	}
-
-	template<class Iterator, class Container>
-	bool isLastPlayer(Iterator iterator, const Container &container)
-	{
-		return ((iterator != container.end()) && (++iterator == container.end()));
 	}
 };
 
