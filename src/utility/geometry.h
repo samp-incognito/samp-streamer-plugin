@@ -17,6 +17,8 @@
 #ifndef UTILITY_GEOMETRY_H
 #define UTILITY_GEOMETRY_H
 
+#include "misc.h"
+
 #include "../common.h"
 #include "../item.h"
 
