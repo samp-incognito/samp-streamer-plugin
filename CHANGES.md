@@ -1,6 +1,15 @@
 SA-MP Streamer Plugin
 =====================
 
+v2.8.2
+------
+
+- Added "compensatedtime" parameter to Streamer_UpdateEx which
+  pauses automatic updates for the specified amount of time in
+  milliseconds, disables the player's controls, and sets the player's
+  position to the new coordinates
+- Fixed bugs with line intersection tests for areas
+
 v2.8.1
 ------
 
