@@ -17,7 +17,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#define INCLUDE_FILE_VERSION (0x281001)
-#define PLUGIN_VERSION "2.8.1"
+#define INCLUDE_FILE_VERSION (0x282001)
+#define PLUGIN_VERSION "2.8.2"
 
 #endif
