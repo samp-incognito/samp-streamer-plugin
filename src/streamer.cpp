@@ -44,7 +44,7 @@ Streamer::Streamer()
 	lastUpdateTime = 0.0f;
 	tickCount = 0;
 	tickRate = 50;
-	velocityBoundaries = boost::make_tuple(0.25f, 25.0f);
+	velocityBoundaries = boost::make_tuple(0.25f, 7.5f);
 }
 
 void Streamer::calculateAverageElapsedTime()
