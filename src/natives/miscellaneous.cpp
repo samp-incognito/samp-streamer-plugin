@@ -1330,141 +1330,142 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountItems(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(5, "Streamer_GetNearbyItems");
-	Eigen::Vector2f position = Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2]));
-	switch (static_cast<int>(params[3]))
+	CHECK_PARAMS(6, "Streamer_GetNearbyItems");
+	Eigen::Vector3f position3d = Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]));
+	Eigen::Vector2f position2d = Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2]));
+	switch (static_cast<int>(params[4]))
 	{
 		case STREAMER_TYPE_OBJECT:
 		{
 			std::vector<SharedCell> pointCells;
-			core->getGrid()->findMinimalCellsForPoint(position, pointCells);
+			core->getGrid()->findMinimalCellsForPoint(position2d, pointCells);
 			std::multimap<float, int> orderedObjects;
 			for (std::vector<SharedCell>::const_iterator p = pointCells.begin(); p != pointCells.end(); ++p)
 			{
 				for (boost::unordered_map<int, Item::SharedObject>::const_iterator a = (*p)->objects.begin(); a != (*p)->objects.end(); ++a)
 				{
-					float distance = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(a->second->position[0], a->second->position[1]), position));
+					float distance = static_cast<float>(boost::geometry::distance(a->second->position, position3d));
 					orderedObjects.insert(std::pair<float, int>(distance, a->first));
 				}
 			}
-			std::vector<int> finalAreas;
+			std::vector<int> final;
 			for (std::map<float, int>::iterator i = orderedObjects.begin(); i != orderedObjects.end(); ++i)
 			{
-				finalAreas.push_back(i->second);
+				final.push_back(i->second);
 			}
-			Utility::convertContainerToArray(amx, params[4], params[5], finalAreas);
-			return static_cast<cell>(finalAreas.size());
+			Utility::convertContainerToArray(amx, params[5], params[6], final);
+			return static_cast<cell>(final.size());
 		}
 		case STREAMER_TYPE_PICKUP:
 		{
 			std::vector<SharedCell> pointCells;
-			core->getGrid()->findMinimalCellsForPoint(position, pointCells);
+			core->getGrid()->findMinimalCellsForPoint(position2d, pointCells);
 			std::multimap<float, int> orderedPickups;
 			for (std::vector<SharedCell>::const_iterator p = pointCells.begin(); p != pointCells.end(); ++p)
 			{
 				for (boost::unordered_map<int, Item::SharedPickup>::const_iterator a = (*p)->pickups.begin(); a != (*p)->pickups.end(); ++a)
 				{
-					float distance = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(a->second->position[0], a->second->position[1]), position));
+					float distance = static_cast<float>(boost::geometry::distance(a->second->position, position3d));
 					orderedPickups.insert(std::pair<float, int>(distance, a->first));
 				}
 			}
-			std::vector<int> finalAreas;
+			std::vector<int> final;
 			for (std::map<float, int>::iterator i = orderedPickups.begin(); i != orderedPickups.end(); ++i)
 			{
-				finalAreas.push_back(i->second);
+				final.push_back(i->second);
 			}
-			Utility::convertContainerToArray(amx, params[4], params[5], finalAreas);
-			return static_cast<cell>(finalAreas.size());
+			Utility::convertContainerToArray(amx, params[5], params[6], final);
+			return static_cast<cell>(final.size());
 		}
 		case STREAMER_TYPE_CP:
 		{
 			std::vector<SharedCell> pointCells;
-			core->getGrid()->findMinimalCellsForPoint(position, pointCells);
+			core->getGrid()->findMinimalCellsForPoint(position2d, pointCells);
 			std::multimap<float, int> orderedCheckpoints;
 			for (std::vector<SharedCell>::const_iterator p = pointCells.begin(); p != pointCells.end(); ++p)
 			{
 				for (boost::unordered_map<int, Item::SharedCheckpoint>::const_iterator a = (*p)->checkpoints.begin(); a != (*p)->checkpoints.end(); ++a)
 				{
-					float distance = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(a->second->position[0], a->second->position[1]), position));
+					float distance = static_cast<float>(boost::geometry::distance(a->second->position, position3d));
 					orderedCheckpoints.insert(std::pair<float, int>(distance, a->first));
 				}
 			}
-			std::vector<int> finalAreas;
+			std::vector<int> final;
 			for (std::map<float, int>::iterator i = orderedCheckpoints.begin(); i != orderedCheckpoints.end(); ++i)
 			{
-				finalAreas.push_back(i->second);
+				final.push_back(i->second);
 			}
-			Utility::convertContainerToArray(amx, params[4], params[5], finalAreas);
-			return static_cast<cell>(finalAreas.size());
+			Utility::convertContainerToArray(amx, params[5], params[6], final);
+			return static_cast<cell>(final.size());
 		}
 		case STREAMER_TYPE_RACE_CP:
 		{
 			std::vector<SharedCell> pointCells;
-			core->getGrid()->findMinimalCellsForPoint(position, pointCells);
+			core->getGrid()->findMinimalCellsForPoint(position2d, pointCells);
 			std::multimap<float, int> orderedRaceCheckpoints;
 			for (std::vector<SharedCell>::const_iterator p = pointCells.begin(); p != pointCells.end(); ++p)
 			{
 				for (boost::unordered_map<int, Item::SharedRaceCheckpoint>::const_iterator a = (*p)->raceCheckpoints.begin(); a != (*p)->raceCheckpoints.end(); ++a)
 				{
-					float distance = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(a->second->position[0], a->second->position[1]), position));
+					float distance = static_cast<float>(boost::geometry::distance(a->second->position, position3d));
 					orderedRaceCheckpoints.insert(std::pair<float, int>(distance, a->first));
 				}
 			}
-			std::vector<int> finalAreas;
+			std::vector<int> final;
 			for (std::map<float, int>::iterator i = orderedRaceCheckpoints.begin(); i != orderedRaceCheckpoints.end(); ++i)
 			{
-				finalAreas.push_back(i->second);
+				final.push_back(i->second);
 			}
-			Utility::convertContainerToArray(amx, params[4], params[5], finalAreas);
-			return static_cast<cell>(finalAreas.size());
+			Utility::convertContainerToArray(amx, params[5], params[6], final);
+			return static_cast<cell>(final.size());
 		}
 		case STREAMER_TYPE_MAP_ICON:
 		{
 			std::vector<SharedCell> pointCells;
-			core->getGrid()->findMinimalCellsForPoint(position, pointCells);
+			core->getGrid()->findMinimalCellsForPoint(position2d, pointCells);
 			std::multimap<float, int> orderedMapIcons;
 			for (std::vector<SharedCell>::const_iterator p = pointCells.begin(); p != pointCells.end(); ++p)
 			{
 				for (boost::unordered_map<int, Item::SharedMapIcon>::const_iterator a = (*p)->mapIcons.begin(); a != (*p)->mapIcons.end(); ++a)
 				{
-					float distance = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(a->second->position[0], a->second->position[1]), position));
+					float distance = static_cast<float>(boost::geometry::distance(a->second->position, position3d));
 					orderedMapIcons.insert(std::pair<float, int>(distance, a->first));
 				}
 			}
-			std::vector<int> finalAreas;
+			std::vector<int> final;
 			for (std::map<float, int>::iterator i = orderedMapIcons.begin(); i != orderedMapIcons.end(); ++i)
 			{
-				finalAreas.push_back(i->second);
+				final.push_back(i->second);
 			}
-			Utility::convertContainerToArray(amx, params[4], params[5], finalAreas);
-			return static_cast<cell>(finalAreas.size());
+			Utility::convertContainerToArray(amx, params[5], params[6], final);
+			return static_cast<cell>(final.size());
 		}
 		case STREAMER_TYPE_3D_TEXT_LABEL:
 		{
 			std::vector<SharedCell> pointCells;
-			core->getGrid()->findMinimalCellsForPoint(position, pointCells);
+			core->getGrid()->findMinimalCellsForPoint(position2d, pointCells);
 			std::multimap<float, int> orderedTextLabels;
 			float distance = 0.0;
 			for (std::vector<SharedCell>::const_iterator p = pointCells.begin(); p != pointCells.end(); ++p)
 			{
 				for (boost::unordered_map<int, Item::SharedTextLabel>::const_iterator a = (*p)->textLabels.begin(); a != (*p)->textLabels.end(); ++a)
 				{
-					distance = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(a->second->position[0], a->second->position[1]), position));
+					distance = static_cast<float>(boost::geometry::distance(a->second->position, position3d));
 					orderedTextLabels.insert(std::pair<float, int>(distance, a->first));
 				}
 			}
-			std::vector<int> finalAreas;
+			std::vector<int> final;
 			for (std::map<float, int>::iterator i = orderedTextLabels.begin(); i != orderedTextLabels.end(); ++i)
 			{
-				finalAreas.push_back(i->second);
+				final.push_back(i->second);
 			}
-			Utility::convertContainerToArray(amx, params[4], params[5], finalAreas);
-			return static_cast<cell>(finalAreas.size());
+			Utility::convertContainerToArray(amx, params[5], params[6], final);
+			return static_cast<cell>(final.size());
 		}
 		case STREAMER_TYPE_AREA:
 		{
 			std::vector<SharedCell> pointCells;
-			core->getGrid()->findMinimalCellsForPoint(position, pointCells);
+			core->getGrid()->findMinimalCellsForPoint(position2d, pointCells);
 			std::multimap<float, int> orderedAreas;
 			float distance = 0.0;
 			Eigen::Vector3f tempPos;
@@ -1480,44 +1481,45 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 						{
 							if (a->second->attach)
 							{
-								distance = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(a->second->attach->position[0], a->second->attach->position[1]), position));
+								distance = static_cast<float>(boost::geometry::distance(a->second->attach->position, position3d));
 							}
 							else
 							{
-								tempPos = boost::get<Eigen::Vector3f>(a->second->position);
-								distance = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(tempPos[0], tempPos[1]), position));
+								distance = static_cast<float>(boost::geometry::distance(boost::get<Eigen::Vector3f>(a->second->position), position3d));
 							}
 							break;
 						}
 						case STREAMER_AREA_TYPE_RECTANGLE:
 						{
-							Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Box2D>(a->second->position));
-							distance = static_cast<float>(boost::geometry::distance(centroid, position));
+							Eigen::Vector3f centroid = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3D>(a->second->position));
+							distance = static_cast<float>(boost::geometry::distance(centroid, position3d));
 							break;
 						}
 						case STREAMER_AREA_TYPE_CUBOID:
 						{
-							Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Box2D>(a->second->position));
-							distance = static_cast<float>(boost::geometry::distance(centroid, position));
+							Eigen::Vector3f centroid = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3D>(a->second->position));
+							distance = static_cast<float>(boost::geometry::distance(centroid, position3d));
 							break;
 						}
 						case STREAMER_AREA_TYPE_POLYGON:
 						{
-							Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2D>(a->second->position));
-							distance = static_cast<float>(boost::geometry::distance(centroid, position));
+							Eigen::Vector2f centroidxy = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2D>(a->second->position));
+							Eigen::Vector2f positionz = boost::get<Eigen::Vector2f>(a->second->height);
+							Eigen::Vector3f centroid = Eigen::Vector3f(centroidxy[0], centroidxy[1], positionz[1] - positionz[0]);
+							distance = static_cast<float>(boost::geometry::distance(centroid, position3d));
 							break;
 						}
 					}
 					orderedAreas.insert(std::pair<float, int>(distance, a->first));
 				}
 			}
-			std::vector<int> finalAreas;
+			std::vector<int> final;
 			for (std::map<float, int>::iterator i = orderedAreas.begin(); i != orderedAreas.end(); ++i)
 			{
-				finalAreas.push_back(i->second);
+				final.push_back(i->second);
 			}
-			Utility::convertContainerToArray(amx, params[4], params[5], finalAreas);
-			return static_cast<cell>(finalAreas.size());
+			Utility::convertContainerToArray(amx, params[5], params[6], final);
+			return static_cast<cell>(final.size());
 		}
 		default:
 		{

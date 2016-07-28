@@ -226,7 +226,7 @@ native Streamer_DestroyAllVisibleItems(playerid, type, serverwide = 1);
 native Streamer_CountVisibleItems(playerid, type, serverwide = 1);
 native Streamer_DestroyAllItems(type, serverwide = 1);
 native Streamer_CountItems(type, serverwide = 1);
-native Streamer_GetNearbyItems(Float:x, Float:y, type, STREAMER_ALL_TAGS items[], maxitems = sizeof items);
+native Streamer_GetNearbyItems(Float:x, Float:y, Float:z, type, STREAMER_ALL_TAGS items[], maxitems = sizeof items);
 
 // Natives (Objects)
 
