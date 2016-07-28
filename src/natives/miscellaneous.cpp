@@ -1330,9 +1330,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountItems(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(6, "Streamer_GetNearbyItems");
+	CHECK_PARAMS(7, "Streamer_GetNearbyItems");
 	Eigen::Vector3f position3d = Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]));
 	Eigen::Vector2f position2d = Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2]));
+	float range = amx_ctof(params[7]);
 	switch (static_cast<int>(params[4]))
 	{
 		case STREAMER_TYPE_OBJECT:
@@ -1345,7 +1346,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 				for (boost::unordered_map<int, Item::SharedObject>::const_iterator a = (*p)->objects.begin(); a != (*p)->objects.end(); ++a)
 				{
 					float distance = static_cast<float>(boost::geometry::distance(a->second->position, position3d));
-					orderedObjects.insert(std::pair<float, int>(distance, a->first));
+					if(distance < range)
+					{
+						orderedObjects.insert(std::pair<float, int>(distance, a->first));
+					}
 				}
 			}
 			std::vector<int> final;
@@ -1366,7 +1370,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 				for (boost::unordered_map<int, Item::SharedPickup>::const_iterator a = (*p)->pickups.begin(); a != (*p)->pickups.end(); ++a)
 				{
 					float distance = static_cast<float>(boost::geometry::distance(a->second->position, position3d));
-					orderedPickups.insert(std::pair<float, int>(distance, a->first));
+					if(distance < range)
+					{
+						orderedPickups.insert(std::pair<float, int>(distance, a->first));
+					}
 				}
 			}
 			std::vector<int> final;
@@ -1387,7 +1394,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 				for (boost::unordered_map<int, Item::SharedCheckpoint>::const_iterator a = (*p)->checkpoints.begin(); a != (*p)->checkpoints.end(); ++a)
 				{
 					float distance = static_cast<float>(boost::geometry::distance(a->second->position, position3d));
-					orderedCheckpoints.insert(std::pair<float, int>(distance, a->first));
+					if(distance < range)
+					{
+						orderedCheckpoints.insert(std::pair<float, int>(distance, a->first));
+					}
 				}
 			}
 			std::vector<int> final;
@@ -1408,7 +1418,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 				for (boost::unordered_map<int, Item::SharedRaceCheckpoint>::const_iterator a = (*p)->raceCheckpoints.begin(); a != (*p)->raceCheckpoints.end(); ++a)
 				{
 					float distance = static_cast<float>(boost::geometry::distance(a->second->position, position3d));
-					orderedRaceCheckpoints.insert(std::pair<float, int>(distance, a->first));
+					if(distance < range)
+					{
+						orderedRaceCheckpoints.insert(std::pair<float, int>(distance, a->first));
+					}
 				}
 			}
 			std::vector<int> final;
@@ -1429,7 +1442,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 				for (boost::unordered_map<int, Item::SharedMapIcon>::const_iterator a = (*p)->mapIcons.begin(); a != (*p)->mapIcons.end(); ++a)
 				{
 					float distance = static_cast<float>(boost::geometry::distance(a->second->position, position3d));
-					orderedMapIcons.insert(std::pair<float, int>(distance, a->first));
+					if(distance < range)
+					{
+						orderedMapIcons.insert(std::pair<float, int>(distance, a->first));
+					}
 				}
 			}
 			std::vector<int> final;
@@ -1451,7 +1467,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 				for (boost::unordered_map<int, Item::SharedTextLabel>::const_iterator a = (*p)->textLabels.begin(); a != (*p)->textLabels.end(); ++a)
 				{
 					distance = static_cast<float>(boost::geometry::distance(a->second->position, position3d));
-					orderedTextLabels.insert(std::pair<float, int>(distance, a->first));
+					if(distance < range)
+					{
+						orderedTextLabels.insert(std::pair<float, int>(distance, a->first));
+					}
 				}
 			}
 			std::vector<int> final;
@@ -1510,7 +1529,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 							break;
 						}
 					}
-					orderedAreas.insert(std::pair<float, int>(distance, a->first));
+					if(distance < range)
+					{
+						orderedAreas.insert(std::pair<float, int>(distance, a->first));
+					}
 				}
 			}
 			std::vector<int> final;
