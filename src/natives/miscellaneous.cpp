@@ -1333,7 +1333,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 	CHECK_PARAMS(7, "Streamer_GetNearbyItems");
 	Eigen::Vector3f position3d = Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]));
 	Eigen::Vector2f position2d = Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2]));
-	float range = amx_ctof(params[7]);
+	float range = pow(amx_ctof(params[7]), 2);
 	switch (static_cast<int>(params[4]))
 	{
 		case STREAMER_TYPE_OBJECT:
@@ -1345,7 +1345,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 			{
 				for (boost::unordered_map<int, Item::SharedObject>::const_iterator a = (*p)->objects.begin(); a != (*p)->objects.end(); ++a)
 				{
-					float distance = static_cast<float>(boost::geometry::distance(a->second->position, position3d));
+					float distance = static_cast<float>(boost::geometry::comparable_distance(a->second->position, position3d));
 					if(distance < range)
 					{
 						orderedObjects.insert(std::pair<float, int>(distance, a->first));
@@ -1353,7 +1353,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 				}
 			}
 			std::vector<int> final;
-			for (std::map<float, int>::iterator i = orderedObjects.begin(); i != orderedObjects.end(); ++i)
+			for (std::multimap<float, int>::iterator i = orderedObjects.begin(); i != orderedObjects.end(); ++i)
 			{
 				final.push_back(i->second);
 			}
@@ -1369,7 +1369,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 			{
 				for (boost::unordered_map<int, Item::SharedPickup>::const_iterator a = (*p)->pickups.begin(); a != (*p)->pickups.end(); ++a)
 				{
-					float distance = static_cast<float>(boost::geometry::distance(a->second->position, position3d));
+					float distance = static_cast<float>(boost::geometry::comparable_distance(a->second->position, position3d));
 					if(distance < range)
 					{
 						orderedPickups.insert(std::pair<float, int>(distance, a->first));
@@ -1377,7 +1377,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 				}
 			}
 			std::vector<int> final;
-			for (std::map<float, int>::iterator i = orderedPickups.begin(); i != orderedPickups.end(); ++i)
+			for (std::multimap<float, int>::iterator i = orderedPickups.begin(); i != orderedPickups.end(); ++i)
 			{
 				final.push_back(i->second);
 			}
@@ -1393,7 +1393,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 			{
 				for (boost::unordered_map<int, Item::SharedCheckpoint>::const_iterator a = (*p)->checkpoints.begin(); a != (*p)->checkpoints.end(); ++a)
 				{
-					float distance = static_cast<float>(boost::geometry::distance(a->second->position, position3d));
+					float distance = static_cast<float>(boost::geometry::comparable_distance(a->second->position, position3d));
 					if(distance < range)
 					{
 						orderedCheckpoints.insert(std::pair<float, int>(distance, a->first));
@@ -1401,7 +1401,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 				}
 			}
 			std::vector<int> final;
-			for (std::map<float, int>::iterator i = orderedCheckpoints.begin(); i != orderedCheckpoints.end(); ++i)
+			for (std::multimap<float, int>::iterator i = orderedCheckpoints.begin(); i != orderedCheckpoints.end(); ++i)
 			{
 				final.push_back(i->second);
 			}
@@ -1417,7 +1417,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 			{
 				for (boost::unordered_map<int, Item::SharedRaceCheckpoint>::const_iterator a = (*p)->raceCheckpoints.begin(); a != (*p)->raceCheckpoints.end(); ++a)
 				{
-					float distance = static_cast<float>(boost::geometry::distance(a->second->position, position3d));
+					float distance = static_cast<float>(boost::geometry::comparable_distance(a->second->position, position3d));
 					if(distance < range)
 					{
 						orderedRaceCheckpoints.insert(std::pair<float, int>(distance, a->first));
@@ -1425,7 +1425,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 				}
 			}
 			std::vector<int> final;
-			for (std::map<float, int>::iterator i = orderedRaceCheckpoints.begin(); i != orderedRaceCheckpoints.end(); ++i)
+			for (std::multimap<float, int>::iterator i = orderedRaceCheckpoints.begin(); i != orderedRaceCheckpoints.end(); ++i)
 			{
 				final.push_back(i->second);
 			}
@@ -1441,7 +1441,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 			{
 				for (boost::unordered_map<int, Item::SharedMapIcon>::const_iterator a = (*p)->mapIcons.begin(); a != (*p)->mapIcons.end(); ++a)
 				{
-					float distance = static_cast<float>(boost::geometry::distance(a->second->position, position3d));
+					float distance = static_cast<float>(boost::geometry::comparable_distance(a->second->position, position3d));
 					if(distance < range)
 					{
 						orderedMapIcons.insert(std::pair<float, int>(distance, a->first));
@@ -1449,7 +1449,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 				}
 			}
 			std::vector<int> final;
-			for (std::map<float, int>::iterator i = orderedMapIcons.begin(); i != orderedMapIcons.end(); ++i)
+			for (std::multimap<float, int>::iterator i = orderedMapIcons.begin(); i != orderedMapIcons.end(); ++i)
 			{
 				final.push_back(i->second);
 			}
@@ -1466,7 +1466,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 			{
 				for (boost::unordered_map<int, Item::SharedTextLabel>::const_iterator a = (*p)->textLabels.begin(); a != (*p)->textLabels.end(); ++a)
 				{
-					distance = static_cast<float>(boost::geometry::distance(a->second->position, position3d));
+					distance = static_cast<float>(boost::geometry::comparable_distance(a->second->position, position3d));
 					if(distance < range)
 					{
 						orderedTextLabels.insert(std::pair<float, int>(distance, a->first));
@@ -1474,7 +1474,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 				}
 			}
 			std::vector<int> final;
-			for (std::map<float, int>::iterator i = orderedTextLabels.begin(); i != orderedTextLabels.end(); ++i)
+			for (std::multimap<float, int>::iterator i = orderedTextLabels.begin(); i != orderedTextLabels.end(); ++i)
 			{
 				final.push_back(i->second);
 			}
@@ -1500,24 +1500,24 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 						{
 							if (a->second->attach)
 							{
-								distance = static_cast<float>(boost::geometry::distance(a->second->attach->position, position3d));
+								distance = static_cast<float>(boost::geometry::comparable_distance(a->second->attach->position, position3d));
 							}
 							else
 							{
-								distance = static_cast<float>(boost::geometry::distance(boost::get<Eigen::Vector3f>(a->second->position), position3d));
+								distance = static_cast<float>(boost::geometry::comparable_distance(boost::get<Eigen::Vector3f>(a->second->position), position3d));
 							}
 							break;
 						}
 						case STREAMER_AREA_TYPE_RECTANGLE:
 						{
 							Eigen::Vector3f centroid = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3D>(a->second->position));
-							distance = static_cast<float>(boost::geometry::distance(centroid, position3d));
+							distance = static_cast<float>(boost::geometry::comparable_distance(centroid, position3d));
 							break;
 						}
 						case STREAMER_AREA_TYPE_CUBOID:
 						{
 							Eigen::Vector3f centroid = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3D>(a->second->position));
-							distance = static_cast<float>(boost::geometry::distance(centroid, position3d));
+							distance = static_cast<float>(boost::geometry::comparable_distance(centroid, position3d));
 							break;
 						}
 						case STREAMER_AREA_TYPE_POLYGON:
@@ -1525,7 +1525,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 							Eigen::Vector2f centroidxy = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2D>(a->second->position));
 							Eigen::Vector2f positionz = boost::get<Eigen::Vector2f>(a->second->height);
 							Eigen::Vector3f centroid = Eigen::Vector3f(centroidxy[0], centroidxy[1], positionz[1] - positionz[0]);
-							distance = static_cast<float>(boost::geometry::distance(centroid, position3d));
+							distance = static_cast<float>(boost::geometry::comparable_distance(centroid, position3d));
 							break;
 						}
 					}
@@ -1536,7 +1536,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 				}
 			}
 			std::vector<int> final;
-			for (std::map<float, int>::iterator i = orderedAreas.begin(); i != orderedAreas.end(); ++i)
+			for (std::multimap<float, int>::iterator i = orderedAreas.begin(); i != orderedAreas.end(); ++i)
 			{
 				final.push_back(i->second);
 			}
