@@ -104,6 +104,7 @@ AMX_NATIVE_INFO natives[] =
 	{ "Streamer_CountVisibleItems", Natives::Streamer_CountVisibleItems },
 	{ "Streamer_DestroyAllItems", Natives::Streamer_DestroyAllItems },
 	{ "Streamer_CountItems", Natives::Streamer_CountItems },
+	{ "Streamer_GetNearbyItems", Natives::Streamer_GetNearbyItems },
 	// Objects
 	{ "CreateDynamicObject", Natives::CreateDynamicObject },
 	{ "DestroyDynamicObject", Natives::DestroyDynamicObject },
