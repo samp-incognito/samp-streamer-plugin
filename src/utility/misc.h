@@ -19,6 +19,7 @@
 
 #include "../common.h"
 #include "../item.h"
+#include "../streamer.h"
 
 #include <boost/unordered_map.hpp>
 #include <boost/unordered_set.hpp>
@@ -110,6 +111,10 @@ namespace Utility
 	{
 		if (container.any())
 		{
+			if (container.all())
+			{
+				return -1;
+			}
 			for (std::size_t i = 0; i < N; ++i)
 			{
 				if (container.test(i))
@@ -118,7 +123,7 @@ namespace Utility
 				}
 			}
 		}
-		return -1;
+		return INVALID_GENERIC_ID;
 	}
 
 	template<typename T>
