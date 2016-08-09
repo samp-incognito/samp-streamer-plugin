@@ -73,14 +73,18 @@ namespace Utility
 	template<std::size_t N, typename T>
 	inline bool addToContainer(std::bitset<N> &container, T value)
 	{
-		if (value >= 0 && static_cast<std::size_t>(value) < N)
+		if (value < 0)
 		{
-			container.set(static_cast<std::size_t>(value));
-			return true;
+			container.set();
+		}
+		else if (static_cast<std::size_t>(value) >= N)
+		{
+			container.reset();
 		}
 		else
 		{
-			container.set();
+			container.set(static_cast<std::size_t>(value));
+			return true;
 		}
 		return false;
 	}
