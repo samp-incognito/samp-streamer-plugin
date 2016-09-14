@@ -43,6 +43,10 @@ namespace Natives
 	// Settings
 	cell AMX_NATIVE_CALL Streamer_GetTickRate(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_SetTickRate(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_GetPlayerTickRate(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_SetPlayerTickRate(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_GetChunkSize(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_SetChunkSize(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_GetMaxItems(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_SetMaxItems(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_GetVisibleItems(AMX *amx, cell *params);

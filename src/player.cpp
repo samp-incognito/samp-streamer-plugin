@@ -29,6 +29,7 @@ Player::Player(int id)
 {
 	activeCheckpoint = 0;
 	activeRaceCheckpoint = 0;
+	checkedPickups = false;
 	currentVisibleObjects = core->getData()->getGlobalMaxVisibleItems(STREAMER_TYPE_OBJECT);
 	currentVisibleTextLabels = core->getData()->getGlobalMaxVisibleItems(STREAMER_TYPE_3D_TEXT_LABEL);
 	delayedCheckpoint = 0;
@@ -50,6 +51,8 @@ Player::Player(int id)
 	radiusMultipliers[STREAMER_TYPE_3D_TEXT_LABEL] = core->getData()->getGlobalRadiusMultiplier(STREAMER_TYPE_3D_TEXT_LABEL);
 	radiusMultipliers[STREAMER_TYPE_AREA] = core->getData()->getGlobalRadiusMultiplier(STREAMER_TYPE_AREA);
 	requestingClass = false;
+	tickCount = 0;
+	tickRate = 50;
 	updateUsingCameraPosition = false;
 	updateWhenIdle = false;
 	visibleCell = SharedCell(new Cell());

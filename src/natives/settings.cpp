@@ -32,6 +32,41 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetTickRate(AMX *amx, cell *params)
 	return static_cast<cell>(core->getStreamer()->setTickRate(static_cast<std::size_t>(params[1])));
 }
 
+cell AMX_NATIVE_CALL Natives::Streamer_GetPlayerTickRate(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "Streamer_GetPlayerTickRate");
+	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
+	if (p != core->getData()->players.end())
+	{
+		return static_cast<cell>(p->second.tickRate);
+	}
+	return 0;
+}
+
+cell AMX_NATIVE_CALL Natives::Streamer_SetPlayerTickRate(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "Streamer_SetPlayerTickRate");
+	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
+	if (p != core->getData()->players.end())
+	{
+		p->second.tickRate = static_cast<std::size_t>(params[2]);
+		return 1;
+	}
+	return 0;
+}
+
+cell AMX_NATIVE_CALL Natives::Streamer_GetChunkSize(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "Streamer_GetChunkSize");
+	return static_cast<cell>(core->getStreamer()->getChunkSize(static_cast<std::size_t>(params[1])));
+}
+
+cell AMX_NATIVE_CALL Natives::Streamer_SetChunkSize(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "Streamer_SetChunkSize");
+	return static_cast<cell>(core->getStreamer()->setChunkSize(static_cast<int>(params[1]), static_cast<std::size_t>(params[2])) != 0);
+}
+
 cell AMX_NATIVE_CALL Natives::Streamer_GetMaxItems(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "Streamer_GetMaxItems");

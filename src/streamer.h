@@ -42,7 +42,7 @@ public:
 	{
 		return lastUpdateTime;
 	}
-\
+
 	inline std::size_t getTickRate()
 	{
 		return tickRate;
@@ -58,6 +58,9 @@ public:
 		return false;
 	}
 
+	std::size_t getChunkSize(int type);
+	bool setChunkSize(int type, std::size_t value);
+
 	void startAutomaticUpdate();
 	void startManualUpdate(Player &player, int type);
 
@@ -70,23 +73,32 @@ public:
 private:
 	void calculateAverageElapsedTime();
 
+	void performPlayerChunkUpdate(Player &player);
 	void performPlayerUpdate(Player &player, bool automatic);
 	void executeCallbacks();
 
 	void processAreas(Player &player, const std::vector<SharedCell> &cells);
 	void processCheckpoints(Player &player, const std::vector<SharedCell> &cells);
-	void processMapIcons(Player &player, const std::vector<SharedCell> &cells);
-	void processObjects(Player &player, const std::vector<SharedCell> &cells);
 	void processRaceCheckpoints(Player &player, const std::vector<SharedCell> &cells);
-	void processTextLabels(Player &player, const std::vector<SharedCell> &cells);
 
-	void processPickups(Player &player, const std::vector<SharedCell> &cells);
-	void processPickups();
+	void discoverMapIcons(Player &player, const std::vector<SharedCell> &cells);
+	void streamMapIcons(Player &player);
+
+	void discoverObjects(Player &player, const std::vector<SharedCell> &cells);
+	void streamObjects(Player &player);
+
+	void discoverPickups(Player &player, const std::vector<SharedCell> &cells);
+	void streamPickups();
+
+	void discoverTextLabels(Player &player, const std::vector<SharedCell> &cells);
+	void streamTextLabels(Player &player);
 
 	void processMovingObjects();
 	void processAttachedAreas();
 	void processAttachedObjects();
 	void processAttachedTextLabels();
+
+	std::size_t chunkSize[STREAMER_MAX_TYPES];
 
 	std::size_t tickCount;
 	std::size_t tickRate;
@@ -101,18 +113,6 @@ private:
 	std::vector<int> objectMoveCallbacks;
 
 	boost::unordered_map<int, Item::SharedPickup> discoveredPickups;
-
-	struct CompareItem
-	{
-		bool operator()(std::pair<int, float> const &a, std::pair<int, float> const &b)
-		{
-			if (a.first != b.first)
-			{
-				return a.first > b.first;
-			}
-			return a.second < b.second;
-		}
-	};
 
 	template<std::size_t N, typename T>
 	inline bool doesPlayerSatisfyConditions(const std::bitset<N> &a, const T &b, const boost::unordered_set<T> &c, const T &d, const boost::unordered_set<T> &e, const T &f)

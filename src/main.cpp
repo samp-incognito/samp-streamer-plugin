@@ -52,6 +52,10 @@ AMX_NATIVE_INFO natives[] =
 	// Settings
 	{ "Streamer_GetTickRate", Natives::Streamer_GetTickRate },
 	{ "Streamer_SetTickRate", Natives::Streamer_SetTickRate },
+	{ "Streamer_GetPlayerTickRate", Natives::Streamer_GetPlayerTickRate },
+	{ "Streamer_SetPlayerTickRate", Natives::Streamer_SetPlayerTickRate },
+	{ "Streamer_GetChunkSize", Natives::Streamer_GetChunkSize },
+	{ "Streamer_SetChunkSize", Natives::Streamer_SetChunkSize },
 	{ "Streamer_GetMaxItems", Natives::Streamer_GetMaxItems },
 	{ "Streamer_SetMaxItems", Natives::Streamer_SetMaxItems },
 	{ "Streamer_GetVisibleItems", Natives::Streamer_GetVisibleItems },

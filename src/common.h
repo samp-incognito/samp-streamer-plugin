@@ -108,6 +108,18 @@ namespace Item
 	typedef boost::intrusive_ptr<Pickup> SharedPickup;
 	typedef boost::intrusive_ptr<RaceCheckpoint> SharedRaceCheckpoint;
 	typedef boost::intrusive_ptr<TextLabel> SharedTextLabel;
+
+	struct Compare
+	{
+		bool operator()(std::pair<int, float> const &a, std::pair<int, float> const &b)
+		{
+			if (a.first != b.first)
+			{
+				return a.first > b.first;
+			}
+			return a.second < b.second;
+		}
+	};
 }
 
 namespace boost { namespace geometry { namespace traits {

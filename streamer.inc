@@ -168,6 +168,10 @@ enum
 
 native Streamer_GetTickRate();
 native Streamer_SetTickRate(rate);
+native Streamer_GetPlayerTickRate(playerid);
+native Streamer_SetPlayerTickRate(playerid, rate);
+native Streamer_GetChunkSize(type);
+native Streamer_SetChunkSize(type, size);
 native Streamer_GetMaxItems(type);
 native Streamer_SetMaxItems(type, items);
 native Streamer_GetVisibleItems(type, playerid = -1);

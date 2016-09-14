@@ -28,6 +28,7 @@
 #include <Eigen/Core>
 
 #include <bitset>
+#include <map>
 
 struct Player
 {
@@ -35,6 +36,7 @@ struct Player
 
 	int activeCheckpoint;
 	int activeRaceCheckpoint;
+	bool checkedPickups;
 	std::size_t currentVisibleObjects;
 	std::size_t currentVisibleTextLabels;
 	int delayedCheckpoint;
@@ -51,6 +53,8 @@ struct Player
 	float radiusMultipliers[STREAMER_MAX_TYPES];
 	int references;
 	bool requestingClass;
+	std::size_t tickCount;
+	std::size_t tickRate;
 	bool updateUsingCameraPosition;
 	bool updateWhenIdle;
 	SharedCell visibleCell;
@@ -59,6 +63,14 @@ struct Player
 	int worldID;
 
 	std::bitset<STREAMER_MAX_TYPES> enabledItems;
+	std::bitset<STREAMER_MAX_TYPES> processingChunks;
+
+	std::multimap<std::pair<int, float>, Item::SharedMapIcon, Item::Compare> discoveredMapIcons;
+	std::multimap<std::pair<int, float>, Item::SharedMapIcon, Item::Compare> existingMapIcons;
+	std::multimap<std::pair<int, float>, Item::SharedObject, Item::Compare> discoveredObjects;
+	std::multimap<std::pair<int, float>, Item::SharedObject, Item::Compare> existingObjects;
+	std::multimap<std::pair<int, float>, Item::SharedTextLabel, Item::Compare> discoveredTextLabels;
+	std::multimap<std::pair<int, float>, Item::SharedTextLabel, Item::Compare> existingTextLabels;
 
 	boost::unordered_set<int> internalAreas;
 	boost::unordered_map<int, int> internalMapIcons;
