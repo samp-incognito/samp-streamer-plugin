@@ -1405,7 +1405,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 			{
 				finalAreas.push_back(i->second);
 			}
-			Utility::convertContainerToArray(amx, params[5], params[6], finalAreas;
+			Utility::convertContainerToArray(amx, params[5], params[6], finalAreas);
 			return static_cast<cell>(finalAreas.size());
 		}
 		case STREAMER_TYPE_RACE_CP:
