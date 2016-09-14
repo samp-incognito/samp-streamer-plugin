@@ -366,7 +366,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItemStatic(AMX *amx, cell *params
 
 cell AMX_NATIVE_CALL Natives::Streamer_ToggleItemAntiAreas(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "Streamer_ToggleItemNonAreas");
+	CHECK_PARAMS(3, "Streamer_ToggleItemAntiAreas");
 	switch (static_cast<int>(params[1]))
 	{
 		case STREAMER_TYPE_OBJECT:
