@@ -649,7 +649,7 @@ void Streamer::streamMapIcons(Player &player)
 		{
 			player.visibleCell->mapIcons.insert(std::make_pair(d->second->mapIconID, d->second));
 		}
-		d = player.discoveredMapIcons.erase(d);
+		player.discoveredMapIcons.erase(d++);
 		++chunkCount;
 	}
 	if (player.discoveredMapIcons.empty())
@@ -811,7 +811,7 @@ void Streamer::streamObjects(Player &player)
 		{
 			player.visibleCell->objects.insert(std::make_pair(d->second->objectID, d->second));
 		}
-		d = player.discoveredObjects.erase(d);
+		player.discoveredObjects.erase(d++);
 		++chunkCount;
 	}
 	if (player.discoveredObjects.empty())
@@ -1050,7 +1050,7 @@ void Streamer::streamTextLabels(Player &player)
 		{
 			player.visibleCell->textLabels.insert(std::make_pair(d->second->textLabelID, d->second));
 		}
-		d = player.discoveredTextLabels.erase(d);
+		player.discoveredTextLabels.erase(d++);
 		++chunkCount;
 	}
 	if (player.discoveredTextLabels.empty())

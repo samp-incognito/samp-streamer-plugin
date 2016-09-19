@@ -17,6 +17,10 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#define INVALID_ALTERNATE_ID (-1)
+#define INVALID_GENERIC_ID (0xFFFF)
+#define INVALID_STREAMER_ID (0)
+
 #define STREAMER_MAX_TYPES (7)
 
 #define STREAMER_TYPE_OBJECT (0)

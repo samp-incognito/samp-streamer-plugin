@@ -19,7 +19,6 @@
 
 #include "../common.h"
 #include "../item.h"
-#include "../streamer.h"
 
 #include <boost/unordered_map.hpp>
 #include <boost/unordered_set.hpp>

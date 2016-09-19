@@ -17,10 +17,6 @@
 #ifndef STREAMER_H
 #define STREAMER_H
 
-#define INVALID_ALTERNATE_ID (-1)
-#define INVALID_GENERIC_ID (0xFFFF)
-#define INVALID_STREAMER_ID (0)
-
 #include "cell.h"
 #include "common.h"
 #include "item.h"
