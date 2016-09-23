@@ -411,11 +411,11 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleAllItems(AMX *amx, cell *params)
 				{
 					if (!static_cast<int>(params[3]))
 					{
-						static_cast<cell>(Utility::removeFromContainer(o->second->players, static_cast<int>(params[1])));
+						Utility::removeFromContainer(o->second->players, static_cast<int>(params[1]));
 					}
 					else
 					{
-						static_cast<cell>(Utility::addToContainer(o->second->players, static_cast<int>(params[1])));
+						Utility::addToContainer(o->second->players, static_cast<int>(params[1]));
 					}
 				}
 			}
@@ -430,11 +430,11 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleAllItems(AMX *amx, cell *params)
 				{
 					if (!static_cast<int>(params[3]))
 					{
-						static_cast<cell>(Utility::removeFromContainer(p->second->players, static_cast<int>(params[1])));
+						Utility::removeFromContainer(p->second->players, static_cast<int>(params[1]));
 					}
 					else
 					{
-						static_cast<cell>(Utility::addToContainer(p->second->players, static_cast<int>(params[1])));
+						Utility::addToContainer(p->second->players, static_cast<int>(params[1]));
 					}
 				}
 			}
@@ -449,11 +449,11 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleAllItems(AMX *amx, cell *params)
 				{
 					if (!static_cast<int>(params[3]))
 					{
-						static_cast<cell>(Utility::removeFromContainer(c->second->players, static_cast<int>(params[1])));
+						Utility::removeFromContainer(c->second->players, static_cast<int>(params[1]));
 					}
 					else
 					{
-						static_cast<cell>(Utility::addToContainer(c->second->players, static_cast<int>(params[1])));
+						Utility::addToContainer(c->second->players, static_cast<int>(params[1]));
 					}
 				}
 			}
@@ -468,11 +468,11 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleAllItems(AMX *amx, cell *params)
 				{
 					if (!static_cast<int>(params[3]))
 					{
-						static_cast<cell>(Utility::removeFromContainer(r->second->players, static_cast<int>(params[1])));
+						Utility::removeFromContainer(r->second->players, static_cast<int>(params[1]));
 					}
 					else
 					{
-						static_cast<cell>(Utility::addToContainer(r->second->players, static_cast<int>(params[1])));
+						Utility::addToContainer(r->second->players, static_cast<int>(params[1]));
 					}
 				}
 			}
@@ -487,11 +487,11 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleAllItems(AMX *amx, cell *params)
 				{
 					if (!static_cast<int>(params[3]))
 					{
-						static_cast<cell>(Utility::removeFromContainer(m->second->players, static_cast<int>(params[1])));
+						Utility::removeFromContainer(m->second->players, static_cast<int>(params[1]));
 					}
 					else
 					{
-						static_cast<cell>(Utility::addToContainer(m->second->players, static_cast<int>(params[1])));
+						Utility::addToContainer(m->second->players, static_cast<int>(params[1]));
 					}
 				}
 			}
@@ -506,11 +506,11 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleAllItems(AMX *amx, cell *params)
 				{
 					if (!static_cast<int>(params[3]))
 					{
-						static_cast<cell>(Utility::removeFromContainer(t->second->players, static_cast<int>(params[1])));
+						Utility::removeFromContainer(t->second->players, static_cast<int>(params[1]));
 					}
 					else
 					{
-						static_cast<cell>(Utility::addToContainer(t->second->players, static_cast<int>(params[1])));
+						Utility::addToContainer(t->second->players, static_cast<int>(params[1]));
 					}
 				}
 			}
@@ -525,11 +525,11 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleAllItems(AMX *amx, cell *params)
 				{
 					if (!static_cast<int>(params[3]))
 					{
-						static_cast<cell>(Utility::removeFromContainer(a->second->players, static_cast<int>(params[1])));
+						Utility::removeFromContainer(a->second->players, static_cast<int>(params[1]));
 					}
 					else
 					{
-						static_cast<cell>(Utility::addToContainer(a->second->players, static_cast<int>(params[1])));
+						Utility::addToContainer(a->second->players, static_cast<int>(params[1]));
 					}
 				}
 			}
