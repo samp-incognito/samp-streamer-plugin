@@ -302,7 +302,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerGiveDamageActor(int playerid, int actorid
 			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
 			{
 				int amxIndex = 0;
-				if (!amx_FindPublic(*a, "OnPlayerDamageDynamicActor", &amxIndex))
+				if (!amx_FindPublic(*a, "OnPlayerGiveDamageDynamicActor", &amxIndex))
 				{
 					amx_Push(*a, static_cast<cell>(bodypart));
 					amx_Push(*a, static_cast<cell>(weaponid));
