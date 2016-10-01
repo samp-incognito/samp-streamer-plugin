@@ -43,7 +43,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicActor(AMX *amx, cell *params)
 	actor->modelID = static_cast<int>(params[1]);
 	actor->position = Eigen::Vector3f(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
 	actor->rotation = amx_ctof(params[5]);
-	actor->invulnerable = static_cast<int>(params[6]);
+	actor->invulnerable = static_cast<int>(params[6]) != 0;
 	actor->health = amx_ctof(params[7]);
 	Utility::addToContainer(actor->worlds, static_cast<int>(params[8]));
 	Utility::addToContainer(actor->interiors, static_cast<int>(params[9]));
