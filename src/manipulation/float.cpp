@@ -735,6 +735,56 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 			}
 			break;
 		}
+		case STREAMER_TYPE_ACTOR:
+		{
+			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
+			if (a != core->getData()->actors.end())
+			{
+				switch (static_cast<int>(params[3]))
+				{
+					case Health:
+					{
+						Utility::storeFloatInNative(amx, params[4], a->second->health);
+						return 1;
+					}
+					case StreamDistance:
+					{
+						Utility::storeFloatInNative(amx, params[4], a->second->streamDistance);
+						return 1;
+					}
+					case Rotation:
+					{
+						Utility::storeFloatInNative(amx, params[4], a->second->rotation);
+						return 1;
+					}
+					case X:
+					{
+						Utility::storeFloatInNative(amx, params[4], a->second->position[0]);
+						return 1;
+					}
+					case Y:
+					{
+						Utility::storeFloatInNative(amx, params[4], a->second->position[1]);
+						return 1;
+					}
+					case Z:
+					{
+						Utility::storeFloatInNative(amx, params[4], a->second->position[2]);
+						return 1;
+					}
+					default:
+					{
+						error = InvalidData;
+						break;
+					}
+				}
+			}
+			else
+			{
+				error = InvalidID;
+			}
+			break;
+		}
 		default:
 		{
 			error = InvalidType;
@@ -1631,6 +1681,90 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					core->getGrid()->removeArea(a->second, true);
 				}
 				if (reassign)
+				{
+					return 1;
+				}
+			}
+			else
+			{
+				error = InvalidID;
+			}
+			break;
+		}
+		case STREAMER_TYPE_ACTOR:
+		{
+			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
+			if (a != core->getData()->actors.end())
+			{
+				switch (static_cast<int>(params[3]))
+				{
+					case Health:
+					{
+						a->second->health = amx_ctof(params[4]);
+						update = true;
+						return 1;
+					}
+					case StreamDistance:
+					{
+						a->second->comparableStreamDistance = amx_ctof(params[4]) * amx_ctof(params[4]);
+						a->second->streamDistance = amx_ctof(params[4]);
+						reassign = true;
+						break;
+					}
+					case Rotation:
+					{
+						a->second->rotation = amx_ctof(params[4]);
+						update = true;
+						return 1;
+					}
+					case X:
+					{
+						a->second->position[0] = amx_ctof(params[4]);
+						if (a->second->cell)
+						{
+							reassign = true;
+						}
+						update = true;
+						break;
+					}
+					case Y:
+					{
+						a->second->position[1] = amx_ctof(params[4]);
+						if (a->second->cell)
+						{
+							reassign = true;
+						}
+						update = true;
+						break;
+					}
+					case Z:
+					{
+						a->second->position[2] = amx_ctof(params[4]);
+						update = true;
+						break;
+					}
+					default:
+					{
+						error = InvalidData;
+						break;
+					}
+				}
+				if (reassign)
+				{
+					core->getGrid()->removeActor(a->second, true);
+				}
+				if (update)
+				{
+					boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
+					if (i != core->getData()->internalActors.end())
+					{
+						sampgdk::DestroyActor(i->second);
+						i->second = sampgdk::CreateActor(a->second->modelID, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
+						sampgdk::SetActorHealth(i->second, a->second->health);
+						sampgdk::SetActorFacingAngle(i->second, a->second->rotation);
+					}
+				}
+				if (reassign || update)
 				{
 					return 1;
 				}

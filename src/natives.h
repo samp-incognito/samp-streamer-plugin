@@ -178,6 +178,10 @@ namespace Natives
 	cell AMX_NATIVE_CALL AttachDynamicAreaToObject(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL AttachDynamicAreaToPlayer(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL AttachDynamicAreaToVehicle(AMX *amx, cell *params);
+	// Actors
+	cell AMX_NATIVE_CALL CreateDynamicActor(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL DestroyDynamicActor(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL IsValidDynamicActor(AMX *amx, cell *params);
 	// Extended
 	cell AMX_NATIVE_CALL CreateDynamicObjectEx(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL CreateDynamicPickupEx(AMX *amx, cell *params);
@@ -191,6 +195,7 @@ namespace Natives
 	cell AMX_NATIVE_CALL CreateDynamicRectangleEx(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL CreateDynamicCuboidEx(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL CreateDynamicPolygonEx(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL CreateDynamicActorEx(AMX *amx, cell *params);
 	// Internal
 	cell AMX_NATIVE_CALL Streamer_CallbackHook(AMX *amx, cell *params);
 	// Deprecated

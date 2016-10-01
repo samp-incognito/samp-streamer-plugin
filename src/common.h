@@ -30,6 +30,7 @@
 #define STREAMER_TYPE_MAP_ICON (4)
 #define STREAMER_TYPE_3D_TEXT_LABEL (5)
 #define STREAMER_TYPE_AREA (6)
+#define STREAMER_TYPE_ACTOR (7)
 
 #define STREAMER_MAX_AREA_TYPES (5)
 
@@ -104,6 +105,7 @@ namespace Item
 	struct Pickup;
 	struct RaceCheckpoint;
 	struct TextLabel;
+	struct Actor;
 
 	typedef boost::intrusive_ptr<Area> SharedArea;
 	typedef boost::intrusive_ptr<Checkpoint> SharedCheckpoint;
@@ -112,6 +114,7 @@ namespace Item
 	typedef boost::intrusive_ptr<Pickup> SharedPickup;
 	typedef boost::intrusive_ptr<RaceCheckpoint> SharedRaceCheckpoint;
 	typedef boost::intrusive_ptr<TextLabel> SharedTextLabel;
+	typedef boost::intrusive_ptr<Actor> SharedActor;
 
 	struct Compare
 	{

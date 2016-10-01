@@ -153,6 +153,10 @@ void Streamer::startAutomaticUpdate()
 			{
 				streamPickups();
 			}
+			if (Utility::haveAllPlayersCheckedActors())
+			{
+				streamActors();
+			}
 			executeCallbacks();
 			tickCount = 0;
 		}
@@ -396,6 +400,14 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 						{
 							player.position += delta;
 						}
+					}
+					break;
+				}
+				case STREAMER_TYPE_ACTOR:
+				{
+					if (automatic && !core->getData()->actors.empty() && (player.enabledItems[STREAMER_TYPE_ACTOR]))
+					{
+						discoverActors(player, cells);
 					}
 					break;
 				}
@@ -1057,6 +1069,73 @@ void Streamer::streamTextLabels(Player &player)
 	{
 		player.existingTextLabels.clear();
 		player.processingChunks.reset(STREAMER_TYPE_3D_TEXT_LABEL);
+	}
+}
+
+void Streamer::discoverActors(Player &player, const std::vector<SharedCell> &cells)
+{
+	for (std::vector<SharedCell>::const_iterator c = cells.begin(); c != cells.end(); ++c)
+	{
+		for (boost::unordered_map<int, Item::SharedActor>::const_iterator p = (*c)->actors.begin(); p != (*c)->actors.end(); ++p)
+		{
+			boost::unordered_map<int, Item::SharedActor>::iterator d = discoveredActors.find(p->first);
+			if (d == discoveredActors.end())
+			{
+				if (doesPlayerSatisfyConditions(p->second->players, player.playerID, p->second->interiors, player.interiorID, p->second->worlds, player.worldID, p->second->areas, player.internalAreas, p->second->inverseAreaChecking))
+				{
+					if (p->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF || boost::geometry::comparable_distance(player.position, p->second->position) < (p->second->comparableStreamDistance * player.radiusMultipliers[STREAMER_TYPE_ACTOR]))
+					{
+						boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(p->first);
+						discoveredActors.insert(*p);
+					}
+				}
+			}
+		}
+	}
+	player.checkedActors = true;
+}
+
+void Streamer::streamActors()
+{
+	boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.begin();
+	while (i != core->getData()->internalActors.end())
+	{
+		boost::unordered_map<int, Item::SharedActor>::iterator d = discoveredActors.find(i->first);
+		if (d == discoveredActors.end())
+		{
+			sampgdk::DestroyActor(i->second);
+			i = core->getData()->internalActors.erase(i);
+		}
+		else
+		{
+			discoveredActors.erase(d);
+			++i;
+		}
+	}
+	std::multimap<int, Item::SharedActor> sortedActors;
+	for (boost::unordered_map<int, Item::SharedActor>::iterator d = discoveredActors.begin(); d != discoveredActors.end(); ++d)
+	{
+		sortedActors.insert(std::make_pair(d->second->priority, d->second));
+	}
+	discoveredActors.clear();
+	for (std::multimap<int, Item::SharedActor>::iterator i = sortedActors.begin(); i != sortedActors.end(); ++i)
+	{
+		if (core->getData()->internalActors.size() == core->getData()->getGlobalMaxVisibleItems(STREAMER_TYPE_ACTOR))
+		{
+			break;
+		}
+		int internalID = sampgdk::CreateActor(i->second->modelID, i->second->position[0], i->second->position[1], i->second->position[2], i->second->rotation);
+		if (internalID == INVALID_ALTERNATE_ID)
+		{
+			break;
+		}
+		sampgdk::SetActorInvulnerable(internalID, i->second->invulnerable);
+		sampgdk::SetActorHealth(internalID, i->second->health);
+		core->getData()->internalActors.insert(std::make_pair(i->second->actorID, internalID));
+	}
+	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+	{
+		p->second.checkedActors = false;
 	}
 }
 

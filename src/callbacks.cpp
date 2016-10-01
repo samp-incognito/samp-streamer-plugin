@@ -291,3 +291,29 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerWeaponShot(int playerid, int weaponid, in
 	}
 	return retVal;
 }
+
+PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerGiveDamageActor(int playerid, int actorid, float amount, int weaponid, int bodypart)
+{
+	for (boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
+	{
+		if (i->second == actorid)
+		{
+			int actorid = i->first;
+			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
+			{
+				int amxIndex = 0;
+				if (!amx_FindPublic(*a, "OnPlayerDamageDynamicActor", &amxIndex))
+				{
+					amx_Push(*a, static_cast<cell>(bodypart));
+					amx_Push(*a, static_cast<cell>(weaponid));
+					amx_Push(*a, amx_ftoc(amount));
+					amx_Push(*a, static_cast<cell>(actorid));
+					amx_Push(*a, static_cast<cell>(playerid));
+					amx_Exec(*a, NULL, amxIndex);
+				}
+			}
+			break;
+		}
+	}
+	return true;
+}

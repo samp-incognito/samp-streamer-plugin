@@ -185,6 +185,18 @@ void Utility::destroyAllItemsInInterface(AMX *amx)
 			++a;
 		}
 	}
+	boost::unordered_map<int, Item::SharedActor>::iterator ac = core->getData()->actors.begin();
+	while (ac != core->getData()->actors.end())
+	{
+		if (ac->second->amx == amx)
+		{
+			ac = destroyActor(ac);
+		}
+		else
+		{
+			++ac;
+		}
+	}
 }
 
 void Utility::executeFinalAreaCallbacks(int areaid)

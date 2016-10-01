@@ -194,6 +194,10 @@ AMX_NATIVE_INFO natives[] =
 	{ "AttachDynamicAreaToObject", Natives::AttachDynamicAreaToObject },
 	{ "AttachDynamicAreaToPlayer", Natives::AttachDynamicAreaToPlayer },
 	{ "AttachDynamicAreaToVehicle", Natives::AttachDynamicAreaToVehicle },
+	// Actors
+	{ "CreateDynamicActor", Natives::CreateDynamicActor },
+	{ "DestroyDynamicActor", Natives::DestroyDynamicActor },
+	{ "IsValidDynamicActor", Natives::IsValidDynamicActor },
 	// Extended
 	{ "CreateDynamicObjectEx", Natives::CreateDynamicObjectEx },
 	{ "CreateDynamicPickupEx", Natives::CreateDynamicPickupEx },
@@ -208,6 +212,7 @@ AMX_NATIVE_INFO natives[] =
 	{ "CreateDynamicCuboidEx", Natives::CreateDynamicCuboidEx },
 	{ "CreateDynamicCubeEx", Natives::CreateDynamicCuboidEx },
 	{ "CreateDynamicPolygonEx", Natives::CreateDynamicPolygonEx },
+	{ "CreateDynamicActorEx", Natives::CreateDynamicActorEx },
 	// Deprecated
 	{ "Streamer_TickRate", Natives::Streamer_SetTickRate },
 	{ "Streamer_MaxItems", Natives::Streamer_SetMaxItems },

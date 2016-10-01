@@ -361,3 +361,33 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPolygonEx(AMX *amx, cell *params)
 	core->getData()->areas.insert(std::make_pair(areaID, area));
 	return static_cast<cell>(areaID);
 }
+
+cell AMX_NATIVE_CALL Natives::CreateDynamicActorEx(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(17, "CreateDynamicActorEx");
+	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_ACTOR) == core->getData()->actors.size())
+	{
+		return 0;
+	}
+	int actorID = Item::Actor::identifier.get();
+	Item::SharedActor actor(new Item::Actor);
+	actor->amx = amx;
+	actor->actorID = actorID;
+	actor->inverseAreaChecking = false;
+	actor->originalComparableStreamDistance = -1.0f;
+	actor->modelID = static_cast<int>(params[1]);
+	actor->position = Eigen::Vector3f(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
+	actor->rotation = amx_ctof(params[5]);
+	actor->invulnerable = static_cast<int>(params[6]) != 0;
+	actor->health = amx_ctof(params[7]);
+	actor->comparableStreamDistance = amx_ctof(params[8]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[8]) : amx_ctof(params[8]) * amx_ctof(params[8]);
+	actor->streamDistance = amx_ctof(params[8]);
+	Utility::convertArrayToContainer(amx, params[9], params[14], actor->worlds);
+	Utility::convertArrayToContainer(amx, params[10], params[15], actor->interiors);
+	Utility::convertArrayToContainer(amx, params[11], params[16], actor->players);
+	Utility::convertArrayToContainer(amx, params[12], params[17], actor->areas);
+	actor->priority = static_cast<int>(params[13]);
+	core->getGrid()->addActor(actor);
+	core->getData()->actors.insert(std::make_pair(actorID, actor));
+	return static_cast<cell>(actorID);
+}

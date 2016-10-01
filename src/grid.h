@@ -38,6 +38,7 @@ public:
 	void addPickup(const Item::SharedPickup &pickup);
 	void addRaceCheckpoint(const Item::SharedRaceCheckpoint &raceCheckpoint);
 	void addTextLabel(const Item::SharedTextLabel &textLabel);
+	void addActor(const Item::SharedActor &actor);
 
 	inline float getCellSize()
 	{
@@ -69,6 +70,7 @@ public:
 	void removePickup(const Item::SharedPickup &pickup, bool reassign = false);
 	void removeRaceCheckpoint(const Item::SharedRaceCheckpoint &raceCheckpoint, bool reassign = false);
 	void removeTextLabel(const Item::SharedTextLabel &textLabel, bool reassign = false);
+	void removeActor(const Item::SharedActor &actor, bool reassign = false);
 
 	void findAllCellsForPlayer(Player &player, std::vector<SharedCell> &playerCells);
 	void findMinimalCellsForPlayer(Player &player, std::vector<SharedCell> &playerCells);
@@ -90,7 +92,7 @@ private:
 
 	inline void eraseCellIfEmpty(const SharedCell &cell)
 	{
-		if (cell->areas.empty() && cell->checkpoints.empty() && cell->mapIcons.empty() && cell->objects.empty() && cell->pickups.empty() && cell->raceCheckpoints.empty() && cell->textLabels.empty())
+		if (cell->areas.empty() && cell->checkpoints.empty() && cell->mapIcons.empty() && cell->objects.empty() && cell->pickups.empty() && cell->raceCheckpoints.empty() && cell->textLabels.empty() && cell->actors.empty())
 		{
 			cells.erase(cell->cellID);
 		}

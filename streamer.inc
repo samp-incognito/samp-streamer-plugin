@@ -25,6 +25,7 @@
 #define STREAMER_TYPE_MAP_ICON (4)
 #define STREAMER_TYPE_3D_TEXT_LABEL (5)
 #define STREAMER_TYPE_AREA (6)
+#define STREAMER_TYPE_ACTOR (7)
 
 #define STREAMER_AREA_TYPE_CIRCLE (0)
 #define STREAMER_AREA_TYPE_CYLINDER (1)
@@ -55,6 +56,7 @@
 	#define STREAMER_TAG_RACE_CP
 	#define STREAMER_TAG_MAP_ICON
 	#define STREAMER_TAG_AREA
+	#define STREAMER_TAG_ACTOR
 
 	#if !defined STREAMER_REMOVE_TEXT3D_TAG
 		#if !defined STREAMER_USE_DYNAMIC_TEXT3D_TAG
@@ -77,8 +79,9 @@
 	#define STREAMER_TAG_MAP_ICON DynamicMapIcon:
 	#define STREAMER_TAG_3D_TEXT_LABEL DynamicText3D:
 	#define STREAMER_TAG_AREA DynamicArea:
+	#define STREAMER_TAG_ACTOR DynamicActor:
 
-	#define STREAMER_ALL_TAGS {DynamicObject,DynamicPickup,DynamicCP,DynamicRaceCP,DynamicMapIcon,DynamicText3D,DynamicArea,_}:
+	#define STREAMER_ALL_TAGS {DynamicObject,DynamicPickup,DynamicCP,DynamicRaceCP,DynamicMapIcon,DynamicText3D,DynamicArea,DynamicActor,_}:
 #endif
 
 #if !defined STREAMER_OBJECT_SD
@@ -101,6 +104,9 @@
 #endif
 #if !defined STREAMER_3D_TEXT_LABEL_SD
 	#define STREAMER_3D_TEXT_LABEL_SD 200.0
+#endif
+#if !defined STREAMER_ACTOR_SD
+	#define STREAMER_ACTOR_SD 200.0
 #endif
 
 // Include File Version
@@ -129,7 +135,9 @@ enum
 	E_STREAMER_COLOR,
 	E_STREAMER_DRAW_DISTANCE,
 	E_STREAMER_EXTRA_ID,
+	E_STREAMER_HEALTH,
 	E_STREAMER_INTERIOR_ID,
+	E_STREAMER_INVULNERABLE,
 	E_STREAMER_MAX_X,
 	E_STREAMER_MAX_Y,
 	E_STREAMER_MAX_Z,
@@ -149,6 +157,7 @@ enum
 	E_STREAMER_NEXT_Z,
 	E_STREAMER_PLAYER_ID,
 	E_STREAMER_PRIORITY,
+	E_STREAMER_ROTATION,
 	E_STREAMER_R_X,
 	E_STREAMER_R_Y,
 	E_STREAMER_R_Z,
@@ -325,6 +334,12 @@ native AttachDynamicAreaToObject(STREAMER_TAG_AREA areaid, STREAMER_TAG_OBJECT_A
 native AttachDynamicAreaToPlayer(STREAMER_TAG_AREA areaid, playerid, Float:offsetx = 0.0, Float:offsety = 0.0, Float:offsetz = 0.0);
 native AttachDynamicAreaToVehicle(STREAMER_TAG_AREA areaid, vehicleid, Float:offsetx = 0.0, Float:offsety = 0.0, Float:offsetz = 0.0);
 
+// Natives (Actors)
+
+native STREAMER_TAG_ACTOR CreateDynamicActor(modelid, Float:x, Float:y, Float:z, Float:r, bool:invulnerable = true, Float:health = 100.0, worldid = -1, interiorid = -1, playerid = -1, Float:streamdistance = STREAMER_ACTOR_SD, STREAMER_TAG_AREA areaid = STREAMER_TAG_AREA -1, priority = 0);
+native DestroyDynamicActor(STREAMER_TAG_ACTOR actorid);
+native IsValidDynamicActor(STREAMER_TAG_ACTOR actorid);
+
 // Natives (Extended)
 
 native STREAMER_TAG_OBJECT CreateDynamicObjectEx(modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Float:rz, Float:streamdistance = STREAMER_OBJECT_SD, Float:drawdistance = STREAMER_OBJECT_DD, worlds[] = { -1 }, interiors[] = { -1 }, players[] = { -1 }, STREAMER_TAG_AREA areas[] = { STREAMER_TAG_AREA -1 }, priority = 0, maxworlds = sizeof worlds, maxinteriors = sizeof interiors, maxplayers = sizeof players, maxareas = sizeof areas);
@@ -340,6 +355,7 @@ native STREAMER_TAG_AREA CreateDynamicRectangleEx(Float:minx, Float:miny, Float:
 native STREAMER_TAG_AREA CreateDynamicCuboidEx(Float:minx, Float:miny, Float:minz, Float:maxx, Float:maxy, Float:maxz, worlds[] = { -1 }, interiors[] = { -1 }, players[] = { -1 }, maxworlds = sizeof worlds, maxinteriors = sizeof interiors, maxplayers = sizeof players);
 native STREAMER_TAG_AREA CreateDynamicCubeEx(Float:minx, Float:miny, Float:minz, Float:maxx, Float:maxy, Float:maxz, worlds[] = { -1 }, interiors[] = { -1 }, players[] = { -1 }, maxworlds = sizeof worlds, maxinteriors = sizeof interiors, maxplayers = sizeof players);
 native STREAMER_TAG_AREA CreateDynamicPolygonEx(Float:points[], Float:minz = -FLOAT_INFINITY, Float:maxz = FLOAT_INFINITY, maxpoints = sizeof points, worlds[] = { -1 }, interiors[] = { -1 }, players[] = { -1 }, maxworlds = sizeof worlds, maxinteriors = sizeof interiors, maxplayers = sizeof players);
+native STREAMER_TAG_ACTOR CreateDynamicActorEx(modelid, Float:x, Float:y, Float:z, Float:r, bool:invulnerable = true, Float:health = 100.0, Float:streamdistance = STREAMER_PICKUP_SD, worlds[] = { -1 }, interiors[] = { -1 }, players[] = { -1 }, STREAMER_TAG_AREA areas[] = { STREAMER_TAG_AREA -1 }, priority = 0, maxworlds = sizeof worlds, maxinteriors = sizeof interiors, maxplayers = sizeof players, maxareas = sizeof areas);
 
 // Natives (Deprecated)
 
@@ -385,4 +401,6 @@ forward OnPlayerEnterDynamicRaceCP(playerid, STREAMER_TAG_RACE_CP checkpointid);
 forward OnPlayerLeaveDynamicRaceCP(playerid, STREAMER_TAG_RACE_CP checkpointid);
 forward OnPlayerEnterDynamicArea(playerid, STREAMER_TAG_AREA areaid);
 forward OnPlayerLeaveDynamicArea(playerid, STREAMER_TAG_AREA areaid);
+forward OnPlayerGiveDamageDynamicActor(playerid, STREAMER_TAG_ACTOR actorid, Float:amount, weaponid, bodypart);
+
 forward Streamer_OnPluginError(error[]);
