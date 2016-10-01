@@ -33,7 +33,7 @@ Data::Data()
 	globalMaxVisibleItems[STREAMER_TYPE_PICKUP] = 4096;
 	globalMaxVisibleItems[STREAMER_TYPE_MAP_ICON] = 100;
 	globalMaxVisibleItems[STREAMER_TYPE_3D_TEXT_LABEL] = 1024;
-	globalMaxVisibleItems[STREAMER_TYPE_ACTOR] = 100;
+	globalMaxVisibleItems[STREAMER_TYPE_ACTOR] = 50;
 	globalRadiusMultipliers[STREAMER_TYPE_OBJECT] = 1.0f;
 	globalRadiusMultipliers[STREAMER_TYPE_PICKUP] = 1.0f;
 	globalRadiusMultipliers[STREAMER_TYPE_CP] = 1.0f;
