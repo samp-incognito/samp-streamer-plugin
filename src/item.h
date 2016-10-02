@@ -353,6 +353,23 @@ namespace Item
 		bool invulnerable;
 		float health;
 
+		struct Anim
+		{
+			Anim();
+
+			std::string lib;
+			std::string name;
+			float delta;
+			bool loop;
+			bool lockx;
+			bool locky;
+			bool freeze;
+			int time;
+			int references;
+		};
+
+		boost::intrusive_ptr<Anim> anim;
+
 		boost::unordered_set<int> areas;
 		std::vector<int> extras;
 		boost::unordered_set<int> interiors;

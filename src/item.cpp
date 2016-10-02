@@ -41,3 +41,4 @@ Item::RaceCheckpoint::RaceCheckpoint() : references(0) {}
 Item::TextLabel::TextLabel() : references(0) {}
 Item::TextLabel::Attach::Attach() : references(0) {}
 Item::Actor::Actor() : references(0) {}
+Item::Actor::Anim::Anim() : references(0) {}

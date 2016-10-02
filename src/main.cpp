@@ -198,6 +198,9 @@ AMX_NATIVE_INFO natives[] =
 	{ "CreateDynamicActor", Natives::CreateDynamicActor },
 	{ "DestroyDynamicActor", Natives::DestroyDynamicActor },
 	{ "IsValidDynamicActor", Natives::IsValidDynamicActor },
+	{ "ApplyDynamicActorAnimation", Natives::ApplyDynamicActorAnimation },
+	{ "ClearDynamicActorAnimations", Natives::ClearDynamicActorAnimations },
+	{ "GetPlayerTargetDynamicActor", Natives::GetPlayerTargetDynamicActor },
 	// Extended
 	{ "CreateDynamicObjectEx", Natives::CreateDynamicObjectEx },
 	{ "CreateDynamicPickupEx", Natives::CreateDynamicPickupEx },

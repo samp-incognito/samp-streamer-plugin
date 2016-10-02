@@ -339,6 +339,9 @@ native AttachDynamicAreaToVehicle(STREAMER_TAG_AREA areaid, vehicleid, Float:off
 native STREAMER_TAG_ACTOR CreateDynamicActor(modelid, Float:x, Float:y, Float:z, Float:r, bool:invulnerable = true, Float:health = 100.0, worldid = -1, interiorid = -1, playerid = -1, Float:streamdistance = STREAMER_ACTOR_SD, STREAMER_TAG_AREA areaid = STREAMER_TAG_AREA -1, priority = 0);
 native DestroyDynamicActor(STREAMER_TAG_ACTOR actorid);
 native IsValidDynamicActor(STREAMER_TAG_ACTOR actorid);
+native ApplyDynamicActorAnimation(STREAMER_TAG_ACTOR actorid, animlib[], animname[], Float:fDelta, loop, lockx, locky, freeze, time);
+native ClearDynamicActorAnimations(STREAMER_TAG_ACTOR actorid);
+native GetPlayerTargetDynamicActor(playerid);
 
 // Natives (Extended)
 

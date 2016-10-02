@@ -79,3 +79,60 @@ cell AMX_NATIVE_CALL Natives::IsValidDynamicActor(AMX *amx, cell *params)
 	}
 	return 0;
 }
+
+cell AMX_NATIVE_CALL Natives::ApplyDynamicActorAnimation(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(9, "ApplyDynamicActorAnimation");
+	boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[1]));
+	if (a != core->getData()->actors.end())
+	{
+		a->second->anim = boost::intrusive_ptr<Item::Actor::Anim>(new Item::Actor::Anim);
+		a->second->anim->lib = Utility::convertNativeStringToString(amx, params[2]);
+		a->second->anim->name = Utility::convertNativeStringToString(amx, params[3]);
+		a->second->anim->delta = amx_ctof(params[4]);
+		a->second->anim->loop = static_cast<int>(params[5]) != 0;
+		a->second->anim->lockx = static_cast<int>(params[6]) != 0;
+		a->second->anim->locky = static_cast<int>(params[7]) != 0;
+		a->second->anim->freeze = static_cast<int>(params[8]) != 0;
+		a->second->anim->time = static_cast<int>(params[9]);
+		boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
+		if (i != core->getData()->internalActors.end())
+		{
+			sampgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);
+		}
+		return 1;
+	}
+	return 0;
+}
+
+cell AMX_NATIVE_CALL Natives::ClearDynamicActorAnimations(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "ClearDynamicActorAnimations");
+	boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[1]));
+	if (a != core->getData()->actors.end())
+	{
+		a->second->anim = NULL;
+		boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
+		if (i != core->getData()->internalActors.end())
+		{
+			sampgdk::ClearActorAnimations(i->second);
+		}
+		return 1;
+	}
+	return 0;
+}
+
+cell AMX_NATIVE_CALL Natives::GetPlayerTargetDynamicActor(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "GetPlayerTargetDynamicActor");
+	boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[1]));
+	if (a != core->getData()->actors.end())
+	{
+		boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
+		if (i != core->getData()->internalActors.end())
+		{
+			return sampgdk::GetPlayerTargetActor(i->second);
+		}
+	}
+	return 0;
+}

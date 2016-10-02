@@ -1129,6 +1129,9 @@ void Streamer::streamActors()
 		{
 			break;
 		}
+		if (i->second->anim) {
+			sampgdk::ApplyActorAnimation(internalID, i->second->anim->lib.c_str(), i->second->anim->name.c_str(), i->second->anim->delta, i->second->anim->loop, i->second->anim->lockx, i->second->anim->locky, i->second->anim->freeze, i->second->anim->time);
+		}
 		sampgdk::SetActorInvulnerable(internalID, i->second->invulnerable);
 		sampgdk::SetActorHealth(internalID, i->second->health);
 		core->getData()->internalActors.insert(std::make_pair(i->second->actorID, internalID));

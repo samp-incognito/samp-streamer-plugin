@@ -182,6 +182,9 @@ namespace Natives
 	cell AMX_NATIVE_CALL CreateDynamicActor(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL DestroyDynamicActor(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL IsValidDynamicActor(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL ApplyDynamicActorAnimation(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL ClearDynamicActorAnimations(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetPlayerTargetDynamicActor(AMX *amx, cell *params);
 	// Extended
 	cell AMX_NATIVE_CALL CreateDynamicObjectEx(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL CreateDynamicPickupEx(AMX *amx, cell *params);
