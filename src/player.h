@@ -37,6 +37,7 @@ struct Player
 	int activeCheckpoint;
 	int activeRaceCheckpoint;
 	bool checkedPickups;
+	bool checkedActors;
 	std::size_t currentVisibleObjects;
 	std::size_t currentVisibleTextLabels;
 	int delayedCheckpoint;

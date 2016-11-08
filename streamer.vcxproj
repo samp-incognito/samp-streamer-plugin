@@ -156,6 +156,7 @@
     <ClCompile Include="src\natives\miscellaneous.cpp" />
     <ClCompile Include="src\natives\objects.cpp" />
     <ClCompile Include="src\natives\pickups.cpp" />
+    <ClCompile Include="src\natives\actors.cpp" />
     <ClCompile Include="src\natives\race-checkpoints.cpp" />
     <ClCompile Include="src\natives\settings.cpp" />
     <ClCompile Include="src\natives\text-labels.cpp" />

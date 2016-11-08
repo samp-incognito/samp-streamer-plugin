@@ -34,6 +34,7 @@ namespace Utility
 	boost::unordered_map<int, Item::SharedPickup>::iterator destroyPickup(boost::unordered_map<int, Item::SharedPickup>::iterator p);
 	boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator destroyRaceCheckpoint(boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r);
 	boost::unordered_map<int, Item::SharedTextLabel>::iterator destroyTextLabel(boost::unordered_map<int, Item::SharedTextLabel>::iterator t);
+	boost::unordered_map<int, Item::SharedActor>::iterator destroyActor(boost::unordered_map<int, Item::SharedActor>::iterator a);
 
 	std::size_t getMaxVisibleItems(int type, int playerid);
 	bool setMaxVisibleItems(int type, std::size_t value, int playerid);
@@ -42,6 +43,7 @@ namespace Utility
 	bool setRadiusMultiplier(int type, float value, int playerid);
 
 	bool haveAllPlayersCheckedPickups();
+	bool haveAllPlayersCheckedActors();
 
 	template<typename T>
 	inline bool almostEquals(T a, T b)

@@ -19,3 +19,4 @@ EXPORTS
 	OnPlayerEditObject
 	OnPlayerSelectObject
 	OnPlayerWeaponShot
+	OnPlayerGiveDamageActor

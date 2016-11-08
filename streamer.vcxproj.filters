@@ -185,6 +185,9 @@
     <ClCompile Include="src\natives\pickups.cpp">
       <Filter>src\natives</Filter>
     </ClCompile>
+    <ClCompile Include="src\natives\actors.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
     <ClCompile Include="src\natives\race-checkpoints.cpp">
       <Filter>src\natives</Filter>
     </ClCompile>

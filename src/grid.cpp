@@ -207,6 +207,21 @@ void Grid::addTextLabel(const Item::SharedTextLabel &textLabel)
 	}
 }
 
+void Grid::addActor(const Item::SharedActor &actor)
+{
+	if (actor->comparableStreamDistance > cellDistance || actor->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
+	{
+		globalCell->actors.insert(std::make_pair(actor->actorID, actor));
+		actor->cell.reset();
+	}
+	else
+	{
+		CellID cellID = getCellID(Eigen::Vector2f(actor->position[0], actor->position[1]));
+		cells[cellID]->actors.insert(std::make_pair(actor->actorID, actor));
+		actor->cell = cells[cellID];
+	}
+}
+
 void Grid::rebuildGrid()
 {
 	cells.clear();
@@ -239,6 +254,10 @@ void Grid::rebuildGrid()
 	for (boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.begin(); t != core->getData()->textLabels.end(); ++t)
 	{
 		addTextLabel(t->second);
+	}
+	for (boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.begin(); a != core->getData()->actors.end(); ++a)
+	{
+		addActor(a->second);
 	}
 }
 
@@ -508,6 +527,41 @@ void Grid::removeTextLabel(const Item::SharedTextLabel &textLabel, bool reassign
 			{
 				core->getStreamer()->attachedTextLabels.erase(textLabel);
 			}
+		}
+	}
+}
+
+void Grid::removeActor(const Item::SharedActor &actor, bool reassign)
+{
+	bool found = false;
+	if (actor->cell)
+	{
+		boost::unordered_map<CellID, SharedCell>::iterator c = cells.find(actor->cell->cellID);
+		if (c != cells.end())
+		{
+			boost::unordered_map<int, Item::SharedActor>::iterator a = c->second->actors.find(actor->actorID);
+			if (a != c->second->actors.end())
+			{
+				c->second->actors.quick_erase(a);
+				eraseCellIfEmpty(c->second);
+				found = true;
+			}
+		}
+	}
+	else
+	{
+		boost::unordered_map<int, Item::SharedActor>::iterator a = globalCell->actors.find(actor->actorID);
+		if (a != globalCell->actors.end())
+		{
+			globalCell->actors.quick_erase(a);
+			found = true;
+		}
+	}
+	if (found)
+	{
+		if (reassign)
+		{
+			addActor(actor);
 		}
 	}
 }

@@ -304,6 +304,31 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleItemStatic(AMX *amx, cell *params)
 			}
 			break;
 		}
+		case STREAMER_TYPE_ACTOR:
+		{
+			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
+			if (a != core->getData()->actors.end())
+			{
+				if (static_cast<int>(params[3]))
+				{
+					if (a->second->comparableStreamDistance > STREAMER_STATIC_DISTANCE_CUTOFF && a->second->originalComparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
+					{
+						a->second->originalComparableStreamDistance = a->second->comparableStreamDistance;
+						a->second->comparableStreamDistance = -1.0f;
+					}
+				}
+				else
+				{
+					if (a->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF && a->second->originalComparableStreamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
+					{
+						a->second->comparableStreamDistance = a->second->originalComparableStreamDistance;
+						a->second->originalComparableStreamDistance = -1.0f;
+					}
+				}
+				return 1;
+			}
+			break;
+		}
 		default:
 		{
 			Utility::logError("Streamer_ToggleStaticItem: Invalid type specified");
@@ -390,6 +415,18 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItemStatic(AMX *amx, cell *params
 			}
 			return 0;
 		}
+		case STREAMER_TYPE_ACTOR:
+		{
+			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
+			if (a != core->getData()->actors.end())
+			{
+				if (a->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF && a->second->originalComparableStreamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
+				{
+					return 1;
+				}
+			}
+			return 0;
+		}
 		default:
 		{
 			Utility::logError("Streamer_IsToggleStaticItem: Invalid type specified");
@@ -464,6 +501,16 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleItemAntiAreas(AMX *amx, cell *param
 			}
 			break;
 		}
+		case STREAMER_TYPE_ACTOR:
+		{
+			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
+			if (a != core->getData()->actors.end())
+			{
+				a->second->inverseAreaChecking = static_cast<int>(params[3]) != 0;
+				return 1;
+			}
+			break;
+		}
 		default:
 		{
 			Utility::logError("Streamer_ToggleItemAntiAreas: Invalid type specified");
@@ -529,6 +576,15 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItemAntiAreas(AMX *amx, cell *par
 			if (t != core->getData()->textLabels.end())
 			{
 				return static_cast<cell>(t->second->inverseAreaChecking != 0);
+			}
+			break;
+		}
+		case STREAMER_TYPE_ACTOR:
+		{
+			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
+			if (a != core->getData()->actors.end())
+			{
+				return static_cast<cell>(a->second->inverseAreaChecking != 0);
 			}
 			break;
 		}

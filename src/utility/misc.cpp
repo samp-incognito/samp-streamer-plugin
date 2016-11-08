@@ -143,6 +143,19 @@ boost::unordered_map<int, Item::SharedTextLabel>::iterator Utility::destroyTextL
 	return core->getData()->textLabels.erase(t);
 }
 
+boost::unordered_map<int, Item::SharedActor>::iterator Utility::destroyActor(boost::unordered_map<int, Item::SharedActor>::iterator p)
+{
+	Item::Actor::identifier.remove(p->first, core->getData()->actors.size());
+	boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(p->first);
+	if (i != core->getData()->internalActors.end())
+	{
+		sampgdk::DestroyActor(i->second);
+		core->getData()->internalActors.quick_erase(i);
+	}
+	core->getGrid()->removeActor(p->second);
+	return core->getData()->actors.erase(p);
+}
+
 std::size_t Utility::getMaxVisibleItems(int type, int playerid)
 {
 	if (playerid >= 0 && playerid < MAX_PLAYERS)
@@ -262,6 +275,22 @@ bool Utility::haveAllPlayersCheckedPickups()
 		for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 		{
 			if (!p->second.checkedPickups)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	return false;
+}
+
+bool Utility::haveAllPlayersCheckedActors()
+{
+	if (!core->getData()->players.empty())
+	{
+		for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+		{
+			if (!p->second.checkedActors)
 			{
 				return false;
 			}

@@ -453,6 +453,58 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 			}
 			break;
 		}
+		case STREAMER_TYPE_ACTOR:
+		{
+			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
+			if (a != core->getData()->actors.end())
+			{
+				switch (static_cast<int>(params[3]))
+				{
+					case AreaID:
+					{
+						return Utility::getFirstValueInContainer(a->second->areas);
+					}
+					case ExtraID:
+					{
+						return Utility::getFirstValueInContainer(a->second->extras);
+					}
+					case InteriorID:
+					{
+						return Utility::getFirstValueInContainer(a->second->interiors);
+					}
+					case Invulnerable:
+					{
+						return a->second->invulnerable;
+					}
+					case ModelID:
+					{
+						return a->second->modelID;
+					}
+					case PlayerID:
+					{
+						return Utility::getFirstValueInContainer(a->second->players);
+					}
+					case Priority:
+					{
+						return a->second->priority;
+					}
+					case WorldID:
+					{
+						return Utility::getFirstValueInContainer(a->second->worlds);
+					}
+					default:
+					{
+						error = InvalidData;
+						break;
+					}
+				}
+			}
+			else
+			{
+				error = InvalidID;
+			}
+			break;
+		}
 		default:
 		{
 			error = InvalidType;
@@ -1184,6 +1236,74 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 						break;
 					}
 				}
+			}
+			else
+			{
+				error = InvalidID;
+			}
+			break;
+		}
+		case STREAMER_TYPE_ACTOR:
+		{
+			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
+			if (a != core->getData()->actors.end())
+			{
+				switch (static_cast<int>(params[3]))
+				{
+					case AreaID:
+					{
+						return Utility::setFirstValueInContainer(a->second->areas, static_cast<int>(params[4])) != 0;
+					}
+					case ExtraID:
+					{
+						return Utility::setFirstValueInContainer(a->second->extras, static_cast<int>(params[4])) != 0;
+					}
+					case InteriorID:
+					{
+						return Utility::setFirstValueInContainer(a->second->interiors, static_cast<int>(params[4])) != 0;
+					}
+					case Invulnerable:
+					{
+						a->second->invulnerable = static_cast<int>(params[4]) != 0;
+						update = true;
+						break;
+					}
+					case ModelID:
+					{
+						a->second->modelID = static_cast<int>(params[4]);
+						update = true;
+						break;
+					}
+					case PlayerID:
+					{
+						return Utility::setFirstValueInContainer(a->second->players, static_cast<int>(params[4])) != 0;
+					}
+					case Priority:
+					{
+						a->second->priority = static_cast<int>(params[4]);
+						return 1;
+					}
+					case WorldID:
+					{
+						return Utility::setFirstValueInContainer(a->second->worlds, static_cast<int>(params[4])) != 0;
+					}
+					default:
+					{
+						error = InvalidData;
+						break;
+					}
+				}
+				if (update)
+				{
+					boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
+					if (i != core->getData()->internalActors.end())
+					{
+						sampgdk::DestroyActor(i->second);
+						i->second = sampgdk::CreateActor(a->second->modelID, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
+						sampgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
+					}
+				}
+				return 1;
 			}
 			else
 			{

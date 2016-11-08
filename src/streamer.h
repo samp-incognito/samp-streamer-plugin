@@ -89,6 +89,9 @@ private:
 	void discoverTextLabels(Player &player, const std::vector<SharedCell> &cells);
 	void streamTextLabels(Player &player);
 
+	void discoverActors(Player &player, const std::vector<SharedCell> &cells);
+	void streamActors();
+
 	void processMovingObjects();
 	void processAttachedAreas();
 	void processAttachedObjects();
@@ -109,6 +112,7 @@ private:
 	std::vector<int> objectMoveCallbacks;
 
 	boost::unordered_map<int, Item::SharedPickup> discoveredPickups;
+	boost::unordered_map<int, Item::SharedActor> discoveredActors;
 
 	template<std::size_t N, typename T>
 	inline bool doesPlayerSatisfyConditions(const std::bitset<N> &a, const T &b, const boost::unordered_set<T> &c, const T &d, const boost::unordered_set<T> &e, const T &f)

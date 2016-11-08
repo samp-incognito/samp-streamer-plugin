@@ -163,6 +163,16 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 			}
 			return 0;
 		}
+		case STREAMER_TYPE_ACTOR:
+		{
+			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[5]));
+			if (a != core->getData()->actors.end())
+			{
+				position = a->second->position;
+				break;
+			}
+			return 0;
+		}
 		default:
 		{
 			Utility::logError("Streamer_GetDistanceToItem: Invalid type specified");
@@ -309,6 +319,22 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleItem(AMX *amx, cell *params)
 			}
 			break;
 		}
+		case STREAMER_TYPE_ACTOR:
+		{
+			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[3]));
+			if (a != core->getData()->actors.end())
+			{
+				if (!static_cast<int>(params[4]))
+				{
+					return static_cast<cell>(Utility::removeFromContainer(a->second->players, static_cast<int>(params[1])));
+				}
+				else
+				{
+					return static_cast<cell>(Utility::addToContainer(a->second->players, static_cast<int>(params[1])));
+				}
+			}
+			break;
+		}
 		default:
 		{
 			Utility::logError("Streamer_ToggleItem: Invalid type specified");
@@ -381,6 +407,15 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItem(AMX *amx, cell *params)
 		{
 			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[3]));
 			if (a != core->getData()->areas.end())
+			{
+				return static_cast<cell>(Utility::isInContainer(a->second->players, static_cast<int>(params[1])));
+			}
+			break;
+		}
+		case STREAMER_TYPE_ACTOR:
+		{
+			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[3]));
+			if (a != core->getData()->actors.end())
 			{
 				return static_cast<cell>(Utility::isInContainer(a->second->players, static_cast<int>(params[1])));
 			}
@@ -535,6 +570,25 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleAllItems(AMX *amx, cell *params)
 			}
 			return 1;
 		}
+		case STREAMER_TYPE_ACTOR:
+		{
+			for (boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.begin(); a != core->getData()->actors.end(); ++a)
+			{
+				boost::unordered_set<int>::iterator e = exceptions.find(a->first);
+				if (e == exceptions.end())
+				{
+					if (!static_cast<int>(params[3]))
+					{
+						Utility::removeFromContainer(a->second->players, static_cast<int>(params[1]));
+					}
+					else
+					{
+						Utility::addToContainer(a->second->players, static_cast<int>(params[1]));
+					}
+				}
+			}
+			return 1;
+		}
 		default:
 		{
 			Utility::logError("Streamer_ToggleAllItems: Invalid type specified");
@@ -547,14 +601,26 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleAllItems(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::Streamer_GetItemInternalID(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(3, "Streamer_GetItemInternalID");
-	if (static_cast<int>(params[2]) == STREAMER_TYPE_PICKUP)
+	switch (static_cast<int>(params[2]))
 	{
-		boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.find(static_cast<int>(params[3]));
-		if (i != core->getData()->internalPickups.end())
+		case STREAMER_TYPE_PICKUP:
 		{
-			return static_cast<cell>(i->second);
+			boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.find(static_cast<int>(params[3]));
+			if (i != core->getData()->internalPickups.end())
+			{
+				return static_cast<cell>(i->second);
+			}
+			return 0;
 		}
-		return 0;
+		case STREAMER_TYPE_ACTOR:
+		{
+			boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(static_cast<int>(params[3]));
+			if (i != core->getData()->internalActors.end())
+			{
+				return static_cast<cell>(i->second);
+			}
+			return 0;
+		}
 	}
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
@@ -625,16 +691,30 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemInternalID(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::Streamer_GetItemStreamerID(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(3, "Streamer_GetItemStreamerID");
-	if (static_cast<int>(params[2]) == STREAMER_TYPE_PICKUP)
+	switch (static_cast<int>(params[2]))
 	{
-		for (boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.begin(); i != core->getData()->internalPickups.end(); ++i)
+		case STREAMER_TYPE_PICKUP:
 		{
-			if (i->second == static_cast<int>(params[3]))
+			for (boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.begin(); i != core->getData()->internalPickups.end(); ++i)
 			{
-				return i->first;
+				if (i->second == static_cast<int>(params[3]))
+				{
+					return i->first;
+				}
 			}
+			return 0;
 		}
-		return 0;
+		case STREAMER_TYPE_ACTOR:
+		{
+			for (boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
+			{
+				if (i->second == static_cast<int>(params[3]))
+				{
+					return i->first;
+				}
+			}
+			return 0;
+		}
 	}
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
@@ -712,14 +792,26 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemStreamerID(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::Streamer_IsItemVisible(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(3, "Streamer_IsItemVisible");
-	if (static_cast<int>(params[2]) == STREAMER_TYPE_PICKUP)
+	switch (static_cast<int>(params[2]))
 	{
-		boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.find(static_cast<int>(params[3]));
-		if (i != core->getData()->internalPickups.end())
+		case STREAMER_TYPE_PICKUP:
 		{
-			return 1;
+			boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.find(static_cast<int>(params[3]));
+			if (i != core->getData()->internalPickups.end())
+			{
+				return 1;
+			}
+			return 0;
 		}
-		return 0;
+		case STREAMER_TYPE_ACTOR:
+		{
+			boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(static_cast<int>(params[3]));
+			if (i != core->getData()->internalActors.end())
+			{
+				return 1;
+			}
+			return 0;
+		}
 	}
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
@@ -791,23 +883,44 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 {
 	CHECK_PARAMS(3, "Streamer_DestroyAllVisibleItems");
 	bool serverWide = static_cast<int>(params[3]) != 0;
-	if (static_cast<int>(params[2]) == STREAMER_TYPE_PICKUP)
+	switch (static_cast<int>(params[2]))
 	{
-		boost::unordered_map<int, int>::iterator p = core->getData()->internalPickups.begin();
-		while (p != core->getData()->internalPickups.end())
+		case STREAMER_TYPE_PICKUP:
 		{
-			boost::unordered_map<int, Item::SharedPickup>::iterator q = core->getData()->pickups.find(p->first);
-			if (serverWide || (q != core->getData()->pickups.end() && q->second->amx == amx))
+			boost::unordered_map<int, int>::iterator p = core->getData()->internalPickups.begin();
+			while (p != core->getData()->internalPickups.end())
 			{
-				sampgdk::DestroyPickup(p->second);
-				p = core->getData()->internalPickups.erase(p);
+				boost::unordered_map<int, Item::SharedPickup>::iterator q = core->getData()->pickups.find(p->first);
+				if (serverWide || (q != core->getData()->pickups.end() && q->second->amx == amx))
+				{
+					sampgdk::DestroyPickup(p->second);
+					p = core->getData()->internalPickups.erase(p);
+				}
+				else
+				{
+					++p;
+				}
 			}
-			else
-			{
-				++p;
-			}
+			return 1;
 		}
-		return 1;
+		case STREAMER_TYPE_ACTOR:
+		{
+			boost::unordered_map<int, int>::iterator a = core->getData()->internalActors.begin();
+			while (a != core->getData()->internalActors.end())
+			{
+				boost::unordered_map<int, Item::SharedActor>::iterator q = core->getData()->actors.find(a->first);
+				if (serverWide || (q != core->getData()->actors.end() && q->second->amx == amx))
+				{
+					sampgdk::DestroyActor(a->second);
+					a = core->getData()->internalActors.erase(a);
+				}
+				else
+				{
+					++a;
+				}
+			}
+			return 1;
+		}
 	}
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
@@ -929,9 +1042,16 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountVisibleItems(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(3, "Streamer_CountVisibleItems");
 	bool serverWide = static_cast<int>(params[3]) != 0;
-	if (static_cast<int>(params[2]) == STREAMER_TYPE_PICKUP)
+	switch (static_cast<int>(params[2]))
 	{
-		return static_cast<cell>(core->getData()->internalPickups.size());
+		case STREAMER_TYPE_PICKUP:
+		{
+			return static_cast<cell>(core->getData()->internalPickups.size());
+		}
+		case STREAMER_TYPE_ACTOR:
+		{
+			return static_cast<cell>(core->getData()->internalActors.size());
+		}
 	}
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
@@ -1171,6 +1291,22 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllItems(AMX *amx, cell *params)
 			}
 			return 1;
 		}
+		case STREAMER_TYPE_ACTOR:
+		{
+			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.begin();
+			while (a != core->getData()->actors.end())
+			{
+				if (serverWide || a->second->amx == amx)
+				{
+					a = Utility::destroyActor(a);
+				}
+				else
+				{
+					++a;
+				}
+			}
+			return 1;
+		}
 		default:
 		{
 			Utility::logError("Streamer_DestroyAllItems: Invalid type specified");
@@ -1310,6 +1446,25 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountItems(AMX *amx, cell *params)
 			{
 				int count = 0;
 				for (boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.begin(); a != core->getData()->areas.end(); ++a)
+				{
+					if (a->second->amx == amx)
+					{
+						++count;
+					}
+				}
+				return static_cast<cell>(count);
+			}
+		}
+		case STREAMER_TYPE_ACTOR:
+		{
+			if (serverWide)
+			{
+				return static_cast<cell>(core->getData()->actors.size());
+			}
+			else
+			{
+				int count = 0;
+				for (boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.begin(); a != core->getData()->actors.end(); ++a)
 				{
 					if (a->second->amx == amx)
 					{
@@ -1536,6 +1691,30 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 			}
 			std::vector<int> finalAreas;
 			for (std::multimap<float, int>::iterator i = orderedAreas.begin(); i != orderedAreas.end(); ++i)
+			{
+				finalAreas.push_back(i->second);
+			}
+			Utility::convertContainerToArray(amx, params[5], params[6], finalAreas);
+			return static_cast<cell>(finalAreas.size());
+		}
+		case STREAMER_TYPE_ACTOR:
+		{
+			std::vector<SharedCell> pointCells;
+			core->getGrid()->findMinimalCellsForPoint(position2D, pointCells);
+			std::multimap<float, int> orderedActors;
+			for (std::vector<SharedCell>::const_iterator p = pointCells.begin(); p != pointCells.end(); ++p)
+			{
+				for (boost::unordered_map<int, Item::SharedActor>::const_iterator a = (*p)->actors.begin(); a != (*p)->actors.end(); ++a)
+				{
+					float distance = static_cast<float>(boost::geometry::comparable_distance(a->second->position, position3D));
+					if (distance < range)
+					{
+						orderedActors.insert(std::pair<float, int>(distance, a->first));
+					}
+				}
+			}
+			std::vector<int> finalAreas;
+			for (std::multimap<float, int>::iterator i = orderedActors.begin(); i != orderedActors.end(); ++i)
 			{
 				finalAreas.push_back(i->second);
 			}

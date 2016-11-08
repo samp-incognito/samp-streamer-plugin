@@ -333,6 +333,53 @@ namespace Item
 
 		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 	};
+
+	struct Actor
+	{
+		Actor();
+
+		AMX *amx;
+		SharedCell cell;
+		float comparableStreamDistance;
+		bool inverseAreaChecking;
+		int modelID;
+		float originalComparableStreamDistance;
+		int actorID;
+		Eigen::Vector3f position;
+		float rotation;
+		int priority;
+		int references;
+		float streamDistance;
+		bool invulnerable;
+		float health;
+
+		struct Anim
+		{
+			Anim();
+
+			std::string lib;
+			std::string name;
+			float delta;
+			bool loop;
+			bool lockx;
+			bool locky;
+			bool freeze;
+			int time;
+			int references;
+		};
+
+		boost::intrusive_ptr<Anim> anim;
+
+		boost::unordered_set<int> areas;
+		std::vector<int> extras;
+		boost::unordered_set<int> interiors;
+		std::bitset<MAX_PLAYERS> players;
+		boost::unordered_set<int> worlds;
+
+		static Identifier identifier;
+
+		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+	};
 }
 
 #endif
