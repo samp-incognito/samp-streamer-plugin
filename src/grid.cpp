@@ -612,31 +612,46 @@ void Grid::processDiscoveredCellsForPlayer(Player &player, std::vector<SharedCel
 		boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = player.visibleCell->checkpoints.begin();
 		while (c != player.visibleCell->checkpoints.end())
 		{
-			boost::unordered_set<CellID>::iterator d = discoveredCells.find(c->second->cell->cellID);
-			if (d != discoveredCells.end())
+			if (c->second->cell)
 			{
-				c = player.visibleCell->checkpoints.erase(c);
+				boost::unordered_set<CellID>::iterator d = discoveredCells.find(c->second->cell->cellID);
+				if (d != discoveredCells.end())
+				{
+					c = player.visibleCell->checkpoints.erase(c);
+				}
+				else
+				{
+					++c;
+				}
 			}
 			else
 			{
-				++c;
+				c = player.visibleCell->checkpoints.erase(c);
 			}
+
 		}
 		playerCells.back()->checkpoints.swap(player.visibleCell->checkpoints);
 	}
 	if (player.enabledItems[STREAMER_TYPE_RACE_CP])
 	{
-		boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator t = player.visibleCell->raceCheckpoints.begin();
-		while (t != player.visibleCell->raceCheckpoints.end())
+		boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = player.visibleCell->raceCheckpoints.begin();
+		while (r != player.visibleCell->raceCheckpoints.end())
 		{
-			boost::unordered_set<CellID>::iterator d = discoveredCells.find(t->second->cell->cellID);
-			if (d != discoveredCells.end())
+			if (r->second->cell)
 			{
-				t = player.visibleCell->raceCheckpoints.erase(t);
+				boost::unordered_set<CellID>::iterator d = discoveredCells.find(r->second->cell->cellID);
+				if (d != discoveredCells.end())
+				{
+					r = player.visibleCell->raceCheckpoints.erase(r);
+				}
+				else
+				{
+					++r;
+				}
 			}
 			else
 			{
-				++t;
+				r = player.visibleCell->raceCheckpoints.erase(r);
 			}
 		}
 		playerCells.back()->raceCheckpoints.swap(player.visibleCell->raceCheckpoints);
@@ -646,14 +661,21 @@ void Grid::processDiscoveredCellsForPlayer(Player &player, std::vector<SharedCel
 		boost::unordered_map<int, Item::SharedMapIcon>::iterator m = player.visibleCell->mapIcons.begin();
 		while (m != player.visibleCell->mapIcons.end())
 		{
-			boost::unordered_set<CellID>::iterator d = discoveredCells.find(m->second->cell->cellID);
-			if (d != discoveredCells.end())
+			if (m->second->cell)
 			{
-				m = player.visibleCell->mapIcons.erase(m);
+				boost::unordered_set<CellID>::iterator d = discoveredCells.find(m->second->cell->cellID);
+				if (d != discoveredCells.end())
+				{
+					m = player.visibleCell->mapIcons.erase(m);
+				}
+				else
+				{
+					++m;
+				}
 			}
 			else
 			{
-				++m;
+				m = player.visibleCell->mapIcons.erase(m);
 			}
 		}
 		playerCells.back()->mapIcons.swap(player.visibleCell->mapIcons);
@@ -663,14 +685,21 @@ void Grid::processDiscoveredCellsForPlayer(Player &player, std::vector<SharedCel
 		boost::unordered_map<int, Item::SharedTextLabel>::iterator t = player.visibleCell->textLabels.begin();
 		while (t != player.visibleCell->textLabels.end())
 		{
-			boost::unordered_set<CellID>::iterator d = discoveredCells.find(t->second->cell->cellID);
-			if (d != discoveredCells.end())
+			if (t->second->cell)
 			{
-				t = player.visibleCell->textLabels.erase(t);
+				boost::unordered_set<CellID>::iterator d = discoveredCells.find(t->second->cell->cellID);
+				if (d != discoveredCells.end())
+				{
+					t = player.visibleCell->textLabels.erase(t);
+				}
+				else
+				{
+					++t;
+				}
 			}
 			else
 			{
-				++t;
+				t = player.visibleCell->textLabels.erase(t);
 			}
 		}
 		playerCells.back()->textLabels.swap(player.visibleCell->textLabels);
@@ -680,14 +709,21 @@ void Grid::processDiscoveredCellsForPlayer(Player &player, std::vector<SharedCel
 		boost::unordered_map<int, Item::SharedArea>::iterator a = player.visibleCell->areas.begin();
 		while (a != player.visibleCell->areas.end())
 		{
-			boost::unordered_set<CellID>::iterator d = discoveredCells.find(a->second->cell->cellID);
-			if (d != discoveredCells.end())
+			if (a->second->cell)
 			{
-				a = player.visibleCell->areas.erase(a);
+				boost::unordered_set<CellID>::iterator d = discoveredCells.find(a->second->cell->cellID);
+				if (d != discoveredCells.end())
+				{
+					a = player.visibleCell->areas.erase(a);
+				}
+				else
+				{
+					++a;
+				}
 			}
 			else
 			{
-				++a;
+				a = player.visibleCell->areas.erase(a);
 			}
 		}
 		playerCells.back()->areas.swap(player.visibleCell->areas);
