@@ -346,6 +346,18 @@ native IsValidDynamicActor(STREAMER_TAG_ACTOR actorid);
 native ApplyDynamicActorAnimation(STREAMER_TAG_ACTOR actorid, animlib[], animname[], Float:fDelta, loop, lockx, locky, freeze, time);
 native ClearDynamicActorAnimations(STREAMER_TAG_ACTOR actorid);
 native GetPlayerTargetDynamicActor(playerid);
+native SetDynamicActorFacingAngle(STREAMER_TAG_ACTOR actorid, Float:ang);
+native SetDynamicActorHealth(STREAMER_TAG_ACTOR actorid, Float:health);
+native SetDynamicActorInvulnerable(STREAMER_TAG_ACTOR actorid, invulnerable = true);
+native SetDynamicActorPos(STREAMER_TAG_ACTOR actorid, Float:X, Float:Y, Float:Z);
+native SetDynamicActorVirtualWorld(STREAMER_TAG_ACTOR actorid, vworld);
+native GetDynamicActorFacingAngle(STREAMER_TAG_ACTOR actorid, &Float:ang);
+native GetDynamicActorHealth(STREAMER_TAG_ACTOR actorid, &Float:health);
+native GetDynamicActorPos(STREAMER_TAG_ACTOR actorid, &Float:X, &Float:Y, &Float:Z);
+native GetDynamicActorVirtualWorld(STREAMER_TAG_ACTOR actorid);
+native IsDynamicActorInvulnerable(STREAMER_TAG_ACTOR actorid);
+native IsDynamicActorStreamedIn(STREAMER_TAG_ACTOR actorid, forplayerid);
+native GetPlayerCameraTargetDynActor(playerid);
 
 // Natives (Extended)
 
