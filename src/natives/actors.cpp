@@ -152,6 +152,11 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorFacingAngle(AMX *amx, cell *params)
 			i->second = sampgdk::CreateActor(a->second->modelID, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
 			sampgdk::SetActorHealth(i->second, a->second->health);
 			sampgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
+
+			if (a->second->anim)
+			{
+				sampgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);
+			}
 		}
 		return 1;
 	}
@@ -187,7 +192,15 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorInvulnerable(AMX *amx, cell *params
 		boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
 		if (i != core->getData()->internalActors.end())
 		{
+			sampgdk::DestroyActor(i->second);
+			i->second = sampgdk::CreateActor(a->second->modelID, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
+			sampgdk::SetActorHealth(i->second, a->second->health);
 			sampgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
+
+			if (a->second->anim)
+			{
+				sampgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);
+			}
 		}
 		return 1;
 	}
