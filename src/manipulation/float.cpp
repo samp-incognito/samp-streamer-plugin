@@ -1702,7 +1702,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					{
 						a->second->health = amx_ctof(params[4]);
 						update = true;
-						return 1;
+						break;
 					}
 					case StreamDistance:
 					{
@@ -1715,7 +1715,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					{
 						a->second->rotation = amx_ctof(params[4]);
 						update = true;
-						return 1;
+						break;
 					}
 					case X:
 					{

@@ -125,13 +125,14 @@ cell AMX_NATIVE_CALL Natives::ClearDynamicActorAnimations(AMX *amx, cell *params
 cell AMX_NATIVE_CALL Natives::GetPlayerTargetDynamicActor(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "GetPlayerTargetDynamicActor");
-	boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[1]));
-	if (a != core->getData()->actors.end())
+	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
+	if (p != core->getData()->players.end())
 	{
-		boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
-		if (i != core->getData()->internalActors.end())
-		{
-			return sampgdk::GetPlayerTargetActor(i->second);
+		int actorid = sampgdk::GetPlayerTargetActor(p->second.playerID);
+		for (boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i) {
+			if (i->second == actorid) {
+				return i->first;
+			}
 		}
 	}
 	return 0;
