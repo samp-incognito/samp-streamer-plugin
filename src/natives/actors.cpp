@@ -148,7 +148,10 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorFacingAngle(AMX *amx, cell *params)
 		boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
 		if (i != core->getData()->internalActors.end())
 		{
-			sampgdk::SetActorFacingAngle(i->second, a->second->rotation);
+			sampgdk::DestroyActor(i->second);
+			i->second = sampgdk::CreateActor(a->second->modelID, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
+			sampgdk::SetActorHealth(i->second, a->second->health);
+			sampgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
 		}
 		return 1;
 	}
@@ -307,13 +310,16 @@ cell AMX_NATIVE_CALL Natives::IsDynamicActorStreamedIn(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::GetPlayerCameraTargetDynActor(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "GetPlayerCameraTargetDynActor");
-	boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[1]));
-	if (a != core->getData()->actors.end())
+	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
+	if (p != core->getData()->players.end())
 	{
-		boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
-		if (i != core->getData()->internalActors.end())
+		int actorid = sampgdk::GetPlayerCameraTargetActor(p->second.playerID);
+		for (boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
 		{
-			return sampgdk::GetPlayerCameraTargetActor(i->second);
+			if (i->second == actorid)
+			{
+				return i->first;
+			}
 		}
 	}
 	return 0;

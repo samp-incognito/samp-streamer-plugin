@@ -317,3 +317,49 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerGiveDamageActor(int playerid, int actorid
 	}
 	return true;
 }
+
+PLUGIN_EXPORT bool PLUGIN_CALL OnActorStreamIn(int actorid, int forplayerid)
+{
+	for (boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
+	{
+		if (i->second == actorid)
+		{
+			int actorid = i->first;
+			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
+			{
+				int amxIndex = 0;
+				if (!amx_FindPublic(*a, "OnDynamicActorStreamIn", &amxIndex))
+				{
+					amx_Push(*a, static_cast<cell>(forplayerid));
+					amx_Push(*a, static_cast<cell>(actorid));
+					amx_Exec(*a, NULL, amxIndex);
+				}
+			}
+			break;
+		}
+	}
+	return true;
+}
+
+PLUGIN_EXPORT bool PLUGIN_CALL OnActorStreamOut(int actorid, int forplayerid)
+{
+	for (boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
+	{
+		if (i->second == actorid)
+		{
+			int actorid = i->first;
+			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
+			{
+				int amxIndex = 0;
+				if (!amx_FindPublic(*a, "OnDynamicActorStreamOut", &amxIndex))
+				{
+					amx_Push(*a, static_cast<cell>(forplayerid));
+					amx_Push(*a, static_cast<cell>(actorid));
+					amx_Exec(*a, NULL, amxIndex);
+				}
+			}
+			break;
+		}
+	}
+	return true;
+}

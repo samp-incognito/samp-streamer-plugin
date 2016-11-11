@@ -421,5 +421,7 @@ forward OnPlayerLeaveDynamicRaceCP(playerid, STREAMER_TAG_RACE_CP checkpointid);
 forward OnPlayerEnterDynamicArea(playerid, STREAMER_TAG_AREA areaid);
 forward OnPlayerLeaveDynamicArea(playerid, STREAMER_TAG_AREA areaid);
 forward OnPlayerGiveDamageDynamicActor(playerid, STREAMER_TAG_ACTOR actorid, Float:amount, weaponid, bodypart);
+forward OnDynamicActorStreamIn(STREAMER_TAG_ACTOR actorid, forplayerid);
+forward OnDynamicActorStreamOut(STREAMER_TAG_ACTOR actorid, forplayerid);
 
 forward Streamer_OnPluginError(error[]);
