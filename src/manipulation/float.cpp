@@ -1758,8 +1758,8 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
 					if (i != core->getData()->internalActors.end())
 					{
-						sampgdk::SetActorPos(i->second, a->second->position[0], a->second->position[1], a->second->position[2]);
-						sampgdk::SetActorFacingAngle(i->second, a->second->rotation);
+						sampgdk::DestroyActor(i->second);
+						i->second = sampgdk::CreateActor(a->second->modelID, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
 						sampgdk::SetActorHealth(i->second, a->second->health);
 						sampgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
 					}
