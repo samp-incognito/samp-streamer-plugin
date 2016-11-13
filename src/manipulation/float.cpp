@@ -1760,8 +1760,9 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					{
 						sampgdk::DestroyActor(i->second);
 						i->second = sampgdk::CreateActor(a->second->modelID, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
-						sampgdk::SetActorHealth(i->second, a->second->health);
 						sampgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
+						sampgdk::SetActorHealth(i->second, a->second->health);
+						sampgdk::SetActorVirtualWorld(i->second, a->second->world);
 						if (a->second->anim)
 						{
 							sampgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);

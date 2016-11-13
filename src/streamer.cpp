@@ -1129,12 +1129,13 @@ void Streamer::streamActors()
 		{
 			break;
 		}
+		sampgdk::SetActorInvulnerable(internalID, i->second->invulnerable);
+		sampgdk::SetActorHealth(internalID, i->second->health);
+		sampgdk::SetActorVirtualWorld(internalID, i->second->world);
 		if (i->second->anim)
 		{
 			sampgdk::ApplyActorAnimation(internalID, i->second->anim->lib.c_str(), i->second->anim->name.c_str(), i->second->anim->delta, i->second->anim->loop, i->second->anim->lockx, i->second->anim->locky, i->second->anim->freeze, i->second->anim->time);
 		}
-		sampgdk::SetActorInvulnerable(internalID, i->second->invulnerable);
-		sampgdk::SetActorHealth(internalID, i->second->health);
 		core->getData()->internalActors.insert(std::make_pair(i->second->actorID, internalID));
 	}
 	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
