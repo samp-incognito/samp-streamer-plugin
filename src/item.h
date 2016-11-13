@@ -352,6 +352,7 @@ namespace Item
 		float streamDistance;
 		bool invulnerable;
 		float health;
+		int worldID;
 
 		struct Anim
 		{
