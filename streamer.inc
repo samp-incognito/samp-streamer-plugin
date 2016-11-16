@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-#if defined _inc_streamer
+#if defined _streamer_included
 	#endinput
 #endif
-#define _inc_streamer
+#define _streamer_included
 
 #include <a_samp>
 
