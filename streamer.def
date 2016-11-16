@@ -20,3 +20,5 @@ EXPORTS
 	OnPlayerSelectObject
 	OnPlayerWeaponShot
 	OnPlayerGiveDamageActor
+	OnActorStreamIn
+	OnActorStreamOut

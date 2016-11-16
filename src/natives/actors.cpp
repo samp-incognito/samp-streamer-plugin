@@ -150,8 +150,9 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorFacingAngle(AMX *amx, cell *params)
 		{
 			sampgdk::DestroyActor(i->second);
 			i->second = sampgdk::CreateActor(a->second->modelID, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
-			sampgdk::SetActorHealth(i->second, a->second->health);
 			sampgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
+			sampgdk::SetActorHealth(i->second, a->second->health);
+			sampgdk::SetActorVirtualWorld(i->second, a->second->worldID);
 
 			if (a->second->anim)
 			{
@@ -194,8 +195,9 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorInvulnerable(AMX *amx, cell *params
 		{
 			sampgdk::DestroyActor(i->second);
 			i->second = sampgdk::CreateActor(a->second->modelID, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
-			sampgdk::SetActorHealth(i->second, a->second->health);
 			sampgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
+			sampgdk::SetActorHealth(i->second, a->second->health);
+			sampgdk::SetActorVirtualWorld(i->second, a->second->worldID);
 
 			if (a->second->anim)
 			{
@@ -236,6 +238,12 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorVirtualWorld(AMX *amx, cell *params
 	if (a != core->getData()->actors.end())
 	{
 		Utility::setFirstValueInContainer(a->second->worlds, static_cast<int>(params[2]));
+
+		boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
+		if (i != core->getData()->internalActors.end())
+		{
+			sampgdk::SetActorVirtualWorld(i->second, a->second->worldID);
+		}
 		return 1;
 	}
 	return 0;
