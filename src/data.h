@@ -30,6 +30,9 @@ class Data
 public:
 	Data();
 
+	std::size_t getGlobalChunkTickRate(int type);
+	bool setGlobalChunkTickRate(int type, std::size_t value);
+
 	std::size_t getGlobalMaxItems(int type);
 	bool setGlobalMaxItems(int type, std::size_t value);
 
@@ -59,6 +62,7 @@ public:
 
 	std::vector<int> typePriority;
 private:
+	std::size_t globalChunkTickRate[STREAMER_MAX_TYPES];
 	std::size_t globalMaxItems[STREAMER_MAX_TYPES];
 	std::size_t globalMaxVisibleItems[STREAMER_MAX_TYPES];
 	float globalRadiusMultipliers[STREAMER_MAX_TYPES];

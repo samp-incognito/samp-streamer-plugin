@@ -36,6 +36,9 @@ namespace Utility
 	boost::unordered_map<int, Item::SharedTextLabel>::iterator destroyTextLabel(boost::unordered_map<int, Item::SharedTextLabel>::iterator t);
 	boost::unordered_map<int, Item::SharedActor>::iterator destroyActor(boost::unordered_map<int, Item::SharedActor>::iterator a);
 
+	std::size_t getChunkTickRate(int type, int playerid);
+	bool setChunkTickRate(int type, std::size_t value, int playerid);
+
 	std::size_t getMaxVisibleItems(int type, int playerid);
 	bool setMaxVisibleItems(int type, std::size_t value, int playerid);
 

@@ -156,6 +156,81 @@ boost::unordered_map<int, Item::SharedActor>::iterator Utility::destroyActor(boo
 	return core->getData()->actors.erase(p);
 }
 
+std::size_t Utility::getChunkTickRate(int type, int playerid)
+{
+	if (playerid >= 0 && playerid < MAX_PLAYERS)
+	{
+		boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+		if (p != core->getData()->players.end())
+		{
+			switch (type)
+			{
+				case STREAMER_TYPE_OBJECT:
+				{
+					return p->second.chunkTickRate[STREAMER_TYPE_OBJECT];
+				}
+				case STREAMER_TYPE_MAP_ICON:
+				{
+					return p->second.chunkTickRate[STREAMER_TYPE_MAP_ICON];
+				}
+				case STREAMER_TYPE_3D_TEXT_LABEL:
+				{
+					return p->second.chunkTickRate[STREAMER_TYPE_3D_TEXT_LABEL];
+				}
+			}
+		}
+	}
+	return core->getData()->getGlobalChunkTickRate(type);
+}
+
+bool Utility::setChunkTickRate(int type, std::size_t value, int playerid)
+{
+	if (playerid >= 0 && playerid < MAX_PLAYERS)
+	{
+		boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+		if (p != core->getData()->players.end())
+		{
+			switch (type)
+			{
+				case STREAMER_TYPE_OBJECT:
+				{
+					p->second.chunkTickRate[STREAMER_TYPE_OBJECT] = value;
+					return true;
+				}
+				case STREAMER_TYPE_MAP_ICON:
+				{
+					p->second.chunkTickRate[STREAMER_TYPE_MAP_ICON] = value;
+					return true;
+				}
+				case STREAMER_TYPE_3D_TEXT_LABEL:
+				{
+					p->second.chunkTickRate[STREAMER_TYPE_3D_TEXT_LABEL] = value;
+					return true;
+				}
+			}
+		}
+	}
+	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+	{
+		switch (type)
+		{
+			case STREAMER_TYPE_OBJECT:
+			{
+				p->second.chunkTickRate[STREAMER_TYPE_OBJECT] = value;
+			}
+			case STREAMER_TYPE_MAP_ICON:
+			{
+				p->second.chunkTickRate[STREAMER_TYPE_MAP_ICON] = value;
+			}
+			case STREAMER_TYPE_3D_TEXT_LABEL:
+			{
+				p->second.chunkTickRate[STREAMER_TYPE_3D_TEXT_LABEL] = value;
+			}
+		}
+	}
+	return core->getData()->setGlobalChunkTickRate(type, value);
+}
+
 std::size_t Utility::getMaxVisibleItems(int type, int playerid)
 {
 	if (playerid >= 0 && playerid < MAX_PLAYERS)

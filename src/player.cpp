@@ -31,6 +31,12 @@ Player::Player(int id)
 	activeRaceCheckpoint = 0;
 	checkedPickups = false;
 	checkedActors = false;
+	chunkTickCount[STREAMER_TYPE_OBJECT] = 0;
+	chunkTickCount[STREAMER_TYPE_MAP_ICON] = 0;
+	chunkTickCount[STREAMER_TYPE_3D_TEXT_LABEL] = 0;
+	chunkTickRate[STREAMER_TYPE_OBJECT] = 1;
+	chunkTickRate[STREAMER_TYPE_MAP_ICON] = 1;
+	chunkTickRate[STREAMER_TYPE_3D_TEXT_LABEL] = 1;
 	currentVisibleObjects = core->getData()->getGlobalMaxVisibleItems(STREAMER_TYPE_OBJECT);
 	currentVisibleTextLabels = core->getData()->getGlobalMaxVisibleItems(STREAMER_TYPE_3D_TEXT_LABEL);
 	delayedCheckpoint = 0;

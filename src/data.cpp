@@ -21,6 +21,9 @@
 Data::Data()
 {
 	errorCallbackEnabled = false;
+	globalChunkTickRate[STREAMER_TYPE_OBJECT] = 1;
+	globalChunkTickRate[STREAMER_TYPE_MAP_ICON] = 1;
+	globalChunkTickRate[STREAMER_TYPE_3D_TEXT_LABEL] = 1;
 	globalMaxItems[STREAMER_TYPE_OBJECT] = std::numeric_limits<std::size_t>::max();
 	globalMaxItems[STREAMER_TYPE_PICKUP] = std::numeric_limits<std::size_t>::max();
 	globalMaxItems[STREAMER_TYPE_CP] = std::numeric_limits<std::size_t>::max();
@@ -57,6 +60,25 @@ Data::Data()
 	{
 		typePriority.push_back(defaultTypePriority[i]);
 	}
+}
+
+std::size_t Data::getGlobalChunkTickRate(int type)
+{
+	if (type >= 0 && type < STREAMER_MAX_TYPES)
+	{
+		return globalChunkTickRate[type];
+	}
+	return 0;
+}
+
+bool Data::setGlobalChunkTickRate(int type, std::size_t value)
+{
+	if (type >= 0 && type < STREAMER_MAX_TYPES)
+	{
+		globalChunkTickRate[type] = value;
+		return true;
+	}
+	return false;
 }
 
 std::size_t Data::getGlobalMaxItems(int type)
