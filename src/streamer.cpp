@@ -1086,6 +1086,10 @@ void Streamer::discoverActors(Player &player, const std::vector<SharedCell> &cel
 					if (p->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF || boost::geometry::comparable_distance(player.position, p->second->position) < (p->second->comparableStreamDistance * player.radiusMultipliers[STREAMER_TYPE_ACTOR]))
 					{
 						boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(p->first);
+						if (i == core->getData()->internalActors.end())
+						{
+							p->second->worldID = !p->second->worlds.empty() ? player.worldID : -1;
+						}
 						discoveredActors.insert(*p);
 					}
 				}
@@ -1129,11 +1133,13 @@ void Streamer::streamActors()
 		{
 			break;
 		}
-		if (i->second->anim) {
-			sampgdk::ApplyActorAnimation(internalID, i->second->anim->lib.c_str(), i->second->anim->name.c_str(), i->second->anim->delta, i->second->anim->loop, i->second->anim->lockx, i->second->anim->locky, i->second->anim->freeze, i->second->anim->time);
-		}
 		sampgdk::SetActorInvulnerable(internalID, i->second->invulnerable);
 		sampgdk::SetActorHealth(internalID, i->second->health);
+		sampgdk::SetActorVirtualWorld(internalID, i->second->worldID);
+		if (i->second->anim)
+		{
+			sampgdk::ApplyActorAnimation(internalID, i->second->anim->lib.c_str(), i->second->anim->name.c_str(), i->second->anim->delta, i->second->anim->loop, i->second->anim->lockx, i->second->anim->locky, i->second->anim->freeze, i->second->anim->time);
+		}
 		core->getData()->internalActors.insert(std::make_pair(i->second->actorID, internalID));
 	}
 	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)

@@ -1702,7 +1702,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					{
 						a->second->health = amx_ctof(params[4]);
 						update = true;
-						return 1;
+						break;
 					}
 					case StreamDistance:
 					{
@@ -1715,7 +1715,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					{
 						a->second->rotation = amx_ctof(params[4]);
 						update = true;
-						return 1;
+						break;
 					}
 					case X:
 					{
@@ -1758,10 +1758,15 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
 					if (i != core->getData()->internalActors.end())
 					{
-						sampgdk::SetActorPos(i->second, a->second->position[0], a->second->position[1], a->second->position[2]);
-						sampgdk::SetActorFacingAngle(i->second, a->second->rotation);
-						sampgdk::SetActorHealth(i->second, a->second->health);
+						sampgdk::DestroyActor(i->second);
+						i->second = sampgdk::CreateActor(a->second->modelID, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
 						sampgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
+						sampgdk::SetActorHealth(i->second, a->second->health);
+						sampgdk::SetActorVirtualWorld(i->second, a->second->worldID);
+						if (a->second->anim)
+						{
+							sampgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);
+						}
 					}
 				}
 				if (reassign || update)
