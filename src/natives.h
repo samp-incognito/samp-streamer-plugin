@@ -187,6 +187,18 @@ namespace Natives
 	cell AMX_NATIVE_CALL ApplyDynamicActorAnimation(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL ClearDynamicActorAnimations(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL GetPlayerTargetDynamicActor(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL SetDynamicActorFacingAngle(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL SetDynamicActorHealth(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL SetDynamicActorInvulnerable(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL SetDynamicActorPos(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL SetDynamicActorVirtualWorld(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetDynamicActorFacingAngle(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetDynamicActorHealth(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetDynamicActorPos(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetDynamicActorVirtualWorld(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL IsDynamicActorInvulnerable(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL IsDynamicActorStreamedIn(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetPlayerCameraTargetDynActor(AMX *amx, cell *params);
 	// Extended
 	cell AMX_NATIVE_CALL CreateDynamicObjectEx(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL CreateDynamicPickupEx(AMX *amx, cell *params);
