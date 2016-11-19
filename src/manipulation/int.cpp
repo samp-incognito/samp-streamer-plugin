@@ -567,7 +567,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 							o->second->attach->player = INVALID_GENERIC_ID;
 							o->second->attach->vehicle = INVALID_GENERIC_ID;
 							o->second->attach->object = static_cast<int>(params[4]);
-							o->second->attach->offset.setZero();
+							o->second->attach->positionOffset.setZero();
 							o->second->attach->rotation.setZero();
 							o->second->attach->syncRotation = true;
 							core->getStreamer()->attachedObjects.insert(o->second);
@@ -606,7 +606,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 							o->second->attach->object = INVALID_STREAMER_ID;
 							o->second->attach->vehicle = INVALID_GENERIC_ID;
 							o->second->attach->player = static_cast<int>(params[4]);
-							o->second->attach->offset.setZero();
+							o->second->attach->positionOffset.setZero();
 							o->second->attach->rotation.setZero();
 							core->getStreamer()->attachedObjects.insert(o->second);
 							update = true;
@@ -639,7 +639,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 							o->second->attach->object = INVALID_STREAMER_ID;
 							o->second->attach->player = INVALID_GENERIC_ID;
 							o->second->attach->vehicle = static_cast<int>(params[4]);
-							o->second->attach->offset.setZero();
+							o->second->attach->positionOffset.setZero();
 							o->second->attach->rotation.setZero();
 							core->getStreamer()->attachedObjects.insert(o->second);
 							update = true;
@@ -723,7 +723,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 										AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToObject");
 										if (native != NULL)
 										{
-											sampgdk::InvokeNative(native, "dddffffffb", p->first, i->second, j->second, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2], o->second->attach->syncRotation);
+											sampgdk::InvokeNative(native, "dddffffffb", p->first, i->second, j->second, o->second->attach->positionOffset[0], o->second->attach->positionOffset[1], o->second->attach->positionOffset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2], o->second->attach->syncRotation);
 										}
 									}
 								}
@@ -732,12 +732,12 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 									AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToPlayer");
 									if (native != NULL)
 									{
-										sampgdk::InvokeNative(native, "dddffffff", p->first, i->second, o->second->attach->player, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
+										sampgdk::InvokeNative(native, "dddffffff", p->first, i->second, o->second->attach->player, o->second->attach->positionOffset[0], o->second->attach->positionOffset[1], o->second->attach->positionOffset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
 									}
 								}
 								else if (o->second->attach->vehicle != INVALID_GENERIC_ID)
 								{
-									sampgdk::AttachPlayerObjectToVehicle(p->first, i->second, o->second->attach->vehicle, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
+									sampgdk::AttachPlayerObjectToVehicle(p->first, i->second, o->second->attach->vehicle, o->second->attach->positionOffset[0], o->second->attach->positionOffset[1], o->second->attach->positionOffset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
 								}
 							}
 							else if (o->second->move)

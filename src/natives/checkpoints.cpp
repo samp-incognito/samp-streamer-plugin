@@ -41,6 +41,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCP(AMX *amx, cell *params)
 	checkpoint->checkpointID = checkpointID;
 	checkpoint->inverseAreaChecking = false;
 	checkpoint->originalComparableStreamDistance = -1.0f;
+	checkpoint->positionOffset = Eigen::Vector3f::Zero();
 	checkpoint->position = Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]));
 	checkpoint->size = amx_ctof(params[4]);
 	Utility::addToContainer(checkpoint->worlds, static_cast<int>(params[5]));

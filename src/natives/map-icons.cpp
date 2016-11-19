@@ -41,6 +41,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicMapIcon(AMX *amx, cell *params)
 	mapIcon->mapIconID = mapIconID;
 	mapIcon->inverseAreaChecking = false;
 	mapIcon->originalComparableStreamDistance = -1.0f;
+	mapIcon->positionOffset = Eigen::Vector3f::Zero();
 	mapIcon->position = Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]));
 	mapIcon->type = static_cast<int>(params[4]);
 	mapIcon->color = static_cast<int>(params[5]);

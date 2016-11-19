@@ -51,7 +51,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 					{
 						if (o->second->attach)
 						{
-							Utility::storeFloatInNative(amx, params[4], o->second->attach->offset[0]);
+							Utility::storeFloatInNative(amx, params[4], o->second->attach->positionOffset[0]);
 							return 1;
 						}
 						return 0;
@@ -60,7 +60,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 					{
 						if (o->second->attach)
 						{
-							Utility::storeFloatInNative(amx, params[4], o->second->attach->offset[1]);
+							Utility::storeFloatInNative(amx, params[4], o->second->attach->positionOffset[1]);
 							return 1;
 						}
 						return 0;
@@ -69,7 +69,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 					{
 						if (o->second->attach)
 						{
-							Utility::storeFloatInNative(amx, params[4], o->second->attach->offset[2]);
+							Utility::storeFloatInNative(amx, params[4], o->second->attach->positionOffset[2]);
 							return 1;
 						}
 						return 0;
@@ -542,7 +542,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 					{
 						if (a->second->attach)
 						{
-							Utility::storeFloatInNative(amx, params[4], a->second->attach->offset[0]);
+							Utility::storeFloatInNative(amx, params[4], a->second->attach->positionOffset[0]);
 							return 1;
 						}
 						return 0;
@@ -551,7 +551,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 					{
 						if (a->second->attach)
 						{
-							Utility::storeFloatInNative(amx, params[4], a->second->attach->offset[1]);
+							Utility::storeFloatInNative(amx, params[4], a->second->attach->positionOffset[1]);
 							return 1;
 						}
 						return 0;
@@ -560,7 +560,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 					{
 						if (a->second->attach)
 						{
-							Utility::storeFloatInNative(amx, params[4], a->second->attach->offset[2]);
+							Utility::storeFloatInNative(amx, params[4], a->second->attach->positionOffset[2]);
 							return 1;
 						}
 						return 0;
@@ -829,7 +829,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					{
 						if (o->second->attach)
 						{
-							o->second->attach->offset[0] = amx_ctof(params[4]);
+							o->second->attach->positionOffset[0] = amx_ctof(params[4]);
 							update = true;
 						}
 						break;
@@ -838,7 +838,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					{
 						if (o->second->attach)
 						{
-							o->second->attach->offset[1] = amx_ctof(params[4]);
+							o->second->attach->positionOffset[1] = amx_ctof(params[4]);
 							update = true;
 						}
 						break;
@@ -847,7 +847,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					{
 						if (o->second->attach)
 						{
-							o->second->attach->offset[2] = amx_ctof(params[4]);
+							o->second->attach->positionOffset[2] = amx_ctof(params[4]);
 							update = true;
 						}
 						break;
@@ -991,7 +991,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 										AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToObject");
 										if (native != NULL)
 										{
-											sampgdk::InvokeNative(native, "dddffffffb", p->first, i->second, j->second, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2], o->second->attach->syncRotation);
+											sampgdk::InvokeNative(native, "dddffffffb", p->first, i->second, j->second, o->second->attach->positionOffset[0], o->second->attach->positionOffset[1], o->second->attach->positionOffset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2], o->second->attach->syncRotation);
 										}
 									}
 								}
@@ -1000,12 +1000,12 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 									AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToPlayer");
 									if (native != NULL)
 									{
-										sampgdk::InvokeNative(native, "dddffffff", p->first, i->second, o->second->attach->player, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
+										sampgdk::InvokeNative(native, "dddffffff", p->first, i->second, o->second->attach->player, o->second->attach->positionOffset[0], o->second->attach->positionOffset[1], o->second->attach->positionOffset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
 									}
 								}
 								else if (o->second->attach->vehicle != INVALID_GENERIC_ID)
 								{
-									sampgdk::AttachPlayerObjectToVehicle(p->first, i->second, o->second->attach->vehicle, o->second->attach->offset[0], o->second->attach->offset[1], o->second->attach->offset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
+									sampgdk::AttachPlayerObjectToVehicle(p->first, i->second, o->second->attach->vehicle, o->second->attach->positionOffset[0], o->second->attach->positionOffset[1], o->second->attach->positionOffset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
 								}
 							}
 							else if (o->second->move)
@@ -1453,7 +1453,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					{
 						if (a->second->attach)
 						{
-							a->second->attach->offset[0] = amx_ctof(params[4]);
+							a->second->attach->positionOffset[0] = amx_ctof(params[4]);
 						}
 						break;
 					}
@@ -1461,7 +1461,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					{
 						if (a->second->attach)
 						{
-							a->second->attach->offset[1] = amx_ctof(params[4]);
+							a->second->attach->positionOffset[1] = amx_ctof(params[4]);
 						}
 						break;
 					}
@@ -1469,7 +1469,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					{
 						if (a->second->attach)
 						{
-							a->second->attach->offset[2] = amx_ctof(params[4]);
+							a->second->attach->positionOffset[2] = amx_ctof(params[4]);
 						}
 						break;
 					}

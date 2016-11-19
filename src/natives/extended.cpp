@@ -44,6 +44,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicObjectEx(AMX *amx, cell *params)
 	object->inverseAreaChecking = false;
 	object->noCameraCollision = false;
 	object->originalComparableStreamDistance = -1.0f;
+	object->positionOffset = Eigen::Vector3f::Zero();
 	object->modelID = static_cast<int>(params[1]);
 	object->position = Eigen::Vector3f(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
 	object->rotation = Eigen::Vector3f(amx_ctof(params[5]), amx_ctof(params[6]), amx_ctof(params[7]));
@@ -74,6 +75,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPickupEx(AMX *amx, cell *params)
 	pickup->inverseAreaChecking = false;
 	pickup->originalComparableStreamDistance = -1.0f;
 	pickup->modelID = static_cast<int>(params[1]);
+	pickup->positionOffset = Eigen::Vector3f::Zero();
 	pickup->type = static_cast<int>(params[2]);
 	pickup->position = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
 	pickup->comparableStreamDistance = amx_ctof(params[6]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[6]) : amx_ctof(params[6]) * amx_ctof(params[6]);
@@ -101,6 +103,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCPEx(AMX *amx, cell *params)
 	checkpoint->checkpointID = checkpointID;
 	checkpoint->inverseAreaChecking = false;
 	checkpoint->originalComparableStreamDistance = -1.0f;
+	checkpoint->positionOffset = Eigen::Vector3f::Zero();
 	checkpoint->position = Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]));
 	checkpoint->size = amx_ctof(params[4]);
 	checkpoint->comparableStreamDistance = amx_ctof(params[5]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[5]) : amx_ctof(params[5]) * amx_ctof(params[5]);
@@ -128,6 +131,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicRaceCPEx(AMX *amx, cell *params)
 	raceCheckpoint->raceCheckpointID = raceCheckpointID;
 	raceCheckpoint->inverseAreaChecking = false;
 	raceCheckpoint->originalComparableStreamDistance = -1.0f;
+	raceCheckpoint->positionOffset = Eigen::Vector3f::Zero();
 	raceCheckpoint->type = static_cast<int>(params[1]);
 	raceCheckpoint->position = Eigen::Vector3f(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
 	raceCheckpoint->next = Eigen::Vector3f(amx_ctof(params[5]), amx_ctof(params[6]), amx_ctof(params[7]));
@@ -157,6 +161,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicMapIconEx(AMX *amx, cell *params)
 	mapIcon->mapIconID = mapIconID;
 	mapIcon->inverseAreaChecking = false;
 	mapIcon->originalComparableStreamDistance = -1.0f;
+	mapIcon->positionOffset = Eigen::Vector3f::Zero();
 	mapIcon->position = Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]));
 	mapIcon->type = static_cast<int>(params[4]);
 	mapIcon->color = static_cast<int>(params[5]);
@@ -186,6 +191,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabelEx(AMX *amx, cell *params)
 	textLabel->textLabelID = textLabelID;
 	textLabel->inverseAreaChecking = false;
 	textLabel->originalComparableStreamDistance = -1.0f;
+	textLabel->positionOffset = Eigen::Vector3f::Zero();
 	textLabel->text = Utility::convertNativeStringToString(amx, params[1]);
 	textLabel->color = static_cast<int>(params[2]);
 	textLabel->position = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));

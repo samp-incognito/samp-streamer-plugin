@@ -658,7 +658,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToObject(AMX *amx, cell *params)
 			a->second->attach->player = INVALID_GENERIC_ID;
 			a->second->attach->vehicle = INVALID_GENERIC_ID;
 			a->second->attach->object = boost::make_tuple(static_cast<int>(params[2]), static_cast<int>(params[3]), static_cast<int>(params[4]));
-			a->second->attach->offset = Eigen::Vector3f(amx_ctof(params[5]), amx_ctof(params[6]), amx_ctof(params[7]));
+			a->second->attach->positionOffset = Eigen::Vector3f(amx_ctof(params[5]), amx_ctof(params[6]), amx_ctof(params[7]));
 			core->getStreamer()->attachedAreas.insert(a->second);
 		}
 		else
@@ -695,7 +695,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToPlayer(AMX *amx, cell *params)
 			a->second->attach->object = boost::make_tuple(INVALID_STREAMER_ID, STREAMER_OBJECT_TYPE_DYNAMIC, INVALID_PLAYER_ID);
 			a->second->attach->vehicle = INVALID_GENERIC_ID;
 			a->second->attach->player = static_cast<int>(params[2]);
-			a->second->attach->offset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
+			a->second->attach->positionOffset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
 			core->getStreamer()->attachedAreas.insert(a->second);
 		}
 		else
@@ -732,7 +732,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToVehicle(AMX *amx, cell *params)
 			a->second->attach->object = boost::make_tuple(INVALID_STREAMER_ID, STREAMER_OBJECT_TYPE_DYNAMIC, INVALID_PLAYER_ID);
 			a->second->attach->player = INVALID_GENERIC_ID;
 			a->second->attach->vehicle = static_cast<int>(params[2]);
-			a->second->attach->offset = a->second->attach->offset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
+			a->second->attach->positionOffset = a->second->attach->positionOffset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
 			core->getStreamer()->attachedAreas.insert(a->second);
 		}
 		else

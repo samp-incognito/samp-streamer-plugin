@@ -57,9 +57,9 @@ namespace Item
 			Attach();
 
 			boost::tuple<int, int, int> object;
-			Eigen::Vector3f offset;
 			int player;
 			Eigen::Vector3f position;
+			Eigen::Vector3f positionOffset;
 			int references;
 			int vehicle;
 
@@ -90,6 +90,7 @@ namespace Item
 		bool inverseAreaChecking;
 		float originalComparableStreamDistance;
 		Eigen::Vector3f position;
+		Eigen::Vector3f positionOffset;
 		int priority;
 		int references;
 		float size;
@@ -118,6 +119,7 @@ namespace Item
 		int mapIconID;
 		float originalComparableStreamDistance;
 		Eigen::Vector3f position;
+		Eigen::Vector3f positionOffset;
 		int priority;
 		int references;
 		float streamDistance;
@@ -149,6 +151,7 @@ namespace Item
 		int objectID;
 		float originalComparableStreamDistance;
 		Eigen::Vector3f position;
+		Eigen::Vector3f positionOffset;
 		int priority;
 		int references;
 		Eigen::Vector3f rotation;
@@ -159,9 +162,9 @@ namespace Item
 			Attach();
 
 			int object;
-			Eigen::Vector3f offset;
 			int player;
 			Eigen::Vector3f position;
+			Eigen::Vector3f positionOffset;
 			int references;
 			Eigen::Vector3f rotation;
 			bool syncRotation;
@@ -246,6 +249,7 @@ namespace Item
 		float originalComparableStreamDistance;
 		int pickupID;
 		Eigen::Vector3f position;
+		Eigen::Vector3f positionOffset;
 		int priority;
 		int references;
 		float streamDistance;
@@ -274,6 +278,7 @@ namespace Item
 		Eigen::Vector3f next;
 		float originalComparableStreamDistance;
 		Eigen::Vector3f position;
+		Eigen::Vector3f positionOffset;
 		int priority;
 		int raceCheckpointID;
 		int references;
@@ -304,6 +309,7 @@ namespace Item
 		bool inverseAreaChecking;
 		float originalComparableStreamDistance;
 		Eigen::Vector3f position;
+		Eigen::Vector3f positionOffset;
 		int priority;
 		int references;
 		float streamDistance;
@@ -346,6 +352,7 @@ namespace Item
 		float originalComparableStreamDistance;
 		int actorID;
 		Eigen::Vector3f position;
+		Eigen::Vector3f positionOffset;
 		float rotation;
 		int priority;
 		int references;

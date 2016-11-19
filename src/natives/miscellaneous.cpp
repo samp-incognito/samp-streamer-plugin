@@ -1730,3 +1730,176 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 
 	return 0;
 }
+
+cell AMX_NATIVE_CALL Natives::Streamer_GetItemOffset(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(5, "Streamer_GetItemOffset");
+	Eigen::Vector3f positionOffset = Eigen::Vector3f::Zero();
+	switch (static_cast<int>(params[1]))
+	{
+		case STREAMER_TYPE_OBJECT:
+		{
+			boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
+			if (o != core->getData()->objects.end())
+			{
+				positionOffset = o->second->positionOffset;
+				break;
+			}
+			return 0;
+		}
+		case STREAMER_TYPE_PICKUP:
+		{
+			boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[2]));
+			if (p != core->getData()->pickups.end())
+			{
+				positionOffset = p->second->positionOffset;
+				break;
+			}
+			return 0;
+		}
+		case STREAMER_TYPE_CP:
+		{
+			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[2]));
+			if (c != core->getData()->checkpoints.end())
+			{
+				positionOffset = c->second->positionOffset;
+				break;
+			}
+			return 0;
+		}
+		case STREAMER_TYPE_RACE_CP:
+		{
+			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[2]));
+			if (r != core->getData()->raceCheckpoints.end())
+			{
+				positionOffset = r->second->positionOffset;
+				break;
+			}
+			return 0;
+		}
+		case STREAMER_TYPE_MAP_ICON:
+		{
+			boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[2]));
+			if (m != core->getData()->mapIcons.end())
+			{
+				positionOffset = m->second->positionOffset;
+				break;
+			}
+			return 0;
+		}
+		case STREAMER_TYPE_3D_TEXT_LABEL:
+		{
+			boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[2]));
+			if (t != core->getData()->textLabels.end())
+			{
+				positionOffset = t->second->positionOffset;
+				break;
+			}
+			return 0;
+		}
+		case STREAMER_TYPE_ACTOR:
+		{
+			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
+			if (a != core->getData()->actors.end())
+			{
+				positionOffset = a->second->positionOffset;
+				break;
+			}
+			return 0;
+		}
+		default:
+		{
+			Utility::logError("Streamer_GetItemPosOffset: Invalid type specified");
+			return 0;
+		}
+	}
+	Utility::storeFloatInNative(amx, params[3], positionOffset[0]);
+	Utility::storeFloatInNative(amx, params[4], positionOffset[1]);
+	Utility::storeFloatInNative(amx, params[5], positionOffset[2]);
+	return 1;
+}
+
+cell AMX_NATIVE_CALL Natives::Streamer_SetItemOffset(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(5, "Streamer_SetItemOffset");
+	Eigen::Vector3f positionOffset = Eigen::Vector3f::Zero();
+	switch (static_cast<int>(params[1]))
+	{
+		case STREAMER_TYPE_OBJECT:
+		{
+			boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
+			if (o != core->getData()->objects.end())
+			{
+				o->second->positionOffset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
+				return 1;
+			}
+			break;
+		}
+		case STREAMER_TYPE_PICKUP:
+		{
+			boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[2]));
+			if (p != core->getData()->pickups.end())
+			{
+				p->second->positionOffset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
+				return 1;
+			}
+			break;
+		}
+		case STREAMER_TYPE_CP:
+		{
+			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[2]));
+			if (c != core->getData()->checkpoints.end())
+			{
+				c->second->positionOffset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
+				return 1;
+			}
+			break;
+		}
+		case STREAMER_TYPE_RACE_CP:
+		{
+			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[2]));
+			if (r != core->getData()->raceCheckpoints.end())
+			{
+				r->second->positionOffset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
+				return 1;
+			}
+			break;
+		}
+		case STREAMER_TYPE_MAP_ICON:
+		{
+			boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[2]));
+			if (m != core->getData()->mapIcons.end())
+			{
+				m->second->positionOffset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
+				return 1;
+			}
+			break;
+		}
+		case STREAMER_TYPE_3D_TEXT_LABEL:
+		{
+			boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[2]));
+			if (t != core->getData()->textLabels.end())
+			{
+				t->second->positionOffset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
+				return 1;
+			}
+			break;
+		}
+		case STREAMER_TYPE_ACTOR:
+		{
+			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
+			if (a != core->getData()->actors.end())
+			{
+				a->second->positionOffset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
+				return 1;
+			}
+			break;
+		}
+		default:
+		{
+			Utility::logError("Streamer_SetItemPosOffset: Invalid type specified");
+			return 0;
+		}
+	}
+	return 0;
+}
