@@ -80,6 +80,10 @@ struct Player
 	boost::unordered_map<int, int> internalObjects;
 	boost::unordered_map<int, int> internalTextLabels;
 
+	std::vector<Item::SharedMapIcon> removedMapIcons;
+	std::vector<Item::SharedObject> removedObjects;
+	std::vector<Item::SharedTextLabel> removedTextLabels;
+
 	Identifier mapIconIdentifier;
 
 	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
