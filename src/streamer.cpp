@@ -225,7 +225,7 @@ void Streamer::performPlayerChunkUpdate(Player &player)
 		{
 			case STREAMER_TYPE_OBJECT:
 			{
-				if (!player.discoveredObjects.empty())
+				if (!player.discoveredObjects.empty() || !player.removedObjects.empty())
 				{
 					streamObjects(player);
 				}
@@ -233,7 +233,7 @@ void Streamer::performPlayerChunkUpdate(Player &player)
 			}
 			case STREAMER_TYPE_MAP_ICON:
 			{
-				if (!player.discoveredMapIcons.empty())
+				if (!player.discoveredMapIcons.empty() || !player.removedMapIcons.empty())
 				{
 					streamMapIcons(player);
 				}
@@ -241,7 +241,7 @@ void Streamer::performPlayerChunkUpdate(Player &player)
 			}
 			case STREAMER_TYPE_3D_TEXT_LABEL:
 			{
-				if (!player.discoveredTextLabels.empty())
+				if (!player.discoveredTextLabels.empty() || !player.removedTextLabels.empty())
 				{
 					streamTextLabels(player);
 				}
@@ -602,7 +602,7 @@ void Streamer::discoverMapIcons(Player &player, const std::vector<SharedCell> &c
 			{
 				if (i != player.internalMapIcons.end())
 				{
-					player.removedMapIcons.push_back(m->second);
+					player.removedMapIcons.push_back(i->first);
 				}
 			}
 		}
@@ -620,14 +620,14 @@ void Streamer::streamMapIcons(Player &player)
 		std::size_t chunkCount = 0;
 		if (!player.removedMapIcons.empty())
 		{
-			std::vector<Item::SharedMapIcon>::iterator r = player.removedMapIcons.begin();
+			std::vector<int>::iterator r = player.removedMapIcons.begin();
 			while (r != player.removedMapIcons.end())
 			{
 				if (++chunkCount > chunkSize[STREAMER_TYPE_MAP_ICON])
 				{
 					break;
 				}
-				boost::unordered_map<int, int>::iterator i = player.internalMapIcons.find(r->get()->mapIconID);
+				boost::unordered_map<int, int>::iterator i = player.internalMapIcons.find(*r);
 				if (i != player.internalMapIcons.end())
 				{
 					sampgdk::RemovePlayerMapIcon(player.playerID, i->second);
@@ -737,7 +737,7 @@ void Streamer::discoverObjects(Player &player, const std::vector<SharedCell> &ce
 			{
 				if (i != player.internalObjects.end())
 				{
-					player.removedObjects.push_back(o->second);
+					player.removedObjects.push_back(i->first);
 				}
 			}
 		}
@@ -755,14 +755,14 @@ void Streamer::streamObjects(Player &player)
 		std::size_t chunkCount = 0;
 		if (!player.removedObjects.empty())
 		{
-			std::vector<Item::SharedObject>::iterator r = player.removedObjects.begin();
+			std::vector<int>::iterator r = player.removedObjects.begin();
 			while (r != player.removedObjects.end())
 			{
 				if (++chunkCount > chunkSize[STREAMER_TYPE_OBJECT])
 				{
 					break;
 				}
-				boost::unordered_map<int, int>::iterator i = player.internalObjects.find(r->get()->objectID);
+				boost::unordered_map<int, int>::iterator i = player.internalObjects.find(*r);
 				if (i != player.internalObjects.end())
 				{
 					sampgdk::DestroyPlayerObject(player.playerID, i->second);
@@ -1045,7 +1045,7 @@ void Streamer::discoverTextLabels(Player &player, const std::vector<SharedCell> 
 			{
 				if (i != player.internalTextLabels.end())
 				{
-					player.removedTextLabels.push_back(t->second);
+					player.removedTextLabels.push_back(i->first);
 				}
 			}
 		}
@@ -1063,14 +1063,14 @@ void Streamer::streamTextLabels(Player &player)
 		std::size_t chunkCount = 0;
 		if (!player.removedTextLabels.empty())
 		{
-			std::vector<Item::SharedTextLabel>::iterator r = player.removedTextLabels.begin();
+			std::vector<int>::iterator r = player.removedTextLabels.begin();
 			while (r != player.removedTextLabels.end())
 			{
 				if (++chunkCount > chunkSize[STREAMER_TYPE_3D_TEXT_LABEL])
 				{
 					break;
 				}
-				boost::unordered_map<int, int>::iterator i = player.internalObjects.find(r->get()->textLabelID);
+				boost::unordered_map<int, int>::iterator i = player.internalTextLabels.find(*r);
 				if (i != player.internalTextLabels.end())
 				{
 					sampgdk::DeletePlayer3DTextLabel(player.playerID, i->second);

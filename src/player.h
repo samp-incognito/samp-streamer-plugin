@@ -80,9 +80,9 @@ struct Player
 	boost::unordered_map<int, int> internalObjects;
 	boost::unordered_map<int, int> internalTextLabels;
 
-	std::vector<Item::SharedMapIcon> removedMapIcons;
-	std::vector<Item::SharedObject> removedObjects;
-	std::vector<Item::SharedTextLabel> removedTextLabels;
+	std::vector<int> removedMapIcons;
+	std::vector<int> removedObjects;
+	std::vector<int> removedTextLabels;
 
 	Identifier mapIconIdentifier;
 
