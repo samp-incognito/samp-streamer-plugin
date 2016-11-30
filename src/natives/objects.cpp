@@ -709,7 +709,7 @@ cell AMX_NATIVE_CALL Natives::GetPlayerCameraTargetDynObject(AMX *amx, cell *par
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
-		int objectid = sampgdk::GetPlayerCameraTargetActor(p->second.playerID);
+		int objectid = sampgdk::GetPlayerCameraTargetObject(p->second.playerID);
 		if (objectid != INVALID_OBJECT_ID)
 		{
 			for (boost::unordered_map<int, int>::iterator i = p->second.internalObjects.begin(); i != p->second.internalObjects.end(); ++i)
