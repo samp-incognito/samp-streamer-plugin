@@ -702,3 +702,24 @@ cell AMX_NATIVE_CALL Natives::SetDynamicObjectMaterialText(AMX *amx, cell *param
 	}
 	return 0;
 }
+
+cell AMX_NATIVE_CALL Natives::GetPlayerCameraTargetDynObject(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "GetPlayerCameraTargetDynObject");
+	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
+	if (p != core->getData()->players.end())
+	{
+		int objectid = sampgdk::GetPlayerCameraTargetActor(p->second.playerID);
+		if (objectid != INVALID_OBJECT_ID)
+		{
+			for (boost::unordered_map<int, int>::iterator i = p->second.internalObjects.begin(); i != p->second.internalObjects.end(); ++i)
+			{
+				if (i->second == objectid)
+				{
+					return i->first;
+				}
+			}
+		}
+	}
+	return 0;
+}
