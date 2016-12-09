@@ -128,6 +128,7 @@ namespace Natives
 	cell AMX_NATIVE_CALL IsDynamicObjectMaterialTextUsed(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL GetDynamicObjectMaterialText(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL SetDynamicObjectMaterialText(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetPlayerCameraTargetDynObject(AMX *amx, cell *params);
 	// Pickups
 	cell AMX_NATIVE_CALL CreateDynamicPickup(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL DestroyDynamicPickup(AMX *amx, cell *params);

@@ -275,6 +275,7 @@ native SetDynamicObjectMaterial(STREAMER_TAG_OBJECT objectid, materialindex, mod
 native IsDynamicObjectMaterialTextUsed(STREAMER_TAG_OBJECT objectid, materialindex);
 native GetDynamicObjectMaterialText(STREAMER_TAG_OBJECT objectid, materialindex, text[], &materialsize, fontface[], &fontsize, &bold, &fontcolor, &backcolor, &textalignment, maxtext = sizeof text, maxfontface = sizeof fontface);
 native SetDynamicObjectMaterialText(STREAMER_TAG_OBJECT objectid, materialindex, const text[], materialsize = OBJECT_MATERIAL_SIZE_256x128, const fontface[] = "Arial", fontsize = 24, bold = 1, fontcolor = 0xFFFFFFFF, backcolor = 0, textalignment = 0);
+native STREAMER_TAG_OBJECT GetPlayerCameraTargetDynObject(playerid);
 
 // Natives (Pickups)
 
@@ -362,7 +363,7 @@ native GetDynamicActorPos(STREAMER_TAG_ACTOR actorid, &Float:X, &Float:Y, &Float
 native GetDynamicActorVirtualWorld(STREAMER_TAG_ACTOR actorid);
 native IsDynamicActorInvulnerable(STREAMER_TAG_ACTOR actorid);
 native IsDynamicActorStreamedIn(STREAMER_TAG_ACTOR actorid, forplayerid);
-native GetPlayerCameraTargetDynActor(playerid);
+native STREAMER_TAG_ACTOR GetPlayerCameraTargetDynActor(playerid);
 
 // Natives (Extended)
 

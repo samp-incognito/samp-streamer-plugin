@@ -137,6 +137,7 @@ AMX_NATIVE_INFO natives[] =
 	{ "IsDynamicObjectMaterialTextUsed", Natives::IsDynamicObjectMaterialTextUsed },
 	{ "GetDynamicObjectMaterialText", Natives::GetDynamicObjectMaterialText },
 	{ "SetDynamicObjectMaterialText", Natives::SetDynamicObjectMaterialText },
+	{ "GetPlayerCameraTargetDynObject", Natives::GetPlayerCameraTargetDynObject },
 	// Pickups
 	{ "CreateDynamicPickup", Natives::CreateDynamicPickup },
 	{ "DestroyDynamicPickup", Natives::DestroyDynamicPickup },
