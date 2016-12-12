@@ -33,7 +33,7 @@
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicCircle(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(6, "CreateDynamicCircle");
+	CHECK_PARAMS(7, "CreateDynamicCircle");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return 0;
@@ -49,6 +49,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCircle(AMX *amx, cell *params)
 	Utility::addToContainer(area->worlds, static_cast<int>(params[4]));
 	Utility::addToContainer(area->interiors, static_cast<int>(params[5]));
 	Utility::addToContainer(area->players, static_cast<int>(params[6]));
+	area->priority = static_cast<int>(params[7]);
 	core->getGrid()->addArea(area);
 	core->getData()->areas.insert(std::make_pair(areaID, area));
 	return static_cast<cell>(areaID);
@@ -56,7 +57,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCircle(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicCylinder(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(8, "CreateDynamicCylinder");
+	CHECK_PARAMS(9, "CreateDynamicCylinder");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return 0;
@@ -73,6 +74,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCylinder(AMX *amx, cell *params)
 	Utility::addToContainer(area->worlds, static_cast<int>(params[6]));
 	Utility::addToContainer(area->interiors, static_cast<int>(params[7]));
 	Utility::addToContainer(area->players, static_cast<int>(params[8]));
+	area->priority = static_cast<int>(params[9]);
 	core->getGrid()->addArea(area);
 	core->getData()->areas.insert(std::make_pair(areaID, area));
 	return static_cast<cell>(areaID);
@@ -80,7 +82,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCylinder(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicSphere(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(7, "CreateDynamicSphere");
+	CHECK_PARAMS(8, "CreateDynamicSphere");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return 0;
@@ -96,6 +98,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicSphere(AMX *amx, cell *params)
 	Utility::addToContainer(area->worlds, static_cast<int>(params[5]));
 	Utility::addToContainer(area->interiors, static_cast<int>(params[6]));
 	Utility::addToContainer(area->players, static_cast<int>(params[7]));
+	area->priority = static_cast<int>(params[8]);
 	core->getGrid()->addArea(area);
 	core->getData()->areas.insert(std::make_pair(areaID, area));
 	return static_cast<cell>(areaID);
@@ -103,7 +106,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicSphere(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicRectangle(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(7, "CreateDynamicRectangle");
+	CHECK_PARAMS(8, "CreateDynamicRectangle");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return 0;
@@ -120,6 +123,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicRectangle(AMX *amx, cell *params)
 	Utility::addToContainer(area->worlds, static_cast<int>(params[5]));
 	Utility::addToContainer(area->interiors, static_cast<int>(params[6]));
 	Utility::addToContainer(area->players, static_cast<int>(params[7]));
+	area->priority = static_cast<int>(params[8]);
 	core->getGrid()->addArea(area);
 	core->getData()->areas.insert(std::make_pair(areaID, area));
 	return static_cast<cell>(areaID);
@@ -127,7 +131,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicRectangle(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicCuboid(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(9, "CreateDynamicCuboid");
+	CHECK_PARAMS(10, "CreateDynamicCuboid");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return 0;
@@ -144,6 +148,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCuboid(AMX *amx, cell *params)
 	Utility::addToContainer(area->worlds, static_cast<int>(params[7]));
 	Utility::addToContainer(area->interiors, static_cast<int>(params[8]));
 	Utility::addToContainer(area->players, static_cast<int>(params[9]));
+	area->priority = static_cast<int>(params[10]);
 	core->getGrid()->addArea(area);
 	core->getData()->areas.insert(std::make_pair(areaID, area));
 	return static_cast<cell>(areaID);
@@ -151,7 +156,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCuboid(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicPolygon(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(7, "CreateDynamicPolygon");
+	CHECK_PARAMS(8, "CreateDynamicPolygon");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return 0;
@@ -174,6 +179,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPolygon(AMX *amx, cell *params)
 	Utility::addToContainer(area->worlds, static_cast<int>(params[5]));
 	Utility::addToContainer(area->interiors, static_cast<int>(params[6]));
 	Utility::addToContainer(area->players, static_cast<int>(params[7]));
+	area->priority = static_cast<int>(params[8]);
 	core->getGrid()->addArea(area);
 	core->getData()->areas.insert(std::make_pair(areaID, area));
 	return static_cast<cell>(areaID);
