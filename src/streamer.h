@@ -107,8 +107,8 @@ private:
 
 	boost::tuple<float, float> velocityBoundaries;
 
-	std::vector<boost::tuple<int, int> > areaEnterCallbacks;
-	std::vector<boost::tuple<int, int> > areaLeaveCallbacks;
+	std::multimap<int, boost::tuple<int, int> > areaEnterCallbacks;
+	std::multimap<int, boost::tuple<int, int> > areaLeaveCallbacks;
 	std::vector<int> objectMoveCallbacks;
 
 	boost::unordered_map<int, Item::SharedPickup> discoveredPickups;
