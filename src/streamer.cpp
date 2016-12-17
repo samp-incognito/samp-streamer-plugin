@@ -833,7 +833,7 @@ void Streamer::streamObjects(Player &player)
 						AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToPlayer");
 						if (native != NULL)
 						{
-							sampgdk::InvokeNative(native, "dddffffff", player.playerID, internalID, d->second->attach->player, d->second->attach->positionOffset[0], d->second->attach->positionOffset[1], d->second->attach->positionOffset[2], d->second->attach->rotation[0], d->second->attach->rotation[1], d->second->attach->rotation[2]);
+							sampgdk::InvokeNative(native, "dddffffffd", player.playerID, internalID, d->second->attach->player, d->second->attach->positionOffset[0], d->second->attach->positionOffset[1], d->second->attach->positionOffset[2], d->second->attach->rotation[0], d->second->attach->rotation[1], d->second->attach->rotation[2], 1);
 						}
 					}
 					else if (d->second->attach->vehicle != INVALID_GENERIC_ID)
