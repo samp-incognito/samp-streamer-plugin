@@ -46,12 +46,12 @@ namespace Item
 		SharedCell cell;
 		float comparableSize;
 		Eigen::Vector2f height;
+		int priority;
 		int references;
 		float size;
 		int type;
 
 		boost::variant<Polygon2D, Box2D, Box3D, Eigen::Vector2f, Eigen::Vector3f> position;
-		int priority;
 
 		struct Attach
 		{

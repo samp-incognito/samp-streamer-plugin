@@ -220,7 +220,6 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorPos(AMX *amx, cell *params)
 		a->second->position[0] = amx_ctof(params[2]);
 		a->second->position[1] = amx_ctof(params[3]);
 		a->second->position[2] = amx_ctof(params[4]);
-
 		boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
 		if (i != core->getData()->internalActors.end())
 		{
@@ -240,7 +239,6 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorVirtualWorld(AMX *amx, cell *params
 	if (a != core->getData()->actors.end())
 	{
 		Utility::setFirstValueInContainer(a->second->worlds, static_cast<int>(params[2]));
-
 		boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
 		if (i != core->getData()->internalActors.end())
 		{

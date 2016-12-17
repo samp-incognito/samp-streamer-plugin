@@ -438,7 +438,6 @@ void Streamer::executeCallbacks()
 		}
 	}
 	areaLeaveCallbacks.clear();
-	//std::vector<boost::tuple<int, int> >
 	for (std::multimap<int, boost::tuple<int, int> >::reverse_iterator c = areaEnterCallbacks.rbegin(); c != areaEnterCallbacks.rend(); ++c)
 	{
 		boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(c->second.get<0>());
