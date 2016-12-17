@@ -51,6 +51,7 @@ namespace Item
 		int type;
 
 		boost::variant<Polygon2D, Box2D, Box3D, Eigen::Vector2f, Eigen::Vector3f> position;
+		int priority;
 
 		struct Attach
 		{

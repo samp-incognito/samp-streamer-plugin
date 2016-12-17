@@ -432,6 +432,10 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					{
 						return Utility::getFirstValueInContainer(a->second->players);
 					}
+					case Priority:
+					{
+						return a->second->priority;
+					}
 					case Type:
 					{
 						return a->second->type;
@@ -1225,6 +1229,11 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					case PlayerID:
 					{
 						return Utility::setFirstValueInContainer(a->second->players, static_cast<int>(params[4])) != 0;
+					}
+					case Priority:
+					{
+						a->second->priority = static_cast<int>(params[4]);
+						break;
 					}
 					case WorldID:
 					{
