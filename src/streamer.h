@@ -109,7 +109,11 @@ private:
 
 	std::multimap<int, boost::tuple<int, int> > areaEnterCallbacks;
 	std::multimap<int, boost::tuple<int, int> > areaLeaveCallbacks;
+
 	std::vector<int> objectMoveCallbacks;
+
+	std::vector<boost::tuple<int, int> > streamInCallbacks;
+	std::vector<boost::tuple<int, int> > streamOutCallbacks;
 
 	boost::unordered_map<int, Item::SharedPickup> discoveredPickups;
 	boost::unordered_map<int, Item::SharedActor> discoveredActors;

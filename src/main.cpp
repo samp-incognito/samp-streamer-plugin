@@ -74,6 +74,8 @@ AMX_NATIVE_INFO natives[] =
 	{ "Streamer_IsToggleItemStatic", Natives::Streamer_IsToggleItemStatic },
 	{ "Streamer_ToggleItemInvAreas", Natives::Streamer_ToggleItemInvAreas },
 	{ "Streamer_IsToggleItemInvAreas", Natives::Streamer_IsToggleItemInvAreas },
+	{ "Streamer_ToggleItemCallbacks", Natives::Streamer_ToggleItemCallbacks },
+	{ "Streamer_IsToggleItemCallbacks", Natives::Streamer_IsToggleItemCallbacks },
 	{ "Streamer_ToggleErrorCallback", Natives::Streamer_ToggleErrorCallback },
 	{ "Streamer_IsToggleErrorCallback", Natives::Streamer_IsToggleErrorCallback },
 	// Updates

@@ -65,6 +65,8 @@ namespace Natives
 	cell AMX_NATIVE_CALL Streamer_IsToggleItemStatic(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_ToggleItemInvAreas(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_IsToggleItemInvAreas(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_ToggleItemCallbacks(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_IsToggleItemCallbacks(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_ToggleErrorCallback(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_IsToggleErrorCallback(AMX *amx, cell *params);
 	// Updates

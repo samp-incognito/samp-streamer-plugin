@@ -204,6 +204,8 @@ native Streamer_ToggleItemStatic(type, STREAMER_ALL_TAGS id, toggle);
 native Streamer_IsToggleItemStatic(type, STREAMER_ALL_TAGS id);
 native Streamer_ToggleItemInvAreas(type, STREAMER_ALL_TAGS id, toggle);
 native Streamer_IsToggleItemInvAreas(type, STREAMER_ALL_TAGS id);
+native Streamer_ToggleItemCallbacks(type, STREAMER_ALL_TAGS id, toggle);
+native Streamer_IsToggleItemCallbacks(type, STREAMER_ALL_TAGS id);
 native Streamer_ToggleErrorCallback(toggle);
 native Streamer_IsToggleErrorCallback();
 
@@ -432,5 +434,8 @@ forward OnPlayerLeaveDynamicArea(playerid, STREAMER_TAG_AREA areaid);
 forward OnPlayerGiveDamageDynamicActor(playerid, STREAMER_TAG_ACTOR actorid, Float:amount, weaponid, bodypart);
 forward OnDynamicActorStreamIn(STREAMER_TAG_ACTOR actorid, forplayerid);
 forward OnDynamicActorStreamOut(STREAMER_TAG_ACTOR actorid, forplayerid);
+
+forward Streamer_OnItemStreamIn(type, STREAMER_ALL_TAGS id);
+forward Streamer_OnItemStreamOut(type, STREAMER_ALL_TAGS id);
 
 forward Streamer_OnPluginError(error[]);

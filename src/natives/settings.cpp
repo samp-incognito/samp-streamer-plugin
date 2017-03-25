@@ -609,6 +609,148 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItemInvAreas(AMX *amx, cell *para
 	return 0;
 }
 
+cell AMX_NATIVE_CALL Natives::Streamer_ToggleItemCallbacks(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(3, "Streamer_ToggleItemCallbacks");
+	switch (static_cast<int>(params[1]))
+	{
+		case STREAMER_TYPE_OBJECT:
+		{
+			boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
+			if (o != core->getData()->objects.end())
+			{
+				o->second->streamCallbacks = static_cast<int>(params[3]) != 0;
+				return 1;
+			}
+			break;
+		}
+		case STREAMER_TYPE_PICKUP:
+		{
+			boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[2]));
+			if (p != core->getData()->pickups.end())
+			{
+				p->second->streamCallbacks = static_cast<int>(params[3]) != 0;
+				return 1;
+			}
+			break;
+		}
+		case STREAMER_TYPE_CP:
+		{
+			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[2]));
+			if (c != core->getData()->checkpoints.end())
+			{
+				c->second->streamCallbacks = static_cast<int>(params[3]) != 0;
+				return 1;
+			}
+			break;
+		}
+		case STREAMER_TYPE_RACE_CP:
+		{
+			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[2]));
+			if (r != core->getData()->raceCheckpoints.end())
+			{
+				r->second->streamCallbacks = static_cast<int>(params[3]) != 0;
+				return 1;
+			}
+			break;
+		}
+		case STREAMER_TYPE_MAP_ICON:
+		{
+			boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[2]));
+			if (m != core->getData()->mapIcons.end())
+			{
+				m->second->streamCallbacks = static_cast<int>(params[3]) != 0;
+				return 1;
+			}
+			break;
+		}
+		case STREAMER_TYPE_3D_TEXT_LABEL:
+		{
+			boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[2]));
+			if (t != core->getData()->textLabels.end())
+			{
+				t->second->streamCallbacks = static_cast<int>(params[3]) != 0;
+				return 1;
+			}
+			break;
+		}
+		default:
+		{
+			Utility::logError("Streamer_ToggleItemCallbacks: Invalid type specified");
+			return 0;
+		}
+	}
+	return 0;
+}
+
+cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItemCallbacks(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "Streamer_IsToggleItemCallbacks");
+	switch (static_cast<int>(params[1]))
+	{
+		case STREAMER_TYPE_OBJECT:
+		{
+			boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
+			if (o != core->getData()->objects.end())
+			{
+				return static_cast<cell>(o->second->streamCallbacks != 0);
+			}
+			break;
+		}
+		case STREAMER_TYPE_PICKUP:
+		{
+			boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[2]));
+			if (p != core->getData()->pickups.end())
+			{
+				return static_cast<cell>(p->second->streamCallbacks != 0);
+			}
+			break;
+		}
+		case STREAMER_TYPE_CP:
+		{
+			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[2]));
+			if (c != core->getData()->checkpoints.end())
+			{
+				return static_cast<cell>(c->second->streamCallbacks != 0);
+			}
+			break;
+		}
+		case STREAMER_TYPE_RACE_CP:
+		{
+			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[2]));
+			if (r != core->getData()->raceCheckpoints.end())
+			{
+				return static_cast<cell>(r->second->streamCallbacks != 0);
+			}
+			break;
+		}
+		case STREAMER_TYPE_MAP_ICON:
+		{
+			boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[2]));
+			if (m != core->getData()->mapIcons.end())
+			{
+				return static_cast<cell>(m->second->streamCallbacks != 0);
+			}
+			break;
+		}
+		case STREAMER_TYPE_3D_TEXT_LABEL:
+		{
+			boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[2]));
+			if (t != core->getData()->textLabels.end())
+			{
+				return static_cast<cell>(t->second->streamCallbacks != 0);
+			}
+			break;
+		}
+		default:
+		{
+			Utility::logError("Streamer_IsToggleItemCallbacks: Invalid type specified");
+			return 0;
+		}
+	}
+	return 1;
+}
+
 cell AMX_NATIVE_CALL Natives::Streamer_ToggleErrorCallback(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "Streamer_ToggleErrorCallback");

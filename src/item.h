@@ -96,6 +96,7 @@ namespace Item
 		int priority;
 		int references;
 		float size;
+		bool streamCallbacks;
 		float streamDistance;
 
 		boost::unordered_set<int> areas;
@@ -124,6 +125,7 @@ namespace Item
 		Eigen::Vector3f positionOffset;
 		int priority;
 		int references;
+		bool streamCallbacks;
 		float streamDistance;
 		int style;
 		int type;
@@ -157,6 +159,7 @@ namespace Item
 		int priority;
 		int references;
 		Eigen::Vector3f rotation;
+		bool streamCallbacks;
 		float streamDistance;
 
 		struct Attach
@@ -254,6 +257,7 @@ namespace Item
 		Eigen::Vector3f positionOffset;
 		int priority;
 		int references;
+		bool streamCallbacks;
 		float streamDistance;
 		int type;
 		int worldID;
@@ -285,6 +289,7 @@ namespace Item
 		int raceCheckpointID;
 		int references;
 		float size;
+		bool streamCallbacks;
 		float streamDistance;
 		int type;
 
@@ -314,6 +319,7 @@ namespace Item
 		Eigen::Vector3f positionOffset;
 		int priority;
 		int references;
+		bool streamCallbacks;
 		float streamDistance;
 		bool testLOS;
 		std::string text;
