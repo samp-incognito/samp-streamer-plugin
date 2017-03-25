@@ -1,6 +1,26 @@
 SA-MP Streamer Plugin
 =====================
 
+v2.9.0
+------
+
+- Modified streaming algorithm to limit packets sent per tick by
+  creating and destroying items in chunks (configurable via
+  Streamer_(Get/Set)ChunkTickRate and Streamer_(Get/Set)ChunkSize)
+- Made each player have an independent tick rate (configurable
+  via Streamer_(Get/Set)PlayerTickRate)
+- Added Streamer_OnItemStream(In/Out) and
+  Streamer_(Is)ToggleItemCallbacks
+- Added actor streaming (thanks ziggi)
+- Added Streamer_GetNearbyItems (thanks Southclaws)
+- Added Streamer_(Get/Set)ItemOffset
+- Added (Is)ToggleDynAreaSpectateMode
+- Added GetPlayerCameraTargetDynObject (thanks IstuntmanI)
+- Added "freezeplayer" parameter to Streamer_UpdateEx
+- Renamed Streamer_(Is)ToggleItemAntiAreas to
+  Streamer_(Is)ToggleItemInv(erse)Areas
+- Fixed various bugs
+
 v2.8.2
 ------
 
@@ -29,8 +49,8 @@ v2.8.1
 - Stopped duplicate log entries from being created
 - Fixed parameter order bug with CreateDynamicObjectEx
 
-v2.8
-----
+v2.8.0
+------
 
 - Added ability to stream items only in specified areas by
   using an "areaid" parameter in the item creation natives
@@ -97,8 +117,8 @@ v2.7.5.1
 - Fixed pickup crash
 - Fixed moving object rotation bug
 
-v2.7.5
-------
+v2.7.5.0
+--------
 
 - Updated sampgdk, resolving some issues with callbacks
 - Added type parameter to Streamer_Update(Ex)
@@ -141,8 +161,8 @@ v2.7.1
 - Fixed some minor bugs
 - Updated sampgdk version
 
-v2.7
-----
+v2.7.0
+------
 
 - Added OnPlayerShootDynamicObject for 0.3z
 - Added Streamer_GetItemInternalID and Streamer_GetItemStreamerID for
@@ -187,8 +207,8 @@ v2.6.1
 - Allowed NPCs to trigger area and checkpoint callbacks
 - Fixed IsPlayerInDynamicRaceCP
 
-v2.6
-----
+v2.6.0
+------
 
 - Adjusted algorithm for searching cells that contain visible items,
   improving performance for players moving around the map frequently
@@ -247,8 +267,8 @@ v2.5.1
   and 3D text labels stream out when their positions cannot be
   retrieved
 
-v2.5
-----
+v2.5.0
+------
 
 - Added grid system for partitioning the game world into cells
 - Added hash tables for numerous performance improvements
@@ -328,20 +348,21 @@ v2.3.1
 - Fixed internal map icon ID assignment bug
 - Rewrote PAWN invoke function
 
-v2.3
-----
+v2.3.0
+------
+
 - Fixed PAWN invoke bug in Linux (thanks pod)
 
-v2.2
-----
+v2.2.0
+------
 
 - Fixed item ID assignment bug
 - Corrected another typo in the include file
 - Improved moving objects slightly
 - Made a few adjustments to the default streaming distances
 
-v2.1
-----
+v2.1.0
+------
 
 - Made all streaming distances customizable via an extra optional
   parameter
@@ -352,8 +373,8 @@ v2.1
 - Renamed the custom pickup callback to OnPlayerPickUpDynamicPickup
   (note the capitalization)
 
-v2.0
-----
+v2.0.0
+------
 
 - Numerous bug fixes and optimizations
 - Added support for pickups, checkpoints, race checkpoints,
@@ -363,8 +384,8 @@ v2.0
 - Added more natives and callbacks for the new items
 - Renamed and reorganized several natives
 
-v1.1
-----
+v1.1.0
+------
 
 - Heavily modified dynamic moving objects so that they now are
   tracked in the plugin and synchronized with all players
@@ -376,7 +397,7 @@ v1.1
 - Optimized some streaming code and fixed a few bugs in the automatic
   setup system
 
-v1.0
-----
+v1.0.0
+------
 
 - Initial release

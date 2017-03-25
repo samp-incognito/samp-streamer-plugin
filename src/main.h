@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Incognito
+ * Copyright (C) 2017 Incognito
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#define INCLUDE_FILE_VERSION (0x282001)
-#define PLUGIN_VERSION "2.8.2"
+#define INCLUDE_FILE_VERSION (0x290)
+#define PLUGIN_VERSION "2.9.0"
 
 #endif

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Incognito
+ * Copyright (C) 2017 Incognito
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,8 +36,8 @@ struct Player
 
 	int activeCheckpoint;
 	int activeRaceCheckpoint;
-	bool checkedPickups;
 	bool checkedActors;
+	bool checkedPickups;
 	std::size_t chunkTickCount[STREAMER_MAX_TYPES];
 	std::size_t chunkTickRate[STREAMER_MAX_TYPES];
 	std::size_t currentVisibleObjects;
