@@ -542,6 +542,11 @@ cell AMX_NATIVE_CALL Natives::EditDynamicObject(AMX *amx, cell *params)
 			boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
 			if (o != core->getData()->objects.end())
 			{
+				if (o->second->comparableStreamDistance > STREAMER_STATIC_DISTANCE_CUTOFF && o->second->originalComparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
+				{
+					o->second->originalComparableStreamDistance = o->second->comparableStreamDistance;
+					o->second->comparableStreamDistance = -1.0f;
+				}
 				p->second.position = Eigen::Vector3f(o->second->position[0], o->second->position[1], o->second->position[2]);
 				core->getStreamer()->startManualUpdate(p->second, STREAMER_TYPE_OBJECT);
 			}

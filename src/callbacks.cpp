@@ -193,6 +193,18 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerEditObject(int playerid, bool playerobjec
 				if (i->second == objectid)
 				{
 					int objectid = i->first;
+					if (response == EDIT_RESPONSE_CANCEL || response == EDIT_RESPONSE_FINAL)
+					{
+						boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(objectid);
+						if (o != core->getData()->objects.end())
+						{
+							if (o->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF && o->second->originalComparableStreamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
+							{
+								o->second->comparableStreamDistance = o->second->originalComparableStreamDistance;
+								o->second->originalComparableStreamDistance = -1.0f;
+							}
+						}
+					}
 					for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
 					{
 						int amxIndex = 0;
