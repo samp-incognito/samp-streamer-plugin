@@ -257,12 +257,12 @@ native Streamer_SetItemOffset(type, STREAMER_ALL_TAGS id, Float:x, Float:y, Floa
 native STREAMER_TAG_OBJECT CreateDynamicObject(modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Float:rz, worldid = -1, interiorid = -1, playerid = -1, Float:streamdistance = STREAMER_OBJECT_SD, Float:drawdistance = STREAMER_OBJECT_DD, STREAMER_TAG_AREA areaid = STREAMER_TAG_AREA -1, priority = 0);
 native DestroyDynamicObject(STREAMER_TAG_OBJECT objectid);
 native IsValidDynamicObject(STREAMER_TAG_OBJECT objectid);
-native SetDynamicObjectPos(STREAMER_TAG_OBJECT objectid, Float:x, Float:y, Float:z);
 native GetDynamicObjectPos(STREAMER_TAG_OBJECT objectid, &Float:x, &Float:y, &Float:z);
-native SetDynamicObjectRot(STREAMER_TAG_OBJECT objectid, Float:rx, Float:ry, Float:rz);
+native SetDynamicObjectPos(STREAMER_TAG_OBJECT objectid, Float:x, Float:y, Float:z);
 native GetDynamicObjectRot(STREAMER_TAG_OBJECT objectid, &Float:rx, &Float:ry, &Float:rz);
-native SetDynamicObjectNoCameraCol(STREAMER_TAG_OBJECT objectid);
+native SetDynamicObjectRot(STREAMER_TAG_OBJECT objectid, Float:rx, Float:ry, Float:rz);
 native GetDynamicObjectNoCameraCol(STREAMER_TAG_OBJECT objectid);
+native SetDynamicObjectNoCameraCol(STREAMER_TAG_OBJECT objectid);
 native MoveDynamicObject(STREAMER_TAG_OBJECT objectid, Float:x, Float:y, Float:z, Float:speed, Float:rx = -1000.0, Float:ry = -1000.0, Float:rz = -1000.0);
 native StopDynamicObject(STREAMER_TAG_OBJECT objectid);
 native IsDynamicObjectMoving(STREAMER_TAG_OBJECT objectid);
@@ -353,20 +353,20 @@ native IsToggleDynAreaSpectateMode(STREAMER_TAG_AREA areaid);
 native STREAMER_TAG_ACTOR CreateDynamicActor(modelid, Float:x, Float:y, Float:z, Float:r, invulnerable = 1, Float:health = 100.0, worldid = -1, interiorid = -1, playerid = -1, Float:streamdistance = STREAMER_ACTOR_SD, STREAMER_TAG_AREA areaid = STREAMER_TAG_AREA -1, priority = 0);
 native DestroyDynamicActor(STREAMER_TAG_ACTOR actorid);
 native IsValidDynamicActor(STREAMER_TAG_ACTOR actorid);
+native IsDynamicActorStreamedIn(STREAMER_TAG_ACTOR actorid, forplayerid);
+native GetDynamicActorVirtualWorld(STREAMER_TAG_ACTOR actorid);
+native SetDynamicActorVirtualWorld(STREAMER_TAG_ACTOR actorid, vworld);
 native ApplyDynamicActorAnimation(STREAMER_TAG_ACTOR actorid, animlib[], animname[], Float:fdelta, loop, lockx, locky, freeze, time);
 native ClearDynamicActorAnimations(STREAMER_TAG_ACTOR actorid);
-native GetPlayerTargetDynamicActor(playerid);
+native GetDynamicActorFacingAngle(STREAMER_TAG_ACTOR actorid, &Float:ang);
 native SetDynamicActorFacingAngle(STREAMER_TAG_ACTOR actorid, Float:ang);
+native GetDynamicActorPos(STREAMER_TAG_ACTOR actorid, &Float:x, &Float:y, &Float:z);
+native SetDynamicActorPos(STREAMER_TAG_ACTOR actorid, Float:x, Float:y, Float:z);
+native GetDynamicActorHealth(STREAMER_TAG_ACTOR actorid, &Float:health);
 native SetDynamicActorHealth(STREAMER_TAG_ACTOR actorid, Float:health);
 native SetDynamicActorInvulnerable(STREAMER_TAG_ACTOR actorid, invulnerable = 1);
-native SetDynamicActorPos(STREAMER_TAG_ACTOR actorid, Float:x, Float:y, Float:z);
-native SetDynamicActorVirtualWorld(STREAMER_TAG_ACTOR actorid, vworld);
-native GetDynamicActorFacingAngle(STREAMER_TAG_ACTOR actorid, &Float:ang);
-native GetDynamicActorHealth(STREAMER_TAG_ACTOR actorid, &Float:health);
-native GetDynamicActorPos(STREAMER_TAG_ACTOR actorid, &Float:x, &Float:y, &Float:z);
-native GetDynamicActorVirtualWorld(STREAMER_TAG_ACTOR actorid);
 native IsDynamicActorInvulnerable(STREAMER_TAG_ACTOR actorid);
-native IsDynamicActorStreamedIn(STREAMER_TAG_ACTOR actorid, forplayerid);
+native STREAMER_TAG_ACTOR GetPlayerTargetDynamicActor(playerid);
 native STREAMER_TAG_ACTOR GetPlayerCameraTargetDynActor(playerid);
 
 // Natives (Extended)
@@ -384,7 +384,7 @@ native STREAMER_TAG_AREA CreateDynamicRectangleEx(Float:minx, Float:miny, Float:
 native STREAMER_TAG_AREA CreateDynamicCuboidEx(Float:minx, Float:miny, Float:minz, Float:maxx, Float:maxy, Float:maxz, worlds[] = { -1 }, interiors[] = { -1 }, players[] = { -1 }, priority = 0, maxworlds = sizeof worlds, maxinteriors = sizeof interiors, maxplayers = sizeof players);
 native STREAMER_TAG_AREA CreateDynamicCubeEx(Float:minx, Float:miny, Float:minz, Float:maxx, Float:maxy, Float:maxz, worlds[] = { -1 }, interiors[] = { -1 }, players[] = { -1 }, priority = 0, maxworlds = sizeof worlds, maxinteriors = sizeof interiors, maxplayers = sizeof players);
 native STREAMER_TAG_AREA CreateDynamicPolygonEx(Float:points[], Float:minz = -FLOAT_INFINITY, Float:maxz = FLOAT_INFINITY, maxpoints = sizeof points, worlds[] = { -1 }, interiors[] = { -1 }, players[] = { -1 }, priority = 0, maxworlds = sizeof worlds, maxinteriors = sizeof interiors, maxplayers = sizeof players);
-native STREAMER_TAG_ACTOR CreateDynamicActorEx(modelid, Float:x, Float:y, Float:z, Float:r, invulnerable = 1, Float:health = 100.0, Float:streamdistance = STREAMER_PICKUP_SD, worlds[] = { -1 }, interiors[] = { -1 }, players[] = { -1 }, STREAMER_TAG_AREA areas[] = { STREAMER_TAG_AREA -1 }, priority = 0, maxworlds = sizeof worlds, maxinteriors = sizeof interiors, maxplayers = sizeof players, maxareas = sizeof areas);
+native STREAMER_TAG_ACTOR CreateDynamicActorEx(modelid, Float:x, Float:y, Float:z, Float:r, invulnerable = 1, Float:health = 100.0, Float:streamdistance = STREAMER_ACTOR_SD, worlds[] = { -1 }, interiors[] = { -1 }, players[] = { -1 }, STREAMER_TAG_AREA areas[] = { STREAMER_TAG_AREA -1 }, priority = 0, maxworlds = sizeof worlds, maxinteriors = sizeof interiors, maxplayers = sizeof players, maxareas = sizeof areas);
 
 // Natives (Deprecated)
 
@@ -434,8 +434,6 @@ forward OnPlayerLeaveDynamicArea(playerid, STREAMER_TAG_AREA areaid);
 forward OnPlayerGiveDamageDynamicActor(playerid, STREAMER_TAG_ACTOR actorid, Float:amount, weaponid, bodypart);
 forward OnDynamicActorStreamIn(STREAMER_TAG_ACTOR actorid, forplayerid);
 forward OnDynamicActorStreamOut(STREAMER_TAG_ACTOR actorid, forplayerid);
-
 forward Streamer_OnItemStreamIn(type, STREAMER_ALL_TAGS id);
 forward Streamer_OnItemStreamOut(type, STREAMER_ALL_TAGS id);
-
 forward Streamer_OnPluginError(error[]);

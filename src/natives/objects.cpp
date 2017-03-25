@@ -87,6 +87,24 @@ cell AMX_NATIVE_CALL Natives::IsValidDynamicObject(AMX *amx, cell *params)
 	return 0;
 }
 
+cell AMX_NATIVE_CALL Natives::GetDynamicObjectPos(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(4, "GetDynamicObjectPos");
+	boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[1]));
+	if (o != core->getData()->objects.end())
+	{
+		if (o->second->move)
+		{
+			core->getStreamer()->processActiveItems();
+		}
+		Utility::storeFloatInNative(amx, params[2], o->second->position[0]);
+		Utility::storeFloatInNative(amx, params[3], o->second->position[1]);
+		Utility::storeFloatInNative(amx, params[4], o->second->position[2]);
+		return 1;
+	}
+	return 0;
+}
+
 cell AMX_NATIVE_CALL Natives::SetDynamicObjectPos(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(4, "SetDynamicObjectPos");
@@ -127,9 +145,9 @@ cell AMX_NATIVE_CALL Natives::SetDynamicObjectPos(AMX *amx, cell *params)
 	return 0;
 }
 
-cell AMX_NATIVE_CALL Natives::GetDynamicObjectPos(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL Natives::GetDynamicObjectRot(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(4, "GetDynamicObjectPos");
+	CHECK_PARAMS(4, "GetDynamicObjectRot");
 	boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[1]));
 	if (o != core->getData()->objects.end())
 	{
@@ -137,9 +155,9 @@ cell AMX_NATIVE_CALL Natives::GetDynamicObjectPos(AMX *amx, cell *params)
 		{
 			core->getStreamer()->processActiveItems();
 		}
-		Utility::storeFloatInNative(amx, params[2], o->second->position[0]);
-		Utility::storeFloatInNative(amx, params[3], o->second->position[1]);
-		Utility::storeFloatInNative(amx, params[4], o->second->position[2]);
+		Utility::storeFloatInNative(amx, params[2], o->second->rotation[0]);
+		Utility::storeFloatInNative(amx, params[3], o->second->rotation[1]);
+		Utility::storeFloatInNative(amx, params[4], o->second->rotation[2]);
 		return 1;
 	}
 	return 0;
@@ -173,20 +191,13 @@ cell AMX_NATIVE_CALL Natives::SetDynamicObjectRot(AMX *amx, cell *params)
 	return 0;
 }
 
-cell AMX_NATIVE_CALL Natives::GetDynamicObjectRot(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL Natives::GetDynamicObjectNoCameraCol(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(4, "GetDynamicObjectRot");
+	CHECK_PARAMS(1, "GetDynamicObjectNoCameraCol");
 	boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[1]));
 	if (o != core->getData()->objects.end())
 	{
-		if (o->second->move)
-		{
-			core->getStreamer()->processActiveItems();
-		}
-		Utility::storeFloatInNative(amx, params[2], o->second->rotation[0]);
-		Utility::storeFloatInNative(amx, params[3], o->second->rotation[1]);
-		Utility::storeFloatInNative(amx, params[4], o->second->rotation[2]);
-		return 1;
+		return o->second->noCameraCollision != 0;
 	}
 	return 0;
 }
@@ -207,17 +218,6 @@ cell AMX_NATIVE_CALL Natives::SetDynamicObjectNoCameraCol(AMX *amx, cell *params
 			}
 		}
 		return 1;
-	}
-	return 0;
-}
-
-cell AMX_NATIVE_CALL Natives::GetDynamicObjectNoCameraCol(AMX *amx, cell *params)
-{
-	CHECK_PARAMS(1, "GetDynamicObjectNoCameraCol");
-	boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[1]));
-	if (o != core->getData()->objects.end())
-	{
-		return o->second->noCameraCollision != 0;
 	}
 	return 0;
 }
