@@ -45,6 +45,7 @@ struct Player
 	int delayedCheckpoint;
 	int delayedRaceCheckpoint;
 	bool delayedUpdate;
+	bool delayedUpdateFreeze;
 	boost::chrono::steady_clock::time_point delayedUpdateTime;
 	int delayedUpdateType;
 	int interiorID;

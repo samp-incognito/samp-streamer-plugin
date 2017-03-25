@@ -170,7 +170,10 @@ void Streamer::startManualUpdate(Player &player, int type)
 	{
 		if (player.delayedUpdateTime.time_since_epoch() <= boost::chrono::steady_clock::now().time_since_epoch())
 		{
-			sampgdk::TogglePlayerControllable(player.playerID, true);
+			if (player.delayedUpdateFreeze)
+			{
+				sampgdk::TogglePlayerControllable(player.playerID, true);
+			}
 			player.delayedUpdate = false;
 		}
 	}
