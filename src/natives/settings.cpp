@@ -448,9 +448,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItemStatic(AMX *amx, cell *params
 	return 0;
 }
 
-cell AMX_NATIVE_CALL Natives::Streamer_ToggleItemAntiAreas(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL Natives::Streamer_ToggleItemInvAreas(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "Streamer_ToggleItemAntiAreas");
+	CHECK_PARAMS(3, "Streamer_ToggleItemInvAreas");
 	switch (static_cast<int>(params[1]))
 	{
 		case STREAMER_TYPE_OBJECT:
@@ -525,16 +525,16 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleItemAntiAreas(AMX *amx, cell *param
 		}
 		default:
 		{
-			Utility::logError("Streamer_ToggleItemAntiAreas: Invalid type specified");
+			Utility::logError("Streamer_ToggleItemInvAreas: Invalid type specified");
 			return 0;
 		}
 	}
 	return 0;
 }
 
-cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItemAntiAreas(AMX *amx, cell *params)
+cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItemInvAreas(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "Streamer_IsToggleItemAntiAreas");
+	CHECK_PARAMS(2, "Streamer_IsToggleItemInvAreas");
 	switch (static_cast<int>(params[1]))
 	{
 		case STREAMER_TYPE_OBJECT:
@@ -602,7 +602,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItemAntiAreas(AMX *amx, cell *par
 		}
 		default:
 		{
-			Utility::logError("Streamer_IsToggleItemAntiAreas: Invalid type specified");
+			Utility::logError("Streamer_IsToggleItemInvAreas: Invalid type specified");
 			return 0;
 		}
 	}
