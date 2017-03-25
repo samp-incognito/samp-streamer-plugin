@@ -346,8 +346,8 @@ namespace Item
 	{
 		Actor();
 
-		AMX *amx;
 		int actorID;
+		AMX *amx;
 		SharedCell cell;
 		float comparableStreamDistance;
 		float health;
