@@ -764,7 +764,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToVehicle(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::ToggleDynAreaSpectateMode(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "ToggleDynamicAreaSpectateMode");
+	CHECK_PARAMS(2, "ToggleDynAreaSpectateMode");
 	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
 	if (a != core->getData()->areas.end())
 	{
