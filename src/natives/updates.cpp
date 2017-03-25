@@ -131,7 +131,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_Update(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_UpdateEx(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(8, "Streamer_UpdateEx");
+	CHECK_PARAMS(9, "Streamer_UpdateEx");
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
