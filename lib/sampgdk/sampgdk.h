@@ -498,7 +498,8 @@ SAMPGDK_API(cell, sampgdk_InvokeNativeArray(AMX_NATIVE native,
     const char *format, void **args));
 
 /**
- * \brief Gets called on every public function call
+ * \brief A generic catch-all callback that gets called whenever some
+ * AMX public function is executed
  *
  * This is the publics "filter" callback. It is called whenever the
  * server calls \c amx_Exec(), which practically means that you can
@@ -512,10 +513,31 @@ SAMPGDK_API(cell, sampgdk_InvokeNativeArray(AMX_NATIVE native,
  *        by \c sizeof(cell)
  * \param retval where to store the return value (can be \c NULL)
  *
- * \returns \c true if the callback is allowed to execute
+ * \returns \c true if the public is allowed to execute
  */
 SAMPGDK_CALLBACK(bool, OnPublicCall(AMX *amx, const char *name,
     cell *params, cell *retval));
+
+/**
+ * \brief A generic catch-all callback that gets called whenever some
+ * AMX public function is executed
+ *
+ * This callback is similar to \c OnPublicCall but also allows you to
+ * stop the call from being propagated to other plugins or the gamemode
+ * by setting the \c stop parameter to \c true.
+ *
+ * \param amx AMX on which the function is called
+ * \param name function name
+ * \param params function arguments as stored on the AMX stack, with
+ *        \c params[0] being set to the number of arguments multiplied
+ *        by \c sizeof(cell)
+ * \param retval where to store the return value (can be \c NULL)
+ * \param stop whether to stop public call propagation (\c false by default)
+ *
+ * \returns \c true if the public is allowed to execute
+ */
+SAMPGDK_CALLBACK(bool, OnPublicCall2(AMX *amx, const char *name,
+    cell *params, cell *retval, bool *stop));
 
 /** @} */
 
@@ -792,24 +814,24 @@ inline void vlogprintf(const char *format, va_list args) {
 /**
  * \brief Minor version
  */
-#define SAMPGDK_VERSION_MINOR 4
+#define SAMPGDK_VERSION_MINOR 5
 
 /**
  * \brief Patch version
  */
-#define SAMPGDK_VERSION_PATCH 0
+#define SAMPGDK_VERSION_PATCH 2
 
 /**
  * \brief Library version number in the form of \c 0xAABBCC00 where
  * \c AA, \c BB and \c CC are the major, minor and patch numbers
  */
-#define SAMPGDK_VERSION_ID 67371008
+#define SAMPGDK_VERSION_ID 67437056
 
 /**
  * \brief Library version string in the form of \c x.y.z where \c x,
  * \c y and \c z are the major, minor and patch numbers
  */
-#define SAMPGDK_VERSION_STRING "4.4.0"
+#define SAMPGDK_VERSION_STRING "4.5.2"
 
 /**
  * \brief Gets library version number

@@ -23,44 +23,50 @@ namespace boost { namespace geometry
 namespace detail { namespace overlay { namespace sort_by_side
 {
 
-enum index_type { index_unknown = -1, index_from = 0, index_to = 1 };
+enum direction_type { dir_unknown = -1, dir_from = 0, dir_to = 1 };
 
 // Point-wrapper, adding some properties
 template <typename Point>
 struct ranked_point
 {
     ranked_point()
-        : main_rank(0)
+        : rank(0)
         , turn_index(-1)
-        , op_index(-1)
-        , index(index_unknown)
-        , left_count(0)
-        , right_count(0)
+        , operation_index(-1)
+        , direction(dir_unknown)
+        , count_left(0)
+        , count_right(0)
         , operation(operation_none)
+        , only_turn_on_ring(false)
     {}
 
-    ranked_point(const Point& p, signed_size_type ti, signed_size_type oi,
-                 index_type i, operation_type op, segment_identifier sid)
+    template <typename Op>
+    ranked_point(const Point& p, signed_size_type ti, int oi,
+                 direction_type d, Op op)
         : point(p)
-        , main_rank(0)
+        , rank(0)
+        , zone(-1)
         , turn_index(ti)
-        , op_index(oi)
-        , index(i)
-        , left_count(0)
-        , right_count(0)
-        , operation(op)
-        , seg_id(sid)
+        , operation_index(oi)
+        , direction(d)
+        , count_left(0)
+        , count_right(0)
+        , operation(op.operation)
+        , seg_id(op.seg_id)
+        , only_turn_on_ring(op.enriched.only_turn_on_ring)
     {}
 
     Point point;
-    std::size_t main_rank;
+    std::size_t rank;
+    signed_size_type zone; // index of closed zone, in uu turn there would be 2 zones
     signed_size_type turn_index;
-    signed_size_type op_index;
-    index_type index;
-    std::size_t left_count;
-    std::size_t right_count;
+    int operation_index; // 0,1
+    direction_type direction;
+    std::size_t count_left;
+    std::size_t count_right;
     operation_type operation;
     segment_identifier seg_id;
+    bool only_turn_on_ring;
 };
 
 struct less_by_turn_index
@@ -81,9 +87,9 @@ struct less_by_index
     inline bool operator()(const T& first, const T& second) const
     {
         // First order by from/to
-        if (first.index != second.index)
+        if (first.direction != second.direction)
         {
-            return first.index < second.index;
+            return first.direction < second.direction;
         }
         // All the same, order by turn index (we might consider length too)
         return first.turn_index < second.turn_index;
@@ -179,11 +185,36 @@ private :
     Point m_p1, m_p2;
 };
 
+// Sorts vectors in counter clockwise order (by default)
 template <bool Reverse1, bool Reverse2, typename Point, typename Compare>
 struct side_sorter
 {
     typedef ranked_point<Point> rp;
 
+private :
+    struct include_union
+    {
+        inline bool operator()(rp const& ranked_point) const
+        {
+            // New candidate if there are no polygons on left side,
+            // but there are on right side
+            return ranked_point.count_left == 0
+                && ranked_point.count_right > 0;
+        }
+    };
+
+    struct include_intersection
+    {
+        inline bool operator()(rp const& ranked_point) const
+        {
+            // New candidate if there are two polygons on right side,
+            // and less on the left side
+            return ranked_point.count_left < 2
+                && ranked_point.count_right >= 2;
+        }
+    };
+
+public :
     inline void set_origin(Point const& origin)
     {
         m_origin = origin;
@@ -200,8 +231,8 @@ struct side_sorter
                 op.seg_id, point1, point2, point3);
         Point const& point_to = op.fraction.is_one() ? point3 : point2;
 
-        m_ranked_points.push_back(rp(point1, turn_index, op_index, index_from, op.operation, op.seg_id));
-        m_ranked_points.push_back(rp(point_to, turn_index, op_index, index_to, op.operation, op.seg_id));
+        m_ranked_points.push_back(rp(point1, turn_index, op_index, dir_from, op));
+        m_ranked_points.push_back(rp(point_to, turn_index, op_index, dir_to, op));
 
         if (is_origin)
         {
@@ -233,7 +264,7 @@ struct side_sorter
                 colinear_rank++;
             }
 
-            m_ranked_points[i].main_rank = colinear_rank;
+            m_ranked_points[i].rank = colinear_rank;
         }
     }
 
@@ -243,7 +274,7 @@ struct side_sorter
         for (std::size_t i = 0; i < m_ranked_points.size(); i++)
         {
             const rp& ranked = m_ranked_points[i];
-            if (ranked.index != index_from)
+            if (ranked.direction != dir_from)
             {
                 continue;
             }
@@ -299,25 +330,25 @@ struct side_sorter
             return;
         }
 
-        int const last = 1 + m_ranked_points.back().main_rank;
+        std::size_t const last = 1 + m_ranked_points.back().rank;
 
-        // Move iterator after main_rank==0
+        // Move iterator after rank==0
         bool has_first = false;
         typename container_type::iterator it = m_ranked_points.begin() + 1;
-        for (; it != m_ranked_points.end() && it->main_rank == 0; ++it)
+        for (; it != m_ranked_points.end() && it->rank == 0; ++it)
         {
             has_first = true;
         }
 
         if (has_first)
         {
-            // Reverse first part (having main_rank == 0), if any,
+            // Reverse first part (having rank == 0), if any,
             // but skip the very first row
             std::reverse(m_ranked_points.begin() + 1, it);
             for (typename container_type::iterator fit = m_ranked_points.begin();
                  fit != it; ++fit)
             {
-                BOOST_ASSERT(fit->main_rank == 0);
+                BOOST_ASSERT(fit->rank == 0);
             }
         }
 
@@ -325,12 +356,12 @@ struct side_sorter
         std::reverse(it, m_ranked_points.end());
         for (; it != m_ranked_points.end(); ++it)
         {
-            BOOST_ASSERT(it->main_rank > 0);
-            it->main_rank = last - it->main_rank;
+            BOOST_ASSERT(it->rank > 0);
+            it->rank = last - it->rank;
         }
     }
 
-//protected :
+//private :
 
     typedef std::vector<rp> container_type;
     container_type m_ranked_points;
@@ -338,6 +369,26 @@ struct side_sorter
 
 private :
 
+    //! Check how many open spaces there are
+    template <typename Include>
+    inline std::size_t open_count(Include const& include_functor) const
+    {
+        std::size_t result = 0;
+        std::size_t last_rank = 0;
+        for (std::size_t i = 0; i < m_ranked_points.size(); i++)
+        {
+            rp const& ranked_point = m_ranked_points[i];
+
+            if (ranked_point.rank > last_rank
+                && ranked_point.direction == sort_by_side::dir_to
+                && include_functor(ranked_point))
+            {
+                result++;
+                last_rank = ranked_point.rank;
+            }
+        }
+        return result;
+    }
 
     std::size_t move(std::size_t index) const
     {
@@ -366,19 +417,19 @@ private :
             // if min=5,max=2: assign from 5,6,7,1,2
             bool const in_range
                 = max_rank >= min_rank
-                ? ranked.main_rank >= min_rank && ranked.main_rank <= max_rank
-                : ranked.main_rank >= min_rank || ranked.main_rank <= max_rank
+                ? ranked.rank >= min_rank && ranked.rank <= max_rank
+                : ranked.rank >= min_rank || ranked.rank <= max_rank
                 ;
 
             if (in_range)
             {
                 if (side_index == 1)
                 {
-                    ranked.left_count++;
+                    ranked.count_left++;
                 }
                 else if (side_index == 2)
                 {
-                    ranked.right_count++;
+                    ranked.count_right++;
                 }
             }
         }
@@ -389,8 +440,8 @@ private :
                 std::size_t start_index)
     {
         int state = 1; // 'closed', because start_index is "from", arrives at the turn
-        std::size_t last_from_rank = m_ranked_points[start_index].main_rank;
-        std::size_t previous_rank = m_ranked_points[start_index].main_rank;
+        std::size_t last_from_rank = m_ranked_points[start_index].rank;
+        std::size_t previous_rank = m_ranked_points[start_index].rank;
 
         for (std::size_t index = move<Member>(the_index, start_index);
              ;
@@ -398,7 +449,7 @@ private :
         {
             rp& ranked = m_ranked_points[index];
 
-            if (ranked.main_rank != previous_rank && state == 0)
+            if (ranked.rank != previous_rank && state == 0)
             {
                 assign_ranks(last_from_rank, previous_rank - 1, 1);
                 assign_ranks(last_from_rank + 1, previous_rank, 2);
@@ -409,19 +460,107 @@ private :
                 return;
             }
 
-            if (ranked.index == index_from)
+            if (ranked.direction == dir_from)
             {
-                last_from_rank = ranked.main_rank;
+                last_from_rank = ranked.rank;
                 state++;
             }
-            else if (ranked.index == index_to)
+            else if (ranked.direction == dir_to)
             {
                 state--;
             }
 
-            previous_rank = ranked.main_rank;
+            previous_rank = ranked.rank;
         }
     }
+
+    //! Find closed zones and assign it
+    template <typename Include>
+    std::size_t assign_zones(Include const& include_functor)
+    {
+        // Find a starting point (the first rank after an outgoing rank
+        // with no polygons on the left side)
+        std::size_t start_rank = m_ranked_points.size() + 1;
+        std::size_t start_index = 0;
+        std::size_t max_rank = 0;
+        for (std::size_t i = 0; i < m_ranked_points.size(); i++)
+        {
+            rp const& ranked_point = m_ranked_points[i];
+            if (ranked_point.rank > max_rank)
+            {
+                max_rank = ranked_point.rank;
+            }
+            if (ranked_point.direction == sort_by_side::dir_to
+                && include_functor(ranked_point))
+            {
+                start_rank = ranked_point.rank + 1;
+            }
+            if (ranked_point.rank == start_rank && start_index == 0)
+            {
+                start_index = i;
+            }
+        }
+
+        // Assign the zones
+        std::size_t const undefined_rank = max_rank + 1;
+        std::size_t zone_id = 0;
+        std::size_t last_rank = 0;
+        std::size_t rank_at_next_zone = undefined_rank;
+        std::size_t index = start_index;
+        for (std::size_t i = 0; i < m_ranked_points.size(); i++)
+        {
+            rp& ranked_point = m_ranked_points[index];
+
+            // Implement cyclic behavior
+            index++;
+            if (index == m_ranked_points.size())
+            {
+                index = 0;
+            }
+
+            if (ranked_point.rank != last_rank)
+            {
+                if (ranked_point.rank == rank_at_next_zone)
+                {
+                    zone_id++;
+                    rank_at_next_zone = undefined_rank;
+                }
+
+                if (ranked_point.direction == sort_by_side::dir_to
+                    && include_functor(ranked_point))
+                {
+                    rank_at_next_zone = ranked_point.rank + 1;
+                    if (rank_at_next_zone > max_rank)
+                    {
+                        rank_at_next_zone = 0;
+                    }
+                }
+
+                last_rank = ranked_point.rank;
+            }
+
+            ranked_point.zone = zone_id;
+        }
+        return zone_id;
+    }
+
+public :
+    inline std::size_t open_count(operation_type for_operation) const
+    {
+        return for_operation == operation_union
+            ? open_count(include_union())
+            : open_count(include_intersection())
+            ;
+    }
+
+    inline std::size_t assign_zones(operation_type for_operation)
+    {
+        return for_operation == operation_union
+            ? assign_zones(include_union())
+            : assign_zones(include_intersection())
+            ;
+    }
+
 };
 
 
