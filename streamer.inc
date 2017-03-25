@@ -348,20 +348,20 @@ native IsToggleDynAreaSpectateMode(STREAMER_TAG_AREA areaid);
 
 // Natives (Actors)
 
-native STREAMER_TAG_ACTOR CreateDynamicActor(modelid, Float:x, Float:y, Float:z, Float:r, bool:invulnerable = true, Float:health = 100.0, worldid = -1, interiorid = -1, playerid = -1, Float:streamdistance = STREAMER_ACTOR_SD, STREAMER_TAG_AREA areaid = STREAMER_TAG_AREA -1, priority = 0);
+native STREAMER_TAG_ACTOR CreateDynamicActor(modelid, Float:x, Float:y, Float:z, Float:r, invulnerable = 1, Float:health = 100.0, worldid = -1, interiorid = -1, playerid = -1, Float:streamdistance = STREAMER_ACTOR_SD, STREAMER_TAG_AREA areaid = STREAMER_TAG_AREA -1, priority = 0);
 native DestroyDynamicActor(STREAMER_TAG_ACTOR actorid);
 native IsValidDynamicActor(STREAMER_TAG_ACTOR actorid);
-native ApplyDynamicActorAnimation(STREAMER_TAG_ACTOR actorid, animlib[], animname[], Float:fDelta, loop, lockx, locky, freeze, time);
+native ApplyDynamicActorAnimation(STREAMER_TAG_ACTOR actorid, animlib[], animname[], Float:fdelta, loop, lockx, locky, freeze, time);
 native ClearDynamicActorAnimations(STREAMER_TAG_ACTOR actorid);
 native GetPlayerTargetDynamicActor(playerid);
 native SetDynamicActorFacingAngle(STREAMER_TAG_ACTOR actorid, Float:ang);
 native SetDynamicActorHealth(STREAMER_TAG_ACTOR actorid, Float:health);
-native SetDynamicActorInvulnerable(STREAMER_TAG_ACTOR actorid, invulnerable = true);
-native SetDynamicActorPos(STREAMER_TAG_ACTOR actorid, Float:X, Float:Y, Float:Z);
+native SetDynamicActorInvulnerable(STREAMER_TAG_ACTOR actorid, invulnerable = 1);
+native SetDynamicActorPos(STREAMER_TAG_ACTOR actorid, Float:x, Float:y, Float:z);
 native SetDynamicActorVirtualWorld(STREAMER_TAG_ACTOR actorid, vworld);
 native GetDynamicActorFacingAngle(STREAMER_TAG_ACTOR actorid, &Float:ang);
 native GetDynamicActorHealth(STREAMER_TAG_ACTOR actorid, &Float:health);
-native GetDynamicActorPos(STREAMER_TAG_ACTOR actorid, &Float:X, &Float:Y, &Float:Z);
+native GetDynamicActorPos(STREAMER_TAG_ACTOR actorid, &Float:x, &Float:y, &Float:z);
 native GetDynamicActorVirtualWorld(STREAMER_TAG_ACTOR actorid);
 native IsDynamicActorInvulnerable(STREAMER_TAG_ACTOR actorid);
 native IsDynamicActorStreamedIn(STREAMER_TAG_ACTOR actorid, forplayerid);

@@ -343,7 +343,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleItemStatic(AMX *amx, cell *params)
 		}
 		default:
 		{
-			Utility::logError("Streamer_ToggleStaticItem: Invalid type specified");
+			Utility::logError("Streamer_ToggleItemStatic: Invalid type specified");
 			return 0;
 		}
 	}
@@ -441,7 +441,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItemStatic(AMX *amx, cell *params
 		}
 		default:
 		{
-			Utility::logError("Streamer_IsToggleStaticItem: Invalid type specified");
+			Utility::logError("Streamer_IsToggleItemStatic: Invalid type specified");
 			return 0;
 		}
 	}

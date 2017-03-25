@@ -347,35 +347,35 @@ namespace Item
 		Actor();
 
 		AMX *amx;
+		int actorID;
 		SharedCell cell;
 		float comparableStreamDistance;
+		float health;
 		bool inverseAreaChecking;
+		bool invulnerable;
 		int modelID;
 		float originalComparableStreamDistance;
-		int actorID;
 		Eigen::Vector3f position;
 		Eigen::Vector3f positionOffset;
-		float rotation;
 		int priority;
 		int references;
+		float rotation;
 		float streamDistance;
-		bool invulnerable;
-		float health;
 		int worldID;
 
 		struct Anim
 		{
 			Anim();
 
-			std::string lib;
-			std::string name;
 			float delta;
+			bool freeze;
+			std::string lib;
 			bool loop;
 			bool lockx;
 			bool locky;
-			bool freeze;
-			int time;
+			std::string name;
 			int references;
+			int time;
 		};
 
 		boost::intrusive_ptr<Anim> anim;
