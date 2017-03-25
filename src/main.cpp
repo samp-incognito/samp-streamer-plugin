@@ -146,16 +146,12 @@ AMX_NATIVE_INFO natives[] =
 	{ "CreateDynamicCP", Natives::CreateDynamicCP },
 	{ "DestroyDynamicCP", Natives::DestroyDynamicCP },
 	{ "IsValidDynamicCP", Natives::IsValidDynamicCP },
-	{ "TogglePlayerDynamicCP", Natives::TogglePlayerDynamicCP },
-	{ "TogglePlayerAllDynamicCPs", Natives::TogglePlayerAllDynamicCPs },
 	{ "IsPlayerInDynamicCP", Natives::IsPlayerInDynamicCP },
 	{ "GetPlayerVisibleDynamicCP", Natives::GetPlayerVisibleDynamicCP },
 	// Race Checkpoints
 	{ "CreateDynamicRaceCP", Natives::CreateDynamicRaceCP },
 	{ "DestroyDynamicRaceCP", Natives::DestroyDynamicRaceCP },
 	{ "IsValidDynamicRaceCP", Natives::IsValidDynamicRaceCP },
-	{ "TogglePlayerDynamicRaceCP", Natives::TogglePlayerDynamicRaceCP },
-	{ "TogglePlayerAllDynamicRaceCPs", Natives::TogglePlayerAllDynamicRaceCPs },
 	{ "IsPlayerInDynamicRaceCP", Natives::IsPlayerInDynamicRaceCP },
 	{ "GetPlayerVisibleDynamicRaceCP", Natives::GetPlayerVisibleDynamicRaceCP },
 	// Map Icons
@@ -180,8 +176,6 @@ AMX_NATIVE_INFO natives[] =
 	{ "IsValidDynamicArea", Natives::IsValidDynamicArea },
 	{ "GetDynamicPolygonPoints", Natives::GetDynamicPolygonPoints },
 	{ "GetDynamicPolygonNumberPoints", Natives::GetDynamicPolygonNumberPoints },
-	{ "TogglePlayerDynamicArea", Natives::TogglePlayerDynamicArea },
-	{ "TogglePlayerAllDynamicAreas", Natives::TogglePlayerAllDynamicAreas },
 	{ "IsPlayerInDynamicArea", Natives::IsPlayerInDynamicArea },
 	{ "IsPlayerInAnyDynamicArea", Natives::IsPlayerInAnyDynamicArea },
 	{ "IsAnyPlayerInDynamicArea", Natives::IsAnyPlayerInDynamicArea },
@@ -199,6 +193,8 @@ AMX_NATIVE_INFO natives[] =
 	{ "AttachDynamicAreaToObject", Natives::AttachDynamicAreaToObject },
 	{ "AttachDynamicAreaToPlayer", Natives::AttachDynamicAreaToPlayer },
 	{ "AttachDynamicAreaToVehicle", Natives::AttachDynamicAreaToVehicle },
+	{ "ToggleDynAreaSpectateMode", Natives::ToggleDynAreaSpectateMode},
+	{ "IsToggleDynAreaSpectateMode", Natives::IsToggleDynAreaSpectateMode },
 	// Actors
 	{ "CreateDynamicActor", Natives::CreateDynamicActor },
 	{ "DestroyDynamicActor", Natives::DestroyDynamicActor },
@@ -254,6 +250,12 @@ AMX_NATIVE_INFO natives[] =
 	{ "CountDynamic3DTextLabels", Natives::CountDynamic3DTextLabels },
 	{ "DestroyAllDynamicAreas", Natives::DestroyAllDynamicAreas },
 	{ "CountDynamicAreas", Natives::CountDynamicAreas },
+	{ "TogglePlayerDynamicCP", Natives::TogglePlayerDynamicCP },
+	{ "TogglePlayerAllDynamicCPs", Natives::TogglePlayerAllDynamicCPs },
+	{ "TogglePlayerDynamicRaceCP", Natives::TogglePlayerDynamicRaceCP },
+	{ "TogglePlayerAllDynamicRaceCPs", Natives::TogglePlayerAllDynamicRaceCPs },
+	{ "TogglePlayerDynamicArea", Natives::TogglePlayerDynamicArea },
+	{ "TogglePlayerAllDynamicAreas", Natives::TogglePlayerAllDynamicAreas },
 	{ 0, 0 }
 };
 

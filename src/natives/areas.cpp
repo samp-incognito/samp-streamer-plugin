@@ -91,6 +91,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicSphere(AMX *amx, cell *params)
 	Item::SharedArea area(new Item::Area);
 	area->amx = amx;
 	area->areaID = areaID;
+	area->spectateMode = true;
 	area->type = STREAMER_AREA_TYPE_SPHERE;
 	area->position = Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]));
 	area->comparableSize = amx_ctof(params[4]) * amx_ctof(params[4]);
@@ -115,6 +116,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicRectangle(AMX *amx, cell *params)
 	Item::SharedArea area(new Item::Area);
 	area->amx = amx;
 	area->areaID = areaID;
+	area->spectateMode = true;
 	area->type = STREAMER_AREA_TYPE_RECTANGLE;
 	area->position = Box2D(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), Eigen::Vector2f(amx_ctof(params[3]), amx_ctof(params[4])));
 	boost::geometry::correct(boost::get<Box2D>(area->position));
@@ -140,6 +142,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCuboid(AMX *amx, cell *params)
 	Item::SharedArea area(new Item::Area);
 	area->amx = amx;
 	area->areaID = areaID;
+	area->spectateMode = true;
 	area->type = STREAMER_AREA_TYPE_CUBOID;
 	area->position = Box3D(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), Eigen::Vector3f(amx_ctof(params[4]), amx_ctof(params[5]), amx_ctof(params[6])));
 	boost::geometry::correct(boost::get<Box3D>(area->position));
@@ -170,6 +173,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPolygon(AMX *amx, cell *params)
 	Item::SharedArea area(new Item::Area);
 	area->amx = amx;
 	area->areaID = areaID;
+	area->spectateMode = true;
 	area->type = STREAMER_AREA_TYPE_POLYGON;
 	Utility::convertArrayToPolygon(amx, params[1], params[4], boost::get<Polygon2D>(area->position));
 	area->height = Eigen::Vector2f(amx_ctof(params[2]), amx_ctof(params[3]));
@@ -754,6 +758,29 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToVehicle(AMX *amx, cell *params)
 			}
 		}
 		return 1;
+	}
+	return 0;
+}
+
+cell AMX_NATIVE_CALL Natives::ToggleDynAreaSpectateMode(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2, "ToggleDynamicAreaSpectateMode");
+	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
+	if (a != core->getData()->areas.end())
+	{
+		a->second->spectateMode = static_cast<int>(params[2]) != 0;
+		return 1;
+	}
+	return 0;
+}
+
+cell AMX_NATIVE_CALL Natives::IsToggleDynAreaSpectateMode(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "IsToggleDynAreaSpectateMode");
+	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
+	if (a != core->getData()->areas.end())
+	{
+		return static_cast<cell>(a->second->spectateMode != 0);
 	}
 	return 0;
 }

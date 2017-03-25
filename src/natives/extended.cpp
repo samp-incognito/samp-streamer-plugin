@@ -231,6 +231,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCircleEx(AMX *amx, cell *params)
 	Item::SharedArea area(new Item::Area);
 	area->amx = amx;
 	area->areaID = areaID;
+	area->spectateMode = true;
 	area->type = STREAMER_AREA_TYPE_CIRCLE;
 	area->position = Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2]));
 	area->comparableSize = amx_ctof(params[3]) * amx_ctof(params[3]);
@@ -255,6 +256,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCylinderEx(AMX *amx, cell *params)
 	Item::SharedArea area(new Item::Area);
 	area->amx = amx;
 	area->areaID = areaID;
+	area->spectateMode = true;
 	area->type = STREAMER_AREA_TYPE_CYLINDER;
 	area->position = Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2]));
 	area->height = Eigen::Vector2f(amx_ctof(params[3]), amx_ctof(params[4]));
@@ -280,6 +282,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicSphereEx(AMX *amx, cell *params)
 	Item::SharedArea area(new Item::Area);
 	area->amx = amx;
 	area->areaID = areaID;
+	area->spectateMode = true;
 	area->type = STREAMER_AREA_TYPE_SPHERE;
 	area->position = Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]));
 	area->comparableSize = amx_ctof(params[4]) * amx_ctof(params[4]);
@@ -304,6 +307,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicRectangleEx(AMX *amx, cell *params)
 	Item::SharedArea area(new Item::Area);
 	area->amx = amx;
 	area->areaID = areaID;
+	area->spectateMode = true;
 	area->type = STREAMER_AREA_TYPE_RECTANGLE;
 	area->position = Box2D(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), Eigen::Vector2f(amx_ctof(params[3]), amx_ctof(params[4])));
 	boost::geometry::correct(boost::get<Box2D>(area->position));
@@ -329,6 +333,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCuboidEx(AMX *amx, cell *params)
 	Item::SharedArea area(new Item::Area);
 	area->amx = amx;
 	area->areaID = areaID;
+	area->spectateMode = true;
 	area->type = STREAMER_AREA_TYPE_CUBOID;
 	area->position = Box3D(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), Eigen::Vector3f(amx_ctof(params[4]), amx_ctof(params[5]), amx_ctof(params[6])));
 	boost::geometry::correct(boost::get<Box3D>(area->position));
@@ -358,6 +363,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPolygonEx(AMX *amx, cell *params)
 	Item::SharedArea area(new Item::Area);
 	area->amx = amx;
 	area->areaID = areaID;
+	area->spectateMode = true;
 	area->type = STREAMER_AREA_TYPE_POLYGON;
 	Utility::convertArrayToPolygon(amx, params[1], params[4], boost::get<Polygon2D>(area->position));
 	area->height = Eigen::Vector2f(amx_ctof(params[2]), amx_ctof(params[3]));

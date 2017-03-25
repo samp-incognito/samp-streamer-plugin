@@ -323,7 +323,7 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 	{
 		core->getGrid()->findAllCellsForPlayer(player, cells);
 	}
-	else
+	else if (automatic)
 	{
 		core->getGrid()->findMinimalCellsForPlayer(player, cells);
 	}
@@ -335,79 +335,88 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 		}
 		for (std::vector<int>::const_iterator t = core->getData()->typePriority.begin(); t != core->getData()->typePriority.end(); ++t)
 		{
-			switch (*t)
+			if (update)
 			{
-				case STREAMER_TYPE_OBJECT:
+				switch (*t)
 				{
-					if (update && !core->getData()->objects.empty() && player.enabledItems[STREAMER_TYPE_OBJECT] && !sampgdk::IsPlayerNPC(player.playerID))
+					case STREAMER_TYPE_OBJECT:
 					{
-						discoverObjects(player, cells);
-					}
-					break;
-				}
-				case STREAMER_TYPE_PICKUP:
-				{
-					if (automatic && !core->getData()->pickups.empty() && (player.enabledItems[STREAMER_TYPE_PICKUP]))
-					{
-						discoverPickups(player, cells);
-					}
-					break;
-				}
-				case STREAMER_TYPE_CP:
-				{
-					if (update && !core->getData()->checkpoints.empty() && player.enabledItems[STREAMER_TYPE_CP])
-					{
-						processCheckpoints(player, cells);
-					}
-					break;
-				}
-				case STREAMER_TYPE_RACE_CP:
-				{
-					if (update && !core->getData()->raceCheckpoints.empty() && player.enabledItems[STREAMER_TYPE_RACE_CP])
-					{
-						processRaceCheckpoints(player, cells);
-					}
-					break;
-				}
-				case STREAMER_TYPE_MAP_ICON:
-				{
-					if (update && !core->getData()->mapIcons.empty() && player.enabledItems[STREAMER_TYPE_MAP_ICON] && !sampgdk::IsPlayerNPC(player.playerID))
-					{
-						discoverMapIcons(player, cells);
-					}
-					break;
-				}
-				case STREAMER_TYPE_3D_TEXT_LABEL:
-				{
-					if (update && !core->getData()->textLabels.empty() && player.enabledItems[STREAMER_TYPE_3D_TEXT_LABEL] && !sampgdk::IsPlayerNPC(player.playerID))
-					{
-						discoverTextLabels(player, cells);
-					}
-					break;
-				}
-				case STREAMER_TYPE_AREA:
-				{
-					if (update && !core->getData()->areas.empty() && player.enabledItems[STREAMER_TYPE_AREA])
-					{
-						if (!delta.isZero())
+						if (!core->getData()->objects.empty() && player.enabledItems[STREAMER_TYPE_OBJECT] && !sampgdk::IsPlayerNPC(player.playerID))
 						{
-							player.position = position;
+							discoverObjects(player, cells);
 						}
-						processAreas(player, cells);
-						if (!delta.isZero())
-						{
-							player.position += delta;
-						}
+						break;
 					}
-					break;
-				}
-				case STREAMER_TYPE_ACTOR:
-				{
-					if (automatic && !core->getData()->actors.empty() && (player.enabledItems[STREAMER_TYPE_ACTOR]))
+					case STREAMER_TYPE_CP:
 					{
-						discoverActors(player, cells);
+						if (!core->getData()->checkpoints.empty() && player.enabledItems[STREAMER_TYPE_CP])
+						{
+							processCheckpoints(player, cells);
+						}
+						break;
 					}
-					break;
+					case STREAMER_TYPE_RACE_CP:
+					{
+						if (!core->getData()->raceCheckpoints.empty() && player.enabledItems[STREAMER_TYPE_RACE_CP])
+						{
+							processRaceCheckpoints(player, cells);
+						}
+						break;
+					}
+					case STREAMER_TYPE_MAP_ICON:
+					{
+						if (!core->getData()->mapIcons.empty() && player.enabledItems[STREAMER_TYPE_MAP_ICON] && !sampgdk::IsPlayerNPC(player.playerID))
+						{
+							discoverMapIcons(player, cells);
+						}
+						break;
+					}
+					case STREAMER_TYPE_3D_TEXT_LABEL:
+					{
+						if (!core->getData()->textLabels.empty() && player.enabledItems[STREAMER_TYPE_3D_TEXT_LABEL] && !sampgdk::IsPlayerNPC(player.playerID))
+						{
+							discoverTextLabels(player, cells);
+						}
+						break;
+					}
+					case STREAMER_TYPE_AREA:
+					{
+						if (!core->getData()->areas.empty() && player.enabledItems[STREAMER_TYPE_AREA])
+						{
+							if (!delta.isZero())
+							{
+								player.position = position;
+							}
+							processAreas(player, cells);
+							if (!delta.isZero())
+							{
+								player.position += delta;
+							}
+						}
+						break;
+					}
+				}
+			}
+			else if (automatic)
+			{
+				switch (*t)
+				{
+					case STREAMER_TYPE_PICKUP:
+					{
+						if (!core->getData()->pickups.empty() && player.enabledItems[STREAMER_TYPE_PICKUP])
+						{
+							discoverPickups(player, cells);
+						}
+						break;
+					}
+					case STREAMER_TYPE_ACTOR:
+					{
+						if (!core->getData()->actors.empty() && player.enabledItems[STREAMER_TYPE_ACTOR])
+						{
+							discoverActors(player, cells);
+						}
+						break;
+					}
 				}
 			}
 		}
@@ -479,10 +488,11 @@ void Streamer::processAreas(Player &player, const std::vector<SharedCell> &cells
 {
 	for (std::vector<SharedCell>::const_iterator c = cells.begin(); c != cells.end(); ++c)
 	{
+		int state = sampgdk::GetPlayerState(player.playerID);
 		for (boost::unordered_map<int, Item::SharedArea>::const_iterator a = (*c)->areas.begin(); a != (*c)->areas.end(); ++a)
 		{
 			bool inArea = false;
-			if (doesPlayerSatisfyConditions(a->second->players, player.playerID, a->second->interiors, player.interiorID, a->second->worlds, player.worldID))
+			if (doesPlayerSatisfyConditions(a->second->players, player.playerID, a->second->interiors, player.interiorID, a->second->worlds, player.worldID) && ((!a->second->spectateMode && state != PLAYER_STATE_SPECTATING) || a->second->spectateMode))
 			{
 				inArea = Utility::isPointInArea(player.position, a->second);
 			}

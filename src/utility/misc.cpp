@@ -349,7 +349,7 @@ bool Utility::haveAllPlayersCheckedPickups()
 	{
 		for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 		{
-			if (!p->second.checkedPickups)
+			if (!p->second.checkedPickups && p->second.enabledItems[STREAMER_TYPE_PICKUP])
 			{
 				return false;
 			}
@@ -365,7 +365,7 @@ bool Utility::haveAllPlayersCheckedActors()
 	{
 		for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 		{
-			if (!p->second.checkedActors)
+			if (!p->second.checkedActors && p->second.enabledItems[STREAMER_TYPE_ACTOR])
 			{
 				return false;
 			}

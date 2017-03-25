@@ -49,6 +49,7 @@ namespace Item
 		int priority;
 		int references;
 		float size;
+		bool spectateMode;
 		int type;
 
 		boost::variant<Polygon2D, Box2D, Box3D, Eigen::Vector2f, Eigen::Vector3f> position;

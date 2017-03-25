@@ -343,6 +343,8 @@ native GetNumberDynamicAreasForLine(Float:x1, Float:y1, Float:z1, Float:x2, Floa
 native AttachDynamicAreaToObject(STREAMER_TAG_AREA areaid, STREAMER_TAG_OBJECT_ALT objectid, type = STREAMER_OBJECT_TYPE_DYNAMIC, playerid = INVALID_PLAYER_ID, Float:offsetx = 0.0, Float:offsety = 0.0, Float:offsetz = 0.0);
 native AttachDynamicAreaToPlayer(STREAMER_TAG_AREA areaid, playerid, Float:offsetx = 0.0, Float:offsety = 0.0, Float:offsetz = 0.0);
 native AttachDynamicAreaToVehicle(STREAMER_TAG_AREA areaid, vehicleid, Float:offsetx = 0.0, Float:offsety = 0.0, Float:offsetz = 0.0);
+native ToggleDynAreaSpectateMode(STREAMER_TAG_AREA areaid, toggle);
+native IsToggleDynAreaSpectateMode(STREAMER_TAG_AREA areaid);
 
 // Natives (Actors)
 
@@ -384,12 +386,13 @@ native STREAMER_TAG_ACTOR CreateDynamicActorEx(modelid, Float:x, Float:y, Float:
 
 // Natives (Deprecated)
 
+native Streamer_CallbackHook(callback, {Float,_}:...);
+
 native Streamer_TickRate(rate);
 native Streamer_MaxItems(type, items);
 native Streamer_VisibleItems(type, items, playerid = -1);
 native Streamer_CellDistance(Float:distance);
 native Streamer_CellSize(Float:size);
-native Streamer_CallbackHook(callback, {Float,_}:...);
 
 native DestroyAllDynamicObjects();
 native CountDynamicObjects();
