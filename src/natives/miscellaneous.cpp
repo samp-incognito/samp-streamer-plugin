@@ -1690,6 +1690,107 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 	return static_cast<cell>(finalItems.size());
 }
 
+cell AMX_NATIVE_CALL Natives::Streamer_GetAllVisibleItems(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(4, "Streamer_GetAllVisibleItems");
+	std::multimap<float, int> orderedItems;
+	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
+	if (p != core->getData()->players.end())
+	{
+		switch (static_cast<int>(params[2]))
+		{
+			case STREAMER_TYPE_OBJECT:
+			{
+				for (boost::unordered_map<int, int>::iterator i = p->second.internalObjects.begin(); i != p->second.internalObjects.end(); ++i)
+				{
+					boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(i->first);
+					if (o != core->getData()->objects.end())
+					{
+						float distance = 0.0f;
+						if (o->second->attach)
+						{
+							distance = static_cast<float>(boost::geometry::comparable_distance(p->second.position, o->second->attach->position));
+						}
+						else
+						{
+							distance = static_cast<float>(boost::geometry::comparable_distance(p->second.position, o->second->position));
+						}
+						orderedItems.insert(std::pair<float, int>(distance, o->first));
+					}
+				}
+				break;
+			}
+			case STREAMER_TYPE_PICKUP:
+			{
+				for (boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.begin(); i != core->getData()->internalPickups.end(); ++i)
+				{
+					boost::unordered_map<int, Item::SharedPickup>::iterator q = core->getData()->pickups.find(i->first);
+					if (q != core->getData()->pickups.end())
+					{
+						float distance = static_cast<float>(boost::geometry::comparable_distance(p->second.position, q->second->position));
+						orderedItems.insert(std::pair<float, int>(distance, q->first));
+					}
+				}
+				break;
+			}
+			case STREAMER_TYPE_MAP_ICON:
+			{
+				for (boost::unordered_map<int, int>::iterator i = p->second.internalMapIcons.begin(); i != p->second.internalMapIcons.end(); ++i)
+				{
+					boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(i->first);
+					if (m != core->getData()->mapIcons.end())
+					{
+						float distance = static_cast<float>(boost::geometry::comparable_distance(p->second.position, m->second->position));
+						orderedItems.insert(std::pair<float, int>(distance, m->first));
+					}
+				}
+				break;
+			}
+			case STREAMER_TYPE_3D_TEXT_LABEL:
+			{
+				for (boost::unordered_map<int, int>::iterator i = p->second.internalTextLabels.begin(); i != p->second.internalTextLabels.end(); ++i)
+				{
+					boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(i->first);
+					if (t != core->getData()->textLabels.end())
+					{
+						float distance = 0.0f;
+						if (t->second->attach)
+						{
+							distance = static_cast<float>(boost::geometry::comparable_distance(p->second.position, t->second->attach->position));
+						}
+						else
+						{
+							distance = static_cast<float>(boost::geometry::comparable_distance(p->second.position, t->second->position));
+						}
+						orderedItems.insert(std::pair<float, int>(distance, t->first));
+					}
+				}
+				break;
+			}
+			case STREAMER_TYPE_ACTOR:
+			{
+				for (boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
+				{
+					boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(i->first);
+					if (a != core->getData()->actors.end())
+					{
+						float distance = static_cast<float>(boost::geometry::comparable_distance(p->second.position, a->second->position));
+						orderedItems.insert(std::pair<float, int>(distance, a->first));
+					}
+				}
+				break;
+			}
+		}
+	}
+	std::vector<int> finalItems;
+	for (std::multimap<float, int>::iterator i = orderedItems.begin(); i != orderedItems.end(); ++i)
+	{
+		finalItems.push_back(i->second);
+	}
+	Utility::convertContainerToArray(amx, params[3], params[4], finalItems);
+	return static_cast<cell>(finalItems.size());
+}
+
 cell AMX_NATIVE_CALL Natives::Streamer_GetItemOffset(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(5, "Streamer_GetItemOffset");

@@ -104,6 +104,7 @@ namespace Natives
 	cell AMX_NATIVE_CALL Streamer_DestroyAllItems(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_CountItems(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_GetNearbyItems(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_GetAllVisibleItems(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_GetItemOffset(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_SetItemOffset(AMX *amx, cell *params);
 	// Objects

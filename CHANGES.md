@@ -12,7 +12,8 @@ v2.9.0
 - Added Streamer_OnItemStream(In/Out) and
   Streamer_(Is)ToggleItemCallbacks
 - Added actor streaming (thanks ziggi)
-- Added Streamer_GetNearbyItems (thanks Southclaws)
+- Added Streamer_GetNearbyItems (thanks Southclaws) and
+  Streamer_GetAllVisibleItems
 - Added Streamer_(Get/Set)ItemOffset
 - Added (Is)ToggleDynAreaSpectateMode
 - Added GetPlayerCameraTargetDynObject (thanks IstuntmanI)
