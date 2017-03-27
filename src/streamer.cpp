@@ -306,7 +306,10 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 			if (c != core->getData()->checkpoints.end())
 			{
 				sampgdk::SetPlayerCheckpoint(player.playerID, c->second->position[0], c->second->position[1], c->second->position[2], c->second->size);
-				streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_CP, c->first));
+				if (c->second->streamCallbacks)
+				{
+					streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_CP, c->first));
+				}
 				player.visibleCheckpoint = c->first;
 			}
 			player.delayedCheckpoint = 0;
@@ -317,7 +320,10 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 			if (r != core->getData()->raceCheckpoints.end())
 			{
 				sampgdk::SetPlayerRaceCheckpoint(player.playerID, r->second->type, r->second->position[0], r->second->position[1], r->second->position[2], r->second->next[0], r->second->next[1], r->second->next[2], r->second->size);
-				streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_RACE_CP, r->first));
+				if (r->second->streamCallbacks)
+				{
+					streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_RACE_CP, r->first));
+				}
 				player.visibleRaceCheckpoint = r->first;
 			}
 			player.delayedRaceCheckpoint = 0;
@@ -434,173 +440,209 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 
 void Streamer::executeCallbacks()
 {
-	for (std::multimap<int, boost::tuple<int, int> >::reverse_iterator c = areaLeaveCallbacks.rbegin(); c != areaLeaveCallbacks.rend(); ++c)
+	if (!areaLeaveCallbacks.empty())
 	{
-		boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(c->second.get<0>());
-		if (a != core->getData()->areas.end())
+		std::multimap<int, boost::tuple<int, int> > callbacks;
+		std::swap(areaLeaveCallbacks, callbacks);
+		for (std::multimap<int, boost::tuple<int, int> >::reverse_iterator c = callbacks.rbegin(); c != callbacks.rend(); ++c)
 		{
+			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(c->second.get<0>());
+			if (a != core->getData()->areas.end())
+			{
+				for (std::set<AMX*>::iterator i = core->getData()->interfaces.begin(); i != core->getData()->interfaces.end(); ++i)
+				{
+					int amxIndex = 0;
+					if (!amx_FindPublic(*i, "OnPlayerLeaveDynamicArea", &amxIndex))
+					{
+						amx_Push(*i, static_cast<cell>(c->second.get<0>()));
+						amx_Push(*i, static_cast<cell>(c->second.get<1>()));
+						amx_Exec(*i, NULL, amxIndex);
+					}
+				}
+			}
+		}
+	}
+	if (!areaEnterCallbacks.empty())
+	{
+		std::multimap<int, boost::tuple<int, int> > callbacks;
+		std::swap(areaEnterCallbacks, callbacks);
+		for (std::multimap<int, boost::tuple<int, int> >::reverse_iterator c = callbacks.rbegin(); c != callbacks.rend(); ++c)
+		{
+			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(c->second.get<0>());
+			if (a != core->getData()->areas.end())
+			{
+				for (std::set<AMX*>::iterator i = core->getData()->interfaces.begin(); i != core->getData()->interfaces.end(); ++i)
+				{
+					int amxIndex = 0;
+					if (!amx_FindPublic(*i, "OnPlayerEnterDynamicArea", &amxIndex))
+					{
+						amx_Push(*i, static_cast<cell>(c->second.get<0>()));
+						amx_Push(*i, static_cast<cell>(c->second.get<1>()));
+						amx_Exec(*i, NULL, amxIndex);
+					}
+				}
+			}
+		}
+	}
+	if (!objectMoveCallbacks.empty())
+	{
+		std::vector<int> callbacks;
+		std::swap(objectMoveCallbacks, callbacks);
+		for (std::vector<int>::const_iterator c = callbacks.begin(); c != callbacks.end(); ++c)
+		{
+			boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(*c);
+			if (o != core->getData()->objects.end())
+			{
+				for (std::set<AMX*>::iterator i = core->getData()->interfaces.begin(); i != core->getData()->interfaces.end(); ++i)
+				{
+					int amxIndex = 0;
+					if (!amx_FindPublic(*i, "OnDynamicObjectMoved", &amxIndex))
+					{
+						amx_Push(*i, static_cast<cell>(*c));
+						amx_Exec(*i, NULL, amxIndex);
+					}
+				}
+			}
+		}
+	}
+	if (!streamInCallbacks.empty())
+	{
+		std::vector<boost::tuple<int, int> > callbacks;
+		std::swap(streamInCallbacks, callbacks);
+		for (std::vector<boost::tuple<int, int> >::const_iterator c = callbacks.begin(); c != callbacks.end(); ++c)
+		{
+			switch (c->get<0>())
+			{
+				case STREAMER_TYPE_OBJECT:
+				{
+					if (core->getData()->objects.find(c->get<1>()) == core->getData()->objects.end())
+					{
+						continue;
+					}
+					break;
+				}
+				case STREAMER_TYPE_PICKUP:
+				{
+					if (core->getData()->pickups.find(c->get<1>()) == core->getData()->pickups.end())
+					{
+						continue;
+					}
+					break;
+				}
+				case STREAMER_TYPE_CP:
+				{
+					if (core->getData()->checkpoints.find(c->get<1>()) == core->getData()->checkpoints.end())
+					{
+						continue;
+					}
+					break;
+				}
+				case STREAMER_TYPE_RACE_CP:
+				{
+					if (core->getData()->raceCheckpoints.find(c->get<1>()) == core->getData()->raceCheckpoints.end())
+					{
+						continue;
+					}
+					break;
+				}
+				case STREAMER_TYPE_MAP_ICON:
+				{
+					if (core->getData()->mapIcons.find(c->get<1>()) == core->getData()->mapIcons.end())
+					{
+						continue;
+					}
+					break;
+				}
+				case STREAMER_TYPE_3D_TEXT_LABEL:
+				{
+					if (core->getData()->textLabels.find(c->get<1>()) == core->getData()->textLabels.end())
+					{
+						continue;
+					}
+					break;
+				}
+			}
 			for (std::set<AMX*>::iterator i = core->getData()->interfaces.begin(); i != core->getData()->interfaces.end(); ++i)
 			{
 				int amxIndex = 0;
-				if (!amx_FindPublic(*i, "OnPlayerLeaveDynamicArea", &amxIndex))
+				if (!amx_FindPublic(*i, "Streamer_OnItemStreamIn", &amxIndex))
 				{
-					amx_Push(*i, static_cast<cell>(c->second.get<0>()));
-					amx_Push(*i, static_cast<cell>(c->second.get<1>()));
+					amx_Push(*i, static_cast<cell>(c->get<1>()));
+					amx_Push(*i, static_cast<cell>(c->get<0>()));
 					amx_Exec(*i, NULL, amxIndex);
 				}
 			}
 		}
 	}
-	areaLeaveCallbacks.clear();
-	for (std::multimap<int, boost::tuple<int, int> >::reverse_iterator c = areaEnterCallbacks.rbegin(); c != areaEnterCallbacks.rend(); ++c)
+	if (!streamOutCallbacks.empty())
 	{
-		boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(c->second.get<0>());
-		if (a != core->getData()->areas.end())
+		std::vector<boost::tuple<int, int> > callbacks;
+		std::swap(streamOutCallbacks, callbacks);
+		for (std::vector<boost::tuple<int, int> >::const_iterator c = callbacks.begin(); c != callbacks.end(); ++c)
 		{
+			switch (c->get<0>())
+			{
+				case STREAMER_TYPE_OBJECT:
+				{
+					if (core->getData()->objects.find(c->get<1>()) == core->getData()->objects.end())
+					{
+						continue;
+					}
+					break;
+				}
+				case STREAMER_TYPE_PICKUP:
+				{
+					if (core->getData()->pickups.find(c->get<1>()) == core->getData()->pickups.end())
+					{
+						continue;
+					}
+					break;
+				}
+				case STREAMER_TYPE_CP:
+				{
+					if (core->getData()->checkpoints.find(c->get<1>()) == core->getData()->checkpoints.end())
+					{
+						continue;
+					}
+					break;
+				}
+				case STREAMER_TYPE_RACE_CP:
+				{
+					if (core->getData()->raceCheckpoints.find(c->get<1>()) == core->getData()->raceCheckpoints.end())
+					{
+						continue;
+					}
+					break;
+				}
+				case STREAMER_TYPE_MAP_ICON:
+				{
+					if (core->getData()->mapIcons.find(c->get<1>()) == core->getData()->mapIcons.end())
+					{
+						continue;
+					}
+					break;
+				}
+				case STREAMER_TYPE_3D_TEXT_LABEL:
+				{
+					if (core->getData()->textLabels.find(c->get<1>()) == core->getData()->textLabels.end())
+					{
+						continue;
+					}
+					break;
+				}
+			}
 			for (std::set<AMX*>::iterator i = core->getData()->interfaces.begin(); i != core->getData()->interfaces.end(); ++i)
 			{
 				int amxIndex = 0;
-				if (!amx_FindPublic(*i, "OnPlayerEnterDynamicArea", &amxIndex))
+				if (!amx_FindPublic(*i, "Streamer_OnItemStreamOut", &amxIndex))
 				{
-					amx_Push(*i, static_cast<cell>(c->second.get<0>()));
-					amx_Push(*i, static_cast<cell>(c->second.get<1>()));
+					amx_Push(*i, static_cast<cell>(c->get<1>()));
+					amx_Push(*i, static_cast<cell>(c->get<0>()));
 					amx_Exec(*i, NULL, amxIndex);
 				}
 			}
 		}
 	}
-	areaEnterCallbacks.clear();
-	for (std::vector<int>::const_iterator c = objectMoveCallbacks.begin(); c != objectMoveCallbacks.end(); ++c)
-	{
-		boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(*c);
-		if (o != core->getData()->objects.end())
-		{
-			for (std::set<AMX*>::iterator i = core->getData()->interfaces.begin(); i != core->getData()->interfaces.end(); ++i)
-			{
-				int amxIndex = 0;
-				if (!amx_FindPublic(*i, "OnDynamicObjectMoved", &amxIndex))
-				{
-					amx_Push(*i, static_cast<cell>(*c));
-					amx_Exec(*i, NULL, amxIndex);
-				}
-			}
-		}
-	}
-	objectMoveCallbacks.clear();
-	for (std::vector<boost::tuple<int, int> >::const_iterator c = streamInCallbacks.begin(); c != streamInCallbacks.end(); ++c)
-	{
-		switch (c->get<0>())
-		{
-			case STREAMER_TYPE_OBJECT:
-			{
-				if (core->getData()->objects.find(c->get<1>()) == core->getData()->objects.end())
-				{
-					continue;
-				}
-				break;
-			}
-			case STREAMER_TYPE_CP:
-			{
-				if (core->getData()->checkpoints.find(c->get<1>()) == core->getData()->checkpoints.end())
-				{
-					continue;
-				}
-				break;
-			}
-			case STREAMER_TYPE_RACE_CP:
-			{
-				if (core->getData()->raceCheckpoints.find(c->get<1>()) == core->getData()->raceCheckpoints.end())
-				{
-					continue;
-				}
-				break;
-			}
-			case STREAMER_TYPE_MAP_ICON:
-			{
-				if (core->getData()->mapIcons.find(c->get<1>()) == core->getData()->mapIcons.end())
-				{
-					continue;
-				}
-				break;
-			}
-			case STREAMER_TYPE_3D_TEXT_LABEL:
-			{
-				if (core->getData()->textLabels.find(c->get<1>()) == core->getData()->textLabels.end())
-				{
-					continue;
-				}
-				break;
-			}
-		}
-		for (std::set<AMX*>::iterator i = core->getData()->interfaces.begin(); i != core->getData()->interfaces.end(); ++i)
-		{
-			int amxIndex = 0;
-			if (!amx_FindPublic(*i, "Streamer_OnItemStreamIn", &amxIndex))
-			{
-				amx_Push(*i, static_cast<cell>(c->get<1>()));
-				amx_Push(*i, static_cast<cell>(c->get<0>()));
-				amx_Exec(*i, NULL, amxIndex);
-			}
-		}
-	}
-	streamInCallbacks.clear();
-	for (std::vector<boost::tuple<int, int> >::const_iterator c = streamOutCallbacks.begin(); c != streamOutCallbacks.end(); ++c)
-	{
-		switch (c->get<0>())
-		{
-			case STREAMER_TYPE_OBJECT:
-			{
-				if (core->getData()->objects.find(c->get<1>()) == core->getData()->objects.end())
-				{
-					continue;
-				}
-				break;
-			}
-			case STREAMER_TYPE_CP:
-			{
-				if (core->getData()->checkpoints.find(c->get<1>()) == core->getData()->checkpoints.end())
-				{
-					continue;
-				}
-				break;
-			}
-			case STREAMER_TYPE_RACE_CP:
-			{
-				if (core->getData()->raceCheckpoints.find(c->get<1>()) == core->getData()->raceCheckpoints.end())
-				{
-					continue;
-				}
-				break;
-			}
-			case STREAMER_TYPE_MAP_ICON:
-			{
-				if (core->getData()->mapIcons.find(c->get<1>()) == core->getData()->mapIcons.end())
-				{
-					continue;
-				}
-				break;
-			}
-			case STREAMER_TYPE_3D_TEXT_LABEL :
-			{
-				if (core->getData()->textLabels.find(c->get<1>()) == core->getData()->textLabels.end())
-				{
-					continue;
-				}
-				break;
-			}
-		}
-		for (std::set<AMX*>::iterator i = core->getData()->interfaces.begin(); i != core->getData()->interfaces.end(); ++i)
-		{
-			int amxIndex = 0;
-			if (!amx_FindPublic(*i, "Streamer_OnItemStreamOut", &amxIndex))
-			{
-				amx_Push(*i, static_cast<cell>(c->get<1>()));
-				amx_Push(*i, static_cast<cell>(c->get<0>()));
-				amx_Exec(*i, NULL, amxIndex);
-			}
-		}
-	}
-	streamOutCallbacks.clear();
 }
 
 void Streamer::processAreas(Player &player, const std::vector<SharedCell> &cells)
@@ -668,7 +710,10 @@ void Streamer::processCheckpoints(Player &player, const std::vector<SharedCell> 
 				if (d->first == player.visibleCheckpoint)
 				{
 					sampgdk::DisablePlayerCheckpoint(player.playerID);
-					streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_CP, d->first));
+					if (d->second->streamCallbacks)
+					{
+						streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_CP, d->second->checkpointID));
+					}
 					player.activeCheckpoint = 0;
 					player.visibleCheckpoint = 0;
 
@@ -684,7 +729,10 @@ void Streamer::processCheckpoints(Player &player, const std::vector<SharedCell> 
 			if (player.visibleCheckpoint)
 			{
 				sampgdk::DisablePlayerCheckpoint(player.playerID);
-				streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_CP, d->second->checkpointID));
+				if (d->second->streamCallbacks)
+				{
+					streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_CP, d->second->checkpointID));
+				}
 				player.activeCheckpoint = 0;
 			}
 			player.delayedCheckpoint = d->second->checkpointID;
@@ -763,7 +811,14 @@ void Streamer::streamMapIcons(Player &player)
 				if (i != player.internalMapIcons.end())
 				{
 					sampgdk::RemovePlayerMapIcon(player.playerID, i->second);
-					streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_MAP_ICON, *r));
+					boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(*r);
+					if (m != core->getData()->mapIcons.end())
+					{
+						if (m->second->streamCallbacks)
+						{
+							streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_MAP_ICON, *r));
+						}
+					}
 					player.mapIconIdentifier.remove(i->second, player.internalMapIcons.size());
 					player.internalMapIcons.quick_erase(i);
 				}
@@ -790,7 +845,10 @@ void Streamer::streamMapIcons(Player &player)
 							if (i != player.internalMapIcons.end())
 							{
 								sampgdk::RemovePlayerMapIcon(player.playerID, i->second);
-								streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_MAP_ICON, e->second->mapIconID));
+								if (e->second->streamCallbacks)
+								{
+									streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_MAP_ICON, e->second->mapIconID));
+								}
 								player.mapIconIdentifier.remove(i->second, player.internalMapIcons.size());
 								player.internalMapIcons.quick_erase(i);
 							}
@@ -809,7 +867,10 @@ void Streamer::streamMapIcons(Player &player)
 				}
 				int internalID = player.mapIconIdentifier.get();
 				sampgdk::SetPlayerMapIcon(player.playerID, internalID, d->second->position[0], d->second->position[1], d->second->position[2], d->second->type, d->second->color, d->second->style);
-				streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_MAP_ICON, d->second->mapIconID));
+				if (d->second->streamCallbacks)
+				{
+					streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_MAP_ICON, d->second->mapIconID));
+				}
 				player.internalMapIcons.insert(std::make_pair(d->second->mapIconID, internalID));
 				if (d->second->cell)
 				{
@@ -901,7 +962,14 @@ void Streamer::streamObjects(Player &player)
 				if (i != player.internalObjects.end())
 				{
 					sampgdk::DestroyPlayerObject(player.playerID, i->second);
-					streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_OBJECT, *r));
+					boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(*r);
+					if (o != core->getData()->objects.end())
+					{
+						if (o->second->streamCallbacks)
+						{
+							streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_OBJECT, *r));
+						}
+					}
 					player.internalObjects.quick_erase(i);
 				}
 				r = player.removedObjects.erase(r);
@@ -927,7 +995,10 @@ void Streamer::streamObjects(Player &player)
 							if (i != player.internalObjects.end())
 							{
 								sampgdk::DestroyPlayerObject(player.playerID, i->second);
-								streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_OBJECT, e->second->objectID));
+								if (e->second->streamCallbacks)
+								{
+									streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_OBJECT, e->second->objectID));
+								}
 								player.internalObjects.quick_erase(i);
 							}
 							if (e->second->cell)
@@ -951,7 +1022,10 @@ void Streamer::streamObjects(Player &player)
 					player.discoveredObjects.clear();
 					break;
 				}
-				streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_OBJECT, d->second->objectID));
+				if (d->second->streamCallbacks)
+				{
+					streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_OBJECT, d->second->objectID));
+				}
 				if (d->second->attach)
 				{
 					if (d->second->attach->object != INVALID_STREAMER_ID)
@@ -1052,7 +1126,14 @@ void Streamer::streamPickups()
 		if (d == discoveredPickups.end())
 		{
 			sampgdk::DestroyPickup(i->second);
-			streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_PICKUP, d->first));
+			boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(i->first);
+			if (p != core->getData()->pickups.end())
+			{
+				if (p->second->streamCallbacks)
+				{
+					streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_PICKUP, i->first));
+				}
+			}
 			i = core->getData()->internalPickups.erase(i);
 		}
 		else
@@ -1078,7 +1159,10 @@ void Streamer::streamPickups()
 		{
 			break;
 		}
-		streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_PICKUP, i->second->pickupID));
+		if (i->second->streamCallbacks)
+		{
+			streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_PICKUP, i->second->pickupID));
+		}
 		core->getData()->internalPickups.insert(std::make_pair(i->second->pickupID, internalID));
 	}
 	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
@@ -1115,7 +1199,10 @@ void Streamer::processRaceCheckpoints(Player &player, const std::vector<SharedCe
 				if (r->first == player.visibleRaceCheckpoint)
 				{
 					sampgdk::DisablePlayerRaceCheckpoint(player.playerID);
-					streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_RACE_CP, r->first));
+					if (r->second->streamCallbacks)
+					{
+						streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_RACE_CP, r->second->raceCheckpointID));
+					}
 					player.activeRaceCheckpoint = 0;
 					player.visibleRaceCheckpoint = 0;
 				}
@@ -1130,7 +1217,10 @@ void Streamer::processRaceCheckpoints(Player &player, const std::vector<SharedCe
 			if (player.visibleRaceCheckpoint)
 			{
 				sampgdk::DisablePlayerRaceCheckpoint(player.playerID);
-				streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_RACE_CP, d->second->raceCheckpointID));
+				if (d->second->streamCallbacks)
+				{
+					streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_RACE_CP, d->second->raceCheckpointID));
+				}
 				player.activeRaceCheckpoint = 0;
 			}
 			player.delayedRaceCheckpoint = d->second->raceCheckpointID;
@@ -1216,7 +1306,14 @@ void Streamer::streamTextLabels(Player &player)
 				if (i != player.internalTextLabels.end())
 				{
 					sampgdk::DeletePlayer3DTextLabel(player.playerID, i->second);
-					streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_3D_TEXT_LABEL, *r));
+					boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(*r);
+					if (t != core->getData()->textLabels.end())
+					{
+						if (t->second->streamCallbacks)
+						{
+							streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_3D_TEXT_LABEL, *r));
+						}
+					}
 					player.internalTextLabels.quick_erase(i);
 				}
 				r = player.removedTextLabels.erase(r);
@@ -1242,7 +1339,10 @@ void Streamer::streamTextLabels(Player &player)
 							if (i != player.internalTextLabels.end())
 							{
 								sampgdk::DeletePlayer3DTextLabel(player.playerID, i->second);
-								streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_3D_TEXT_LABEL, e->second->textLabelID));
+								if (e->second->streamCallbacks)
+								{
+									streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_3D_TEXT_LABEL, e->second->textLabelID));
+								}
 								player.internalTextLabels.quick_erase(i);
 							}
 							if (e->second->cell)
@@ -1266,7 +1366,10 @@ void Streamer::streamTextLabels(Player &player)
 					player.discoveredTextLabels.clear();
 					break;
 				}
-				streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_3D_TEXT_LABEL, d->second->textLabelID));
+				if (d->second->streamCallbacks)
+				{
+					streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_3D_TEXT_LABEL, d->second->textLabelID));
+				}
 				player.internalTextLabels.insert(std::make_pair(d->second->textLabelID, internalID));
 				if (d->second->cell)
 				{
