@@ -1003,7 +1003,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 			case STREAMER_TYPE_3D_TEXT_LABEL:
 			{
 				boost::unordered_map<int, int>::iterator i = p->second.internalTextLabels.begin();
-				while (i != p->second.internalMapIcons.end())
+				while (i != p->second.internalTextLabels.end())
 				{
 					boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(i->first);
 					if (serverWide || (t != core->getData()->textLabels.end() && t->second->amx == amx))
@@ -1074,10 +1074,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountVisibleItems(AMX *amx, cell *params)
 				else
 				{
 					int count = 0;
-					for (boost::unordered_map<int, int>::iterator o = p->second.internalObjects.begin(); o != p->second.internalObjects.end(); ++o)
+					for (boost::unordered_map<int, int>::iterator i = p->second.internalObjects.begin(); i != p->second.internalObjects.end(); ++i)
 					{
-						boost::unordered_map<int, Item::SharedObject>::iterator q = core->getData()->objects.find(o->first);
-						if (q != core->getData()->objects.end() && q->second->amx == amx)
+						boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(i->first);
+						if (o != core->getData()->objects.end() && o->second->amx == amx)
 						{
 							++count;
 						}
@@ -1118,10 +1118,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountVisibleItems(AMX *amx, cell *params)
 				else
 				{
 					int count = 0;
-					for (boost::unordered_map<int, int>::iterator m = p->second.internalMapIcons.begin(); m != p->second.internalObjects.end(); ++m)
+					for (boost::unordered_map<int, int>::iterator i = p->second.internalMapIcons.begin(); i != p->second.internalMapIcons.end(); ++i)
 					{
-						boost::unordered_map<int, Item::SharedMapIcon>::iterator n = core->getData()->mapIcons.find(m->first);
-						if (n != core->getData()->mapIcons.end() && n->second->amx == amx)
+						boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(i->first);
+						if (m != core->getData()->mapIcons.end() && m->second->amx == amx)
 						{
 							++count;
 						}
@@ -1138,10 +1138,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountVisibleItems(AMX *amx, cell *params)
 				else
 				{
 					int count = 0;
-					for (boost::unordered_map<int, int>::iterator t = p->second.internalTextLabels.begin(); t != p->second.internalTextLabels.end(); ++t)
+					for (boost::unordered_map<int, int>::iterator i = p->second.internalTextLabels.begin(); i != p->second.internalTextLabels.end(); ++i)
 					{
-						boost::unordered_map<int, Item::SharedTextLabel>::iterator u = core->getData()->textLabels.find(t->first);
-						if (u != core->getData()->textLabels.end() && u->second->amx == amx)
+						boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(i->first);
+						if (t != core->getData()->textLabels.end() && t->second->amx == amx)
 						{
 							++count;
 						}
@@ -1158,10 +1158,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountVisibleItems(AMX *amx, cell *params)
 				else
 				{
 					int count = 0;
-					for (boost::unordered_set<int>::iterator a = p->second.internalAreas.begin(); a != p->second.internalAreas.end(); ++a)
+					for (boost::unordered_set<int>::iterator i = p->second.internalAreas.begin(); i != p->second.internalAreas.end(); ++i)
 					{
-						boost::unordered_map<int, Item::SharedArea>::iterator b = core->getData()->areas.find(*a);
-						if (b != core->getData()->areas.end() && b->second->amx == amx)
+						boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(*i);
+						if (a != core->getData()->areas.end() && a->second->amx == amx)
 						{
 							++count;
 						}
@@ -1496,13 +1496,13 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 	Eigen::Vector2f position2D = Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2]));
 	Eigen::Vector3f position3D = Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]));
 	float range = amx_ctof(params[7]) * amx_ctof(params[7]);
+	std::multimap<float, int> orderedItems;
+	std::vector<SharedCell> pointCells;
+	core->getGrid()->findMinimalCellsForPoint(position2D, pointCells);
 	switch (static_cast<int>(params[4]))
 	{
 		case STREAMER_TYPE_OBJECT:
 		{
-			std::vector<SharedCell> pointCells;
-			core->getGrid()->findMinimalCellsForPoint(position2D, pointCells);
-			std::multimap<float, int> orderedObjects;
 			for (std::vector<SharedCell>::const_iterator p = pointCells.begin(); p != pointCells.end(); ++p)
 			{
 				for (boost::unordered_map<int, Item::SharedObject>::const_iterator o = (*p)->objects.begin(); o != (*p)->objects.end(); ++o)
@@ -1518,23 +1518,14 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 					}
 					if (distance < range)
 					{
-						orderedObjects.insert(std::pair<float, int>(distance, o->first));
+						orderedItems.insert(std::pair<float, int>(distance, o->first));
 					}
 				}
 			}
-			std::vector<int> finalObjects;
-			for (std::multimap<float, int>::iterator i = orderedObjects.begin(); i != orderedObjects.end(); ++i)
-			{
-				finalObjects.push_back(i->second);
-			}
-			Utility::convertContainerToArray(amx, params[5], params[6], finalObjects);
-			return static_cast<cell>(finalObjects.size());
+			break;
 		}
 		case STREAMER_TYPE_PICKUP:
 		{
-			std::vector<SharedCell> pointCells;
-			core->getGrid()->findMinimalCellsForPoint(position2D, pointCells);
-			std::multimap<float, int> orderedPickups;
 			for (std::vector<SharedCell>::const_iterator p = pointCells.begin(); p != pointCells.end(); ++p)
 			{
 				for (boost::unordered_map<int, Item::SharedPickup>::const_iterator q = (*p)->pickups.begin(); q != (*p)->pickups.end(); ++q)
@@ -1542,23 +1533,14 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 					float distance = static_cast<float>(boost::geometry::comparable_distance(position3D, q->second->position));
 					if (distance < range)
 					{
-						orderedPickups.insert(std::pair<float, int>(distance, q->first));
+						orderedItems.insert(std::pair<float, int>(distance, q->first));
 					}
 				}
 			}
-			std::vector<int> finalPickups;
-			for (std::multimap<float, int>::iterator i = orderedPickups.begin(); i != orderedPickups.end(); ++i)
-			{
-				finalPickups.push_back(i->second);
-			}
-			Utility::convertContainerToArray(amx, params[5], params[6], finalPickups);
-			return static_cast<cell>(finalPickups.size());
+			break;
 		}
 		case STREAMER_TYPE_CP:
 		{
-			std::vector<SharedCell> pointCells;
-			core->getGrid()->findMinimalCellsForPoint(position2D, pointCells);
-			std::multimap<float, int> orderedCheckpoints;
 			for (std::vector<SharedCell>::const_iterator p = pointCells.begin(); p != pointCells.end(); ++p)
 			{
 				for (boost::unordered_map<int, Item::SharedCheckpoint>::const_iterator c = (*p)->checkpoints.begin(); c != (*p)->checkpoints.end(); ++c)
@@ -1566,23 +1548,14 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 					float distance = static_cast<float>(boost::geometry::comparable_distance(position3D, c->second->position));
 					if (distance < range)
 					{
-						orderedCheckpoints.insert(std::pair<float, int>(distance, c->first));
+						orderedItems.insert(std::pair<float, int>(distance, c->first));
 					}
 				}
 			}
-			std::vector<int> finalCheckpoints;
-			for (std::multimap<float, int>::iterator i = orderedCheckpoints.begin(); i != orderedCheckpoints.end(); ++i)
-			{
-				finalCheckpoints.push_back(i->second);
-			}
-			Utility::convertContainerToArray(amx, params[5], params[6], finalCheckpoints);
-			return static_cast<cell>(finalCheckpoints.size());
+			break;
 		}
 		case STREAMER_TYPE_RACE_CP:
 		{
-			std::vector<SharedCell> pointCells;
-			core->getGrid()->findMinimalCellsForPoint(position2D, pointCells);
-			std::multimap<float, int> orderedRaceCheckpoints;
 			for (std::vector<SharedCell>::const_iterator p = pointCells.begin(); p != pointCells.end(); ++p)
 			{
 				for (boost::unordered_map<int, Item::SharedRaceCheckpoint>::const_iterator r = (*p)->raceCheckpoints.begin(); r != (*p)->raceCheckpoints.end(); ++r)
@@ -1590,23 +1563,14 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 					float distance = static_cast<float>(boost::geometry::comparable_distance(position3D, r->second->position));
 					if (distance < range)
 					{
-						orderedRaceCheckpoints.insert(std::pair<float, int>(distance, r->first));
+						orderedItems.insert(std::pair<float, int>(distance, r->first));
 					}
 				}
 			}
-			std::vector<int> finalRaceCheckpoints;
-			for (std::multimap<float, int>::iterator i = orderedRaceCheckpoints.begin(); i != orderedRaceCheckpoints.end(); ++i)
-			{
-				finalRaceCheckpoints.push_back(i->second);
-			}
-			Utility::convertContainerToArray(amx, params[5], params[6], finalRaceCheckpoints);
-			return static_cast<cell>(finalRaceCheckpoints.size());
+			break;
 		}
 		case STREAMER_TYPE_MAP_ICON:
 		{
-			std::vector<SharedCell> pointCells;
-			core->getGrid()->findMinimalCellsForPoint(position2D, pointCells);
-			std::multimap<float, int> orderedMapIcons;
 			for (std::vector<SharedCell>::const_iterator p = pointCells.begin(); p != pointCells.end(); ++p)
 			{
 				for (boost::unordered_map<int, Item::SharedMapIcon>::const_iterator m = (*p)->mapIcons.begin(); m != (*p)->mapIcons.end(); ++m)
@@ -1614,23 +1578,14 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 					float distance = static_cast<float>(boost::geometry::comparable_distance(position3D, m->second->position));
 					if (distance < range)
 					{
-						orderedMapIcons.insert(std::pair<float, int>(distance, m->first));
+						orderedItems.insert(std::pair<float, int>(distance, m->first));
 					}
 				}
 			}
-			std::vector<int> finalMapIcons;
-			for (std::multimap<float, int>::iterator i = orderedMapIcons.begin(); i != orderedMapIcons.end(); ++i)
-			{
-				finalMapIcons.push_back(i->second);
-			}
-			Utility::convertContainerToArray(amx, params[5], params[6], finalMapIcons);
-			return static_cast<cell>(finalMapIcons.size());
+			break;
 		}
 		case STREAMER_TYPE_3D_TEXT_LABEL:
 		{
-			std::vector<SharedCell> pointCells;
-			core->getGrid()->findMinimalCellsForPoint(position2D, pointCells);
-			std::multimap<float, int> orderedTextLabels;
 			for (std::vector<SharedCell>::const_iterator p = pointCells.begin(); p != pointCells.end(); ++p)
 			{
 				for (boost::unordered_map<int, Item::SharedTextLabel>::const_iterator t = (*p)->textLabels.begin(); t != (*p)->textLabels.end(); ++t)
@@ -1638,23 +1593,14 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 					float distance = static_cast<float>(boost::geometry::comparable_distance(position3D, t->second->position));
 					if (distance < range)
 					{
-						orderedTextLabels.insert(std::pair<float, int>(distance, t->first));
+						orderedItems.insert(std::pair<float, int>(distance, t->first));
 					}
 				}
 			}
-			std::vector<int> finalTextLabels;
-			for (std::multimap<float, int>::iterator i = orderedTextLabels.begin(); i != orderedTextLabels.end(); ++i)
-			{
-				finalTextLabels.push_back(i->second);
-			}
-			Utility::convertContainerToArray(amx, params[5], params[6], finalTextLabels);
-			return static_cast<cell>(finalTextLabels.size());
+			break;
 		}
 		case STREAMER_TYPE_AREA:
 		{
-			std::vector<SharedCell> pointCells;
-			core->getGrid()->findMinimalCellsForPoint(position2D, pointCells);
-			std::multimap<float, int> orderedAreas;
 			for (std::vector<SharedCell>::const_iterator p = pointCells.begin(); p != pointCells.end(); ++p)
 			{
 				for (boost::unordered_map<int, Item::SharedArea>::const_iterator a = (*p)->areas.begin(); a != (*p)->areas.end(); ++a)
@@ -1708,23 +1654,14 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 					}
 					if (distance < range)
 					{
-						orderedAreas.insert(std::pair<float, int>(distance, a->first));
+						orderedItems.insert(std::pair<float, int>(distance, a->first));
 					}
 				}
 			}
-			std::vector<int> finalAreas;
-			for (std::multimap<float, int>::iterator i = orderedAreas.begin(); i != orderedAreas.end(); ++i)
-			{
-				finalAreas.push_back(i->second);
-			}
-			Utility::convertContainerToArray(amx, params[5], params[6], finalAreas);
-			return static_cast<cell>(finalAreas.size());
+			break;
 		}
 		case STREAMER_TYPE_ACTOR:
 		{
-			std::vector<SharedCell> pointCells;
-			core->getGrid()->findMinimalCellsForPoint(position2D, pointCells);
-			std::multimap<float, int> orderedActors;
 			for (std::vector<SharedCell>::const_iterator p = pointCells.begin(); p != pointCells.end(); ++p)
 			{
 				for (boost::unordered_map<int, Item::SharedActor>::const_iterator a = (*p)->actors.begin(); a != (*p)->actors.end(); ++a)
@@ -1732,17 +1669,11 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 					float distance = static_cast<float>(boost::geometry::comparable_distance(position3D, a->second->position));
 					if (distance < range)
 					{
-						orderedActors.insert(std::pair<float, int>(distance, a->first));
+						orderedItems.insert(std::pair<float, int>(distance, a->first));
 					}
 				}
 			}
-			std::vector<int> finalActors;
-			for (std::multimap<float, int>::iterator i = orderedActors.begin(); i != orderedActors.end(); ++i)
-			{
-				finalActors.push_back(i->second);
-			}
-			Utility::convertContainerToArray(amx, params[5], params[6], finalActors);
-			return static_cast<cell>(finalActors.size());
+			break;
 		}
 		default:
 		{
@@ -1750,8 +1681,13 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 			return 0;
 		}
 	}
-
-	return 0;
+	std::vector<int> finalItems;
+	for (std::multimap<float, int>::iterator i = orderedItems.begin(); i != orderedItems.end(); ++i)
+	{
+		finalItems.push_back(i->second);
+	}
+	Utility::convertContainerToArray(amx, params[5], params[6], finalItems);
+	return static_cast<cell>(finalItems.size());
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetItemOffset(AMX *amx, cell *params)
