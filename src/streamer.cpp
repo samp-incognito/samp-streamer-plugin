@@ -334,7 +334,7 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 	{
 		core->getGrid()->findAllCellsForPlayer(player, cells);
 	}
-	else if (automatic)
+	else
 	{
 		core->getGrid()->findMinimalCellsForPlayer(player, cells);
 	}
@@ -408,7 +408,7 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 					}
 				}
 			}
-			else if (automatic)
+			if (automatic)
 			{
 				switch (*t)
 				{
