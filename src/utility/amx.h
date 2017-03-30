@@ -81,7 +81,7 @@ namespace Utility
 		container.reset();
 		for (std::size_t i = 0; i < static_cast<std::size_t>(size); ++i)
 		{
-			if (!addToContainer(container, static_cast<std::size_t>(array[i])))
+			if (!addToContainer(container, static_cast<int>(array[i])))
 			{
 				return false;
 			}
