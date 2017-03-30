@@ -121,6 +121,7 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorVirtualWorld(AMX *amx, cell *params
 		boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
 		if (i != core->getData()->internalActors.end())
 		{
+			a->second->worldID = !a->second->worlds.empty() ? static_cast<int>(params[2]) : 0;
 			sampgdk::SetActorVirtualWorld(i->second, a->second->worldID);
 		}
 		return 1;
@@ -198,7 +199,6 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorFacingAngle(AMX *amx, cell *params)
 			sampgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
 			sampgdk::SetActorHealth(i->second, a->second->health);
 			sampgdk::SetActorVirtualWorld(i->second, a->second->worldID);
-
 			if (a->second->anim)
 			{
 				sampgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);
@@ -290,7 +290,6 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorInvulnerable(AMX *amx, cell *params
 			sampgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
 			sampgdk::SetActorHealth(i->second, a->second->health);
 			sampgdk::SetActorVirtualWorld(i->second, a->second->worldID);
-
 			if (a->second->anim)
 			{
 				sampgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);

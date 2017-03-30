@@ -38,7 +38,7 @@ boost::unordered_map<int, Item::SharedActor>::iterator Utility::destroyActor(boo
 	boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
 	if (i != core->getData()->internalActors.end())
 	{
-		sampgdk::DestroyActor(i->second);
+		core->getData()->destroyedActors.push_back(i->second);
 		core->getData()->internalActors.quick_erase(i);
 	}
 	core->getGrid()->removeActor(a->second);
@@ -343,6 +343,22 @@ bool Utility::setRadiusMultiplier(int type, float value, int playerid)
 	return core->getData()->setGlobalRadiusMultiplier(type, value);
 }
 
+bool Utility::haveAllPlayersCheckedActors()
+{
+	if (!core->getData()->players.empty())
+	{
+		for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+		{
+			if (!p->second.checkedActors && p->second.enabledItems[STREAMER_TYPE_ACTOR])
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	return false;
+}
+
 bool Utility::haveAllPlayersCheckedPickups()
 {
 	if (!core->getData()->players.empty())
@@ -359,18 +375,15 @@ bool Utility::haveAllPlayersCheckedPickups()
 	return false;
 }
 
-bool Utility::haveAllPlayersCheckedActors()
+void Utility::processPendingDestroyedActors()
 {
-	if (!core->getData()->players.empty())
+	if (!core->getData()->destroyedActors.empty())
 	{
-		for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+		std::vector<int>::iterator a = core->getData()->destroyedActors.begin();
+		while (a != core->getData()->destroyedActors.end())
 		{
-			if (!p->second.checkedActors && p->second.enabledItems[STREAMER_TYPE_ACTOR])
-			{
-				return false;
-			}
+			sampgdk::DestroyActor(*a);
+			a = core->getData()->destroyedActors.erase(a);
 		}
-		return true;
 	}
-	return false;
 }

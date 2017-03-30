@@ -148,6 +148,7 @@ void Streamer::startAutomaticUpdate()
 		{
 			calculateAverageElapsedTime();
 			processActiveItems();
+			Utility::processPendingDestroyedActors();
 			if (Utility::haveAllPlayersCheckedPickups())
 			{
 				streamPickups();
@@ -661,7 +662,7 @@ void Streamer::discoverActors(Player &player, const std::vector<SharedCell> &cel
 						boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
 						if (i == core->getData()->internalActors.end())
 						{
-							a->second->worldID = !a->second->worlds.empty() ? player.worldID : -1;
+							a->second->worldID = !a->second->worlds.empty() ? player.worldID : 0;
 						}
 						discoveredActors.insert(*a);
 					}

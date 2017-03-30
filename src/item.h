@@ -37,6 +37,55 @@
 
 namespace Item
 {
+	struct Actor
+	{
+		Actor();
+
+		int actorID;
+		AMX *amx;
+		SharedCell cell;
+		float comparableStreamDistance;
+		float health;
+		bool inverseAreaChecking;
+		bool invulnerable;
+		int modelID;
+		float originalComparableStreamDistance;
+		Eigen::Vector3f position;
+		Eigen::Vector3f positionOffset;
+		int priority;
+		int references;
+		float rotation;
+		float streamDistance;
+		int worldID;
+
+		struct Anim
+		{
+			Anim();
+
+			float delta;
+			bool freeze;
+			std::string lib;
+			bool loop;
+			bool lockx;
+			bool locky;
+			std::string name;
+			int references;
+			int time;
+		};
+
+		boost::intrusive_ptr<Anim> anim;
+
+		boost::unordered_set<int> areas;
+		std::vector<int> extras;
+		boost::unordered_set<int> interiors;
+		std::bitset<MAX_PLAYERS> players;
+		boost::unordered_set<int> worlds;
+
+		static Identifier identifier;
+
+		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+	};
+
 	struct Area
 	{
 		Area();
@@ -336,55 +385,6 @@ namespace Item
 		};
 
 		boost::intrusive_ptr<Attach> attach;
-
-		boost::unordered_set<int> areas;
-		std::vector<int> extras;
-		boost::unordered_set<int> interiors;
-		std::bitset<MAX_PLAYERS> players;
-		boost::unordered_set<int> worlds;
-
-		static Identifier identifier;
-
-		EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-	};
-
-	struct Actor
-	{
-		Actor();
-
-		int actorID;
-		AMX *amx;
-		SharedCell cell;
-		float comparableStreamDistance;
-		float health;
-		bool inverseAreaChecking;
-		bool invulnerable;
-		int modelID;
-		float originalComparableStreamDistance;
-		Eigen::Vector3f position;
-		Eigen::Vector3f positionOffset;
-		int priority;
-		int references;
-		float rotation;
-		float streamDistance;
-		int worldID;
-
-		struct Anim
-		{
-			Anim();
-
-			float delta;
-			bool freeze;
-			std::string lib;
-			bool loop;
-			bool lockx;
-			bool locky;
-			std::string name;
-			int references;
-			int time;
-		};
-
-		boost::intrusive_ptr<Anim> anim;
 
 		boost::unordered_set<int> areas;
 		std::vector<int> extras;

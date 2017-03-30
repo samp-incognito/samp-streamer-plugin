@@ -45,8 +45,10 @@ namespace Utility
 	float getRadiusMultiplier(int type, int playerid);
 	bool setRadiusMultiplier(int type, float value, int playerid);
 
-	bool haveAllPlayersCheckedPickups();
 	bool haveAllPlayersCheckedActors();
+	bool haveAllPlayersCheckedPickups();
+
+	void processPendingDestroyedActors();
 
 	template<typename T>
 	inline bool almostEquals(T a, T b)
