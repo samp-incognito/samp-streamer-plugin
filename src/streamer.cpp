@@ -119,9 +119,9 @@ void Streamer::calculateAverageElapsedTime()
 
 void Streamer::startAutomaticUpdate()
 {
-	boost::chrono::steady_clock::time_point startTime = boost::chrono::steady_clock::now();
 	if (!core->getData()->interfaces.empty())
 	{
+		boost::chrono::steady_clock::time_point startTime = boost::chrono::steady_clock::now();
 		for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 		{
 			if (p->second.processingChunks.any())
@@ -149,19 +149,33 @@ void Streamer::startAutomaticUpdate()
 			calculateAverageElapsedTime();
 			processActiveItems();
 			Utility::processPendingDestroyedActors();
-			if (Utility::haveAllPlayersCheckedPickups())
+			for (std::vector<int>::const_iterator t = core->getData()->typePriority.begin(); t != core->getData()->typePriority.end(); ++t)
 			{
-				streamPickups();
-			}
-			if (Utility::haveAllPlayersCheckedActors())
-			{
-				streamActors();
+				switch (*t)
+				{
+					case STREAMER_TYPE_PICKUP:
+					{
+						if (Utility::haveAllPlayersCheckedPickups())
+						{
+							streamPickups();
+						}
+						break;
+					}
+					case STREAMER_TYPE_ACTOR:
+					{
+						if (Utility::haveAllPlayersCheckedActors())
+						{
+							streamActors();
+						}
+						break;
+					}
+				}
 			}
 			executeCallbacks();
 			tickCount = 0;
 		}
+		lastUpdateTime = boost::chrono::duration<float, boost::milli>(boost::chrono::steady_clock::now() - startTime).count();
 	}
-	lastUpdateTime = boost::chrono::duration<float, boost::milli>(boost::chrono::steady_clock::now() - startTime).count();
 }
 
 void Streamer::startManualUpdate(Player &player, int type)
@@ -210,10 +224,10 @@ void Streamer::startManualUpdate(Player &player, int type)
 	else
 	{
 		player.discoveredObjects.clear();
-		player.existingObjects.clear();
 		player.discoveredMapIcons.clear();
-		player.existingMapIcons.clear();
 		player.discoveredTextLabels.clear();
+		player.existingMapIcons.clear();
+		player.existingObjects.clear();
 		player.existingTextLabels.clear();
 		player.processingChunks.reset();
 	}
