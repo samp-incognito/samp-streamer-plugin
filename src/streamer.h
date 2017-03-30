@@ -69,7 +69,7 @@ public:
 private:
 	void calculateAverageElapsedTime();
 
-	void performPlayerChunkUpdate(Player &player);
+	void performPlayerChunkUpdate(Player &player, bool automatic);
 	void performPlayerUpdate(Player &player, bool automatic);
 	void executeCallbacks();
 
@@ -81,16 +81,16 @@ private:
 	void processRaceCheckpoints(Player &player, const std::vector<SharedCell> &cells);
 
 	void discoverMapIcons(Player &player, const std::vector<SharedCell> &cells);
-	void streamMapIcons(Player &player);
+	void streamMapIcons(Player &player, bool automatic);
 
 	void discoverObjects(Player &player, const std::vector<SharedCell> &cells);
-	void streamObjects(Player &player);
+	void streamObjects(Player &player, bool automatic);
 
 	void discoverPickups(Player &player, const std::vector<SharedCell> &cells);
 	void streamPickups();
 
 	void discoverTextLabels(Player &player, const std::vector<SharedCell> &cells);
-	void streamTextLabels(Player &player);
+	void streamTextLabels(Player &player, bool automatic);
 
 	void processMovingObjects();
 	void processAttachedAreas();
