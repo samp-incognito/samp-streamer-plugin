@@ -887,7 +887,7 @@ void Streamer::discoverMapIcons(Player &player, const std::vector<SharedCell> &c
 
 void Streamer::streamMapIcons(Player &player, bool automatic)
 {
-	if (++player.chunkTickCount[STREAMER_TYPE_MAP_ICON] >= player.chunkTickRate[STREAMER_TYPE_MAP_ICON] || !automatic)
+	if (!automatic || ++player.chunkTickCount[STREAMER_TYPE_MAP_ICON] >= player.chunkTickRate[STREAMER_TYPE_MAP_ICON])
 	{
 		std::size_t chunkCount = 0;
 		if (!player.removedMapIcons.empty())
@@ -895,7 +895,7 @@ void Streamer::streamMapIcons(Player &player, bool automatic)
 			std::vector<int>::iterator r = player.removedMapIcons.begin();
 			while (r != player.removedMapIcons.end())
 			{
-				if (++chunkCount > chunkSize[STREAMER_TYPE_MAP_ICON] || !automatic)
+				if (automatic && ++chunkCount > chunkSize[STREAMER_TYPE_MAP_ICON])
 				{
 					break;
 				}
@@ -922,7 +922,7 @@ void Streamer::streamMapIcons(Player &player, bool automatic)
 			std::multimap<std::pair<int, float>, Item::SharedMapIcon, Item::Compare>::iterator d = player.discoveredMapIcons.begin();
 			while (d != player.discoveredMapIcons.end())
 			{
-				if (++chunkCount > chunkSize[STREAMER_TYPE_MAP_ICON] || !automatic)
+				if (automatic && ++chunkCount > chunkSize[STREAMER_TYPE_MAP_ICON])
 				{
 					break;
 				}
@@ -1038,7 +1038,7 @@ void Streamer::discoverObjects(Player &player, const std::vector<SharedCell> &ce
 
 void Streamer::streamObjects(Player &player, bool automatic)
 {
-	if (++player.chunkTickCount[STREAMER_TYPE_OBJECT] >= player.chunkTickRate[STREAMER_TYPE_OBJECT] || !automatic)
+	if (!automatic || ++player.chunkTickCount[STREAMER_TYPE_OBJECT] >= player.chunkTickRate[STREAMER_TYPE_OBJECT])
 	{
 		std::size_t chunkCount = 0;
 		if (!player.removedObjects.empty())
@@ -1046,7 +1046,7 @@ void Streamer::streamObjects(Player &player, bool automatic)
 			std::vector<int>::iterator r = player.removedObjects.begin();
 			while (r != player.removedObjects.end())
 			{
-				if (++chunkCount > chunkSize[STREAMER_TYPE_OBJECT] || !automatic)
+				if (automatic && ++chunkCount > chunkSize[STREAMER_TYPE_OBJECT])
 				{
 					break;
 				}
@@ -1072,7 +1072,7 @@ void Streamer::streamObjects(Player &player, bool automatic)
 			std::multimap<std::pair<int, float>, Item::SharedObject, Item::Compare>::iterator d = player.discoveredObjects.begin();
 			while (d != player.discoveredObjects.end())
 			{
-				if (++chunkCount > chunkSize[STREAMER_TYPE_OBJECT] || !automatic)
+				if (automatic && ++chunkCount > chunkSize[STREAMER_TYPE_OBJECT])
 				{
 					break;
 				}
@@ -1381,7 +1381,7 @@ void Streamer::discoverTextLabels(Player &player, const std::vector<SharedCell> 
 
 void Streamer::streamTextLabels(Player &player, bool automatic)
 {
-	if (++player.chunkTickCount[STREAMER_TYPE_3D_TEXT_LABEL] >= player.chunkTickRate[STREAMER_TYPE_3D_TEXT_LABEL] || !automatic)
+	if (!automatic || ++player.chunkTickCount[STREAMER_TYPE_3D_TEXT_LABEL] >= player.chunkTickRate[STREAMER_TYPE_3D_TEXT_LABEL])
 	{
 		std::size_t chunkCount = 0;
 		if (!player.removedTextLabels.empty())
@@ -1389,7 +1389,7 @@ void Streamer::streamTextLabels(Player &player, bool automatic)
 			std::vector<int>::iterator r = player.removedTextLabels.begin();
 			while (r != player.removedTextLabels.end())
 			{
-				if (++chunkCount > chunkSize[STREAMER_TYPE_3D_TEXT_LABEL] || !automatic)
+				if (automatic && ++chunkCount > chunkSize[STREAMER_TYPE_3D_TEXT_LABEL])
 				{
 					break;
 				}
@@ -1415,7 +1415,7 @@ void Streamer::streamTextLabels(Player &player, bool automatic)
 			std::multimap<std::pair<int, float>, Item::SharedTextLabel, Item::Compare>::iterator d = player.discoveredTextLabels.begin();
 			while (d != player.discoveredTextLabels.end())
 			{
-				if (++chunkCount > chunkSize[STREAMER_TYPE_3D_TEXT_LABEL] || !automatic)
+				if (automatic && ++chunkCount > chunkSize[STREAMER_TYPE_3D_TEXT_LABEL])
 				{
 					break;
 				}
