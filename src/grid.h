@@ -31,6 +31,7 @@ class Grid
 public:
 	Grid();
 
+	void addActor(const Item::SharedActor &actor);
 	void addArea(const Item::SharedArea &area);
 	void addCheckpoint(const Item::SharedCheckpoint &checkpoint);
 	void addMapIcon(const Item::SharedMapIcon &mapIcon);
@@ -38,7 +39,6 @@ public:
 	void addPickup(const Item::SharedPickup &pickup);
 	void addRaceCheckpoint(const Item::SharedRaceCheckpoint &raceCheckpoint);
 	void addTextLabel(const Item::SharedTextLabel &textLabel);
-	void addActor(const Item::SharedActor &actor);
 
 	inline float getCellSize()
 	{
@@ -63,6 +63,7 @@ public:
 
 	void rebuildGrid();
 
+	void removeActor(const Item::SharedActor &actor, bool reassign = false);
 	void removeArea(const Item::SharedArea &area, bool reassign = false);
 	void removeCheckpoint(const Item::SharedCheckpoint &checkpoint, bool reassign = false);
 	void removeMapIcon(const Item::SharedMapIcon &mapIcon, bool reassign = false);
@@ -70,7 +71,6 @@ public:
 	void removePickup(const Item::SharedPickup &pickup, bool reassign = false);
 	void removeRaceCheckpoint(const Item::SharedRaceCheckpoint &raceCheckpoint, bool reassign = false);
 	void removeTextLabel(const Item::SharedTextLabel &textLabel, bool reassign = false);
-	void removeActor(const Item::SharedActor &actor, bool reassign = false);
 
 	void findAllCellsForPlayer(Player &player, std::vector<SharedCell> &playerCells);
 	void findMinimalCellsForPlayer(Player &player, std::vector<SharedCell> &playerCells);

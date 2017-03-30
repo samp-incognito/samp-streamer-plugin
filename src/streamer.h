@@ -73,6 +73,9 @@ private:
 	void performPlayerUpdate(Player &player, bool automatic);
 	void executeCallbacks();
 
+	void discoverActors(Player &player, const std::vector<SharedCell> &cells);
+	void streamActors();
+
 	void processAreas(Player &player, const std::vector<SharedCell> &cells);
 	void processCheckpoints(Player &player, const std::vector<SharedCell> &cells);
 	void processRaceCheckpoints(Player &player, const std::vector<SharedCell> &cells);
@@ -88,9 +91,6 @@ private:
 
 	void discoverTextLabels(Player &player, const std::vector<SharedCell> &cells);
 	void streamTextLabels(Player &player);
-
-	void discoverActors(Player &player, const std::vector<SharedCell> &cells);
-	void streamActors();
 
 	void processMovingObjects();
 	void processAttachedAreas();

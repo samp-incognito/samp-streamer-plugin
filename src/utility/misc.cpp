@@ -32,6 +32,19 @@
 
 using namespace Utility;
 
+boost::unordered_map<int, Item::SharedActor>::iterator Utility::destroyActor(boost::unordered_map<int, Item::SharedActor>::iterator a)
+{
+	Item::Actor::identifier.remove(a->first, core->getData()->actors.size());
+	boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
+	if (i != core->getData()->internalActors.end())
+	{
+		sampgdk::DestroyActor(i->second);
+		core->getData()->internalActors.quick_erase(i);
+	}
+	core->getGrid()->removeActor(a->second);
+	return core->getData()->actors.erase(a);
+}
+
 boost::unordered_map<int, Item::SharedArea>::iterator Utility::destroyArea(boost::unordered_map<int, Item::SharedArea>::iterator a)
 {
 	Item::Area::identifier.remove(a->first, core->getData()->areas.size());
@@ -141,19 +154,6 @@ boost::unordered_map<int, Item::SharedTextLabel>::iterator Utility::destroyTextL
 	}
 	core->getGrid()->removeTextLabel(t->second);
 	return core->getData()->textLabels.erase(t);
-}
-
-boost::unordered_map<int, Item::SharedActor>::iterator Utility::destroyActor(boost::unordered_map<int, Item::SharedActor>::iterator p)
-{
-	Item::Actor::identifier.remove(p->first, core->getData()->actors.size());
-	boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(p->first);
-	if (i != core->getData()->internalActors.end())
-	{
-		sampgdk::DestroyActor(i->second);
-		core->getData()->internalActors.quick_erase(i);
-	}
-	core->getGrid()->removeActor(p->second);
-	return core->getData()->actors.erase(p);
 }
 
 std::size_t Utility::getChunkTickRate(int type, int playerid)

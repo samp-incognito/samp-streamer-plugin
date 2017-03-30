@@ -27,6 +27,7 @@
 
 namespace Utility
 {
+	boost::unordered_map<int, Item::SharedActor>::iterator destroyActor(boost::unordered_map<int, Item::SharedActor>::iterator a);
 	boost::unordered_map<int, Item::SharedArea>::iterator destroyArea(boost::unordered_map<int, Item::SharedArea>::iterator a);
 	boost::unordered_map<int, Item::SharedCheckpoint>::iterator destroyCheckpoint(boost::unordered_map<int, Item::SharedCheckpoint>::iterator c);
 	boost::unordered_map<int, Item::SharedMapIcon>::iterator destroyMapIcon(boost::unordered_map<int, Item::SharedMapIcon>::iterator m);
@@ -34,7 +35,6 @@ namespace Utility
 	boost::unordered_map<int, Item::SharedPickup>::iterator destroyPickup(boost::unordered_map<int, Item::SharedPickup>::iterator p);
 	boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator destroyRaceCheckpoint(boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r);
 	boost::unordered_map<int, Item::SharedTextLabel>::iterator destroyTextLabel(boost::unordered_map<int, Item::SharedTextLabel>::iterator t);
-	boost::unordered_map<int, Item::SharedActor>::iterator destroyActor(boost::unordered_map<int, Item::SharedActor>::iterator a);
 
 	std::size_t getChunkTickRate(int type, int playerid);
 	bool setChunkTickRate(int type, std::size_t value, int playerid);

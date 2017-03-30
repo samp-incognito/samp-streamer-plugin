@@ -185,16 +185,16 @@ void Utility::destroyAllItemsInInterface(AMX *amx)
 			++a;
 		}
 	}
-	boost::unordered_map<int, Item::SharedActor>::iterator ac = core->getData()->actors.begin();
-	while (ac != core->getData()->actors.end())
+	boost::unordered_map<int, Item::SharedActor>::iterator b = core->getData()->actors.begin();
+	while (b != core->getData()->actors.end())
 	{
-		if (ac->second->amx == amx)
+		if (b->second->amx == amx)
 		{
-			ac = destroyActor(ac);
+			b = destroyActor(b);
 		}
 		else
 		{
-			++ac;
+			++b;
 		}
 	}
 }

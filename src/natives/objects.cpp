@@ -43,8 +43,8 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicObject(AMX *amx, cell *params)
 	Item::SharedObject object(new Item::Object);
 	object->amx = amx;
 	object->objectID = objectID;
-	object->noCameraCollision = false;
 	object->inverseAreaChecking = false;
+	object->noCameraCollision = false;
 	object->originalComparableStreamDistance = -1.0f;
 	object->positionOffset = Eigen::Vector3f::Zero();
 	object->streamCallbacks = false;
