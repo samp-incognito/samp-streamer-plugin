@@ -667,8 +667,8 @@ void Streamer::discoverActors(Player &player, const std::vector<SharedCell> &cel
 	{
 		for (boost::unordered_map<int, Item::SharedActor>::const_iterator a = (*c)->actors.begin(); a != (*c)->actors.end(); ++a)
 		{
-			boost::unordered_map<int, Item::SharedActor>::iterator d = discoveredActors.find(a->first);
-			if (d == discoveredActors.end())
+			boost::unordered_map<int, Item::SharedActor>::iterator d = core->getData()->discoveredActors.find(a->first);
+			if (d == core->getData()->discoveredActors.end())
 			{
 				if (doesPlayerSatisfyConditions(a->second->players, player.playerID, a->second->interiors, player.interiorID, a->second->worlds, player.worldID, a->second->areas, player.internalAreas, a->second->inverseAreaChecking))
 				{
@@ -679,7 +679,7 @@ void Streamer::discoverActors(Player &player, const std::vector<SharedCell> &cel
 						{
 							a->second->worldID = !a->second->worlds.empty() ? player.worldID : 0;
 						}
-						discoveredActors.insert(*a);
+						core->getData()->discoveredActors.insert(*a);
 					}
 				}
 			}
@@ -693,24 +693,24 @@ void Streamer::streamActors()
 	boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.begin();
 	while (i != core->getData()->internalActors.end())
 	{
-		boost::unordered_map<int, Item::SharedActor>::iterator d = discoveredActors.find(i->first);
-		if (d == discoveredActors.end())
+		boost::unordered_map<int, Item::SharedActor>::iterator d = core->getData()->discoveredActors.find(i->first);
+		if (d == core->getData()->discoveredActors.end())
 		{
 			sampgdk::DestroyActor(i->second);
 			i = core->getData()->internalActors.erase(i);
 		}
 		else
 		{
-			discoveredActors.erase(d);
+			core->getData()->discoveredActors.erase(d);
 			++i;
 		}
 	}
 	std::multimap<int, Item::SharedActor> sortedActors;
-	for (boost::unordered_map<int, Item::SharedActor>::iterator d = discoveredActors.begin(); d != discoveredActors.end(); ++d)
+	for (boost::unordered_map<int, Item::SharedActor>::iterator d = core->getData()->discoveredActors.begin(); d != core->getData()->discoveredActors.end(); ++d)
 	{
 		sortedActors.insert(std::make_pair(d->second->priority, d->second));
 	}
-	discoveredActors.clear();
+	core->getData()->discoveredActors.clear();
 	for (std::multimap<int, Item::SharedActor>::iterator i = sortedActors.begin(); i != sortedActors.end(); ++i)
 	{
 		if (core->getData()->internalActors.size() == core->getData()->getGlobalMaxVisibleItems(STREAMER_TYPE_ACTOR))
@@ -926,6 +926,12 @@ void Streamer::streamMapIcons(Player &player, bool automatic)
 				{
 					break;
 				}
+				boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(d->second->mapIconID);
+				if (m == core->getData()->mapIcons.end())
+				{
+					player.discoveredMapIcons.erase(d++);
+					continue;
+				}
 				if (player.internalMapIcons.size() == player.maxVisibleMapIcons)
 				{
 					std::multimap<std::pair<int, float>, Item::SharedMapIcon, Item::Compare>::reverse_iterator e = player.existingMapIcons.rbegin();
@@ -1076,6 +1082,12 @@ void Streamer::streamObjects(Player &player, bool automatic)
 				{
 					break;
 				}
+				boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(d->second->objectID);
+				if (o == core->getData()->objects.end())
+				{
+					player.discoveredObjects.erase(d++);
+					continue;
+				}
 				if (player.internalObjects.size() == player.currentVisibleObjects)
 				{
 					std::multimap<std::pair<int, float>, Item::SharedObject, Item::Compare>::reverse_iterator e = player.existingObjects.rbegin();
@@ -1187,8 +1199,8 @@ void Streamer::discoverPickups(Player &player, const std::vector<SharedCell> &ce
 	{
 		for (boost::unordered_map<int, Item::SharedPickup>::const_iterator p = (*c)->pickups.begin(); p != (*c)->pickups.end(); ++p)
 		{
-			boost::unordered_map<int, Item::SharedPickup>::iterator d = discoveredPickups.find(p->first);
-			if (d == discoveredPickups.end())
+			boost::unordered_map<int, Item::SharedPickup>::iterator d = core->getData()->discoveredPickups.find(p->first);
+			if (d == core->getData()->discoveredPickups.end())
 			{
 				if (doesPlayerSatisfyConditions(p->second->players, player.playerID, p->second->interiors, player.interiorID, p->second->worlds, player.worldID, p->second->areas, player.internalAreas, p->second->inverseAreaChecking))
 				{
@@ -1199,7 +1211,7 @@ void Streamer::discoverPickups(Player &player, const std::vector<SharedCell> &ce
 						{
 							p->second->worldID = !p->second->worlds.empty() ? player.worldID : -1;
 						}
-						discoveredPickups.insert(*p);
+						core->getData()->discoveredPickups.insert(*p);
 					}
 				}
 			}
@@ -1213,8 +1225,8 @@ void Streamer::streamPickups()
 	boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.begin();
 	while (i != core->getData()->internalPickups.end())
 	{
-		boost::unordered_map<int, Item::SharedPickup>::iterator d = discoveredPickups.find(i->first);
-		if (d == discoveredPickups.end())
+		boost::unordered_map<int, Item::SharedPickup>::iterator d = core->getData()->discoveredPickups.find(i->first);
+		if (d == core->getData()->discoveredPickups.end())
 		{
 			sampgdk::DestroyPickup(i->second);
 			boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(i->first);
@@ -1229,16 +1241,16 @@ void Streamer::streamPickups()
 		}
 		else
 		{
-			discoveredPickups.erase(d);
+			core->getData()->discoveredPickups.erase(d);
 			++i;
 		}
 	}
 	std::multimap<int, Item::SharedPickup> sortedPickups;
-	for (boost::unordered_map<int, Item::SharedPickup>::iterator d = discoveredPickups.begin(); d != discoveredPickups.end(); ++d)
+	for (boost::unordered_map<int, Item::SharedPickup>::iterator d = core->getData()->discoveredPickups.begin(); d != core->getData()->discoveredPickups.end(); ++d)
 	{
 		sortedPickups.insert(std::make_pair(d->second->priority, d->second));
 	}
-	discoveredPickups.clear();
+	core->getData()->discoveredPickups.clear();
 	for (std::multimap<int, Item::SharedPickup>::iterator i = sortedPickups.begin(); i != sortedPickups.end(); ++i)
 	{
 		if (core->getData()->internalPickups.size() == core->getData()->getGlobalMaxVisibleItems(STREAMER_TYPE_PICKUP))
@@ -1418,6 +1430,12 @@ void Streamer::streamTextLabels(Player &player, bool automatic)
 				if (automatic && ++chunkCount > chunkSize[STREAMER_TYPE_3D_TEXT_LABEL])
 				{
 					break;
+				}
+				boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(d->second->textLabelID);
+				if (t == core->getData()->textLabels.end())
+				{
+					player.discoveredTextLabels.erase(d++);
+					continue;
 				}
 				if (player.internalTextLabels.size() == player.currentVisibleTextLabels)
 				{

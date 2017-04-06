@@ -41,6 +41,11 @@ boost::unordered_map<int, Item::SharedActor>::iterator Utility::destroyActor(boo
 		core->getData()->destroyedActors.push_back(i->second);
 		core->getData()->internalActors.quick_erase(i);
 	}
+	boost::unordered_map<int, Item::SharedActor>::iterator d = core->getData()->discoveredActors.find(a->first);
+	if (d != core->getData()->discoveredActors.end())
+	{
+		core->getData()->discoveredActors.erase(d);
+	}
 	core->getGrid()->removeActor(a->second);
 	return core->getData()->actors.erase(a);
 }
@@ -117,6 +122,11 @@ boost::unordered_map<int, Item::SharedPickup>::iterator Utility::destroyPickup(b
 	{
 		sampgdk::DestroyPickup(i->second);
 		core->getData()->internalPickups.quick_erase(i);
+	}
+	boost::unordered_map<int, Item::SharedPickup>::iterator d = core->getData()->discoveredPickups.find(p->first);
+	if (d != core->getData()->discoveredPickups.end())
+	{
+		core->getData()->discoveredPickups.erase(d);
 	}
 	core->getGrid()->removePickup(p->second);
 	return core->getData()->pickups.erase(p);

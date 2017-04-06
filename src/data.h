@@ -48,6 +48,9 @@ public:
 
 	std::vector<int> destroyedActors;
 
+	boost::unordered_map<int, Item::SharedActor> discoveredActors;
+	boost::unordered_map<int, Item::SharedPickup> discoveredPickups;
+
 	boost::unordered_map<int, int> internalActors;
 	boost::unordered_map<int, int> internalPickups;
 
