@@ -595,14 +595,21 @@ void Grid::processDiscoveredCellsForPlayer(Player &player, std::vector<SharedCel
 		boost::unordered_map<int, Item::SharedObject>::iterator o = player.visibleCell->objects.begin();
 		while (o != player.visibleCell->objects.end())
 		{
-			boost::unordered_set<CellID>::iterator d = discoveredCells.find(o->second->cell->cellID);
-			if (d != discoveredCells.end())
+			if (o->second->cell)
 			{
-				o = player.visibleCell->objects.erase(o);
+				boost::unordered_set<CellID>::iterator d = discoveredCells.find(o->second->cell->cellID);
+				if (d != discoveredCells.end())
+				{
+					o = player.visibleCell->objects.erase(o);
+				}
+				else
+				{
+					++o;
+				}
 			}
 			else
 			{
-				++o;
+				o = player.visibleCell->objects.erase(o);
 			}
 		}
 		playerCells.back()->objects.swap(player.visibleCell->objects);
@@ -628,7 +635,6 @@ void Grid::processDiscoveredCellsForPlayer(Player &player, std::vector<SharedCel
 			{
 				c = player.visibleCell->checkpoints.erase(c);
 			}
-
 		}
 		playerCells.back()->checkpoints.swap(player.visibleCell->checkpoints);
 	}
