@@ -1882,7 +1882,6 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemOffset(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::Streamer_SetItemOffset(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(5, "Streamer_SetItemOffset");
-	Eigen::Vector3f positionOffset = Eigen::Vector3f::Zero();
 	switch (static_cast<int>(params[1]))
 	{
 		case STREAMER_TYPE_OBJECT:
