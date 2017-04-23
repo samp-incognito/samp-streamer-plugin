@@ -166,7 +166,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPolygon(AMX *amx, cell *params)
 	}
 	if (static_cast<int>(params[4] >= 2 && static_cast<int>(params[4]) % 2))
 	{
-		Utility::logError("CreateDynamicPolygon: Number of points must be divisible by two");
+		Utility::logError("CreateDynamicPolygon: Number of points must be divisible by two.");
 		return 0;
 	}
 	int areaID = Item::Area::identifier.get();

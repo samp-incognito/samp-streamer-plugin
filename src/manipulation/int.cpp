@@ -519,17 +519,17 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 	{
 		case InvalidData:
 		{
-			Utility::logError("Streamer_GetIntData: Invalid data specified");
+			Utility::logError("Streamer_GetIntData: Invalid data specified.");
 			break;
 		}
 		case InvalidID:
 		{
-			Utility::logError("Streamer_GetIntData: Invalid ID specified");
+			Utility::logError("Streamer_GetIntData: Invalid ID specified.");
 			break;
 		}
 		case InvalidType:
 		{
-			Utility::logError("Streamer_GetIntData: Invalid type specified");
+			Utility::logError("Streamer_GetIntData: Invalid type specified.");
 			break;
 		}
 	}
@@ -559,12 +559,12 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 						{
 							if (o->second->move)
 							{
-								Utility::logError("Streamer_SetIntData: Object is currently moving and must be stopped first");
+								Utility::logError("Streamer_SetIntData: Object is currently moving and must be stopped first.");
 								return 0;
 							}
 							if (sampgdk::FindNative("SetPlayerGravity") == NULL)
 							{
-								Utility::logError("Streamer_SetIntData: YSF plugin must be loaded to attach objects to objects");
+								Utility::logError("Streamer_SetIntData: YSF plugin must be loaded to attach objects to objects.");
 								return 0;
 							}
 							o->second->attach = boost::intrusive_ptr<Item::Object::Attach>(new Item::Object::Attach);
@@ -598,12 +598,12 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 						{
 							if (o->second->move)
 							{
-								Utility::logError("Streamer_SetIntData: Object is currently moving and must be stopped first");
+								Utility::logError("Streamer_SetIntData: Object is currently moving and must be stopped first.");
 								return 0;
 							}
 							if (sampgdk::FindNative("SetPlayerGravity") == NULL)
 							{
-								Utility::logError("Streamer_SetIntData: YSF plugin must be loaded to attach objects to players");
+								Utility::logError("Streamer_SetIntData: YSF plugin must be loaded to attach objects to players.");
 								return 0;
 							}
 							o->second->attach = boost::intrusive_ptr<Item::Object::Attach>(new Item::Object::Attach);
@@ -636,7 +636,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 						{
 							if (o->second->move)
 							{
-								Utility::logError("Streamer_SetIntData: Object is currently moving and must be stopped first");
+								Utility::logError("Streamer_SetIntData: Object is currently moving and must be stopped first.");
 								return 0;
 							}
 							o->second->attach = boost::intrusive_ptr<Item::Object::Attach>(new Item::Object::Attach);
@@ -1163,7 +1163,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 				{
 					case AttachedObject:
 					{
-						Utility::logError("Streamer_SetIntData: Use AttachDynamicAreaToObject to adjust attached area data");
+						Utility::logError("Streamer_SetIntData: Use AttachDynamicAreaToObject to adjust attached area data.");
 						return 0;
 					}
 					case AttachedPlayer:
@@ -1336,17 +1336,17 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 	{
 		case InvalidData:
 		{
-			Utility::logError("Streamer_SetIntData: Invalid data specified");
+			Utility::logError("Streamer_SetIntData: Invalid data specified.");
 			break;
 		}
 		case InvalidID:
 		{
-			Utility::logError("Streamer_SetIntData: Invalid ID specified");
+			Utility::logError("Streamer_SetIntData: Invalid ID specified.");
 			break;
 		}
 		case InvalidType:
 		{
-			Utility::logError("Streamer_SetIntData: Invalid type specified");
+			Utility::logError("Streamer_SetIntData: Invalid type specified.");
 			break;
 		}
 	}

@@ -59,7 +59,7 @@ int Utility::checkInterfaceAndRegisterNatives(AMX *amx, AMX_NATIVE_INFO *amxNati
 			foundNatives = true;
 			if (!amxNativeTable[i].address)
 			{
-				Utility::logError("Obsolete or invalid native \"%s\" found (script might need to be recompiled with the latest include file)", name);
+				Utility::logError("Obsolete or invalid native \"%s\" found (script might recompiled with the correct include file).", name);
 				amxNativeTable[i].address = reinterpret_cast<cell>(hookedNative);
 				hookedNatives = true;
 			}
@@ -88,7 +88,7 @@ int Utility::checkInterfaceAndRegisterNatives(AMX *amx, AMX_NATIVE_INFO *amxNati
 			{
 				includeFileVersion << std::hex << std::showbase << includeFileValue;
 			}
-			Utility::logError("Include file version (%s) does not match plugin version (%#x) (script might need to be recompiled with the latest include file)", includeFileVersion.str().c_str(), INCLUDE_FILE_VERSION);
+			Utility::logError("Include file version (%s) does not match plugin version (%#x) (script might need to be recompiled with the correct include file).", includeFileVersion.str().c_str(), INCLUDE_FILE_VERSION);
 		}
 	}
 	if (hookedNatives)

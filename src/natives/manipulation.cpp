@@ -180,7 +180,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetUpperBound(AMX *amx, cell *params)
 		}
 		default:
 		{
-			Utility::logError("Streamer_GetUpperBound: Invalid type specified");
+			Utility::logError("Streamer_GetUpperBound: Invalid type specified.");
 			return 0;
 		}
 	}

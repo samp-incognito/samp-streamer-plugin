@@ -97,17 +97,17 @@ int Manipulation::getArrayData(AMX *amx, cell *params)
 	{
 		case InvalidData:
 		{
-			Utility::logError("Streamer_GetArrayData: Invalid data specified");
+			Utility::logError("Streamer_GetArrayData: Invalid data specified.");
 			break;
 		}
 		case InvalidID:
 		{
-			Utility::logError("Streamer_GetArrayData: Invalid ID specified");
+			Utility::logError("Streamer_GetArrayData: Invalid ID specified.");
 			break;
 		}
 		case InvalidType:
 		{
-			Utility::logError("Streamer_GetArrayData: Invalid type specified");
+			Utility::logError("Streamer_GetArrayData: Invalid type specified.");
 			break;
 		}
 		default:
@@ -185,17 +185,17 @@ int Manipulation::setArrayData(AMX *amx, cell *params)
 	{
 		case InvalidData:
 		{
-			Utility::logError("Streamer_SetArrayData: Invalid data specified");
+			Utility::logError("Streamer_SetArrayData: Invalid data specified.");
 			break;
 		}
 		case InvalidID:
 		{
-			Utility::logError("Streamer_SetArrayData: Invalid ID specified");
+			Utility::logError("Streamer_SetArrayData: Invalid ID specified.");
 			break;
 		}
 		case InvalidType:
 		{
-			Utility::logError("Streamer_SetArrayData: Invalid type specified");
+			Utility::logError("Streamer_SetArrayData: Invalid type specified.");
 			break;
 		}
 		default:
@@ -273,17 +273,17 @@ int Manipulation::isInArrayData(AMX *amx, cell *params)
 	{
 		case InvalidData:
 		{
-			Utility::logError("Streamer_IsInArrayData: Invalid data specified");
+			Utility::logError("Streamer_IsInArrayData: Invalid data specified.");
 			break;
 		}
 		case InvalidID:
 		{
-			Utility::logError("Streamer_IsInArrayData: Invalid ID specified");
+			Utility::logError("Streamer_IsInArrayData: Invalid ID specified.");
 			break;
 		}
 		case InvalidType:
 		{
-			Utility::logError("Streamer_IsInArrayData: Invalid type specified");
+			Utility::logError("Streamer_IsInArrayData: Invalid type specified.");
 			break;
 		}
 		default:
@@ -361,17 +361,17 @@ int Manipulation::appendArrayData(AMX *amx, cell *params)
 	{
 		case InvalidData:
 		{
-			Utility::logError("Streamer_AppendArrayData: Invalid data specified");
+			Utility::logError("Streamer_AppendArrayData: Invalid data specified.");
 			break;
 		}
 		case InvalidID:
 		{
-			Utility::logError("Streamer_AppendArrayData: Invalid ID specified");
+			Utility::logError("Streamer_AppendArrayData: Invalid ID specified.");
 			break;
 		}
 		case InvalidType:
 		{
-			Utility::logError("Streamer_AppendArrayData: Invalid type specified");
+			Utility::logError("Streamer_AppendArrayData: Invalid type specified.");
 			break;
 		}
 		default:
@@ -449,17 +449,17 @@ int Manipulation::removeArrayData(AMX *amx, cell *params)
 	{
 		case InvalidData:
 		{
-			Utility::logError("Streamer_RemoveArrayData: Invalid data specified");
+			Utility::logError("Streamer_RemoveArrayData: Invalid data specified.");
 			break;
 		}
 		case InvalidID:
 		{
-			Utility::logError("Streamer_RemoveArrayData: Invalid ID specified");
+			Utility::logError("Streamer_RemoveArrayData: Invalid ID specified.");
 			break;
 		}
 		case InvalidType:
 		{
-			Utility::logError("Streamer_RemoveArrayData: Invalid type specified");
+			Utility::logError("Streamer_RemoveArrayData: Invalid type specified.");
 			break;
 		}
 		default:

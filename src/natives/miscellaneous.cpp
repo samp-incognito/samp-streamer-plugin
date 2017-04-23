@@ -178,7 +178,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 		}
 		default:
 		{
-			Utility::logError("Streamer_GetDistanceToItem: Invalid type specified");
+			Utility::logError("Streamer_GetDistanceToItem: Invalid type specified.");
 			return 0;
 		}
 	}
@@ -198,7 +198,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 		}
 		default:
 		{
-			Utility::logError("Streamer_GetDistanceToItem: Invalid number of dimensions specified (outside range of 2-3)");
+			Utility::logError("Streamer_GetDistanceToItem: Invalid number of dimensions specified (outside range of 2-3).");
 			return 0;
 		}
 	}
@@ -340,7 +340,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleItem(AMX *amx, cell *params)
 		}
 		default:
 		{
-			Utility::logError("Streamer_ToggleItem: Invalid type specified");
+			Utility::logError("Streamer_ToggleItem: Invalid type specified.");
 			return 0;
 		}
 	}
@@ -426,7 +426,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItem(AMX *amx, cell *params)
 		}
 		default:
 		{
-			Utility::logError("Streamer_IsToggleItem: Invalid type specified");
+			Utility::logError("Streamer_IsToggleItem: Invalid type specified.");
 			return 0;
 		}
 	}
@@ -594,7 +594,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleAllItems(AMX *amx, cell *params)
 		}
 		default:
 		{
-			Utility::logError("Streamer_ToggleAllItems: Invalid type specified");
+			Utility::logError("Streamer_ToggleAllItems: Invalid type specified.");
 			return 0;
 		}
 	}
@@ -683,7 +683,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemInternalID(AMX *amx, cell *params)
 			}
 			default:
 			{
-				Utility::logError("Streamer_GetItemInternalID: Invalid type specified");
+				Utility::logError("Streamer_GetItemInternalID: Invalid type specified.");
 				return 0;
 			}
 		}
@@ -784,7 +784,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemStreamerID(AMX *amx, cell *params)
 			}
 			default:
 			{
-				Utility::logError("Streamer_GetItemStreamerID: Invalid type specified");
+				Utility::logError("Streamer_GetItemStreamerID: Invalid type specified.");
 				return 0;
 			}
 		}
@@ -874,7 +874,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsItemVisible(AMX *amx, cell *params)
 			}
 			default:
 			{
-				Utility::logError("Streamer_IsItemVisible: Invalid type specified");
+				Utility::logError("Streamer_IsItemVisible: Invalid type specified.");
 				return 0;
 			}
 		}
@@ -1033,7 +1033,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 			}
 			default:
 			{
-				Utility::logError("Streamer_DestroyAllVisibleItems: Invalid type specified");
+				Utility::logError("Streamer_DestroyAllVisibleItems: Invalid type specified.");
 				return 0;
 			}
 		}
@@ -1167,7 +1167,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountVisibleItems(AMX *amx, cell *params)
 			}
 			default:
 			{
-				Utility::logError("Streamer_CountVisibleItems: Invalid type specified");
+				Utility::logError("Streamer_CountVisibleItems: Invalid type specified.");
 				return 0;
 			}
 		}
@@ -1312,7 +1312,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllItems(AMX *amx, cell *params)
 		}
 		default:
 		{
-			Utility::logError("Streamer_DestroyAllItems: Invalid type specified");
+			Utility::logError("Streamer_DestroyAllItems: Invalid type specified.");
 			return 0;
 		}
 	}
@@ -1479,7 +1479,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountItems(AMX *amx, cell *params)
 		}
 		default:
 		{
-			Utility::logError("Streamer_CountItems: Invalid type specified");
+			Utility::logError("Streamer_CountItems: Invalid type specified.");
 			return 0;
 		}
 	}
@@ -1668,7 +1668,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 		}
 		default:
 		{
-			Utility::logError("Streamer_GetNearbyItems: Invalid type specified");
+			Utility::logError("Streamer_GetNearbyItems: Invalid type specified.");
 			return 0;
 		}
 	}
@@ -1860,7 +1860,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemOffset(AMX *amx, cell *params)
 		}
 		default:
 		{
-			Utility::logError("Streamer_GetItemPosOffset: Invalid type specified");
+			Utility::logError("Streamer_GetItemPosOffset: Invalid type specified.");
 			return 0;
 		}
 	}
@@ -1947,7 +1947,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemOffset(AMX *amx, cell *params)
 		}
 		default:
 		{
-			Utility::logError("Streamer_SetItemPosOffset: Invalid type specified");
+			Utility::logError("Streamer_SetItemPosOffset: Invalid type specified.");
 			return 0;
 		}
 	}

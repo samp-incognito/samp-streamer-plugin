@@ -343,7 +343,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleItemStatic(AMX *amx, cell *params)
 		}
 		default:
 		{
-			Utility::logError("Streamer_ToggleItemStatic: Invalid type specified");
+			Utility::logError("Streamer_ToggleItemStatic: Invalid type specified.");
 			return 0;
 		}
 	}
@@ -441,7 +441,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItemStatic(AMX *amx, cell *params
 		}
 		default:
 		{
-			Utility::logError("Streamer_IsToggleItemStatic: Invalid type specified");
+			Utility::logError("Streamer_IsToggleItemStatic: Invalid type specified.");
 			return 0;
 		}
 	}
@@ -525,7 +525,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleItemInvAreas(AMX *amx, cell *params
 		}
 		default:
 		{
-			Utility::logError("Streamer_ToggleItemInvAreas: Invalid type specified");
+			Utility::logError("Streamer_ToggleItemInvAreas: Invalid type specified.");
 			return 0;
 		}
 	}
@@ -602,7 +602,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItemInvAreas(AMX *amx, cell *para
 		}
 		default:
 		{
-			Utility::logError("Streamer_IsToggleItemInvAreas: Invalid type specified");
+			Utility::logError("Streamer_IsToggleItemInvAreas: Invalid type specified.");
 			return 0;
 		}
 	}
@@ -676,7 +676,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleItemCallbacks(AMX *amx, cell *param
 		}
 		default:
 		{
-			Utility::logError("Streamer_ToggleItemCallbacks: Invalid type specified");
+			Utility::logError("Streamer_ToggleItemCallbacks: Invalid type specified.");
 			return 0;
 		}
 	}
@@ -744,7 +744,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItemCallbacks(AMX *amx, cell *par
 		}
 		default:
 		{
-			Utility::logError("Streamer_IsToggleItemCallbacks: Invalid type specified");
+			Utility::logError("Streamer_IsToggleItemCallbacks: Invalid type specified.");
 			return 0;
 		}
 	}

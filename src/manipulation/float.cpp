@@ -825,17 +825,17 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 	{
 		case InvalidData:
 		{
-			Utility::logError("Streamer_GetFloatData: Invalid data specified");
+			Utility::logError("Streamer_GetFloatData: Invalid data specified.");
 			break;
 		}
 		case InvalidID:
 		{
-			Utility::logError("Streamer_GetFloatData: Invalid ID specified");
+			Utility::logError("Streamer_GetFloatData: Invalid ID specified.");
 			break;
 		}
 		case InvalidType:
 		{
-			Utility::logError("Streamer_GetFloatData: Invalid type specified");
+			Utility::logError("Streamer_GetFloatData: Invalid type specified.");
 			break;
 		}
 	}
@@ -923,7 +923,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					case MoveY:
 					case MoveZ:
 					{
-						Utility::logError("Streamer_SetFloatData: Use MoveDynamicObject to adjust moving object data");
+						Utility::logError("Streamer_SetFloatData: Use MoveDynamicObject to adjust moving object data.");
 						return 0;
 					}
 					case RX:
@@ -955,7 +955,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					{
 						if (o->second->move)
 						{
-							Utility::logError("Streamer_SetFloatData: Object is currently moving and must be stopped first");
+							Utility::logError("Streamer_SetFloatData: Object is currently moving and must be stopped first.");
 							return 0;
 						}
 						o->second->position[0] = amx_ctof(params[4]);
@@ -970,7 +970,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					{
 						if (o->second->move)
 						{
-							Utility::logError("Streamer_SetFloatData: Object is currently moving and must be stopped first");
+							Utility::logError("Streamer_SetFloatData: Object is currently moving and must be stopped first.");
 							return 0;
 						}
 						o->second->position[1] = amx_ctof(params[4]);
@@ -985,7 +985,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					{
 						if (o->second->move)
 						{
-							Utility::logError("Streamer_SetFloatData: Object is currently moving and must be stopped first");
+							Utility::logError("Streamer_SetFloatData: Object is currently moving and must be stopped first.");
 							return 0;
 						}
 						o->second->position[2] = amx_ctof(params[4]);
@@ -1820,17 +1820,17 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 	{
 		case InvalidData:
 		{
-			Utility::logError("Streamer_SetFloatData: Invalid data specified");
+			Utility::logError("Streamer_SetFloatData: Invalid data specified.");
 			break;
 		}
 		case InvalidID:
 		{
-			Utility::logError("Streamer_SetFloatData: Invalid ID specified");
+			Utility::logError("Streamer_SetFloatData: Invalid ID specified.");
 			break;
 		}
 		case InvalidType:
 		{
-			Utility::logError("Streamer_SetFloatData: Invalid type specified");
+			Utility::logError("Streamer_SetFloatData: Invalid type specified.");
 			break;
 		}
 	}
