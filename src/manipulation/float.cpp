@@ -515,8 +515,20 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 					{
 						if (a->second->attach)
 						{
-							Utility::storeFloatInNative(amx, params[4], a->second->attach->position[0]);
-							return 1;
+							switch (a->second->type)
+							{
+								case STREAMER_AREA_TYPE_CIRCLE:
+								case STREAMER_AREA_TYPE_CYLINDER:
+								{
+									Utility::storeFloatInNative(amx, params[4], boost::get<Eigen::Vector2f>(a->second->attach->position)[0]);
+									return 1;
+								}
+								case STREAMER_AREA_TYPE_SPHERE:
+								{
+									Utility::storeFloatInNative(amx, params[4], boost::get<Eigen::Vector3f>(a->second->attach->position)[0]);
+									return 1;
+								}
+							}
 						}
 						return 0;
 					}
@@ -524,8 +536,20 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 					{
 						if (a->second->attach)
 						{
-							Utility::storeFloatInNative(amx, params[4], a->second->attach->position[1]);
-							return 1;
+							switch (a->second->type)
+							{
+								case STREAMER_AREA_TYPE_CIRCLE:
+								case STREAMER_AREA_TYPE_CYLINDER:
+								{
+									Utility::storeFloatInNative(amx, params[4], boost::get<Eigen::Vector2f>(a->second->attach->position)[1]);
+									return 1;
+								}
+								case STREAMER_AREA_TYPE_SPHERE:
+								{
+									Utility::storeFloatInNative(amx, params[4], boost::get<Eigen::Vector3f>(a->second->attach->position)[1]);
+									return 1;
+								}
+							}
 						}
 						return 0;
 					}
@@ -533,8 +557,14 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 					{
 						if (a->second->attach)
 						{
-							Utility::storeFloatInNative(amx, params[4], a->second->attach->position[2]);
-							return 1;
+							switch (a->second->type)
+							{
+								case STREAMER_AREA_TYPE_SPHERE:
+								{
+									Utility::storeFloatInNative(amx, params[4], boost::get<Eigen::Vector3f>(a->second->attach->position)[2]);
+									return 1;
+								}
+							}
 						}
 						return 0;
 					}

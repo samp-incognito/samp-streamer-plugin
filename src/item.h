@@ -107,9 +107,10 @@ namespace Item
 		{
 			Attach();
 
+			Eigen::Vector2f height;
 			boost::tuple<int, int, int> object;
 			int player;
-			Eigen::Vector3f position;
+			boost::variant<Polygon2D, Box2D, Box3D, Eigen::Vector2f, Eigen::Vector3f> position;
 			Eigen::Vector3f positionOffset;
 			int references;
 			int vehicle;

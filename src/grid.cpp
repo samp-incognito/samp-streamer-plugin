@@ -63,52 +63,47 @@ void Grid::addArea(const Item::SharedArea &area)
 	}
 	else
 	{
-		Eigen::Vector2f position = Eigen::Vector2f::Zero();
+		Eigen::Vector2f centroid = Eigen::Vector2f::Zero();
+		boost::variant<Polygon2D, Box2D, Box3D, Eigen::Vector2f, Eigen::Vector3f> position;
+		if (area->attach)
+		{
+			position = area->attach->position;
+		}
+		else
+		{
+			position = area->position;
+		}
 		switch (area->type)
 		{
 			case STREAMER_AREA_TYPE_CIRCLE:
 			case STREAMER_AREA_TYPE_CYLINDER:
 			{
-				if (area->attach)
-				{
-					position = Eigen::Vector2f(area->attach->position[0], area->attach->position[1]);
-				}
-				else
-				{
-					position = boost::get<Eigen::Vector2f>(area->position);
-				}
+				centroid = Eigen::Vector2f(boost::get<Eigen::Vector2f>(position));
 				break;
 			}
 			case STREAMER_AREA_TYPE_SPHERE:
 			{
-				if (area->attach)
-				{
-					position = Eigen::Vector2f(area->attach->position[0], area->attach->position[1]);
-				}
-				else
-				{
-					position = Eigen::Vector2f(boost::get<Eigen::Vector3f>(area->position)[0], boost::get<Eigen::Vector3f>(area->position)[1]);
-				}
+				centroid = Eigen::Vector2f(boost::get<Eigen::Vector3f>(position)[0], boost::get<Eigen::Vector3f>(position)[1]);
 				break;
 			}
 			case STREAMER_AREA_TYPE_RECTANGLE:
 			{
-				boost::geometry::centroid(boost::get<Box2D>(area->position), position);
+				boost::geometry::centroid(boost::get<Box2D>(position), centroid);
 				break;
 			}
 			case STREAMER_AREA_TYPE_CUBOID:
 			{
-				Eigen::Vector3f centroid = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3D>(area->position));
-				position = Eigen::Vector2f(centroid[0], centroid[1]);
+				Eigen::Vector3f point = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3D>(position));
+				centroid = Eigen::Vector2f(point[0], point[1]);
 				break;
 			}
 			case STREAMER_AREA_TYPE_POLYGON:
 			{
-				boost::geometry::centroid(boost::get<Polygon2D>(area->position), position);
+				boost::geometry::centroid(boost::get<Polygon2D>(position), centroid);
 				break;
 			}
 		}
-		CellID cellID = getCellID(position);
+		CellID cellID = getCellID(centroid);
 		cells[cellID]->areas.insert(std::make_pair(area->areaID, area));
 		area->cell = cells[cellID];
 	}

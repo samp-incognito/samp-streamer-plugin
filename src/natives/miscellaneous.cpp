@@ -116,52 +116,48 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[5]));
 			if (a != core->getData()->areas.end())
 			{
+				boost::variant<Polygon2D, Box2D, Box3D, Eigen::Vector2f, Eigen::Vector3f> areaPosition;
+				if (a->second->attach)
+				{
+					areaPosition = a->second->position;
+				}
+				else
+				{
+					areaPosition = a->second->position;
+				}
 				switch (a->second->type)
 				{
 					case STREAMER_AREA_TYPE_CIRCLE:
 					case STREAMER_AREA_TYPE_CYLINDER:
 					{
 						float distance = 0.0f;
-						if (a->second->attach)
-						{
-							distance = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), Eigen::Vector2f(a->second->attach->position[0], a->second->attach->position[1])));
-						}
-						else
-						{
-							distance = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), boost::get<Eigen::Vector2f>(a->second->position)));
-						}
+						distance = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), boost::get<Eigen::Vector2f>(areaPosition)));
 						Utility::storeFloatInNative(amx, params[6], distance);
 						return 1;
 					}
 					case STREAMER_AREA_TYPE_SPHERE:
 					{
-						if (a->second->attach)
-						{
-							position = a->second->attach->position;
-						}
-						else
-						{
-							position = boost::get<Eigen::Vector3f>(a->second->position);
-						}
+
+						position = boost::get<Eigen::Vector3f>(areaPosition);
 						break;
 					}
 					case STREAMER_AREA_TYPE_RECTANGLE:
 					{
-						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Box2D>(a->second->position));
+						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Box2D>(areaPosition));
 						float distance = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), centroid));
 						Utility::storeFloatInNative(amx, params[6], distance);
 						return 1;
 					}
 					case STREAMER_AREA_TYPE_CUBOID:
 					{
-						Eigen::Vector3f centroid = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3D>(a->second->position));
+						Eigen::Vector3f centroid = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3D>(areaPosition));
 						float distance = static_cast<float>(boost::geometry::distance(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), centroid));
 						Utility::storeFloatInNative(amx, params[6], distance);
 						return 1;
 					}
 					case STREAMER_AREA_TYPE_POLYGON:
 					{
-						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2D>(a->second->position));
+						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2D>(areaPosition));
 						float distance = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), centroid));
 						Utility::storeFloatInNative(amx, params[6], distance);
 						return 1;
@@ -1605,49 +1601,44 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 			{
 				for (boost::unordered_map<int, Item::SharedArea>::const_iterator a = (*p)->areas.begin(); a != (*p)->areas.end(); ++a)
 				{
+					boost::variant<Polygon2D, Box2D, Box3D, Eigen::Vector2f, Eigen::Vector3f> position;
+					if (a->second->attach)
+					{
+						position = a->second->position;
+					}
+					else
+					{
+						position = a->second->position;
+					}
 					float distance = 0.0f;
 					switch (a->second->type)
 					{
 						case STREAMER_AREA_TYPE_CIRCLE:
 						case STREAMER_AREA_TYPE_CYLINDER:
 						{
-							if (a->second->attach)
-							{
-								distance = static_cast<float>(boost::geometry::distance(position2D, Eigen::Vector2f(a->second->attach->position[0], a->second->attach->position[1])));
-							}
-							else
-							{
-								distance = static_cast<float>(boost::geometry::distance(position2D, boost::get<Eigen::Vector2f>(a->second->position)));
-							}
+							distance = static_cast<float>(boost::geometry::distance(position2D, boost::get<Eigen::Vector2f>(position)));
 							break;
 						}
 						case STREAMER_AREA_TYPE_SPHERE:
 						{
-							if (a->second->attach)
-							{
-								distance = static_cast<float>(boost::geometry::comparable_distance(position3D, a->second->attach->position));
-							}
-							else
-							{
-								distance = static_cast<float>(boost::geometry::comparable_distance(position3D, boost::get<Eigen::Vector3f>(a->second->position)));
-							}
+							distance = static_cast<float>(boost::geometry::comparable_distance(position3D, boost::get<Eigen::Vector3f>(position)));
 							break;
 						}
 						case STREAMER_AREA_TYPE_RECTANGLE:
 						{
-							Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Box2D>(a->second->position));
+							Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Box2D>(position));
 							distance = static_cast<float>(boost::geometry::comparable_distance(position2D, centroid));
 							break;
 						}
 						case STREAMER_AREA_TYPE_CUBOID:
 						{
-							Eigen::Vector3f centroid = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3D>(a->second->position));
+							Eigen::Vector3f centroid = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3D>(position));
 							distance = static_cast<float>(boost::geometry::comparable_distance(position3D, centroid));
 							break;
 						}
 						case STREAMER_AREA_TYPE_POLYGON:
 						{
-							Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2D>(a->second->position));
+							Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2D>(position));
 							distance = static_cast<float>(boost::geometry::comparable_distance(position2D, centroid));
 							break;
 						}

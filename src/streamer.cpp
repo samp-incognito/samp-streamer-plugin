@@ -121,34 +121,44 @@ void Streamer::startAutomaticUpdate()
 {
 	if (!core->getData()->interfaces.empty())
 	{
-		boost::chrono::steady_clock::time_point startTime = boost::chrono::steady_clock::now();
-		for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+		boost::chrono::steady_clock::time_point currentTime = boost::chrono::steady_clock::now();
+		if (!core->getData()->players.empty())
 		{
-			if (p->second.processingChunks.any())
+			bool updatedActiveItems = false;
+			for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 			{
-				performPlayerChunkUpdate(p->second, true);
-			}
-			else
-			{
-				if (++p->second.tickCount >= p->second.tickRate)
+				if (p->second.processingChunks.any())
 				{
-					if (!p->second.delayedUpdate)
+					performPlayerChunkUpdate(p->second, true);
+				}
+				else
+				{
+					if (++p->second.tickCount >= p->second.tickRate)
 					{
-						performPlayerUpdate(p->second, true);
+						if (!updatedActiveItems)
+						{
+							processActiveItems();
+							updatedActiveItems = true;
+						}
+						if (!p->second.delayedUpdate)
+						{
+							performPlayerUpdate(p->second, true);
+						}
+						else
+						{
+							startManualUpdate(p->second, p->second.delayedUpdateType);
+						}
+						p->second.tickCount = 0;
 					}
-					else
-					{
-						startManualUpdate(p->second, p->second.delayedUpdateType);
-					}
-					p->second.tickCount = 0;
 				}
 			}
 		}
+		else
+		{
+			processActiveItems();
+		}
 		if (++tickCount >= tickRate)
 		{
-			calculateAverageElapsedTime();
-			processActiveItems();
-			Utility::processPendingDestroyedActors();
 			for (std::vector<int>::const_iterator t = core->getData()->typePriority.begin(); t != core->getData()->typePriority.end(); ++t)
 			{
 				switch (*t)
@@ -163,6 +173,7 @@ void Streamer::startAutomaticUpdate()
 					}
 					case STREAMER_TYPE_ACTOR:
 					{
+						Utility::processPendingDestroyedActors();
 						if (Utility::haveAllPlayersCheckedActors())
 						{
 							streamActors();
@@ -174,7 +185,8 @@ void Streamer::startAutomaticUpdate()
 			executeCallbacks();
 			tickCount = 0;
 		}
-		lastUpdateTime = boost::chrono::duration<float, boost::milli>(boost::chrono::steady_clock::now() - startTime).count();
+		calculateAverageElapsedTime();
+		lastUpdateTime = boost::chrono::duration<float, boost::milli>(boost::chrono::steady_clock::now() - currentTime).count();
 	}
 }
 
@@ -1573,24 +1585,18 @@ void Streamer::processAttachedAreas()
 				{
 					case STREAMER_OBJECT_TYPE_GLOBAL:
 					{
-						adjust = sampgdk::GetObjectPos((*a)->attach->object.get<0>(), &(*a)->attach->position[0], &(*a)->attach->position[1], &(*a)->attach->position[2]);
-						if (!(*a)->attach->positionOffset.isZero())
-						{
-							Eigen::Vector3f rotation = Eigen::Vector3f::Zero();
-							sampgdk::GetObjectRot((*a)->attach->object.get<0>(), &rotation[0], &rotation[1], &rotation[2]);
-							Utility::projectPoint((*a)->attach->positionOffset, rotation, (*a)->attach->position);
-						}
+						Eigen::Vector3f position = Eigen::Vector3f::Zero(), rotation = Eigen::Vector3f::Zero();
+						adjust = sampgdk::GetObjectPos((*a)->attach->object.get<0>(), &position[0], &position[1], &position[2]);
+						sampgdk::GetObjectRot((*a)->attach->object.get<0>(), &rotation[0], &rotation[1], &rotation[2]);
+						Utility::constructAttachedArea(*a, boost::variant<float, Eigen::Vector3f, Eigen::Vector4f>(rotation), position);
 						break;
 					}
 					case STREAMER_OBJECT_TYPE_PLAYER:
 					{
-						adjust = sampgdk::GetPlayerObjectPos((*a)->attach->object.get<2>(), (*a)->attach->object.get<0>(), &(*a)->attach->position[0], &(*a)->attach->position[1], &(*a)->attach->position[2]);
-						if (!(*a)->attach->positionOffset.isZero())
-						{
-							Eigen::Vector3f rotation = Eigen::Vector3f::Zero();
-							sampgdk::GetPlayerObjectRot((*a)->attach->object.get<2>(), (*a)->attach->object.get<0>(), &rotation[0], &rotation[1], &rotation[2]);
-							Utility::projectPoint((*a)->attach->positionOffset, rotation, (*a)->attach->position);
-						}
+						Eigen::Vector3f position = Eigen::Vector3f::Zero(), rotation = Eigen::Vector3f::Zero();
+						adjust = sampgdk::GetPlayerObjectPos((*a)->attach->object.get<2>(), (*a)->attach->object.get<0>(), &position[0], &position[1], &position[2]);
+						sampgdk::GetPlayerObjectRot((*a)->attach->object.get<2>(), (*a)->attach->object.get<0>(), &rotation[0], &rotation[1], &rotation[2]);
+						Utility::constructAttachedArea(*a, boost::variant<float, Eigen::Vector3f, Eigen::Vector4f>(rotation), position);
 						break;
 					}
 					case STREAMER_OBJECT_TYPE_DYNAMIC:
@@ -1598,11 +1604,7 @@ void Streamer::processAttachedAreas()
 						boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find((*a)->attach->object.get<0>());
 						if (o != core->getData()->objects.end())
 						{
-							(*a)->attach->position = o->second->position;
-							if (!(*a)->attach->positionOffset.isZero())
-							{
-								Utility::projectPoint((*a)->attach->positionOffset, o->second->rotation, (*a)->attach->position);
-							}
+							Utility::constructAttachedArea(*a, boost::variant<float, Eigen::Vector3f, Eigen::Vector4f>(o->second->rotation), o->second->position);
 							adjust = true;
 						}
 						break;
@@ -1611,43 +1613,39 @@ void Streamer::processAttachedAreas()
 			}
 			else if ((*a)->attach->player != INVALID_GENERIC_ID)
 			{
-				adjust = sampgdk::GetPlayerPos((*a)->attach->player, &(*a)->attach->position[0], &(*a)->attach->position[1], &(*a)->attach->position[2]);
-				if (!(*a)->attach->positionOffset.isZero())
-				{
-					float heading = 0.0f;
-					sampgdk::GetPlayerFacingAngle((*a)->attach->player, &heading);
-					Utility::projectPoint((*a)->attach->positionOffset, heading, (*a)->attach->position);
-				}
+				float heading = 0.0f;
+				Eigen::Vector3f position = Eigen::Vector3f::Zero();
+				adjust = sampgdk::GetPlayerPos((*a)->attach->player, &position[0], &position[1], &position[2]);
+				sampgdk::GetPlayerFacingAngle((*a)->attach->player, &heading);
+				Utility::constructAttachedArea(*a, boost::variant<float, Eigen::Vector3f, Eigen::Vector4f>(heading), position);
 			}
 			else if ((*a)->attach->vehicle != INVALID_GENERIC_ID)
 			{
-				adjust = sampgdk::GetVehiclePos((*a)->attach->vehicle, &(*a)->attach->position[0], &(*a)->attach->position[1], &(*a)->attach->position[2]);
-				if (!(*a)->attach->positionOffset.isZero())
+				bool occupied = false;
+				for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 				{
-					bool occupied = false;
-					for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+					if (sampgdk::GetPlayerState(p->first) == PLAYER_STATE_DRIVER)
 					{
-						if (sampgdk::GetPlayerState(p->first) == PLAYER_STATE_DRIVER)
+						if (sampgdk::GetPlayerVehicleID(p->first) == (*a)->attach->vehicle)
 						{
-							if (sampgdk::GetPlayerVehicleID(p->first) == (*a)->attach->vehicle)
-							{
-								occupied = true;
-								break;
-							}
+							occupied = true;
+							break;
 						}
 					}
-					if (!occupied)
-					{
-						float heading = 0.0f;
-						sampgdk::GetVehicleZAngle((*a)->attach->vehicle, &heading);
-						Utility::projectPoint((*a)->attach->positionOffset, heading, (*a)->attach->position);
-					}
-					else
-					{
-						Eigen::Vector4f quaternion = Eigen::Vector4f::Zero();
-						sampgdk::GetVehicleRotationQuat((*a)->attach->vehicle, &quaternion[0], &quaternion[1], &quaternion[2], &quaternion[3]);
-						Utility::projectPoint((*a)->attach->positionOffset, quaternion, (*a)->attach->position);
-					}
+				}
+				Eigen::Vector3f position = Eigen::Vector3f::Zero();
+				adjust = sampgdk::GetVehiclePos((*a)->attach->vehicle, &position[0], &position[1], &position[2]);
+				if (!occupied)
+				{
+					float heading = 0.0f;
+					sampgdk::GetVehicleZAngle((*a)->attach->vehicle, &heading);
+					Utility::constructAttachedArea(*a, boost::variant<float, Eigen::Vector3f, Eigen::Vector4f>(heading), position);
+				}
+				else
+				{
+					Eigen::Vector4f quaternion = Eigen::Vector4f::Zero();
+					sampgdk::GetVehicleRotationQuat((*a)->attach->vehicle, &quaternion[0], &quaternion[1], &quaternion[2], &quaternion[3]);
+					Utility::constructAttachedArea(*a, boost::variant<float, Eigen::Vector3f, Eigen::Vector4f>(quaternion), position);
 				}
 			}
 			if (adjust)
@@ -1659,7 +1657,37 @@ void Streamer::processAttachedAreas()
 			}
 			else
 			{
-				(*a)->attach->position.fill(std::numeric_limits<float>::infinity());
+				switch ((*a)->type)
+				{
+					case STREAMER_AREA_TYPE_CIRCLE:
+					case STREAMER_AREA_TYPE_CYLINDER:
+					{
+						boost::get<Eigen::Vector2f>((*a)->attach->position).fill(std::numeric_limits<float>::infinity());
+						break;
+					}
+					case STREAMER_AREA_TYPE_SPHERE:
+					{
+						boost::get<Eigen::Vector3f>((*a)->attach->position).fill(std::numeric_limits<float>::infinity());
+						break;
+					}
+					case STREAMER_AREA_TYPE_RECTANGLE:
+					{
+						boost::get<Box2D>((*a)->attach->position).min_corner().fill(std::numeric_limits<float>::infinity());
+						boost::get<Box2D>((*a)->attach->position).max_corner().fill(std::numeric_limits<float>::infinity());
+						break;
+					}
+					case STREAMER_AREA_TYPE_CUBOID:
+					{
+						boost::get<Box3D>((*a)->attach->position).min_corner().fill(std::numeric_limits<float>::infinity());
+						boost::get<Box3D>((*a)->attach->position).max_corner().fill(std::numeric_limits<float>::infinity());
+						break;
+					}
+					case STREAMER_AREA_TYPE_POLYGON:
+					{
+						boost::get<Polygon2D>((*a)->attach->position).clear();
+						break;
+					}
+				}
 			}
 		}
 	}
