@@ -295,7 +295,14 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 			int state = sampgdk::GetPlayerState(player.playerID);
 			if ((state != PLAYER_STATE_NONE && state != PLAYER_STATE_WASTED) || (state == PLAYER_STATE_SPECTATING && !player.requestingClass))
 			{
-				sampgdk::GetPlayerPos(player.playerID, &player.position[0], &player.position[1], &player.position[2]);
+				if (!sampgdk::IsPlayerInAnyVehicle(player.playerID))
+				{
+					sampgdk::GetPlayerPos(player.playerID, &player.position[0], &player.position[1], &player.position[2]);
+				}
+				else
+				{
+					sampgdk::GetVehiclePos(sampgdk::GetPlayerVehicleID(player.playerID), &player.position[0], &player.position[1], &player.position[2]);
+				}
 				if (player.position != position)
 				{
 					position = player.position;
