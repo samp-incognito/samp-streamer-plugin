@@ -1173,6 +1173,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 							a->second->attach = boost::intrusive_ptr<Item::Area::Attach>(new Item::Area::Attach);
 							a->second->attach->object = boost::make_tuple(INVALID_STREAMER_ID, STREAMER_OBJECT_TYPE_DYNAMIC, INVALID_PLAYER_ID);
 							a->second->attach->vehicle = INVALID_GENERIC_ID;
+							a->second->attach->position = a->second->position;
 							a->second->attach->player = static_cast<int>(params[4]);
 							core->getStreamer()->attachedAreas.insert(a->second);
 							return 1;
@@ -1199,6 +1200,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 							a->second->attach = boost::intrusive_ptr<Item::Area::Attach>(new Item::Area::Attach);
 							a->second->attach->object = boost::make_tuple(INVALID_STREAMER_ID, STREAMER_OBJECT_TYPE_DYNAMIC, INVALID_PLAYER_ID);
 							a->second->attach->player = INVALID_GENERIC_ID;
+							a->second->attach->position = a->second->position;
 							a->second->attach->vehicle = static_cast<int>(params[4]);
 							core->getStreamer()->attachedAreas.insert(a->second);
 							return 1;

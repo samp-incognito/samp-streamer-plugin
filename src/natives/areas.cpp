@@ -645,9 +645,9 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToObject(AMX *amx, cell *params)
 		if ((static_cast<int>(params[2]) != INVALID_GENERIC_ID && static_cast<int>(params[3]) != STREAMER_OBJECT_TYPE_DYNAMIC) || (static_cast<int>(params[2]) != INVALID_STREAMER_ID && static_cast<int>(params[3]) == STREAMER_OBJECT_TYPE_DYNAMIC))
 		{
 			a->second->attach = boost::intrusive_ptr<Item::Area::Attach>(new Item::Area::Attach);
-			a->second->attach->position = a->second->position;
 			a->second->attach->player = INVALID_GENERIC_ID;
 			a->second->attach->vehicle = INVALID_GENERIC_ID;
+			a->second->attach->position = a->second->position;
 			a->second->attach->object = boost::make_tuple(static_cast<int>(params[2]), static_cast<int>(params[3]), static_cast<int>(params[4]));
 			a->second->attach->positionOffset = Eigen::Vector3f(amx_ctof(params[5]), amx_ctof(params[6]), amx_ctof(params[7]));
 			core->getStreamer()->attachedAreas.insert(a->second);
@@ -678,9 +678,9 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToPlayer(AMX *amx, cell *params)
 		if (static_cast<int>(params[2]) != INVALID_GENERIC_ID)
 		{
 			a->second->attach = boost::intrusive_ptr<Item::Area::Attach>(new Item::Area::Attach);
-			a->second->attach->position = a->second->position;
 			a->second->attach->object = boost::make_tuple(INVALID_STREAMER_ID, STREAMER_OBJECT_TYPE_DYNAMIC, INVALID_PLAYER_ID);
 			a->second->attach->vehicle = INVALID_GENERIC_ID;
+			a->second->attach->position = a->second->position;
 			a->second->attach->player = static_cast<int>(params[2]);
 			a->second->attach->positionOffset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
 			core->getStreamer()->attachedAreas.insert(a->second);
@@ -711,9 +711,9 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToVehicle(AMX *amx, cell *params)
 		if (static_cast<int>(params[2]) != INVALID_GENERIC_ID)
 		{
 			a->second->attach = boost::intrusive_ptr<Item::Area::Attach>(new Item::Area::Attach);
-			a->second->attach->position = a->second->position;
 			a->second->attach->object = boost::make_tuple(INVALID_STREAMER_ID, STREAMER_OBJECT_TYPE_DYNAMIC, INVALID_PLAYER_ID);
 			a->second->attach->player = INVALID_GENERIC_ID;
+			a->second->attach->position = a->second->position;
 			a->second->attach->vehicle = static_cast<int>(params[2]);
 			a->second->attach->positionOffset = a->second->attach->positionOffset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
 			core->getStreamer()->attachedAreas.insert(a->second);
