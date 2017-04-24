@@ -1,6 +1,12 @@
 SA-MP Streamer Plugin
 =====================
 
+v2.9.1
+------
+
+- Fixed some bugs and a crash that randomly occurred
+- Allowed any type of area to be attached
+
 v2.9.0
 ------
 
