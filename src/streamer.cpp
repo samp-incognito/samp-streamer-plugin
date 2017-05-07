@@ -243,6 +243,7 @@ void Streamer::startManualUpdate(Player &player, int type)
 		player.existingTextLabels.clear();
 		player.processingChunks.reset();
 	}
+	processActiveItems();
 	performPlayerUpdate(player, false);
 	performPlayerChunkUpdate(player, false);
 	player.enabledItems = enabledItems;
