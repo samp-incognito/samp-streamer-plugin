@@ -17,7 +17,7 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#define INVALID_ALTERNATE_ID (-1)
+#define INVALID_PICKUP_ID (-1)
 #define INVALID_STREAMER_ID (0)
 
 #define STREAMER_MAX_TYPES (8)

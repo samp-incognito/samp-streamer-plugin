@@ -738,7 +738,7 @@ void Streamer::streamActors()
 			break;
 		}
 		int internalID = sampgdk::CreateActor(i->second->modelID, i->second->position[0], i->second->position[1], i->second->position[2], i->second->rotation);
-		if (internalID == INVALID_ALTERNATE_ID)
+		if (internalID == INVALID_ACTOR_ID)
 		{
 			break;
 		}
@@ -1278,7 +1278,7 @@ void Streamer::streamPickups()
 			break;
 		}
 		int internalID = sampgdk::CreatePickup(i->second->modelID, i->second->type, i->second->position[0], i->second->position[1], i->second->position[2], i->second->worldID);
-		if (internalID == INVALID_ALTERNATE_ID)
+		if (internalID == INVALID_PICKUP_ID)
 		{
 			break;
 		}
