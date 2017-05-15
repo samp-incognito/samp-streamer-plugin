@@ -1013,7 +1013,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 							i->second = sampgdk::CreatePlayerObject(p->first, o->second->modelID, o->second->position[0], o->second->position[1], o->second->position[2], o->second->rotation[0], o->second->rotation[1], o->second->rotation[2], o->second->drawDistance);
 							if (o->second->attach)
 							{
-								if (o->second->attach->object != INVALID_GENERIC_ID)
+								if (o->second->attach->object != INVALID_OBJECT_ID)
 								{
 									boost::unordered_map<int, int>::iterator j = p->second.internalObjects.find(o->second->attach->object);
 									if (j != p->second.internalObjects.end())
@@ -1025,7 +1025,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 										}
 									}
 								}
-								else if (o->second->attach->player != INVALID_GENERIC_ID)
+								else if (o->second->attach->player != INVALID_PLAYER_ID)
 								{
 									AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToPlayer");
 									if (native != NULL)
@@ -1033,7 +1033,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 										sampgdk::InvokeNative(native, "dddffffffd", p->first, i->second, o->second->attach->player, o->second->attach->positionOffset[0], o->second->attach->positionOffset[1], o->second->attach->positionOffset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2], 1);
 									}
 								}
-								else if (o->second->attach->vehicle != INVALID_GENERIC_ID)
+								else if (o->second->attach->vehicle != INVALID_VEHICLE_ID)
 								{
 									sampgdk::AttachPlayerObjectToVehicle(p->first, i->second, o->second->attach->vehicle, o->second->attach->positionOffset[0], o->second->attach->positionOffset[1], o->second->attach->positionOffset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
 								}
@@ -1457,7 +1457,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 						if (i != p->second.internalTextLabels.end())
 						{
 							sampgdk::DeletePlayer3DTextLabel(p->first, i->second);
-							i->second = sampgdk::CreatePlayer3DTextLabel(p->first, t->second->text.c_str(), t->second->color, t->second->position[0], t->second->position[1], t->second->position[2], t->second->drawDistance, t->second->attach ? t->second->attach->player : INVALID_GENERIC_ID, t->second->attach ? t->second->attach->vehicle : INVALID_GENERIC_ID, t->second->testLOS);
+							i->second = sampgdk::CreatePlayer3DTextLabel(p->first, t->second->text.c_str(), t->second->color, t->second->position[0], t->second->position[1], t->second->position[2], t->second->drawDistance, t->second->attach ? t->second->attach->player : INVALID_PLAYER_ID, t->second->attach ? t->second->attach->vehicle : INVALID_VEHICLE_ID, t->second->testLOS);
 						}
 					}
 				}

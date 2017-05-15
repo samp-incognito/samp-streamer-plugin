@@ -49,7 +49,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabel(AMX *amx, cell *params)
 	textLabel->color = static_cast<int>(params[2]);
 	textLabel->position = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
 	textLabel->drawDistance = amx_ctof(params[6]);
-	if (static_cast<int>(params[7]) != INVALID_GENERIC_ID || static_cast<int>(params[8]) != INVALID_GENERIC_ID)
+	if (static_cast<int>(params[7]) != INVALID_PLAYER_ID || static_cast<int>(params[8]) != INVALID_VEHICLE_ID)
 	{
 		textLabel->attach = boost::intrusive_ptr<Item::TextLabel::Attach>(new Item::TextLabel::Attach);
 		textLabel->attach->player = static_cast<int>(params[7]);

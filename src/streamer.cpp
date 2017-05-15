@@ -1140,7 +1140,7 @@ void Streamer::streamObjects(Player &player, bool automatic)
 					break;
 				}
 				int internalID = sampgdk::CreatePlayerObject(player.playerID, d->second->modelID, d->second->position[0], d->second->position[1], d->second->position[2], d->second->rotation[0], d->second->rotation[1], d->second->rotation[2], d->second->drawDistance);
-				if (internalID == INVALID_GENERIC_ID)
+				if (internalID == INVALID_OBJECT_ID)
 				{
 					player.currentVisibleObjects = player.internalObjects.size();
 					player.discoveredObjects.clear();
@@ -1164,7 +1164,7 @@ void Streamer::streamObjects(Player &player, bool automatic)
 							}
 						}
 					}
-					else if (d->second->attach->player != INVALID_GENERIC_ID)
+					else if (d->second->attach->player != INVALID_PLAYER_ID)
 					{
 						AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToPlayer");
 						if (native != NULL)
@@ -1172,7 +1172,7 @@ void Streamer::streamObjects(Player &player, bool automatic)
 							sampgdk::InvokeNative(native, "dddffffffd", player.playerID, internalID, d->second->attach->player, d->second->attach->positionOffset[0], d->second->attach->positionOffset[1], d->second->attach->positionOffset[2], d->second->attach->rotation[0], d->second->attach->rotation[1], d->second->attach->rotation[2], 1);
 						}
 					}
-					else if (d->second->attach->vehicle != INVALID_GENERIC_ID)
+					else if (d->second->attach->vehicle != INVALID_VEHICLE_ID)
 					{
 						sampgdk::AttachPlayerObjectToVehicle(player.playerID, internalID, d->second->attach->vehicle, d->second->attach->positionOffset[0], d->second->attach->positionOffset[1], d->second->attach->positionOffset[2], d->second->attach->rotation[0], d->second->attach->rotation[1], d->second->attach->rotation[2]);
 					}
@@ -1488,8 +1488,8 @@ void Streamer::streamTextLabels(Player &player, bool automatic)
 					player.discoveredTextLabels.clear();
 					break;
 				}
-				int internalID = sampgdk::CreatePlayer3DTextLabel(player.playerID, d->second->text.c_str(), d->second->color, d->second->position[0], d->second->position[1], d->second->position[2], d->second->drawDistance, d->second->attach ? d->second->attach->player : INVALID_GENERIC_ID, d->second->attach ? d->second->attach->vehicle : INVALID_GENERIC_ID, d->second->testLOS);
-				if (internalID == INVALID_GENERIC_ID)
+				int internalID = sampgdk::CreatePlayer3DTextLabel(player.playerID, d->second->text.c_str(), d->second->color, d->second->position[0], d->second->position[1], d->second->position[2], d->second->drawDistance, d->second->attach ? d->second->attach->player : INVALID_PLAYER_ID, d->second->attach ? d->second->attach->vehicle : INVALID_VEHICLE_ID, d->second->testLOS);
+				if (internalID == INVALID_3DTEXT_ID)
 				{
 					player.currentVisibleTextLabels = player.internalTextLabels.size();
 					player.discoveredTextLabels.clear();
@@ -1587,7 +1587,7 @@ void Streamer::processAttachedAreas()
 		if ((*a)->attach)
 		{
 			bool adjust = false;
-			if (((*a)->attach->object.get<0>() != INVALID_GENERIC_ID && (*a)->attach->object.get<1>() != STREAMER_OBJECT_TYPE_DYNAMIC) || ((*a)->attach->object.get<0>() != INVALID_STREAMER_ID && (*a)->attach->object.get<1>() == STREAMER_OBJECT_TYPE_DYNAMIC))
+			if (((*a)->attach->object.get<0>() != INVALID_OBJECT_ID && (*a)->attach->object.get<1>() != STREAMER_OBJECT_TYPE_DYNAMIC) || ((*a)->attach->object.get<0>() != INVALID_STREAMER_ID && (*a)->attach->object.get<1>() == STREAMER_OBJECT_TYPE_DYNAMIC))
 			{
 				switch ((*a)->attach->object.get<1>())
 				{
@@ -1619,7 +1619,7 @@ void Streamer::processAttachedAreas()
 					}
 				}
 			}
-			else if ((*a)->attach->player != INVALID_GENERIC_ID)
+			else if ((*a)->attach->player != INVALID_PLAYER_ID)
 			{
 				float heading = 0.0f;
 				Eigen::Vector3f position = Eigen::Vector3f::Zero();
@@ -1627,7 +1627,7 @@ void Streamer::processAttachedAreas()
 				sampgdk::GetPlayerFacingAngle((*a)->attach->player, &heading);
 				Utility::constructAttachedArea(*a, boost::variant<float, Eigen::Vector3f, Eigen::Vector4f>(heading), position);
 			}
-			else if ((*a)->attach->vehicle != INVALID_GENERIC_ID)
+			else if ((*a)->attach->vehicle != INVALID_VEHICLE_ID)
 			{
 				bool occupied = false;
 				for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
@@ -1717,11 +1717,11 @@ void Streamer::processAttachedObjects()
 					adjust = true;
 				}
 			}
-			else if ((*o)->attach->player != INVALID_GENERIC_ID)
+			else if ((*o)->attach->player != INVALID_PLAYER_ID)
 			{
 				adjust = sampgdk::GetPlayerPos((*o)->attach->player, &(*o)->attach->position[0], &(*o)->attach->position[1], &(*o)->attach->position[2]);
 			}
-			else if ((*o)->attach->vehicle != INVALID_GENERIC_ID)
+			else if ((*o)->attach->vehicle != INVALID_VEHICLE_ID)
 			{
 				adjust = sampgdk::GetVehiclePos((*o)->attach->vehicle, &(*o)->attach->position[0], &(*o)->attach->position[1], &(*o)->attach->position[2]);
 			}
@@ -1747,11 +1747,11 @@ void Streamer::processAttachedTextLabels()
 		bool adjust = false;
 		if ((*t)->attach)
 		{
-			if ((*t)->attach->player != INVALID_GENERIC_ID)
+			if ((*t)->attach->player != INVALID_PLAYER_ID)
 			{
 				adjust = sampgdk::GetPlayerPos((*t)->attach->player, &(*t)->attach->position[0], &(*t)->attach->position[1], &(*t)->attach->position[2]);
 			}
-			else if ((*t)->attach->vehicle != INVALID_GENERIC_ID)
+			else if ((*t)->attach->vehicle != INVALID_VEHICLE_ID)
 			{
 				adjust = sampgdk::GetVehiclePos((*t)->attach->vehicle, &(*t)->attach->position[0], &(*t)->attach->position[1], &(*t)->attach->position[2]);
 			}

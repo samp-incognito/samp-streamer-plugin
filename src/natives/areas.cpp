@@ -642,11 +642,11 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToObject(AMX *amx, cell *params)
 	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
 	if (a != core->getData()->areas.end())
 	{
-		if ((static_cast<int>(params[2]) != INVALID_GENERIC_ID && static_cast<int>(params[3]) != STREAMER_OBJECT_TYPE_DYNAMIC) || (static_cast<int>(params[2]) != INVALID_STREAMER_ID && static_cast<int>(params[3]) == STREAMER_OBJECT_TYPE_DYNAMIC))
+		if ((static_cast<int>(params[2]) != INVALID_OBJECT_ID && static_cast<int>(params[3]) != STREAMER_OBJECT_TYPE_DYNAMIC) || (static_cast<int>(params[2]) != INVALID_STREAMER_ID && static_cast<int>(params[3]) == STREAMER_OBJECT_TYPE_DYNAMIC))
 		{
 			a->second->attach = boost::intrusive_ptr<Item::Area::Attach>(new Item::Area::Attach);
-			a->second->attach->player = INVALID_GENERIC_ID;
-			a->second->attach->vehicle = INVALID_GENERIC_ID;
+			a->second->attach->player = INVALID_PLAYER_ID;
+			a->second->attach->vehicle = INVALID_VEHICLE_ID;
 			a->second->attach->position = a->second->position;
 			a->second->attach->object = boost::make_tuple(static_cast<int>(params[2]), static_cast<int>(params[3]), static_cast<int>(params[4]));
 			a->second->attach->positionOffset = Eigen::Vector3f(amx_ctof(params[5]), amx_ctof(params[6]), amx_ctof(params[7]));
@@ -656,7 +656,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToObject(AMX *amx, cell *params)
 		{
 			if (a->second->attach)
 			{
-				if ((a->second->attach->object.get<0>() != INVALID_GENERIC_ID && a->second->attach->object.get<1>() != STREAMER_OBJECT_TYPE_DYNAMIC) || (a->second->attach->object.get<0>() != INVALID_STREAMER_ID && a->second->attach->object.get<1>() == STREAMER_OBJECT_TYPE_DYNAMIC))
+				if ((a->second->attach->object.get<0>() != INVALID_OBJECT_ID && a->second->attach->object.get<1>() != STREAMER_OBJECT_TYPE_DYNAMIC) || (a->second->attach->object.get<0>() != INVALID_STREAMER_ID && a->second->attach->object.get<1>() == STREAMER_OBJECT_TYPE_DYNAMIC))
 				{
 					a->second->attach.reset();
 					core->getStreamer()->attachedAreas.erase(a->second);
@@ -675,11 +675,11 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToPlayer(AMX *amx, cell *params)
 	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
 	if (a != core->getData()->areas.end())
 	{
-		if (static_cast<int>(params[2]) != INVALID_GENERIC_ID)
+		if (static_cast<int>(params[2]) != INVALID_PLAYER_ID)
 		{
 			a->second->attach = boost::intrusive_ptr<Item::Area::Attach>(new Item::Area::Attach);
 			a->second->attach->object = boost::make_tuple(INVALID_STREAMER_ID, STREAMER_OBJECT_TYPE_DYNAMIC, INVALID_PLAYER_ID);
-			a->second->attach->vehicle = INVALID_GENERIC_ID;
+			a->second->attach->vehicle = INVALID_VEHICLE_ID;
 			a->second->attach->position = a->second->position;
 			a->second->attach->player = static_cast<int>(params[2]);
 			a->second->attach->positionOffset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
@@ -689,7 +689,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToPlayer(AMX *amx, cell *params)
 		{
 			if (a->second->attach)
 			{
-				if (a->second->attach->player != INVALID_GENERIC_ID)
+				if (a->second->attach->player != INVALID_PLAYER_ID)
 				{
 					a->second->attach.reset();
 					core->getStreamer()->attachedAreas.erase(a->second);
@@ -708,11 +708,11 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToVehicle(AMX *amx, cell *params)
 	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
 	if (a != core->getData()->areas.end())
 	{
-		if (static_cast<int>(params[2]) != INVALID_GENERIC_ID)
+		if (static_cast<int>(params[2]) != INVALID_VEHICLE_ID)
 		{
 			a->second->attach = boost::intrusive_ptr<Item::Area::Attach>(new Item::Area::Attach);
 			a->second->attach->object = boost::make_tuple(INVALID_STREAMER_ID, STREAMER_OBJECT_TYPE_DYNAMIC, INVALID_PLAYER_ID);
-			a->second->attach->player = INVALID_GENERIC_ID;
+			a->second->attach->player = INVALID_PLAYER_ID;
 			a->second->attach->position = a->second->position;
 			a->second->attach->vehicle = static_cast<int>(params[2]);
 			a->second->attach->positionOffset = a->second->attach->positionOffset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
@@ -722,7 +722,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToVehicle(AMX *amx, cell *params)
 		{
 			if (a->second->attach)
 			{
-				if (a->second->attach->vehicle != INVALID_GENERIC_ID)
+				if (a->second->attach->vehicle != INVALID_VEHICLE_ID)
 				{
 					a->second->attach.reset();
 					core->getStreamer()->attachedAreas.erase(a->second);
