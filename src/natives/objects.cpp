@@ -727,5 +727,5 @@ cell AMX_NATIVE_CALL Natives::GetPlayerCameraTargetDynObject(AMX *amx, cell *par
 			}
 		}
 	}
-	return 0;
+	return INVALID_STREAMER_ID;
 }
