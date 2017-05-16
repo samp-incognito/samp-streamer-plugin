@@ -671,6 +671,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemInternalID(AMX *amx, cell *params)
 				{
 					return static_cast<cell>(i->second);
 				}
+				return INVALID_3DTEXT_ID;
 			}
 			case STREAMER_TYPE_AREA:
 			{
