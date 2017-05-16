@@ -613,7 +613,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemInternalID(AMX *amx, cell *params)
 			{
 				return static_cast<cell>(i->second);
 			}
-			return 0;
+			return INVALID_PICKUP_ID;
 		}
 		case STREAMER_TYPE_ACTOR:
 		{
@@ -622,7 +622,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemInternalID(AMX *amx, cell *params)
 			{
 				return static_cast<cell>(i->second);
 			}
-			return 0;
+			return INVALID_ACTOR_ID;
 		}
 	}
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
@@ -637,7 +637,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemInternalID(AMX *amx, cell *params)
 				{
 					return static_cast<cell>(i->second);
 				}
-				return 0;
+				return INVALID_OBJECT_ID;
 			}
 			case STREAMER_TYPE_CP:
 			{
@@ -645,7 +645,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemInternalID(AMX *amx, cell *params)
 				{
 					return 1;
 				}
-				return 0;
+				return -1;
 			}
 			case STREAMER_TYPE_RACE_CP:
 			{
@@ -653,7 +653,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemInternalID(AMX *amx, cell *params)
 				{
 					return 1;
 				}
-				return 0;
+				return -1;
 			}
 			case STREAMER_TYPE_MAP_ICON:
 			{
@@ -662,7 +662,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemInternalID(AMX *amx, cell *params)
 				{
 					return static_cast<cell>(i->second);
 				}
-				return 0;
+				return -1;
 			}
 			case STREAMER_TYPE_3D_TEXT_LABEL:
 			{
@@ -679,16 +679,16 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemInternalID(AMX *amx, cell *params)
 				{
 					return *i;
 				}
-				return 0;
+				return INVALID_STREAMER_ID;
 			}
 			default:
 			{
 				Utility::logError("Streamer_GetItemInternalID: Invalid type specified.");
-				return 0;
+				return -1;
 			}
 		}
 	}
-	return 0;
+	return -1;
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetItemStreamerID(AMX *amx, cell *params)
