@@ -318,13 +318,18 @@ cell AMX_NATIVE_CALL Natives::GetPlayerTargetDynamicActor(AMX *amx, cell *params
 	if (p != core->getData()->players.end())
 	{
 		int actorid = sampgdk::GetPlayerTargetActor(p->second.playerID);
-		for (boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i) {
-			if (i->second == actorid) {
-				return i->first;
+		if(actorid != INVALID_ACTOR_ID)
+		{
+			for (boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
+			{
+				if (i->second == actorid)
+				{
+					return i->first;
+				}
 			}
 		}
 	}
-	return 0;
+	return INVALID_STREAMER_ID;
 }
 
 cell AMX_NATIVE_CALL Natives::GetPlayerCameraTargetDynActor(AMX *amx, cell *params)
@@ -345,5 +350,5 @@ cell AMX_NATIVE_CALL Natives::GetPlayerCameraTargetDynActor(AMX *amx, cell *para
 			}
 		}
 	}
-	return 0;
+	return INVALID_STREAMER_ID;
 }

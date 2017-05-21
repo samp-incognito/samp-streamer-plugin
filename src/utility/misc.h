@@ -135,7 +135,7 @@ namespace Utility
 				}
 			}
 		}
-		return INVALID_GENERIC_ID;
+		return INVALID_PLAYER_ID;
 	}
 
 	template<typename T>

@@ -311,7 +311,7 @@ cell AMX_NATIVE_CALL Natives::AttachCameraToDynamicObject(AMX *amx, cell *params
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
-		int internalID = INVALID_GENERIC_ID;
+		int internalID = INVALID_OBJECT_ID;
 		boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(static_cast<int>(params[2]));
 		if (i == p->second.internalObjects.end())
 		{
@@ -331,7 +331,7 @@ cell AMX_NATIVE_CALL Natives::AttachCameraToDynamicObject(AMX *amx, cell *params
 		{
 			internalID = i->second;
 		}
-		if (internalID != INVALID_GENERIC_ID)
+		if (internalID != INVALID_OBJECT_ID)
 		{
 			sampgdk::AttachCameraToPlayerObject(p->first, internalID);
 			return 1;
@@ -357,8 +357,8 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToObject(AMX *amx, cell *params
 			return 0;
 		}
 		o->second->attach = boost::intrusive_ptr<Item::Object::Attach>(new Item::Object::Attach);
-		o->second->attach->player = INVALID_GENERIC_ID;
-		o->second->attach->vehicle = INVALID_GENERIC_ID;
+		o->second->attach->player = INVALID_PLAYER_ID;
+		o->second->attach->vehicle = INVALID_VEHICLE_ID;
 		o->second->attach->object = static_cast<int>(params[2]);
 		o->second->attach->positionOffset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
 		o->second->attach->rotation = Eigen::Vector3f(amx_ctof(params[6]), amx_ctof(params[7]), amx_ctof(params[8]));
@@ -436,7 +436,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToPlayer(AMX *amx, cell *params
 		}
 		o->second->attach = boost::intrusive_ptr<Item::Object::Attach>(new Item::Object::Attach);
 		o->second->attach->object = INVALID_STREAMER_ID;
-		o->second->attach->vehicle = INVALID_GENERIC_ID;
+		o->second->attach->vehicle = INVALID_VEHICLE_ID;
 		o->second->attach->player = static_cast<int>(params[2]);
 		o->second->attach->positionOffset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
 		o->second->attach->rotation = Eigen::Vector3f(amx_ctof(params[6]), amx_ctof(params[7]), amx_ctof(params[8]));
@@ -463,7 +463,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToPlayer(AMX *amx, cell *params
 				}
 			}
 		}
-		if (static_cast<int>(params[2]) != INVALID_GENERIC_ID)
+		if (static_cast<int>(params[2]) != INVALID_PLAYER_ID)
 		{
 			core->getStreamer()->attachedObjects.insert(o->second);
 		}
@@ -491,7 +491,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToVehicle(AMX *amx, cell *param
 		}
 		o->second->attach = boost::intrusive_ptr<Item::Object::Attach>(new Item::Object::Attach);
 		o->second->attach->object = INVALID_STREAMER_ID;
-		o->second->attach->player = INVALID_GENERIC_ID;
+		o->second->attach->player = INVALID_PLAYER_ID;
 		o->second->attach->vehicle = static_cast<int>(params[2]);
 		o->second->attach->positionOffset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
 		o->second->attach->rotation = Eigen::Vector3f(amx_ctof(params[6]), amx_ctof(params[7]), amx_ctof(params[8]));
@@ -514,7 +514,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToVehicle(AMX *amx, cell *param
 				}
 			}
 		}
-		if (static_cast<int>(params[2]) != INVALID_GENERIC_ID)
+		if (static_cast<int>(params[2]) != INVALID_VEHICLE_ID)
 		{
 			core->getStreamer()->attachedObjects.insert(o->second);
 		}
@@ -535,7 +535,7 @@ cell AMX_NATIVE_CALL Natives::EditDynamicObject(AMX *amx, cell *params)
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
-		int internalID = INVALID_GENERIC_ID;
+		int internalID = INVALID_OBJECT_ID;
 		boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(static_cast<int>(params[2]));
 		if (i == p->second.internalObjects.end())
 		{
@@ -560,7 +560,7 @@ cell AMX_NATIVE_CALL Natives::EditDynamicObject(AMX *amx, cell *params)
 		{
 			internalID = i->second;
 		}
-		if (internalID != INVALID_GENERIC_ID)
+		if (internalID != INVALID_OBJECT_ID)
 		{
 			sampgdk::EditPlayerObject(p->first, internalID);
 			return 1;
@@ -727,5 +727,5 @@ cell AMX_NATIVE_CALL Natives::GetPlayerCameraTargetDynObject(AMX *amx, cell *par
 			}
 		}
 	}
-	return 0;
+	return INVALID_STREAMER_ID;
 }
