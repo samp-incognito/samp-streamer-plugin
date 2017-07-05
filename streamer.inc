@@ -357,6 +357,7 @@ native IsValidDynamicActor(STREAMER_TAG_ACTOR actorid);
 native IsDynamicActorStreamedIn(STREAMER_TAG_ACTOR actorid, forplayerid);
 native GetDynamicActorVirtualWorld(STREAMER_TAG_ACTOR actorid);
 native SetDynamicActorVirtualWorld(STREAMER_TAG_ACTOR actorid, vworld);
+native GetDynamicActorAnimation(STREAMER_TAG_ACTOR actorid, animlib[], animname[], &Float:fdelta, &loop, &lockx, &locky, &freeze, &time, maxanimlib = sizeof animlib, maxanimname = sizeof animname);
 native ApplyDynamicActorAnimation(STREAMER_TAG_ACTOR actorid, const animlib[], const animname[], Float:fdelta, loop, lockx, locky, freeze, time);
 native ClearDynamicActorAnimations(STREAMER_TAG_ACTOR actorid);
 native GetDynamicActorFacingAngle(STREAMER_TAG_ACTOR actorid, &Float:ang);

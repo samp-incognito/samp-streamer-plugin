@@ -205,6 +205,7 @@ AMX_NATIVE_INFO natives[] =
 	{ "IsDynamicActorStreamedIn", Natives::IsDynamicActorStreamedIn },
 	{ "GetDynamicActorVirtualWorld", Natives::GetDynamicActorVirtualWorld },
 	{ "SetDynamicActorVirtualWorld", Natives::SetDynamicActorVirtualWorld },
+	{ "GetDynamicActorAnimation", Natives::GetDynamicActorAnimation },
 	{ "ApplyDynamicActorAnimation", Natives::ApplyDynamicActorAnimation },
 	{ "ClearDynamicActorAnimations", Natives::ClearDynamicActorAnimations },
 	{ "GetDynamicActorFacingAngle", Natives::GetDynamicActorFacingAngle },
