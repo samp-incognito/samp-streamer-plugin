@@ -129,6 +129,28 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorVirtualWorld(AMX *amx, cell *params
 	return 0;
 }
 
+cell AMX_NATIVE_CALL Natives::GetDynamicActorAnimation(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(11, "GetDynamicActorAnimation");
+	boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[1]));
+	if (a != core->getData()->actors.end())
+	{
+		if (a->second->anim)
+		{
+			Utility::convertStringToNativeString(amx, params[2], params[10], a->second->anim->lib);
+			Utility::convertStringToNativeString(amx, params[3], params[11], a->second->anim->name);
+			Utility::storeFloatInNative(amx, params[4], a->second->anim->delta);
+			Utility::storeIntegerInNative(amx, params[5], a->second->anim->loop != 0);
+			Utility::storeIntegerInNative(amx, params[6], a->second->anim->lockx != 0);
+			Utility::storeIntegerInNative(amx, params[7], a->second->anim->locky != 0);
+			Utility::storeIntegerInNative(amx, params[8], a->second->anim->freeze != 0);
+			Utility::storeIntegerInNative(amx, params[9], a->second->anim->time);
+			return 1;
+		}
+	}
+	return 0;
+}
+
 cell AMX_NATIVE_CALL Natives::ApplyDynamicActorAnimation(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(9, "ApplyDynamicActorAnimation");

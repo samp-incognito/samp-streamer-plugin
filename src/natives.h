@@ -195,6 +195,7 @@ namespace Natives
 	cell AMX_NATIVE_CALL IsDynamicActorStreamedIn(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL GetDynamicActorVirtualWorld(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL SetDynamicActorVirtualWorld(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL GetDynamicActorAnimation(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL ApplyDynamicActorAnimation(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL ClearDynamicActorAnimations(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL GetDynamicActorFacingAngle(AMX *amx, cell *params);
