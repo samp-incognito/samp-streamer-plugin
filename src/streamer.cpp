@@ -1152,7 +1152,7 @@ void Streamer::streamObjects(Player &player, bool automatic)
 				}
 				if (d->second->attach)
 				{
-					if (d->second->attach->object != INVALID_STREAMER_ID)
+					if (d->second->attach->object != INVALID_OBJECT_ID)
 					{
 						boost::unordered_map<int, int>::iterator i = player.internalObjects.find(d->second->attach->object);
 						if (i != player.internalObjects.end())
@@ -1708,7 +1708,7 @@ void Streamer::processAttachedObjects()
 		if ((*o)->attach)
 		{
 			bool adjust = false;
-			if ((*o)->attach->object != INVALID_STREAMER_ID)
+			if ((*o)->attach->object != INVALID_OBJECT_ID)
 			{
 				boost::unordered_map<int, Item::SharedObject>::iterator p = core->getData()->objects.find((*o)->attach->object);
 				if (p != core->getData()->objects.end())

@@ -55,7 +55,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 						{
 							return o->second->attach->object;
 						}
-						return INVALID_STREAMER_ID;
+						return INVALID_OBJECT_ID;
 					}
 					case AttachedPlayer:
 					{
@@ -97,7 +97,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					{
 						if (o->second->attach)
 						{
-							if (o->second->attach->object != INVALID_STREAMER_ID)
+							if (o->second->attach->object != INVALID_OBJECT_ID)
 							{
 								return o->second->attach->syncRotation != 0;
 							}
@@ -555,7 +555,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					}
 					case AttachedObject:
 					{
-						if (static_cast<int>(params[4]) != INVALID_STREAMER_ID)
+						if (static_cast<int>(params[4]) != INVALID_OBJECT_ID)
 						{
 							if (o->second->move)
 							{
@@ -581,7 +581,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 						{
 							if (o->second->attach)
 							{
-								if (o->second->attach->object != INVALID_STREAMER_ID)
+								if (o->second->attach->object != INVALID_OBJECT_ID)
 								{
 									o->second->attach.reset();
 									core->getStreamer()->attachedObjects.erase(o->second);
@@ -607,7 +607,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 								return 0;
 							}
 							o->second->attach = boost::intrusive_ptr<Item::Object::Attach>(new Item::Object::Attach);
-							o->second->attach->object = INVALID_STREAMER_ID;
+							o->second->attach->object = INVALID_OBJECT_ID;
 							o->second->attach->vehicle = INVALID_VEHICLE_ID;
 							o->second->attach->player = static_cast<int>(params[4]);
 							o->second->attach->positionOffset.setZero();
@@ -640,7 +640,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 								return 0;
 							}
 							o->second->attach = boost::intrusive_ptr<Item::Object::Attach>(new Item::Object::Attach);
-							o->second->attach->object = INVALID_STREAMER_ID;
+							o->second->attach->object = INVALID_OBJECT_ID;
 							o->second->attach->player = INVALID_PLAYER_ID;
 							o->second->attach->vehicle = static_cast<int>(params[4]);
 							o->second->attach->positionOffset.setZero();
@@ -719,7 +719,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 							i->second = sampgdk::CreatePlayerObject(p->first, o->second->modelID, o->second->position[0], o->second->position[1], o->second->position[2], o->second->rotation[0], o->second->rotation[1], o->second->rotation[2], o->second->drawDistance);
 							if (o->second->attach)
 							{
-								if (o->second->attach->object != INVALID_STREAMER_ID)
+								if (o->second->attach->object != INVALID_OBJECT_ID)
 								{
 									boost::unordered_map<int, int>::iterator j = p->second.internalObjects.find(o->second->attach->object);
 									if (j != p->second.internalObjects.end())
