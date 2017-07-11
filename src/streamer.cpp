@@ -458,7 +458,7 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 					}
 					case STREAMER_TYPE_ACTOR:
 					{
-						if (!core->getData()->actors.empty() && player.enabledItems[STREAMER_TYPE_ACTOR])
+						if (!core->getData()->actors.empty() && player.enabledItems[STREAMER_TYPE_ACTOR] && !sampgdk::IsPlayerNPC(player.playerID))
 						{
 							discoverActors(player, cells);
 						}
