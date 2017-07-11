@@ -759,9 +759,9 @@ void Streamer::streamActors()
 
 void Streamer::processAreas(Player &player, const std::vector<SharedCell> &cells)
 {
+	int state = sampgdk::GetPlayerState(player.playerID);
 	for (std::vector<SharedCell>::const_iterator c = cells.begin(); c != cells.end(); ++c)
 	{
-		int state = sampgdk::GetPlayerState(player.playerID);
 		for (boost::unordered_map<int, Item::SharedArea>::const_iterator a = (*c)->areas.begin(); a != (*c)->areas.end(); ++a)
 		{
 			bool inArea = false;
