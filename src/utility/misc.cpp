@@ -227,14 +227,17 @@ bool Utility::setChunkTickRate(int type, std::size_t value, int playerid)
 			case STREAMER_TYPE_OBJECT:
 			{
 				p->second.chunkTickRate[STREAMER_TYPE_OBJECT] = value;
+				break;
 			}
 			case STREAMER_TYPE_MAP_ICON:
 			{
 				p->second.chunkTickRate[STREAMER_TYPE_MAP_ICON] = value;
+				break;
 			}
 			case STREAMER_TYPE_3D_TEXT_LABEL:
 			{
 				p->second.chunkTickRate[STREAMER_TYPE_3D_TEXT_LABEL] = value;
+				break;
 			}
 		}
 	}
@@ -302,14 +305,17 @@ bool Utility::setMaxVisibleItems(int type, std::size_t value, int playerid)
 			case STREAMER_TYPE_OBJECT:
 			{
 				p->second.maxVisibleObjects = value;
+				break;
 			}
 			case STREAMER_TYPE_MAP_ICON:
 			{
 				p->second.maxVisibleMapIcons = value;
+				break;
 			}
 			case STREAMER_TYPE_3D_TEXT_LABEL:
 			{
 				p->second.maxVisibleTextLabels = value;
+				break;
 			}
 		}
 	}
