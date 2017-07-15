@@ -55,7 +55,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 						{
 							return o->second->attach->object;
 						}
-						return INVALID_STREAMER_ID;
+						return INVALID_OBJECT_ID;
 					}
 					case AttachedPlayer:
 					{
@@ -97,7 +97,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					{
 						if (o->second->attach)
 						{
-							if (o->second->attach->object != INVALID_STREAMER_ID)
+							if (o->second->attach->object != INVALID_OBJECT_ID)
 							{
 								return o->second->attach->syncRotation != 0;
 							}
@@ -555,14 +555,15 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					}
 					case AttachedObject:
 					{
-						if (static_cast<int>(params[4]) != INVALID_STREAMER_ID)
+						if (static_cast<int>(params[4]) != INVALID_OBJECT_ID)
 						{
 							if (o->second->move)
 							{
 								Utility::logError("Streamer_SetIntData: Object is currently moving and must be stopped first.");
 								return 0;
 							}
-							if (sampgdk::FindNative("SetPlayerGravity") == NULL)
+							static AMX_NATIVE native = sampgdk::FindNative("SetPlayerGravity");
+							if (native == NULL)
 							{
 								Utility::logError("Streamer_SetIntData: YSF plugin must be loaded to attach objects to objects.");
 								return 0;
@@ -581,7 +582,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 						{
 							if (o->second->attach)
 							{
-								if (o->second->attach->object != INVALID_STREAMER_ID)
+								if (o->second->attach->object != INVALID_OBJECT_ID)
 								{
 									o->second->attach.reset();
 									core->getStreamer()->attachedObjects.erase(o->second);
@@ -601,13 +602,14 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 								Utility::logError("Streamer_SetIntData: Object is currently moving and must be stopped first.");
 								return 0;
 							}
-							if (sampgdk::FindNative("SetPlayerGravity") == NULL)
+							static AMX_NATIVE native = sampgdk::FindNative("SetPlayerGravity");
+							if (native == NULL)
 							{
 								Utility::logError("Streamer_SetIntData: YSF plugin must be loaded to attach objects to players.");
 								return 0;
 							}
 							o->second->attach = boost::intrusive_ptr<Item::Object::Attach>(new Item::Object::Attach);
-							o->second->attach->object = INVALID_STREAMER_ID;
+							o->second->attach->object = INVALID_OBJECT_ID;
 							o->second->attach->vehicle = INVALID_VEHICLE_ID;
 							o->second->attach->player = static_cast<int>(params[4]);
 							o->second->attach->positionOffset.setZero();
@@ -640,7 +642,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 								return 0;
 							}
 							o->second->attach = boost::intrusive_ptr<Item::Object::Attach>(new Item::Object::Attach);
-							o->second->attach->object = INVALID_STREAMER_ID;
+							o->second->attach->object = INVALID_OBJECT_ID;
 							o->second->attach->player = INVALID_PLAYER_ID;
 							o->second->attach->vehicle = static_cast<int>(params[4]);
 							o->second->attach->positionOffset.setZero();
@@ -719,12 +721,12 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 							i->second = sampgdk::CreatePlayerObject(p->first, o->second->modelID, o->second->position[0], o->second->position[1], o->second->position[2], o->second->rotation[0], o->second->rotation[1], o->second->rotation[2], o->second->drawDistance);
 							if (o->second->attach)
 							{
-								if (o->second->attach->object != INVALID_STREAMER_ID)
+								if (o->second->attach->object != INVALID_OBJECT_ID)
 								{
 									boost::unordered_map<int, int>::iterator j = p->second.internalObjects.find(o->second->attach->object);
 									if (j != p->second.internalObjects.end())
 									{
-										AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToObject");
+										static AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToObject");
 										if (native != NULL)
 										{
 											sampgdk::InvokeNative(native, "dddffffffb", p->first, i->second, j->second, o->second->attach->positionOffset[0], o->second->attach->positionOffset[1], o->second->attach->positionOffset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2], o->second->attach->syncRotation);
@@ -733,7 +735,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 								}
 								else if (o->second->attach->player != INVALID_PLAYER_ID)
 								{
-									AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToPlayer");
+									static AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToPlayer");
 									if (native != NULL)
 									{
 										sampgdk::InvokeNative(native, "dddffffffd", p->first, i->second, o->second->attach->player, o->second->attach->positionOffset[0], o->second->attach->positionOffset[1], o->second->attach->positionOffset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2], 1);

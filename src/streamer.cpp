@@ -458,7 +458,7 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 					}
 					case STREAMER_TYPE_ACTOR:
 					{
-						if (!core->getData()->actors.empty() && player.enabledItems[STREAMER_TYPE_ACTOR])
+						if (!core->getData()->actors.empty() && player.enabledItems[STREAMER_TYPE_ACTOR] && !sampgdk::IsPlayerNPC(player.playerID))
 						{
 							discoverActors(player, cells);
 						}
@@ -759,9 +759,9 @@ void Streamer::streamActors()
 
 void Streamer::processAreas(Player &player, const std::vector<SharedCell> &cells)
 {
+	int state = sampgdk::GetPlayerState(player.playerID);
 	for (std::vector<SharedCell>::const_iterator c = cells.begin(); c != cells.end(); ++c)
 	{
-		int state = sampgdk::GetPlayerState(player.playerID);
 		for (boost::unordered_map<int, Item::SharedArea>::const_iterator a = (*c)->areas.begin(); a != (*c)->areas.end(); ++a)
 		{
 			bool inArea = false;
@@ -1152,7 +1152,7 @@ void Streamer::streamObjects(Player &player, bool automatic)
 				}
 				if (d->second->attach)
 				{
-					if (d->second->attach->object != INVALID_STREAMER_ID)
+					if (d->second->attach->object != INVALID_OBJECT_ID)
 					{
 						boost::unordered_map<int, int>::iterator i = player.internalObjects.find(d->second->attach->object);
 						if (i != player.internalObjects.end())
@@ -1708,7 +1708,7 @@ void Streamer::processAttachedObjects()
 		if ((*o)->attach)
 		{
 			bool adjust = false;
-			if ((*o)->attach->object != INVALID_STREAMER_ID)
+			if ((*o)->attach->object != INVALID_OBJECT_ID)
 			{
 				boost::unordered_map<int, Item::SharedObject>::iterator p = core->getData()->objects.find((*o)->attach->object);
 				if (p != core->getData()->objects.end())

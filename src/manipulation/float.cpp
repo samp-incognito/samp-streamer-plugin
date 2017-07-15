@@ -1018,7 +1018,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 									boost::unordered_map<int, int>::iterator j = p->second.internalObjects.find(o->second->attach->object);
 									if (j != p->second.internalObjects.end())
 									{
-										AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToObject");
+										static AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToObject");
 										if (native != NULL)
 										{
 											sampgdk::InvokeNative(native, "dddffffffb", p->first, i->second, j->second, o->second->attach->positionOffset[0], o->second->attach->positionOffset[1], o->second->attach->positionOffset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2], o->second->attach->syncRotation);
@@ -1027,7 +1027,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 								}
 								else if (o->second->attach->player != INVALID_PLAYER_ID)
 								{
-									AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToPlayer");
+									static AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToPlayer");
 									if (native != NULL)
 									{
 										sampgdk::InvokeNative(native, "dddffffffd", p->first, i->second, o->second->attach->player, o->second->attach->positionOffset[0], o->second->attach->positionOffset[1], o->second->attach->positionOffset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2], 1);
