@@ -84,12 +84,33 @@ boost::unordered_map<int, Item::SharedMapIcon>::iterator Utility::destroyMapIcon
 	Item::MapIcon::identifier.remove(m->first, core->getData()->mapIcons.size());
 	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 	{
+		for (std::multimap<std::pair<int, float>, Item::SharedMapIcon, Item::Compare>::iterator d = p->second.discoveredMapIcons.begin(); d != p->second.discoveredMapIcons.end(); ++d)
+		{
+			if (d->second->mapIconID == m->first)
+			{
+				p->second.discoveredMapIcons.erase(d);
+				break;
+			}
+		}
+		for (std::multimap<std::pair<int, float>, Item::SharedMapIcon, Item::Compare>::iterator e = p->second.existingMapIcons.begin(); e != p->second.existingMapIcons.end(); ++e)
+		{
+			if (e->second->mapIconID == m->first)
+			{
+				p->second.existingMapIcons.erase(e);
+				break;
+			}
+		}
 		boost::unordered_map<int, int>::iterator i = p->second.internalMapIcons.find(m->first);
 		if (i != p->second.internalMapIcons.end())
 		{
 			sampgdk::RemovePlayerMapIcon(p->first, i->second);
 			p->second.mapIconIdentifier.remove(i->second, p->second.internalMapIcons.size());
 			p->second.internalMapIcons.quick_erase(i);
+		}
+		std::set<int>::iterator r = p->second.removedMapIcons.find(m->first);
+		if (r != p->second.removedMapIcons.end())
+		{
+			p->second.removedMapIcons.erase(r);
 		}
 		p->second.visibleCell->mapIcons.erase(m->first);
 	}
@@ -102,11 +123,32 @@ boost::unordered_map<int, Item::SharedObject>::iterator Utility::destroyObject(b
 	Item::Object::identifier.remove(o->first, core->getData()->objects.size());
 	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 	{
+		for (std::multimap<std::pair<int, float>, Item::SharedObject, Item::Compare>::iterator d = p->second.discoveredObjects.begin(); d != p->second.discoveredObjects.end(); ++d)
+		{
+			if (d->second->objectID == o->first)
+			{
+				p->second.discoveredObjects.erase(d);
+				break;
+			}
+		}
+		for (std::multimap<std::pair<int, float>, Item::SharedObject, Item::Compare>::iterator e = p->second.existingObjects.begin(); e != p->second.existingObjects.end(); ++e)
+		{
+			if (e->second->objectID == o->first)
+			{
+				p->second.existingObjects.erase(e);
+				break;
+			}
+		}
 		boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
 		if (i != p->second.internalObjects.end())
 		{
 			sampgdk::DestroyPlayerObject(p->first, i->second);
 			p->second.internalObjects.quick_erase(i);
+		}
+		std::set<int>::iterator r = p->second.removedObjects.find(o->first);
+		if (r != p->second.removedObjects.end())
+		{
+			p->second.removedObjects.erase(r);
 		}
 		p->second.visibleCell->objects.erase(o->first);
 	}
@@ -154,11 +196,32 @@ boost::unordered_map<int, Item::SharedTextLabel>::iterator Utility::destroyTextL
 	Item::TextLabel::identifier.remove(t->first, core->getData()->textLabels.size());
 	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 	{
+		for (std::multimap<std::pair<int, float>, Item::SharedTextLabel, Item::Compare>::iterator d = p->second.discoveredTextLabels.begin(); d != p->second.discoveredTextLabels.end(); ++d)
+		{
+			if (d->second->textLabelID == t->first)
+			{
+				p->second.discoveredTextLabels.erase(d);
+				break;
+			}
+		}
+		for (std::multimap<std::pair<int, float>, Item::SharedTextLabel, Item::Compare>::iterator e = p->second.existingTextLabels.begin(); e != p->second.existingTextLabels.end(); ++e)
+		{
+			if (e->second->textLabelID == t->first)
+			{
+				p->second.existingTextLabels.erase(e);
+				break;
+			}
+		}
 		boost::unordered_map<int, int>::iterator i = p->second.internalTextLabels.find(t->first);
 		if (i != p->second.internalTextLabels.end())
 		{
 			sampgdk::DeletePlayer3DTextLabel(p->first, i->second);
 			p->second.internalTextLabels.quick_erase(i);
+		}
+		std::set<int>::iterator r = p->second.removedTextLabels.find(t->first);
+		if (r != p->second.removedTextLabels.end())
+		{
+			p->second.removedTextLabels.erase(r);
 		}
 		p->second.visibleCell->textLabels.erase(t->first);
 	}

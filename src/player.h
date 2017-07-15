@@ -70,10 +70,11 @@ struct Player
 	std::bitset<STREAMER_MAX_TYPES> processingChunks;
 
 	std::multimap<std::pair<int, float>, Item::SharedMapIcon, Item::Compare> discoveredMapIcons;
-	std::multimap<std::pair<int, float>, Item::SharedMapIcon, Item::Compare> existingMapIcons;
 	std::multimap<std::pair<int, float>, Item::SharedObject, Item::Compare> discoveredObjects;
-	std::multimap<std::pair<int, float>, Item::SharedObject, Item::Compare> existingObjects;
 	std::multimap<std::pair<int, float>, Item::SharedTextLabel, Item::Compare> discoveredTextLabels;
+
+	std::multimap<std::pair<int, float>, Item::SharedMapIcon, Item::Compare> existingMapIcons;
+	std::multimap<std::pair<int, float>, Item::SharedObject, Item::Compare> existingObjects;
 	std::multimap<std::pair<int, float>, Item::SharedTextLabel, Item::Compare> existingTextLabels;
 
 	boost::unordered_set<int> internalAreas;
@@ -81,9 +82,9 @@ struct Player
 	boost::unordered_map<int, int> internalObjects;
 	boost::unordered_map<int, int> internalTextLabels;
 
-	std::vector<int> removedMapIcons;
-	std::vector<int> removedObjects;
-	std::vector<int> removedTextLabels;
+	std::set<int> removedMapIcons;
+	std::set<int> removedObjects;
+	std::set<int> removedTextLabels;
 
 	Identifier mapIconIdentifier;
 
