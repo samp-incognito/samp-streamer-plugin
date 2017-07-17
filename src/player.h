@@ -69,22 +69,22 @@ struct Player
 	std::bitset<STREAMER_MAX_TYPES> enabledItems;
 	std::bitset<STREAMER_MAX_TYPES> processingChunks;
 
-	std::multimap<std::pair<int, float>, Item::SharedMapIcon, Item::Compare> discoveredMapIcons;
-	std::multimap<std::pair<int, float>, Item::SharedObject, Item::Compare> discoveredObjects;
-	std::multimap<std::pair<int, float>, Item::SharedTextLabel, Item::Compare> discoveredTextLabels;
+	Item::Bimap<Item::SharedMapIcon>::Type discoveredMapIcons;
+	Item::Bimap<Item::SharedObject>::Type discoveredObjects;
+	Item::Bimap<Item::SharedTextLabel>::Type discoveredTextLabels;
 
-	std::multimap<std::pair<int, float>, Item::SharedMapIcon, Item::Compare> existingMapIcons;
-	std::multimap<std::pair<int, float>, Item::SharedObject, Item::Compare> existingObjects;
-	std::multimap<std::pair<int, float>, Item::SharedTextLabel, Item::Compare> existingTextLabels;
+	Item::Bimap<Item::SharedMapIcon>::Type existingMapIcons;
+	Item::Bimap<Item::SharedObject>::Type existingObjects;
+	Item::Bimap<Item::SharedTextLabel>::Type existingTextLabels;
 
 	boost::unordered_set<int> internalAreas;
 	boost::unordered_map<int, int> internalMapIcons;
 	boost::unordered_map<int, int> internalObjects;
 	boost::unordered_map<int, int> internalTextLabels;
 
-	std::set<int> removedMapIcons;
-	std::set<int> removedObjects;
-	std::set<int> removedTextLabels;
+	boost::unordered_set<int> removedMapIcons;
+	boost::unordered_set<int> removedObjects;
+	boost::unordered_set<int> removedTextLabels;
 
 	Identifier mapIconIdentifier;
 

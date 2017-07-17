@@ -84,21 +84,15 @@ boost::unordered_map<int, Item::SharedMapIcon>::iterator Utility::destroyMapIcon
 	Item::MapIcon::identifier.remove(m->first, core->getData()->mapIcons.size());
 	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 	{
-		for (std::multimap<std::pair<int, float>, Item::SharedMapIcon, Item::Compare>::iterator d = p->second.discoveredMapIcons.begin(); d != p->second.discoveredMapIcons.end(); ++d)
+		Item::Bimap<Item::SharedMapIcon>::Type::right_iterator d = p->second.discoveredMapIcons.right.find(boost::make_tuple(m->first, m->second));
+		if (d != p->second.discoveredMapIcons.right.end())
 		{
-			if (d->second->mapIconID == m->first)
-			{
-				p->second.discoveredMapIcons.erase(d);
-				break;
-			}
+			p->second.discoveredMapIcons.right.erase(d);
 		}
-		for (std::multimap<std::pair<int, float>, Item::SharedMapIcon, Item::Compare>::iterator e = p->second.existingMapIcons.begin(); e != p->second.existingMapIcons.end(); ++e)
+		Item::Bimap<Item::SharedMapIcon>::Type::right_iterator e = p->second.existingMapIcons.right.find(boost::make_tuple(m->first, m->second));
+		if (e != p->second.existingMapIcons.right.end())
 		{
-			if (e->second->mapIconID == m->first)
-			{
-				p->second.existingMapIcons.erase(e);
-				break;
-			}
+			p->second.existingMapIcons.right.erase(e);
 		}
 		boost::unordered_map<int, int>::iterator i = p->second.internalMapIcons.find(m->first);
 		if (i != p->second.internalMapIcons.end())
@@ -107,7 +101,7 @@ boost::unordered_map<int, Item::SharedMapIcon>::iterator Utility::destroyMapIcon
 			p->second.mapIconIdentifier.remove(i->second, p->second.internalMapIcons.size());
 			p->second.internalMapIcons.quick_erase(i);
 		}
-		std::set<int>::iterator r = p->second.removedMapIcons.find(m->first);
+		boost::unordered_set<int>::iterator r = p->second.removedMapIcons.find(m->first);
 		if (r != p->second.removedMapIcons.end())
 		{
 			p->second.removedMapIcons.erase(r);
@@ -123,21 +117,15 @@ boost::unordered_map<int, Item::SharedObject>::iterator Utility::destroyObject(b
 	Item::Object::identifier.remove(o->first, core->getData()->objects.size());
 	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 	{
-		for (std::multimap<std::pair<int, float>, Item::SharedObject, Item::Compare>::iterator d = p->second.discoveredObjects.begin(); d != p->second.discoveredObjects.end(); ++d)
+		Item::Bimap<Item::SharedObject>::Type::right_iterator d = p->second.discoveredObjects.right.find(boost::make_tuple(o->first, o->second));
+		if (d != p->second.discoveredObjects.right.end())
 		{
-			if (d->second->objectID == o->first)
-			{
-				p->second.discoveredObjects.erase(d);
-				break;
-			}
+			p->second.discoveredObjects.right.erase(d);
 		}
-		for (std::multimap<std::pair<int, float>, Item::SharedObject, Item::Compare>::iterator e = p->second.existingObjects.begin(); e != p->second.existingObjects.end(); ++e)
+		Item::Bimap<Item::SharedObject>::Type::right_iterator e = p->second.existingObjects.right.find(boost::make_tuple(o->first, o->second));
+		if (e != p->second.existingObjects.right.end())
 		{
-			if (e->second->objectID == o->first)
-			{
-				p->second.existingObjects.erase(e);
-				break;
-			}
+			p->second.existingObjects.right.erase(e);
 		}
 		boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
 		if (i != p->second.internalObjects.end())
@@ -145,7 +133,7 @@ boost::unordered_map<int, Item::SharedObject>::iterator Utility::destroyObject(b
 			sampgdk::DestroyPlayerObject(p->first, i->second);
 			p->second.internalObjects.quick_erase(i);
 		}
-		std::set<int>::iterator r = p->second.removedObjects.find(o->first);
+		boost::unordered_set<int>::iterator r = p->second.removedObjects.find(o->first);
 		if (r != p->second.removedObjects.end())
 		{
 			p->second.removedObjects.erase(r);
@@ -196,21 +184,15 @@ boost::unordered_map<int, Item::SharedTextLabel>::iterator Utility::destroyTextL
 	Item::TextLabel::identifier.remove(t->first, core->getData()->textLabels.size());
 	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 	{
-		for (std::multimap<std::pair<int, float>, Item::SharedTextLabel, Item::Compare>::iterator d = p->second.discoveredTextLabels.begin(); d != p->second.discoveredTextLabels.end(); ++d)
+		Item::Bimap<Item::SharedTextLabel>::Type::right_iterator d = p->second.discoveredTextLabels.right.find(boost::make_tuple(t->first, t->second));
+		if (d != p->second.discoveredTextLabels.right.end())
 		{
-			if (d->second->textLabelID == t->first)
-			{
-				p->second.discoveredTextLabels.erase(d);
-				break;
-			}
+			p->second.discoveredTextLabels.right.erase(d);
 		}
-		for (std::multimap<std::pair<int, float>, Item::SharedTextLabel, Item::Compare>::iterator e = p->second.existingTextLabels.begin(); e != p->second.existingTextLabels.end(); ++e)
+		Item::Bimap<Item::SharedTextLabel>::Type::right_iterator e = p->second.existingTextLabels.right.find(boost::make_tuple(t->first, t->second));
+		if (e != p->second.existingTextLabels.right.end())
 		{
-			if (e->second->textLabelID == t->first)
-			{
-				p->second.existingTextLabels.erase(e);
-				break;
-			}
+			p->second.existingTextLabels.right.erase(e);
 		}
 		boost::unordered_map<int, int>::iterator i = p->second.internalTextLabels.find(t->first);
 		if (i != p->second.internalTextLabels.end())
@@ -218,7 +200,7 @@ boost::unordered_map<int, Item::SharedTextLabel>::iterator Utility::destroyTextL
 			sampgdk::DeletePlayer3DTextLabel(p->first, i->second);
 			p->second.internalTextLabels.quick_erase(i);
 		}
-		std::set<int>::iterator r = p->second.removedTextLabels.find(t->first);
+		boost::unordered_set<int>::iterator r = p->second.removedTextLabels.find(t->first);
 		if (r != p->second.removedTextLabels.end())
 		{
 			p->second.removedTextLabels.erase(r);

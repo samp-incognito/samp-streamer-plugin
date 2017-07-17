@@ -63,6 +63,9 @@ inline void intrusive_ptr_release(T *t)
 	}
 }
 
+#include <boost/bimap.hpp>
+#include <boost/bimap/multiset_of.hpp>
+#include <boost/bimap/unordered_set_of.hpp>
 #include <boost/geometry.hpp>
 #include <boost/geometry/geometries/geometries.hpp>
 #include <boost/intrusive_ptr.hpp>
@@ -77,21 +80,21 @@ inline void intrusive_ptr_release(T *t)
 class Cell;
 class Data;
 class Events;
-class Identifier;
 class Grid;
+class Identifier;
 struct Player;
 class Streamer;
 
 typedef std::pair<int, int> CellID;
 typedef boost::intrusive_ptr<Cell> SharedCell;
 
-typedef boost::geometry::model::polygon<Eigen::Vector2f> Polygon2D;
-
 typedef boost::geometry::model::box<Eigen::Vector2f> Box2D;
 typedef boost::geometry::model::box<Eigen::Vector3f> Box3D;
+typedef boost::geometry::model::polygon<Eigen::Vector2f> Polygon2D;
 
 namespace Item
 {
+	struct Actor;
 	struct Area;
 	struct Checkpoint;
 	struct MapIcon;
@@ -99,8 +102,8 @@ namespace Item
 	struct Pickup;
 	struct RaceCheckpoint;
 	struct TextLabel;
-	struct Actor;
 
+	typedef boost::intrusive_ptr<Actor> SharedActor;
 	typedef boost::intrusive_ptr<Area> SharedArea;
 	typedef boost::intrusive_ptr<Checkpoint> SharedCheckpoint;
 	typedef boost::intrusive_ptr<MapIcon> SharedMapIcon;
@@ -108,18 +111,41 @@ namespace Item
 	typedef boost::intrusive_ptr<Pickup> SharedPickup;
 	typedef boost::intrusive_ptr<RaceCheckpoint> SharedRaceCheckpoint;
 	typedef boost::intrusive_ptr<TextLabel> SharedTextLabel;
-	typedef boost::intrusive_ptr<Actor> SharedActor;
 
+	template<typename T>
+	struct Hash
+	{
+		std::size_t operator()(boost::tuple<int, T> const &t) const
+		{
+			std::size_t seed = 0;
+			boost::hash_combine(seed, boost::get<0>(t));
+			boost::hash_combine(seed, boost::get<1>(t));
+			return seed;
+		}
+	};
+
+	template<typename T>
 	struct Compare
 	{
-		bool operator()(std::pair<int, float> const &a, std::pair<int, float> const &b)
+		bool operator()(boost::tuple<int, float> const &a, boost::tuple<int, float> const &b) const
 		{
-			if (a.first != b.first)
+			if (boost::get<0>(a) != boost::get<0>(b))
 			{
-				return a.first > b.first;
+				return boost::get<0>(a) > boost::get<0>(b);
 			}
-			return a.second < b.second;
+			return boost::get<1>(a) < boost::get<1>(b);
 		}
+
+		bool operator()(boost::tuple<int, T> const &a, boost::tuple<int, T> const &b) const
+		{
+			return boost::get<0>(a) == boost::get<0>(b) && boost::get<1>(a) == boost::get<1>(b);
+		}
+	};
+
+	template<typename T>
+	struct Bimap
+	{
+		typedef boost::bimap<boost::bimaps::multiset_of<boost::tuple<int, float>, Compare<T> >, boost::bimaps::unordered_set_of<boost::tuple<int, T>, Hash<T>, Compare<T> > > Type;
 	};
 }
 
