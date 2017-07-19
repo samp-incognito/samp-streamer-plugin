@@ -391,7 +391,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToObject(AMX *amx, cell *params
 				}
 			}
 		}
-		if (static_cast<int>(params[2]) != INVALID_OBJECT_ID)
+		if (static_cast<int>(params[2]) != INVALID_STREAMER_ID)
 		{
 			boost::unordered_map<int, Item::SharedObject>::iterator p = core->getData()->objects.find(static_cast<int>(params[2]));
 			if (p != core->getData()->objects.end())
@@ -437,7 +437,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToPlayer(AMX *amx, cell *params
 			return 0;
 		}
 		o->second->attach = boost::intrusive_ptr<Item::Object::Attach>(new Item::Object::Attach);
-		o->second->attach->object = INVALID_OBJECT_ID;
+		o->second->attach->object = INVALID_STREAMER_ID;
 		o->second->attach->vehicle = INVALID_VEHICLE_ID;
 		o->second->attach->player = static_cast<int>(params[2]);
 		o->second->attach->positionOffset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
@@ -492,7 +492,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToVehicle(AMX *amx, cell *param
 			return 0;
 		}
 		o->second->attach = boost::intrusive_ptr<Item::Object::Attach>(new Item::Object::Attach);
-		o->second->attach->object = INVALID_OBJECT_ID;
+		o->second->attach->object = INVALID_STREAMER_ID;
 		o->second->attach->player = INVALID_PLAYER_ID;
 		o->second->attach->vehicle = static_cast<int>(params[2]);
 		o->second->attach->positionOffset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));

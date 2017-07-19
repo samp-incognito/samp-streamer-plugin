@@ -1093,13 +1093,27 @@ void Streamer::streamObjects(Player &player, bool automatic)
 		}
 		else
 		{
-			bool interrupted = false;
+			bool streamingCanceled = false;
 			Item::Bimap<Item::SharedObject>::Type::left_iterator d = player.discoveredObjects.left.begin();
 			while (d != player.discoveredObjects.left.end())
 			{
 				if (automatic && ++chunkCount > chunkSize[STREAMER_TYPE_OBJECT])
 				{
 					break;
+				}
+				int internalBaseID = INVALID_STREAMER_ID;
+				if (d->second.get<1>()->attach)
+				{
+					if (d->second.get<1>()->attach->object != INVALID_STREAMER_ID)
+					{
+						boost::unordered_map<int, int>::iterator i = player.internalObjects.find(d->second.get<1>()->attach->object);
+						if (i == player.internalObjects.end())
+						{
+							d = player.discoveredObjects.left.erase(d);
+							continue;
+						}
+						internalBaseID = i->second;
+					}
 				}
 				if (player.internalObjects.size() == player.currentVisibleObjects)
 				{
@@ -1129,13 +1143,13 @@ void Streamer::streamObjects(Player &player, bool automatic)
 				}
 				if (player.internalObjects.size() == player.maxVisibleObjects)
 				{
-					interrupted = true;
+					streamingCanceled = true;
 					break;
 				}
 				int internalID = sampgdk::CreatePlayerObject(player.playerID, d->second.get<1>()->modelID, d->second.get<1>()->position[0], d->second.get<1>()->position[1], d->second.get<1>()->position[2], d->second.get<1>()->rotation[0], d->second.get<1>()->rotation[1], d->second.get<1>()->rotation[2], d->second.get<1>()->drawDistance);
 				if (internalID == INVALID_OBJECT_ID)
 				{
-					interrupted = true;
+					streamingCanceled = true;
 					break;
 				}
 				if (d->second.get<1>()->streamCallbacks)
@@ -1144,16 +1158,12 @@ void Streamer::streamObjects(Player &player, bool automatic)
 				}
 				if (d->second.get<1>()->attach)
 				{
-					if (d->second.get<1>()->attach->object != INVALID_OBJECT_ID)
+					if (internalBaseID != INVALID_STREAMER_ID)
 					{
-						boost::unordered_map<int, int>::iterator i = player.internalObjects.find(d->second.get<1>()->attach->object);
-						if (i != player.internalObjects.end())
+						AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToObject");
+						if (native != NULL)
 						{
-							AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToObject");
-							if (native != NULL)
-							{
-								sampgdk::InvokeNative(native, "dddffffffb", player.playerID, internalID, i->second, d->second.get<1>()->attach->positionOffset[0], d->second.get<1>()->attach->positionOffset[1], d->second.get<1>()->attach->positionOffset[2], d->second.get<1>()->attach->rotation[0], d->second.get<1>()->attach->rotation[1], d->second.get<1>()->attach->rotation[2], d->second.get<1>()->attach->syncRotation);
-							}
+							sampgdk::InvokeNative(native, "dddffffffb", player.playerID, internalID, internalBaseID, d->second.get<1>()->attach->positionOffset[0], d->second.get<1>()->attach->positionOffset[1], d->second.get<1>()->attach->positionOffset[2], d->second.get<1>()->attach->rotation[0], d->second.get<1>()->attach->rotation[1], d->second.get<1>()->attach->rotation[2], d->second.get<1>()->attach->syncRotation);
 						}
 					}
 					else if (d->second.get<1>()->attach->player != INVALID_PLAYER_ID)
@@ -1195,7 +1205,7 @@ void Streamer::streamObjects(Player &player, bool automatic)
 				}
 				d = player.discoveredObjects.left.erase(d);
 			}
-			if (interrupted)
+			if (streamingCanceled)
 			{
 				player.currentVisibleObjects = player.internalObjects.size();
 				player.discoveredObjects.clear();
@@ -1441,7 +1451,7 @@ void Streamer::streamTextLabels(Player &player, bool automatic)
 		}
 		else
 		{
-			bool interrupted = false;
+			bool streamingCanceled = false;
 			Item::Bimap<Item::SharedTextLabel>::Type::left_iterator d = player.discoveredTextLabels.left.begin();
 			while (d != player.discoveredTextLabels.left.end())
 			{
@@ -1477,13 +1487,13 @@ void Streamer::streamTextLabels(Player &player, bool automatic)
 				}
 				if (player.internalTextLabels.size() == player.maxVisibleTextLabels)
 				{
-					interrupted = true;
+					streamingCanceled = true;
 					break;
 				}
 				int internalID = sampgdk::CreatePlayer3DTextLabel(player.playerID, d->second.get<1>()->text.c_str(), d->second.get<1>()->color, d->second.get<1>()->position[0], d->second.get<1>()->position[1], d->second.get<1>()->position[2], d->second.get<1>()->drawDistance, d->second.get<1>()->attach ? d->second.get<1>()->attach->player : INVALID_PLAYER_ID, d->second.get<1>()->attach ? d->second.get<1>()->attach->vehicle : INVALID_VEHICLE_ID, d->second.get<1>()->testLOS);
 				if (internalID == INVALID_3DTEXT_ID)
 				{
-					interrupted = true;
+					streamingCanceled = true;
 					break;
 				}
 				if (d->second.get<1>()->streamCallbacks)
@@ -1497,7 +1507,7 @@ void Streamer::streamTextLabels(Player &player, bool automatic)
 				}
 				d = player.discoveredTextLabels.left.erase(d);
 			}
-			if (interrupted)
+			if (streamingCanceled)
 			{
 				player.currentVisibleTextLabels = player.internalTextLabels.size();
 				player.discoveredTextLabels.clear();
@@ -1704,7 +1714,7 @@ void Streamer::processAttachedObjects()
 		if ((*o)->attach)
 		{
 			bool adjust = false;
-			if ((*o)->attach->object != INVALID_OBJECT_ID)
+			if ((*o)->attach->object != INVALID_STREAMER_ID)
 			{
 				boost::unordered_map<int, Item::SharedObject>::iterator p = core->getData()->objects.find((*o)->attach->object);
 				if (p != core->getData()->objects.end())

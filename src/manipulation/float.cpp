@@ -1013,7 +1013,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 							i->second = sampgdk::CreatePlayerObject(p->first, o->second->modelID, o->second->position[0], o->second->position[1], o->second->position[2], o->second->rotation[0], o->second->rotation[1], o->second->rotation[2], o->second->drawDistance);
 							if (o->second->attach)
 							{
-								if (o->second->attach->object != INVALID_OBJECT_ID)
+								if (o->second->attach->object != INVALID_STREAMER_ID)
 								{
 									boost::unordered_map<int, int>::iterator j = p->second.internalObjects.find(o->second->attach->object);
 									if (j != p->second.internalObjects.end())
