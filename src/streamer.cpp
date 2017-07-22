@@ -1160,7 +1160,7 @@ void Streamer::streamObjects(Player &player, bool automatic)
 				{
 					if (internalBaseID != INVALID_STREAMER_ID)
 					{
-						AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToObject");
+						static AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToObject");
 						if (native != NULL)
 						{
 							sampgdk::InvokeNative(native, "dddffffffb", player.playerID, internalID, internalBaseID, d->second.get<1>()->attach->positionOffset[0], d->second.get<1>()->attach->positionOffset[1], d->second.get<1>()->attach->positionOffset[2], d->second.get<1>()->attach->rotation[0], d->second.get<1>()->attach->rotation[1], d->second.get<1>()->attach->rotation[2], d->second.get<1>()->attach->syncRotation);
@@ -1168,7 +1168,7 @@ void Streamer::streamObjects(Player &player, bool automatic)
 					}
 					else if (d->second.get<1>()->attach->player != INVALID_PLAYER_ID)
 					{
-						AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToPlayer");
+						static AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToPlayer");
 						if (native != NULL)
 						{
 							sampgdk::InvokeNative(native, "dddffffffd", player.playerID, internalID, d->second.get<1>()->attach->player, d->second.get<1>()->attach->positionOffset[0], d->second.get<1>()->attach->positionOffset[1], d->second.get<1>()->attach->positionOffset[2], d->second.get<1>()->attach->rotation[0], d->second.get<1>()->attach->rotation[1], d->second.get<1>()->attach->rotation[2], 1);
