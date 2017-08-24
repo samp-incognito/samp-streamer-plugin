@@ -77,6 +77,9 @@ private:
 	void streamActors();
 
 	void processAreas(Player &player, const std::vector<SharedCell> &cells);
+public:
+	bool processPlayerArea(Player &player, boost::unordered_map<int, Item::SharedArea>::const_iterator &a, int state, bool &inArea, boost::unordered_set<int>::iterator &foundArea);
+private:
 	void processCheckpoints(Player &player, const std::vector<SharedCell> &cells);
 	void processRaceCheckpoints(Player &player, const std::vector<SharedCell> &cells);
 
