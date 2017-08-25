@@ -776,10 +776,13 @@ void Streamer::processAreas(Player &player, const std::vector<SharedCell> &cells
 
 bool Streamer::processPlayerArea(Player &player, boost::unordered_map<int, Item::SharedArea>::const_iterator &a, int state, bool &inArea, boost::unordered_set<int>::iterator &foundArea)
 {
-	inArea = false;
 	if (doesPlayerSatisfyConditions(a->second->players, player.playerID, a->second->interiors, player.interiorID, a->second->worlds, player.worldID) && ((!a->second->spectateMode && state != PLAYER_STATE_SPECTATING) || a->second->spectateMode))
 	{
 		inArea = Utility::isPointInArea(player.position, a->second);
+	}
+	else
+	{
+		inArea = false;
 	}
 	foundArea = player.internalAreas.find(a->first);
 	if (inArea)
