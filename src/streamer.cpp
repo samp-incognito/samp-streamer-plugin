@@ -769,30 +769,30 @@ void Streamer::processAreas(Player &player, const std::vector<SharedCell> &cells
 	{
 		for (boost::unordered_map<int, Item::SharedArea>::const_iterator a = (*c)->areas.begin(); a != (*c)->areas.end(); ++a)
 		{
-			Streamer::processPlayerArea(player, a, state, inArea, foundArea);
+			Streamer::processPlayerArea(player, a->second, state, inArea, foundArea);
 		}
 	}
 }
 
-bool Streamer::processPlayerArea(Player &player, boost::unordered_map<int, Item::SharedArea>::const_iterator &a, int state, bool &inArea, boost::unordered_set<int>::iterator &foundArea)
+void Streamer::processPlayerArea(Player &player, const Item::SharedArea &a, const int &state, bool &inArea, boost::unordered_set<int>::iterator &foundArea)
 {
-	if (doesPlayerSatisfyConditions(a->second->players, player.playerID, a->second->interiors, player.interiorID, a->second->worlds, player.worldID) && ((!a->second->spectateMode && state != PLAYER_STATE_SPECTATING) || a->second->spectateMode))
+	if (doesPlayerSatisfyConditions(a->players, player.playerID, a->interiors, player.interiorID, a->worlds, player.worldID) && ((!a->spectateMode && state != PLAYER_STATE_SPECTATING) || a->spectateMode))
 	{
-		inArea = Utility::isPointInArea(player.position, a->second);
+		inArea = Utility::isPointInArea(player.position, a);
 	}
 	else
 	{
 		inArea = false;
 	}
-	foundArea = player.internalAreas.find(a->first);
+	foundArea = player.internalAreas.find(a->areaID);
 	if (inArea)
 	{
 		if (foundArea == player.internalAreas.end())
 		{
-			player.internalAreas.insert(a->first);
-			areaEnterCallbacks.insert(std::make_pair(a->second->priority, boost::make_tuple(a->first, player.playerID)));
+			player.internalAreas.insert(a->areaID);
+			areaEnterCallbacks.insert(std::make_pair(a->priority, boost::make_tuple(a->areaID, player.playerID)));
 		}
-		if (a->second->cell)
+		if (a->cell)
 		{
 			player.visibleCell->areas.insert(*a);
 		}
@@ -802,10 +802,9 @@ bool Streamer::processPlayerArea(Player &player, boost::unordered_map<int, Item:
 		if (foundArea != player.internalAreas.end())
 		{
 			player.internalAreas.quick_erase(foundArea);
-			areaLeaveCallbacks.insert(std::make_pair(a->second->priority, boost::make_tuple(a->first, player.playerID)));
+			areaLeaveCallbacks.insert(std::make_pair(a->priority, boost::make_tuple(a->areaID, player.playerID)));
 		}
 	}
-	return inArea;
 }
 
 void Streamer::processCheckpoints(Player &player, const std::vector<SharedCell> &cells)

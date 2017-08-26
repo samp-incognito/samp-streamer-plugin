@@ -259,7 +259,7 @@ cell AMX_NATIVE_CALL Natives::IsPlayerInDynamicArea(AMX *amx, cell *params)
 				int state = sampgdk::GetPlayerState(p->second.playerID);
 				bool inArea = false;
 				boost::unordered_set<int>::iterator foundArea;
-				core->getStreamer()->processPlayerArea(p->second, a, state, inArea, foundArea);
+				core->getStreamer()->processPlayerArea(p->second, a->second, state, inArea, foundArea);
 				return static_cast<cell>(inArea != 0);
 			}
 		}
@@ -288,7 +288,7 @@ cell AMX_NATIVE_CALL Natives::IsPlayerInAnyDynamicArea(AMX *amx, cell *params)
 			boost::unordered_set<int>::iterator foundArea;
 			for (boost::unordered_map<int, Item::SharedArea>::const_iterator a = core->getData()->areas.begin(); a != core->getData()->areas.end(); ++a)
 			{
-				core->getStreamer()->processPlayerArea(p->second, a, state, inArea, foundArea);
+				core->getStreamer()->processPlayerArea(p->second, a->second, state, inArea, foundArea);
 				if (inArea != 0)
 				{
 					return 1;
@@ -324,7 +324,7 @@ cell AMX_NATIVE_CALL Natives::IsAnyPlayerInDynamicArea(AMX *amx, cell *params)
 			a = core->getData()->areas.find(static_cast<int>(params[1]));
 			if (a != core->getData()->areas.end())
 			{
-				core->getStreamer()->processPlayerArea(p->second, a, sampgdk::GetPlayerState(p->second.playerID), inArea, foundArea);
+				core->getStreamer()->processPlayerArea(p->second, a->second, sampgdk::GetPlayerState(p->second.playerID), inArea, foundArea);
 				return static_cast<cell>(inArea != 0);
 			}
 		}
@@ -355,7 +355,7 @@ cell AMX_NATIVE_CALL Natives::IsAnyPlayerInAnyDynamicArea(AMX *amx, cell *params
 		{
 			for (a = core->getData()->areas.begin(); a != core->getData()->areas.end(); ++a)
 			{
-				core->getStreamer()->processPlayerArea(p->second, a, sampgdk::GetPlayerState(p->second.playerID), inArea, foundArea);
+				core->getStreamer()->processPlayerArea(p->second, a->second, sampgdk::GetPlayerState(p->second.playerID), inArea, foundArea);
 				if (inArea != 0)
 				{
 					return 1;
