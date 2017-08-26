@@ -78,7 +78,7 @@ private:
 
 	void processAreas(Player &player, const std::vector<SharedCell> &cells);
 public:
-	void processPlayerArea(Player &player, const Item::SharedArea &a, const int &state, bool &inArea, boost::unordered_set<int>::iterator &foundArea);
+	bool processPlayerArea(Player &player, const Item::SharedArea &a, const int state);
 private:
 	void processCheckpoints(Player &player, const std::vector<SharedCell> &cells);
 	void processRaceCheckpoints(Player &player, const std::vector<SharedCell> &cells);

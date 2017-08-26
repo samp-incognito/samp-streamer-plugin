@@ -763,28 +763,23 @@ void Streamer::streamActors()
 void Streamer::processAreas(Player &player, const std::vector<SharedCell> &cells)
 {
 	int state = sampgdk::GetPlayerState(player.playerID);
-	bool inArea = false;
-	boost::unordered_set<int>::iterator foundArea;
 	for (std::vector<SharedCell>::const_iterator c = cells.begin(); c != cells.end(); ++c)
 	{
 		for (boost::unordered_map<int, Item::SharedArea>::const_iterator a = (*c)->areas.begin(); a != (*c)->areas.end(); ++a)
 		{
-			Streamer::processPlayerArea(player, a->second, state, inArea, foundArea);
+			Streamer::processPlayerArea(player, a->second, state);
 		}
 	}
 }
 
-void Streamer::processPlayerArea(Player &player, const Item::SharedArea &a, const int &state, bool &inArea, boost::unordered_set<int>::iterator &foundArea)
+bool Streamer::processPlayerArea(Player &player, const Item::SharedArea &a, const int state)
 {
+	bool inArea = false;
 	if (doesPlayerSatisfyConditions(a->players, player.playerID, a->interiors, player.interiorID, a->worlds, player.worldID) && ((!a->spectateMode && state != PLAYER_STATE_SPECTATING) || a->spectateMode))
 	{
 		inArea = Utility::isPointInArea(player.position, a);
 	}
-	else
-	{
-		inArea = false;
-	}
-	foundArea = player.internalAreas.find(a->areaID);
+	boost::unordered_set<int>::iterator foundArea = player.internalAreas.find(a->areaID);
 	if (inArea)
 	{
 		if (foundArea == player.internalAreas.end())
@@ -794,7 +789,7 @@ void Streamer::processPlayerArea(Player &player, const Item::SharedArea &a, cons
 		}
 		if (a->cell)
 		{
-			player.visibleCell->areas.insert(*a);
+			player.visibleCell->areas.insert(std::make_pair(a->areaID, a));
 		}
 	}
 	else
@@ -805,6 +800,7 @@ void Streamer::processPlayerArea(Player &player, const Item::SharedArea &a, cons
 			areaLeaveCallbacks.insert(std::make_pair(a->priority, boost::make_tuple(a->areaID, player.playerID)));
 		}
 	}
+	return inArea;
 }
 
 void Streamer::processCheckpoints(Player &player, const std::vector<SharedCell> &cells)
