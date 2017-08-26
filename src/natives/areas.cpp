@@ -253,10 +253,10 @@ cell AMX_NATIVE_CALL Natives::IsPlayerInDynamicArea(AMX *amx, cell *params)
 		}
 		else
 		{
-			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[2]));
+			boost::unordered_map<int, Item::SharedArea>::const_iterator a = core->getData()->areas.find(static_cast<int>(params[2]));
 			if (a != core->getData()->areas.end())
 			{
-				return static_cast<cell>(Utility::isPointInArea(p->second.position, a->second)) != 0;
+				return static_cast<cell>(core->getStreamer()->processPlayerArea(p->second, a->second, sampgdk::GetPlayerState(p->second.playerID)) != 0);
 			}
 		}
 	}
@@ -279,9 +279,10 @@ cell AMX_NATIVE_CALL Natives::IsPlayerInAnyDynamicArea(AMX *amx, cell *params)
 		}
 		else
 		{
+			int state = sampgdk::GetPlayerState(p->second.playerID);
 			for (boost::unordered_map<int, Item::SharedArea>::const_iterator a = core->getData()->areas.begin(); a != core->getData()->areas.end(); ++a)
 			{
-				if (Utility::isPointInArea(p->second.position, a->second))
+				if (core->getStreamer()->processPlayerArea(p->second, a->second, state) != 0)
 				{
 					return 1;
 				}
@@ -294,10 +295,10 @@ cell AMX_NATIVE_CALL Natives::IsPlayerInAnyDynamicArea(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::IsAnyPlayerInDynamicArea(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "IsAnyPlayerInDynamicArea");
-	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+	bool recheck = static_cast<int>(params[2]) != 0;
+	if (!recheck)
 	{
-		bool recheck = static_cast<int>(params[2]) != 0;
-		if (!recheck)
+		for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 		{
 			boost::unordered_set<int>::iterator i = p->second.internalAreas.find(static_cast<int>(params[1]));
 			if (i != p->second.internalAreas.end())
@@ -305,12 +306,16 @@ cell AMX_NATIVE_CALL Natives::IsAnyPlayerInDynamicArea(AMX *amx, cell *params)
 				return 1;
 			}
 		}
-		else
+	}
+	else
+	{
+		boost::unordered_map<int, Item::SharedArea>::const_iterator a;
+		for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 		{
-			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
+			a = core->getData()->areas.find(static_cast<int>(params[1]));
 			if (a != core->getData()->areas.end())
 			{
-				return static_cast<cell>(Utility::isPointInArea(p->second.position, a->second)) != 0;
+				return static_cast<cell>(core->getStreamer()->processPlayerArea(p->second, a->second, sampgdk::GetPlayerState(p->second.playerID)) != 0);
 			}
 		}
 	}
@@ -320,21 +325,25 @@ cell AMX_NATIVE_CALL Natives::IsAnyPlayerInDynamicArea(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::IsAnyPlayerInAnyDynamicArea(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "IsAnyPlayerInAnyDynamicArea");
-	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+	bool recheck = static_cast<int>(params[1]) != 0;
+	if (!recheck)
 	{
-		bool recheck = static_cast<int>(params[1]) != 0;
-		if (!recheck)
+		for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 		{
 			if (!p->second.internalAreas.empty())
 			{
 				return 1;
 			}
 		}
-		else
+	}
+	else
+	{
+		boost::unordered_map<int, Item::SharedArea>::const_iterator a;
+		for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 		{
-			for (boost::unordered_map<int, Item::SharedArea>::const_iterator a = core->getData()->areas.begin(); a != core->getData()->areas.end(); ++a)
+			for (a = core->getData()->areas.begin(); a != core->getData()->areas.end(); ++a)
 			{
-				if (Utility::isPointInArea(p->second.position, a->second))
+				if (core->getStreamer()->processPlayerArea(p->second, a->second, sampgdk::GetPlayerState(p->second.playerID)) != 0)
 				{
 					return 1;
 				}
