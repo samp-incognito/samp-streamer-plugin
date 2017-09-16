@@ -54,6 +54,8 @@ AMX_NATIVE_INFO natives[] =
 	{ "Streamer_SetTickRate", Natives::Streamer_SetTickRate },
 	{ "Streamer_GetPlayerTickRate", Natives::Streamer_GetPlayerTickRate },
 	{ "Streamer_SetPlayerTickRate", Natives::Streamer_SetPlayerTickRate },
+	{ "Streamer_ToggleChunkStream", Natives::Streamer_ToggleChunkStream },
+	{ "Streamer_IsToggleChunkStream", Natives::Streamer_IsToggleChunkStream },
 	{ "Streamer_GetChunkTickRate", Natives::Streamer_GetChunkTickRate },
 	{ "Streamer_SetChunkTickRate", Natives::Streamer_SetChunkTickRate },
 	{ "Streamer_GetChunkSize", Natives::Streamer_GetChunkSize },

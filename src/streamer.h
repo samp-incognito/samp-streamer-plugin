@@ -54,11 +54,23 @@ public:
 		return false;
 	}
 
+	inline bool getChunkStreamingEnabled()
+	{
+		return chunkStreamingEnabled;
+	}
+
+	inline void setChunkStreamingEnabled(bool enabled)
+	{
+		chunkStreamingEnabled = enabled;
+	}
+
 	std::size_t getChunkSize(int type);
 	bool setChunkSize(int type, std::size_t value);
 
 	void startAutomaticUpdate();
 	void startManualUpdate(Player &player, int type);
+	
+	bool processPlayerArea(Player &player, const Item::SharedArea &a, const int state);
 
 	void processActiveItems();
 
@@ -77,20 +89,24 @@ private:
 	void streamActors();
 
 	void processAreas(Player &player, const std::vector<SharedCell> &cells);
-public:
-	bool processPlayerArea(Player &player, const Item::SharedArea &a, const int state);
-private:
+
 	void processCheckpoints(Player &player, const std::vector<SharedCell> &cells);
 	void processRaceCheckpoints(Player &player, const std::vector<SharedCell> &cells);
 
+	void processMapIcons(Player &player, const std::vector<SharedCell> &cells);
+
 	void discoverMapIcons(Player &player, const std::vector<SharedCell> &cells);
 	void streamMapIcons(Player &player, bool automatic);
+	
+	void processObjects(Player &player, const std::vector<SharedCell> &cells);
 
 	void discoverObjects(Player &player, const std::vector<SharedCell> &cells);
 	void streamObjects(Player &player, bool automatic);
 
 	void discoverPickups(Player &player, const std::vector<SharedCell> &cells);
 	void streamPickups();
+	
+	void processTextLabels(Player &player, const std::vector<SharedCell> &cells);
 
 	void discoverTextLabels(Player &player, const std::vector<SharedCell> &cells);
 	void streamTextLabels(Player &player, bool automatic);
@@ -101,6 +117,7 @@ private:
 	void processAttachedTextLabels();
 
 	std::size_t chunkSize[STREAMER_MAX_TYPES];
+	bool chunkStreamingEnabled;
 
 	std::size_t tickCount;
 	std::size_t tickRate;

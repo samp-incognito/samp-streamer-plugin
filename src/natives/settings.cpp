@@ -55,6 +55,18 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetPlayerTickRate(AMX *amx, cell *params)
 	return 0;
 }
 
+cell AMX_NATIVE_CALL Natives::Streamer_ToggleChunkStream(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "Streamer_ToggleChunkStream");
+	core->getStreamer()->setChunkStreamingEnabled(static_cast<int>(params[1]) != 0);
+	return 1;
+}
+
+cell AMX_NATIVE_CALL Natives::Streamer_IsToggleChunkStream(AMX *amx, cell *params)
+{
+	return static_cast<cell>(core->getStreamer()->getChunkStreamingEnabled());
+}
+
 cell AMX_NATIVE_CALL Natives::Streamer_GetChunkTickRate(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "Streamer_GetChunkTickRate");

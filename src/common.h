@@ -124,8 +124,20 @@ namespace Item
 		}
 	};
 
+	struct PairCompare
+	{
+		bool operator()(std::pair<int, float> const &a, std::pair<int, float> const &b) const
+		{
+			if (a.first != b.first)
+			{
+				return a.first > b.first;
+			}
+			return a.second < b.second;
+		}
+	};
+
 	template<typename T>
-	struct Compare
+	struct TupleCompare
 	{
 		bool operator()(boost::tuple<int, float> const &a, boost::tuple<int, float> const &b) const
 		{
@@ -145,7 +157,7 @@ namespace Item
 	template<typename T>
 	struct Bimap
 	{
-		typedef boost::bimap<boost::bimaps::multiset_of<boost::tuple<int, float>, Compare<T> >, boost::bimaps::unordered_set_of<boost::tuple<int, T>, Hash<T>, Compare<T> > > Type;
+		typedef boost::bimap<boost::bimaps::multiset_of<boost::tuple<int, float>, TupleCompare<T> >, boost::bimaps::unordered_set_of<boost::tuple<int, T>, Hash<T>, TupleCompare<T> > > Type;
 	};
 }
 
