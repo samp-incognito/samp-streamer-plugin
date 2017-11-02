@@ -947,13 +947,13 @@ void Streamer::processMapIcons(Player &player, const std::vector<SharedCell> &ce
 	}
 	for (std::multimap<std::pair<int, float>, Item::SharedMapIcon, Item::PairCompare>::iterator d = discoveredMapIcons.begin(); d != discoveredMapIcons.end(); ++d)
 	{
+		boost::unordered_map<int, int>::iterator i = player.internalMapIcons.find(d->second->mapIconID);
+		if (i != player.internalMapIcons.end())
+		{
+			continue;
+		}
 		if (player.internalMapIcons.size() == player.maxVisibleMapIcons)
 		{
-			boost::unordered_map<int, int>::iterator i = player.internalMapIcons.find(d->second->mapIconID);
-			if (i != player.internalMapIcons.end())
-			{
-				continue;
-			}
 			std::multimap<std::pair<int, float>, Item::SharedMapIcon, Item::PairCompare>::reverse_iterator e = existingMapIcons.rbegin();
 			if (e != existingMapIcons.rend())
 			{
@@ -1093,6 +1093,7 @@ void Streamer::streamMapIcons(Player &player, bool automatic)
 				boost::unordered_map<int, int>::iterator i = player.internalMapIcons.find(d->second.get<1>()->mapIconID);
 				if (i != player.internalMapIcons.end())
 				{
+					d = player.discoveredMapIcons.left.erase(d);
 					continue;
 				}
 				if (player.internalMapIcons.size() == player.maxVisibleMapIcons)
@@ -1422,6 +1423,7 @@ void Streamer::streamObjects(Player &player, bool automatic)
 				boost::unordered_map<int, int>::iterator i = player.internalObjects.find(d->second.get<1>()->objectID);
 				if (i != player.internalObjects.end())
 				{
+					d = player.discoveredObjects.left.erase(d);
 					continue;
 				}
 				int internalBaseID = INVALID_STREAMER_ID;
@@ -1902,6 +1904,7 @@ void Streamer::streamTextLabels(Player &player, bool automatic)
 				boost::unordered_map<int, int>::iterator i = player.internalTextLabels.find(d->second.get<1>()->textLabelID);
 				if (i != player.internalTextLabels.end())
 				{
+					d = player.discoveredTextLabels.left.erase(d);
 					continue;
 				}
 				if (player.internalTextLabels.size() == player.currentVisibleTextLabels)
