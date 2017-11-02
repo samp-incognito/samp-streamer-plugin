@@ -1,6 +1,14 @@
 SA-MP Streamer Plugin
 =====================
 
+v2.9.2
+------
+
+- Fixed some attached object bugs
+- Added GetDynamicActorAnimation (thanks IstuntmanI)
+- Made chunk streaming toggleable (now disabled by default)
+- Added (Is)Streamer_ToggleChunkStream
+
 v2.9.1
 ------
 
