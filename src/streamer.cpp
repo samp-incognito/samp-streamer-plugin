@@ -824,7 +824,7 @@ bool Streamer::processPlayerArea(Player &player, const Item::SharedArea &a, cons
 	{
 		if (foundArea != player.internalAreas.end())
 		{
-			player.internalAreas.quick_erase(foundArea);
+			player.internalAreas.erase(foundArea);
 			areaLeaveCallbacks.insert(std::make_pair(a->priority, boost::make_tuple(a->areaID, player.playerID)));
 		}
 	}
@@ -940,7 +940,7 @@ void Streamer::processMapIcons(Player &player, const std::vector<SharedCell> &ce
 						streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_MAP_ICON, m->first));
 					}
 					player.mapIconIdentifier.remove(i->second, player.internalMapIcons.size());
-					player.internalMapIcons.quick_erase(i);
+					player.internalMapIcons.erase(i);
 				}
 			}
 		}
@@ -963,7 +963,7 @@ void Streamer::processMapIcons(Player &player, const std::vector<SharedCell> &ce
 							streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_MAP_ICON, e->second->mapIconID));
 						}
 						player.mapIconIdentifier.remove(i->second, player.internalMapIcons.size());
-						player.internalMapIcons.quick_erase(i);
+						player.internalMapIcons.erase(i);
 					}
 					if (e->second->cell)
 					{
@@ -1071,7 +1071,7 @@ void Streamer::streamMapIcons(Player &player, bool automatic)
 						}
 					}
 					player.mapIconIdentifier.remove(i->second, player.internalMapIcons.size());
-					player.internalMapIcons.quick_erase(i);
+					player.internalMapIcons.erase(i);
 				}
 				r = player.removedMapIcons.erase(r);
 			}
@@ -1101,7 +1101,7 @@ void Streamer::streamMapIcons(Player &player, bool automatic)
 									streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_MAP_ICON, e->second.get<0>()));
 								}
 								player.mapIconIdentifier.remove(i->second, player.internalMapIcons.size());
-								player.internalMapIcons.quick_erase(i);
+								player.internalMapIcons.erase(i);
 							}
 							if (e->second.get<1>()->cell)
 							{
@@ -1193,7 +1193,7 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 					{
 						streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_OBJECT, o->first));
 					}
-					player.internalObjects.quick_erase(i);
+					player.internalObjects.erase(i);
 				}
 			}
 		}
@@ -1228,7 +1228,7 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 						{
 							streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_OBJECT, e->second->objectID));
 						}
-						player.internalObjects.quick_erase(i);
+						player.internalObjects.erase(i);
 					}
 					if (e->second->cell)
 					{
@@ -1389,7 +1389,7 @@ void Streamer::streamObjects(Player &player, bool automatic)
 							streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_OBJECT, *r));
 						}
 					}
-					player.internalObjects.quick_erase(i);
+					player.internalObjects.erase(i);
 				}
 				r = player.removedObjects.erase(r);
 			}
@@ -1433,7 +1433,7 @@ void Streamer::streamObjects(Player &player, bool automatic)
 								{
 									streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_OBJECT, e->second.get<0>()));
 								}
-								player.internalObjects.quick_erase(i);
+								player.internalObjects.erase(i);
 							}
 							if (e->second.get<1>()->cell)
 							{
@@ -1718,7 +1718,7 @@ void Streamer::processTextLabels(Player &player, const std::vector<SharedCell> &
 					{
 						streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_3D_TEXT_LABEL, t->first));
 					}
-					player.internalTextLabels.quick_erase(i);
+					player.internalTextLabels.erase(i);
 				}
 			}
 		}
@@ -1740,7 +1740,7 @@ void Streamer::processTextLabels(Player &player, const std::vector<SharedCell> &
 						{
 							streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_3D_TEXT_LABEL, e->second->textLabelID));
 						}
-						player.internalTextLabels.quick_erase(i);
+						player.internalTextLabels.erase(i);
 					}
 					if (e->second->cell)
 					{
@@ -1859,7 +1859,7 @@ void Streamer::streamTextLabels(Player &player, bool automatic)
 							streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_3D_TEXT_LABEL, *r));
 						}
 					}
-					player.internalTextLabels.quick_erase(i);
+					player.internalTextLabels.erase(i);
 				}
 				r = player.removedTextLabels.erase(r);
 			}
@@ -1889,7 +1889,7 @@ void Streamer::streamTextLabels(Player &player, bool automatic)
 								{
 									streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_3D_TEXT_LABEL, e->second.get<0>()));
 								}
-								player.internalTextLabels.quick_erase(i);
+								player.internalTextLabels.erase(i);
 							}
 							if (e->second.get<1>()->cell)
 							{

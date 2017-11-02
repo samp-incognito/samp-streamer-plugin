@@ -42,7 +42,7 @@ boost::unordered_map<int, Item::SharedActor>::iterator Utility::destroyActor(boo
 	if (i != core->getData()->internalActors.end())
 	{
 		core->getData()->destroyedActors.push_back(i->second);
-		core->getData()->internalActors.quick_erase(i);
+		core->getData()->internalActors.erase(i);
 	}
 	boost::unordered_map<int, Item::SharedActor>::iterator d = core->getData()->discoveredActors.find(a->first);
 	if (d != core->getData()->discoveredActors.end())
@@ -102,7 +102,7 @@ boost::unordered_map<int, Item::SharedMapIcon>::iterator Utility::destroyMapIcon
 		{
 			sampgdk::RemovePlayerMapIcon(p->first, i->second);
 			p->second.mapIconIdentifier.remove(i->second, p->second.internalMapIcons.size());
-			p->second.internalMapIcons.quick_erase(i);
+			p->second.internalMapIcons.erase(i);
 		}
 		boost::unordered_set<int>::iterator r = p->second.removedMapIcons.find(m->first);
 		if (r != p->second.removedMapIcons.end())
@@ -134,7 +134,7 @@ boost::unordered_map<int, Item::SharedObject>::iterator Utility::destroyObject(b
 		if (i != p->second.internalObjects.end())
 		{
 			sampgdk::DestroyPlayerObject(p->first, i->second);
-			p->second.internalObjects.quick_erase(i);
+			p->second.internalObjects.erase(i);
 		}
 		boost::unordered_set<int>::iterator r = p->second.removedObjects.find(o->first);
 		if (r != p->second.removedObjects.end())
@@ -154,7 +154,7 @@ boost::unordered_map<int, Item::SharedPickup>::iterator Utility::destroyPickup(b
 	if (i != core->getData()->internalPickups.end())
 	{
 		sampgdk::DestroyPickup(i->second);
-		core->getData()->internalPickups.quick_erase(i);
+		core->getData()->internalPickups.erase(i);
 	}
 	boost::unordered_map<int, Item::SharedPickup>::iterator d = core->getData()->discoveredPickups.find(p->first);
 	if (d != core->getData()->discoveredPickups.end())
@@ -201,7 +201,7 @@ boost::unordered_map<int, Item::SharedTextLabel>::iterator Utility::destroyTextL
 		if (i != p->second.internalTextLabels.end())
 		{
 			sampgdk::DeletePlayer3DTextLabel(p->first, i->second);
-			p->second.internalTextLabels.quick_erase(i);
+			p->second.internalTextLabels.erase(i);
 		}
 		boost::unordered_set<int>::iterator r = p->second.removedTextLabels.find(t->first);
 		if (r != p->second.removedTextLabels.end())
