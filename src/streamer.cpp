@@ -762,25 +762,25 @@ void Streamer::streamActors()
 		sortedActors.insert(std::make_pair(d->second->priority, d->second));
 	}
 	core->getData()->discoveredActors.clear();
-	for (std::multimap<int, Item::SharedActor>::iterator i = sortedActors.begin(); i != sortedActors.end(); ++i)
+	for (std::multimap<int, Item::SharedActor>::iterator s = sortedActors.begin(); s != sortedActors.end(); ++s)
 	{
 		if (core->getData()->internalActors.size() == core->getData()->getGlobalMaxVisibleItems(STREAMER_TYPE_ACTOR))
 		{
 			break;
 		}
-		int internalID = sampgdk::CreateActor(i->second->modelID, i->second->position[0], i->second->position[1], i->second->position[2], i->second->rotation);
+		int internalID = sampgdk::CreateActor(s->second->modelID, s->second->position[0], s->second->position[1], s->second->position[2], s->second->rotation);
 		if (internalID == INVALID_ACTOR_ID)
 		{
 			break;
 		}
-		sampgdk::SetActorInvulnerable(internalID, i->second->invulnerable);
-		sampgdk::SetActorHealth(internalID, i->second->health);
-		sampgdk::SetActorVirtualWorld(internalID, i->second->worldID);
-		if (i->second->anim)
+		sampgdk::SetActorInvulnerable(internalID, s->second->invulnerable);
+		sampgdk::SetActorHealth(internalID, s->second->health);
+		sampgdk::SetActorVirtualWorld(internalID, s->second->worldID);
+		if (s->second->anim)
 		{
-			sampgdk::ApplyActorAnimation(internalID, i->second->anim->lib.c_str(), i->second->anim->name.c_str(), i->second->anim->delta, i->second->anim->loop, i->second->anim->lockx, i->second->anim->locky, i->second->anim->freeze, i->second->anim->time);
+			sampgdk::ApplyActorAnimation(internalID, s->second->anim->lib.c_str(), s->second->anim->name.c_str(), s->second->anim->delta, s->second->anim->loop, s->second->anim->lockx, s->second->anim->locky, s->second->anim->freeze, s->second->anim->time);
 		}
-		core->getData()->internalActors.insert(std::make_pair(i->second->actorID, internalID));
+		core->getData()->internalActors.insert(std::make_pair(s->second->actorID, internalID));
 	}
 	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 	{
@@ -1581,22 +1581,22 @@ void Streamer::streamPickups()
 		sortedPickups.insert(std::make_pair(d->second->priority, d->second));
 	}
 	core->getData()->discoveredPickups.clear();
-	for (std::multimap<int, Item::SharedPickup>::iterator i = sortedPickups.begin(); i != sortedPickups.end(); ++i)
+	for (std::multimap<int, Item::SharedPickup>::iterator s = sortedPickups.begin(); s != sortedPickups.end(); ++s)
 	{
 		if (core->getData()->internalPickups.size() == core->getData()->getGlobalMaxVisibleItems(STREAMER_TYPE_PICKUP))
 		{
 			break;
 		}
-		int internalID = sampgdk::CreatePickup(i->second->modelID, i->second->type, i->second->position[0], i->second->position[1], i->second->position[2], i->second->worldID);
+		int internalID = sampgdk::CreatePickup(s->second->modelID, s->second->type, s->second->position[0], s->second->position[1], s->second->position[2], s->second->worldID);
 		if (internalID == INVALID_PICKUP_ID)
 		{
 			break;
 		}
-		if (i->second->streamCallbacks)
+		if (s->second->streamCallbacks)
 		{
-			streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_PICKUP, i->second->pickupID));
+			streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_PICKUP, s->second->pickupID));
 		}
-		core->getData()->internalPickups.insert(std::make_pair(i->second->pickupID, internalID));
+		core->getData()->internalPickups.insert(std::make_pair(s->second->pickupID, internalID));
 	}
 	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 	{
@@ -1966,7 +1966,7 @@ void Streamer::processMovingObjects()
 		if ((*o)->move)
 		{
 			boost::chrono::duration<float, boost::milli> elapsedTime = boost::chrono::steady_clock::now() - (*o)->move->time;
-			if (elapsedTime.count() < (*o)->move->duration)
+			if (boost::chrono::duration_cast<boost::chrono::milliseconds>(elapsedTime).count() < (*o)->move->duration)
 			{
 				(*o)->position = (*o)->move->position.get<1>() + ((*o)->move->position.get<2>() * elapsedTime.count());
 				if (!Utility::almostEquals((*o)->move->rotation.get<0>().maxCoeff(), -1000.0f))

@@ -137,7 +137,7 @@ namespace Item
 	};
 
 	template<typename T>
-	struct TupleCompare
+	struct LeftTupleCompare
 	{
 		bool operator()(boost::tuple<int, float> const &a, boost::tuple<int, float> const &b) const
 		{
@@ -147,7 +147,11 @@ namespace Item
 			}
 			return boost::get<1>(a) < boost::get<1>(b);
 		}
+	};
 
+	template<typename T>
+	struct RightTupleCompare
+	{
 		bool operator()(boost::tuple<int, T> const &a, boost::tuple<int, T> const &b) const
 		{
 			return boost::get<0>(a) == boost::get<0>(b) && boost::get<1>(a) == boost::get<1>(b);
@@ -157,7 +161,7 @@ namespace Item
 	template<typename T>
 	struct Bimap
 	{
-		typedef boost::bimap<boost::bimaps::multiset_of<boost::tuple<int, float>, TupleCompare<T> >, boost::bimaps::unordered_set_of<boost::tuple<int, T>, Hash<T>, TupleCompare<T> > > Type;
+		typedef boost::bimap<boost::bimaps::multiset_of<boost::tuple<int, float>, LeftTupleCompare<T> >, boost::bimaps::unordered_set_of<boost::tuple<int, T>, Hash<T>, RightTupleCompare<T> > > Type;
 	};
 }
 
