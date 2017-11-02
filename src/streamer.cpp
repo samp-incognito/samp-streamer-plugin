@@ -949,6 +949,11 @@ void Streamer::processMapIcons(Player &player, const std::vector<SharedCell> &ce
 	{
 		if (player.internalMapIcons.size() == player.maxVisibleMapIcons)
 		{
+			boost::unordered_map<int, int>::iterator i = player.internalMapIcons.find(d->second->mapIconID);
+			if (i != player.internalMapIcons.end())
+			{
+				continue;
+			}
 			std::multimap<std::pair<int, float>, Item::SharedMapIcon, Item::PairCompare>::reverse_iterator e = existingMapIcons.rbegin();
 			if (e != existingMapIcons.rend())
 			{
@@ -1085,6 +1090,11 @@ void Streamer::streamMapIcons(Player &player, bool automatic)
 				{
 					break;
 				}
+				boost::unordered_map<int, int>::iterator i = player.internalMapIcons.find(d->second.get<1>()->mapIconID);
+				if (i != player.internalMapIcons.end())
+				{
+					continue;
+				}
 				if (player.internalMapIcons.size() == player.maxVisibleMapIcons)
 				{
 					Item::Bimap<Item::SharedMapIcon>::Type::left_reverse_iterator e = player.existingMapIcons.left.rbegin();
@@ -1200,6 +1210,11 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 	}
 	for (std::multimap<std::pair<int, float>, Item::SharedObject, Item::PairCompare>::iterator d = discoveredObjects.begin(); d != discoveredObjects.end(); ++d)
 	{
+		boost::unordered_map<int, int>::iterator i = player.internalObjects.find(d->second->objectID);
+		if (i != player.internalObjects.end())
+		{
+			continue;
+		}
 		int internalBaseID = INVALID_STREAMER_ID;
 		if (d->second->attach)
 		{
@@ -1403,6 +1418,11 @@ void Streamer::streamObjects(Player &player, bool automatic)
 				if (automatic && ++chunkCount > chunkSize[STREAMER_TYPE_OBJECT])
 				{
 					break;
+				}
+				boost::unordered_map<int, int>::iterator i = player.internalObjects.find(d->second.get<1>()->objectID);
+				if (i != player.internalObjects.end())
+				{
+					continue;
 				}
 				int internalBaseID = INVALID_STREAMER_ID;
 				if (d->second.get<1>()->attach)
@@ -1725,6 +1745,11 @@ void Streamer::processTextLabels(Player &player, const std::vector<SharedCell> &
 	}
 	for (std::multimap<std::pair<int, float>, Item::SharedTextLabel, Item::PairCompare>::iterator d = discoveredTextLabels.begin(); d != discoveredTextLabels.end(); ++d)
 	{
+		boost::unordered_map<int, int>::iterator i = player.internalTextLabels.find(d->second->textLabelID);
+		if (i != player.internalTextLabels.end())
+		{
+			continue;
+		}
 		if (player.internalTextLabels.size() == player.currentVisibleTextLabels)
 		{
 			std::multimap<std::pair<int, float>, Item::SharedTextLabel, Item::PairCompare>::reverse_iterator e = existingTextLabels.rbegin();
@@ -1873,6 +1898,11 @@ void Streamer::streamTextLabels(Player &player, bool automatic)
 				if (automatic && ++chunkCount > chunkSize[STREAMER_TYPE_3D_TEXT_LABEL])
 				{
 					break;
+				}
+				boost::unordered_map<int, int>::iterator i = player.internalTextLabels.find(d->second.get<1>()->textLabelID);
+				if (i != player.internalTextLabels.end())
+				{
+					continue;
 				}
 				if (player.internalTextLabels.size() == player.currentVisibleTextLabels)
 				{
@@ -2129,6 +2159,7 @@ void Streamer::processAttachedObjects()
 		if ((*o)->attach)
 		{
 			bool adjust = false;
+			Eigen::Vector3f position = (*o)->attach->position;
 			if ((*o)->attach->object != INVALID_STREAMER_ID)
 			{
 				boost::unordered_map<int, Item::SharedObject>::iterator p = core->getData()->objects.find((*o)->attach->object);
@@ -2148,7 +2179,7 @@ void Streamer::processAttachedObjects()
 			}
 			if (adjust)
 			{
-				if ((*o)->cell)
+				if ((*o)->cell && !(*o)->attach->position.isApprox(position))
 				{
 					core->getGrid()->removeObject(*o, true);
 				}
@@ -2166,6 +2197,7 @@ void Streamer::processAttachedTextLabels()
 	for (boost::unordered_set<Item::SharedTextLabel>::iterator t = attachedTextLabels.begin(); t != attachedTextLabels.end(); ++t)
 	{
 		bool adjust = false;
+		Eigen::Vector3f position = (*t)->attach->position;
 		if ((*t)->attach)
 		{
 			if ((*t)->attach->player != INVALID_PLAYER_ID)
@@ -2178,7 +2210,7 @@ void Streamer::processAttachedTextLabels()
 			}
 			if (adjust)
 			{
-				if ((*t)->cell)
+				if ((*t)->cell && !(*t)->attach->position.isApprox(position))
 				{
 					core->getGrid()->removeTextLabel(*t, true);
 				}
