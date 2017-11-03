@@ -35,7 +35,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicObjectEx(AMX *amx, cell *params)
 	CHECK_PARAMS(18, "CreateDynamicObjectEx");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_OBJECT) == core->getData()->objects.size())
 	{
-		return 0;
+		return INVALID_STREAMER_ID;
 	}
 	int objectID = Item::Object::identifier.get();
 	Item::SharedObject object(new Item::Object);
@@ -67,7 +67,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPickupEx(AMX *amx, cell *params)
 	CHECK_PARAMS(15, "CreateDynamicPickupEx");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_PICKUP) == core->getData()->pickups.size())
 	{
-		return 0;
+		return INVALID_STREAMER_ID;
 	}
 	int pickupID = Item::Pickup::identifier.get();
 	Item::SharedPickup pickup(new Item::Pickup);
@@ -97,7 +97,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCPEx(AMX *amx, cell *params)
 	CHECK_PARAMS(14, "CreateDynamicCPEx");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_CP) == core->getData()->checkpoints.size())
 	{
-		return 0;
+		return INVALID_STREAMER_ID;
 	}
 	int checkpointID = Item::Checkpoint::identifier.get();
 	Item::SharedCheckpoint checkpoint(new Item::Checkpoint);
@@ -126,7 +126,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicRaceCPEx(AMX *amx, cell *params)
 	CHECK_PARAMS(18, "CreateDynamicRaceCPEx");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_RACE_CP) == core->getData()->raceCheckpoints.size())
 	{
-		return 0;
+		return INVALID_STREAMER_ID;
 	}
 	int raceCheckpointID = Item::RaceCheckpoint::identifier.get();
 	Item::SharedRaceCheckpoint raceCheckpoint(new Item::RaceCheckpoint);
@@ -157,7 +157,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicMapIconEx(AMX *amx, cell *params)
 	CHECK_PARAMS(16, "CreateDynamicMapIconEx");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_MAP_ICON) == core->getData()->mapIcons.size())
 	{
-		return 0;
+		return INVALID_STREAMER_ID;
 	}
 	int mapIconID = Item::MapIcon::identifier.get();
 	Item::SharedMapIcon mapIcon(new Item::MapIcon);
@@ -188,7 +188,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabelEx(AMX *amx, cell *params)
 	CHECK_PARAMS(19, "CreateDynamic3DTextLabelEx");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_3D_TEXT_LABEL) == core->getData()->textLabels.size())
 	{
-		return 0;
+		return INVALID_STREAMER_ID;
 	}
 	int textLabelID = Item::TextLabel::identifier.get();
 	Item::SharedTextLabel textLabel(new Item::TextLabel);
@@ -231,7 +231,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCircleEx(AMX *amx, cell *params)
 	CHECK_PARAMS(10, "CreateDynamicCircleEx");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
-		return 0;
+		return INVALID_STREAMER_ID;
 	}
 	int areaID = Item::Area::identifier.get();
 	Item::SharedArea area(new Item::Area);
@@ -256,7 +256,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCylinderEx(AMX *amx, cell *params)
 	CHECK_PARAMS(12, "CreateDynamicCylinderEx");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
-		return 0;
+		return INVALID_STREAMER_ID;
 	}
 	int areaID = Item::Area::identifier.get();
 	Item::SharedArea area(new Item::Area);
@@ -282,7 +282,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicSphereEx(AMX *amx, cell *params)
 	CHECK_PARAMS(11, "CreateDynamicSphereEx");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
-		return 0;
+		return INVALID_STREAMER_ID;
 	}
 	int areaID = Item::Area::identifier.get();
 	Item::SharedArea area(new Item::Area);
@@ -307,7 +307,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicRectangleEx(AMX *amx, cell *params)
 	CHECK_PARAMS(11, "CreateDynamicRectangleEx");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
-		return 0;
+		return INVALID_STREAMER_ID;
 	}
 	int areaID = Item::Area::identifier.get();
 	Item::SharedArea area(new Item::Area);
@@ -333,7 +333,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCuboidEx(AMX *amx, cell *params)
 	CHECK_PARAMS(13, "CreateDynamicCuboidEx");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
-		return 0;
+		return INVALID_STREAMER_ID;
 	}
 	int areaID = Item::Area::identifier.get();
 	Item::SharedArea area(new Item::Area);
@@ -359,11 +359,12 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPolygonEx(AMX *amx, cell *params)
 	CHECK_PARAMS(11, "CreateDynamicPolygonEx");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
-		return 0;
+		return INVALID_STREAMER_ID;
 	}
 	if (static_cast<int>(params[4] >= 2 && static_cast<int>(params[4]) % 2))
 	{
 		Utility::logError("CreateDynamicPolygonEx: Number of points must be divisible by two.");
+		return INVALID_STREAMER_ID;
 	}
 	int areaID = Item::Area::identifier.get();
 	Item::SharedArea area(new Item::Area);
@@ -390,7 +391,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicActorEx(AMX *amx, cell *params)
 	CHECK_PARAMS(17, "CreateDynamicActorEx");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_ACTOR) == core->getData()->actors.size())
 	{
-		return 0;
+		return INVALID_STREAMER_ID;
 	}
 	int actorID = Item::Actor::identifier.get();
 	Item::SharedActor actor(new Item::Actor);

@@ -36,7 +36,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCircle(AMX *amx, cell *params)
 	CHECK_PARAMS(7, "CreateDynamicCircle");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
-		return 0;
+		return INVALID_STREAMER_ID;
 	}
 	int areaID = Item::Area::identifier.get();
 	Item::SharedArea area(new Item::Area);
@@ -60,7 +60,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCylinder(AMX *amx, cell *params)
 	CHECK_PARAMS(9, "CreateDynamicCylinder");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
-		return 0;
+		return INVALID_STREAMER_ID;
 	}
 	int areaID = Item::Area::identifier.get();
 	Item::SharedArea area(new Item::Area);
@@ -85,7 +85,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicSphere(AMX *amx, cell *params)
 	CHECK_PARAMS(8, "CreateDynamicSphere");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
-		return 0;
+		return INVALID_STREAMER_ID;
 	}
 	int areaID = Item::Area::identifier.get();
 	Item::SharedArea area(new Item::Area);
@@ -110,7 +110,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicRectangle(AMX *amx, cell *params)
 	CHECK_PARAMS(8, "CreateDynamicRectangle");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
-		return 0;
+		return INVALID_STREAMER_ID;
 	}
 	int areaID = Item::Area::identifier.get();
 	Item::SharedArea area(new Item::Area);
@@ -136,7 +136,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCuboid(AMX *amx, cell *params)
 	CHECK_PARAMS(10, "CreateDynamicCuboid");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
-		return 0;
+		return INVALID_STREAMER_ID;
 	}
 	int areaID = Item::Area::identifier.get();
 	Item::SharedArea area(new Item::Area);
@@ -162,12 +162,12 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPolygon(AMX *amx, cell *params)
 	CHECK_PARAMS(8, "CreateDynamicPolygon");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
-		return 0;
+		return INVALID_STREAMER_ID;
 	}
 	if (static_cast<int>(params[4] >= 2 && static_cast<int>(params[4]) % 2))
 	{
 		Utility::logError("CreateDynamicPolygon: Number of points must be divisible by two.");
-		return 0;
+		return INVALID_STREAMER_ID;
 	}
 	int areaID = Item::Area::identifier.get();
 	Item::SharedArea area(new Item::Area);

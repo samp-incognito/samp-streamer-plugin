@@ -33,7 +33,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCP(AMX *amx, cell *params)
 	CHECK_PARAMS(10, "CreateDynamicCP");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_CP) == core->getData()->checkpoints.size())
 	{
-		return 0;
+		return INVALID_STREAMER_ID;
 	}
 	int checkpointID = Item::Checkpoint::identifier.get();
 	Item::SharedCheckpoint checkpoint(new Item::Checkpoint);

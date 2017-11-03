@@ -37,7 +37,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicObject(AMX *amx, cell *params)
 	CHECK_PARAMS(14, "CreateDynamicObject");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_OBJECT) == core->getData()->objects.size())
 	{
-		return 0;
+		return INVALID_STREAMER_ID;
 	}
 	int objectID = Item::Object::identifier.get();
 	Item::SharedObject object(new Item::Object);
