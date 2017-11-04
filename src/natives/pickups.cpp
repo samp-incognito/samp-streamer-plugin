@@ -32,7 +32,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPickup(AMX *amx, cell *params)
 	CHECK_PARAMS(11, "CreateDynamicPickup");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_PICKUP) == core->getData()->pickups.size())
 	{
-		return 0;
+		return INVALID_STREAMER_ID;
 	}
 	int pickupID = Item::Pickup::identifier.get();
 	Item::SharedPickup pickup(new Item::Pickup);

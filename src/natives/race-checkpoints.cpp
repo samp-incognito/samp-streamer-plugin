@@ -33,7 +33,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicRaceCP(AMX *amx, cell *params)
 	CHECK_PARAMS(14, "CreateDynamicRaceCP");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_RACE_CP) == core->getData()->raceCheckpoints.size())
 	{
-		return 0;
+		return INVALID_STREAMER_ID;
 	}
 	int raceCheckpointID = Item::RaceCheckpoint::identifier.get();
 	Item::SharedRaceCheckpoint raceCheckpoint(new Item::RaceCheckpoint);

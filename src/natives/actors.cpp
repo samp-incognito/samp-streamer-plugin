@@ -32,7 +32,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicActor(AMX *amx, cell *params)
 	CHECK_PARAMS(13, "CreateDynamicActor");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_ACTOR) == core->getData()->actors.size())
 	{
-		return 0;
+		return INVALID_STREAMER_ID;
 	}
 	int actorID = Item::Actor::identifier.get();
 	Item::SharedActor actor(new Item::Actor);

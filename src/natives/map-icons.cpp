@@ -33,7 +33,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicMapIcon(AMX *amx, cell *params)
 	CHECK_PARAMS(12, "CreateDynamicMapIcon");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_MAP_ICON) == core->getData()->mapIcons.size())
 	{
-		return 0;
+		return INVALID_STREAMER_ID;
 	}
 	int mapIconID = Item::MapIcon::identifier.get();
 	Item::SharedMapIcon mapIcon(new Item::MapIcon);

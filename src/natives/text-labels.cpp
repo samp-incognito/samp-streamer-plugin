@@ -35,7 +35,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabel(AMX *amx, cell *params)
 	CHECK_PARAMS(15, "CreateDynamic3DTextLabel");
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_3D_TEXT_LABEL) == core->getData()->textLabels.size())
 	{
-		return 0;
+		return INVALID_STREAMER_ID;
 	}
 	int textLabelID = Item::TextLabel::identifier.get();
 	Item::SharedTextLabel textLabel(new Item::TextLabel);
