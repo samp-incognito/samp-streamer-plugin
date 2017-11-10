@@ -151,10 +151,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 					}
 					case STREAMER_AREA_TYPE_CUBOID:
 					{
-						Eigen::Vector3f centroid = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3D>(areaPosition));
-						float distance = static_cast<float>(boost::geometry::distance(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), centroid));
-						Utility::storeFloatInNative(amx, params[6], distance);
-						return 1;
+						position = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3D>(areaPosition));
+						success = true;
+						break;
 					}
 					case STREAMER_AREA_TYPE_POLYGON:
 					{
