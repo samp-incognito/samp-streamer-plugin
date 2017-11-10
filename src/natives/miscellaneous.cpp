@@ -35,6 +35,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 	CHECK_PARAMS(7, "Streamer_GetDistanceToItem");
 	int dimensions = static_cast<int>(params[7]);
 	Eigen::Vector3f position = Eigen::Vector3f::Zero();
+	bool success = false;
 	switch (static_cast<int>(params[4]))
 	{
 		case STREAMER_TYPE_OBJECT:
@@ -137,8 +138,8 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 					}
 					case STREAMER_AREA_TYPE_SPHERE:
 					{
-
 						position = boost::get<Eigen::Vector3f>(areaPosition);
+						success = true;
 						break;
 					}
 					case STREAMER_AREA_TYPE_RECTANGLE:
@@ -163,6 +164,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 						return 1;
 					}
 				}
+			}
+			if (success)
+			{
+				break;
 			}
 			return 0;
 		}
