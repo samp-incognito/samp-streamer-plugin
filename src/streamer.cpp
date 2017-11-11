@@ -489,7 +489,7 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 					}
 					case STREAMER_TYPE_ACTOR:
 					{
-						if (!core->getData()->actors.empty() && player.enabledItems[STREAMER_TYPE_ACTOR] && !sampgdk::IsPlayerNPC(player.playerID))
+						if (!core->getData()->actors.empty() && player.enabledItems[STREAMER_TYPE_ACTOR])
 						{
 							discoverActors(player, cells);
 						}
@@ -714,23 +714,26 @@ void Streamer::executeCallbacks()
 
 void Streamer::discoverActors(Player &player, const std::vector<SharedCell> &cells)
 {
-	for (std::vector<SharedCell>::const_iterator c = cells.begin(); c != cells.end(); ++c)
+	if (!sampgdk::IsPlayerNPC(player.playerID))
 	{
-		for (boost::unordered_map<int, Item::SharedActor>::const_iterator a = (*c)->actors.begin(); a != (*c)->actors.end(); ++a)
+		for (std::vector<SharedCell>::const_iterator c = cells.begin(); c != cells.end(); ++c)
 		{
-			boost::unordered_map<int, Item::SharedActor>::iterator d = core->getData()->discoveredActors.find(a->first);
-			if (d == core->getData()->discoveredActors.end())
+			for (boost::unordered_map<int, Item::SharedActor>::const_iterator a = (*c)->actors.begin(); a != (*c)->actors.end(); ++a)
 			{
-				if (doesPlayerSatisfyConditions(a->second->players, player.playerID, a->second->interiors, player.interiorID, a->second->worlds, player.worldID, a->second->areas, player.internalAreas, a->second->inverseAreaChecking))
+				boost::unordered_map<int, Item::SharedActor>::iterator d = core->getData()->discoveredActors.find(a->first);
+				if (d == core->getData()->discoveredActors.end())
 				{
-					if (a->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF || boost::geometry::comparable_distance(player.position, Eigen::Vector3f(a->second->position + a->second->positionOffset)) < (a->second->comparableStreamDistance * player.radiusMultipliers[STREAMER_TYPE_ACTOR]))
+					if (doesPlayerSatisfyConditions(a->second->players, player.playerID, a->second->interiors, player.interiorID, a->second->worlds, player.worldID, a->second->areas, player.internalAreas, a->second->inverseAreaChecking))
 					{
-						boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
-						if (i == core->getData()->internalActors.end())
+						if (a->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF || boost::geometry::comparable_distance(player.position, Eigen::Vector3f(a->second->position + a->second->positionOffset)) < (a->second->comparableStreamDistance * player.radiusMultipliers[STREAMER_TYPE_ACTOR]))
 						{
-							a->second->worldID = !a->second->worlds.empty() ? player.worldID : 0;
+							boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
+							if (i == core->getData()->internalActors.end())
+							{
+								a->second->worldID = !a->second->worlds.empty() ? player.worldID : 0;
+							}
+							core->getData()->discoveredActors.insert(*a);
 						}
-						core->getData()->discoveredActors.insert(*a);
 					}
 				}
 			}
