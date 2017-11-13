@@ -28,6 +28,7 @@
 
 #include <bitset>
 #include <map>
+#include <vector>
 
 class Streamer
 {
@@ -54,19 +55,6 @@ public:
 		return false;
 	}
 
-	inline bool getChunkStreamingEnabled()
-	{
-		return chunkStreamingEnabled;
-	}
-
-	inline void setChunkStreamingEnabled(bool enabled)
-	{
-		chunkStreamingEnabled = enabled;
-	}
-
-	std::size_t getChunkSize(int type);
-	bool setChunkSize(int type, std::size_t value);
-
 	void startAutomaticUpdate();
 	void startManualUpdate(Player &player, int type);
 	
@@ -81,43 +69,26 @@ public:
 private:
 	void calculateAverageElapsedTime();
 
-	void performPlayerChunkUpdate(Player &player, bool automatic);
-	void performPlayerUpdate(Player &player, bool automatic);
 	void executeCallbacks();
 
 	void discoverActors(Player &player, const std::vector<SharedCell> &cells);
 	void streamActors();
 
 	void processAreas(Player &player, const std::vector<SharedCell> &cells);
-
 	void processCheckpoints(Player &player, const std::vector<SharedCell> &cells);
 	void processRaceCheckpoints(Player &player, const std::vector<SharedCell> &cells);
-
 	void processMapIcons(Player &player, const std::vector<SharedCell> &cells);
-
-	void discoverMapIcons(Player &player, const std::vector<SharedCell> &cells);
-	void streamMapIcons(Player &player, bool automatic);
-	
 	void processObjects(Player &player, const std::vector<SharedCell> &cells);
-
-	void discoverObjects(Player &player, const std::vector<SharedCell> &cells);
-	void streamObjects(Player &player, bool automatic);
 
 	void discoverPickups(Player &player, const std::vector<SharedCell> &cells);
 	void streamPickups();
 	
 	void processTextLabels(Player &player, const std::vector<SharedCell> &cells);
 
-	void discoverTextLabels(Player &player, const std::vector<SharedCell> &cells);
-	void streamTextLabels(Player &player, bool automatic);
-
 	void processMovingObjects();
 	void processAttachedAreas();
 	void processAttachedObjects();
 	void processAttachedTextLabels();
-
-	std::size_t chunkSize[STREAMER_MAX_TYPES];
-	bool chunkStreamingEnabled;
 
 	std::size_t tickCount;
 	std::size_t tickRate;
@@ -131,6 +102,8 @@ private:
 	std::multimap<int, boost::tuple<int, int> > areaLeaveCallbacks;
 
 	std::vector<int> objectMoveCallbacks;
+protected:
+	void performPlayerUpdate(Player &player, bool automatic);
 
 	std::vector<boost::tuple<int, int> > streamInCallbacks;
 	std::vector<boost::tuple<int, int> > streamOutCallbacks;

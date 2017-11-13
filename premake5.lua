@@ -35,13 +35,15 @@ solution "streamer"
 		if _ACTION == "gmake" then
 			defines { "BOOST_CHRONO_HEADER_ONLY", "LINUX", "SAMPGDK_AMALGAMATION", "SAMPGDK_CPP_WRAPPERS" }
 			buildoptions { "-fPIC", "-m32", "-O0", "-Wall" }
-			flags { "NoImportLib", "Symbols" }
+			flags { "NoImportLib" }
 			linkoptions { "-m32", "-rdynamic" }
 			objdir "obj/linux/Debug"
+			symbols "On"
 			targetdir "bin/linux/Debug"
 		elseif string.startswith(_ACTION, "vs") then
 			defines { "BOOST_ALL_NO_LIB", "BOOST_CHRONO_HEADER_ONLY", "NOMINMAX", "SAMPGDK_AMALGAMATION", "SAMPGDK_CPP_WRAPPERS", "WIN32" }
-			flags { "FatalWarnings", "Symbols" }
+			flags { "FatalWarnings" }
 			objdir "obj/win32/Debug"
+			symbols "On"
 			targetdir "bin/win32/Debug"
 		end

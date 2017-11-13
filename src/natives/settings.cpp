@@ -58,13 +58,13 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetPlayerTickRate(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::Streamer_ToggleChunkStream(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "Streamer_ToggleChunkStream");
-	core->getStreamer()->setChunkStreamingEnabled(static_cast<int>(params[1]) != 0);
+	core->getChunkStreamer()->setChunkStreamingEnabled(static_cast<int>(params[1]) != 0);
 	return 1;
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_IsToggleChunkStream(AMX *amx, cell *params)
 {
-	return static_cast<cell>(core->getStreamer()->getChunkStreamingEnabled());
+	return static_cast<cell>(core->getChunkStreamer()->getChunkStreamingEnabled());
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetChunkTickRate(AMX *amx, cell *params)
@@ -82,13 +82,13 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetChunkTickRate(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::Streamer_GetChunkSize(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "Streamer_GetChunkSize");
-	return static_cast<cell>(core->getStreamer()->getChunkSize(static_cast<std::size_t>(params[1])));
+	return static_cast<cell>(core->getChunkStreamer()->getChunkSize(static_cast<std::size_t>(params[1])));
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_SetChunkSize(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2, "Streamer_SetChunkSize");
-	return static_cast<cell>(core->getStreamer()->setChunkSize(static_cast<int>(params[1]), static_cast<std::size_t>(params[2])) != 0);
+	return static_cast<cell>(core->getChunkStreamer()->setChunkSize(static_cast<int>(params[1]), static_cast<std::size_t>(params[2])) != 0);
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetMaxItems(AMX *amx, cell *params)

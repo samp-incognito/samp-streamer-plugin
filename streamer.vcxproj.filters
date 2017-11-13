@@ -33,9 +33,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="streamer.def" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="lib\samp-plugin-sdk\amx\amx.h">
       <Filter>lib\samp-plugin-sdk\amx</Filter>
     </ClInclude>
@@ -55,6 +52,9 @@
       <Filter>lib\sampgdk</Filter>
     </ClInclude>
     <ClInclude Include="src\cell.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\chunk-streamer.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\common.h">
@@ -131,6 +131,9 @@
     <ClCompile Include="src\cell.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\chunk-streamer.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
     <ClCompile Include="src\core.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -158,6 +161,9 @@
     <ClCompile Include="src\manipulation\int.cpp">
       <Filter>src\manipulation</Filter>
     </ClCompile>
+    <ClCompile Include="src\natives\actors.cpp">
+      <Filter>src\natives</Filter>
+    </ClCompile>
     <ClCompile Include="src\natives\areas.cpp">
       <Filter>src\natives</Filter>
     </ClCompile>
@@ -183,9 +189,6 @@
       <Filter>src\natives</Filter>
     </ClCompile>
     <ClCompile Include="src\natives\pickups.cpp">
-      <Filter>src\natives</Filter>
-    </ClCompile>
-    <ClCompile Include="src\natives\actors.cpp">
       <Filter>src\natives</Filter>
     </ClCompile>
     <ClCompile Include="src\natives\race-checkpoints.cpp">
@@ -215,6 +218,9 @@
     <ClCompile Include="src\utility\misc.cpp">
       <Filter>src\utility</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="streamer.def" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="streamer.rc" />

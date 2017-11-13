@@ -74,7 +74,6 @@
     </ResourceCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <ImportLibrary>bin\win32\Release\streamer.lib</ImportLibrary>
@@ -112,6 +111,7 @@
     <ClInclude Include="lib\samp-plugin-sdk\plugincommon.h" />
     <ClInclude Include="lib\sampgdk\sampgdk.h" />
     <ClInclude Include="src\cell.h" />
+    <ClInclude Include="src\chunk-streamer.h" />
     <ClInclude Include="src\common.h" />
     <ClInclude Include="src\core.h" />
     <ClInclude Include="src\data.h" />
@@ -138,6 +138,7 @@
     <ClCompile Include="lib\sampgdk\sampgdk.c" />
     <ClCompile Include="src\callbacks.cpp" />
     <ClCompile Include="src\cell.cpp" />
+    <ClCompile Include="src\chunk-streamer.cpp" />
     <ClCompile Include="src\core.cpp" />
     <ClCompile Include="src\data.cpp" />
     <ClCompile Include="src\grid.cpp" />
@@ -147,6 +148,7 @@
     <ClCompile Include="src\manipulation\array.cpp" />
     <ClCompile Include="src\manipulation\float.cpp" />
     <ClCompile Include="src\manipulation\int.cpp" />
+    <ClCompile Include="src\natives\actors.cpp" />
     <ClCompile Include="src\natives\areas.cpp" />
     <ClCompile Include="src\natives\checkpoints.cpp" />
     <ClCompile Include="src\natives\deprecated.cpp" />
@@ -156,7 +158,6 @@
     <ClCompile Include="src\natives\miscellaneous.cpp" />
     <ClCompile Include="src\natives\objects.cpp" />
     <ClCompile Include="src\natives\pickups.cpp" />
-    <ClCompile Include="src\natives\actors.cpp" />
     <ClCompile Include="src\natives\race-checkpoints.cpp" />
     <ClCompile Include="src\natives\settings.cpp" />
     <ClCompile Include="src\natives\text-labels.cpp" />
