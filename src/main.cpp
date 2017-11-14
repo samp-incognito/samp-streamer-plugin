@@ -116,6 +116,8 @@ AMX_NATIVE_INFO natives[] =
 	{ "Streamer_CountItems", Natives::Streamer_CountItems },
 	{ "Streamer_GetNearbyItems", Natives::Streamer_GetNearbyItems },
 	{ "Streamer_GetAllVisibleItems", Natives::Streamer_GetAllVisibleItems },
+	{ "Streamer_GetItemPos", Natives::Streamer_GetItemPos },
+	{ "Streamer_SetItemPos", Natives::Streamer_SetItemPos },
 	{ "Streamer_GetItemOffset", Natives::Streamer_GetItemOffset },
 	{ "Streamer_SetItemOffset", Natives::Streamer_SetItemOffset },
 	// Objects

@@ -1787,6 +1787,416 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetAllVisibleItems(AMX *amx, cell *params
 	return static_cast<cell>(finalItems.size());
 }
 
+cell AMX_NATIVE_CALL Natives::Streamer_GetItemPos(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(5, "Streamer_GetItemPos");
+	Eigen::Vector3f position = Eigen::Vector3f::Zero();
+	switch (static_cast<int>(params[1]))
+	{
+		case STREAMER_TYPE_OBJECT:
+		{
+			boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
+			if (o != core->getData()->objects.end())
+			{
+				if (o->second->attach)
+				{
+					position = o->second->attach->position;
+				}
+				else
+				{
+					position = o->second->position;
+				}
+				break;
+			}
+			return 0;
+		}
+		case STREAMER_TYPE_PICKUP:
+		{
+			boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[2]));
+			if (p != core->getData()->pickups.end())
+			{
+				position = p->second->position;
+				break;
+			}
+			return 0;
+		}
+		case STREAMER_TYPE_CP:
+		{
+			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[2]));
+			if (c != core->getData()->checkpoints.end())
+			{
+				position = c->second->position;
+				break;
+			}
+			return 0;
+		}
+		case STREAMER_TYPE_RACE_CP:
+		{
+			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[2]));
+			if (r != core->getData()->raceCheckpoints.end())
+			{
+				position = r->second->position;
+				break;
+			}
+			return 0;
+		}
+		case STREAMER_TYPE_MAP_ICON:
+		{
+			boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[2]));
+			if (m != core->getData()->mapIcons.end())
+			{
+				position = m->second->position;
+				break;
+			}
+			return 0;
+		}
+		case STREAMER_TYPE_3D_TEXT_LABEL:
+		{
+			boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[2]));
+			if (t != core->getData()->textLabels.end())
+			{
+				if (t->second->attach)
+				{
+					position = t->second->attach->position;
+				}
+				else
+				{
+					position = t->second->position;
+				}
+				break;
+			}
+			return 0;
+		}
+		case STREAMER_TYPE_AREA:
+		{
+			bool success = false;
+			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[2]));
+			if (a != core->getData()->areas.end())
+			{
+				boost::variant<Polygon2D, Box2D, Box3D, Eigen::Vector2f, Eigen::Vector3f> areaPosition;
+				if (a->second->attach)
+				{
+					areaPosition = a->second->position;
+				}
+				else
+				{
+					areaPosition = a->second->position;
+				}
+				switch (a->second->type)
+				{
+					case STREAMER_AREA_TYPE_CIRCLE:
+					case STREAMER_AREA_TYPE_CYLINDER:
+					{
+						position[0] = boost::get<Eigen::Vector2f>(areaPosition)[0];
+						position[1] = boost::get<Eigen::Vector2f>(areaPosition)[1];
+						position[2] = 0.0f;
+						success = true;
+						break;
+					}
+					case STREAMER_AREA_TYPE_SPHERE:
+					{
+						position = boost::get<Eigen::Vector3f>(areaPosition);
+						success = true;
+						break;
+					}
+					case STREAMER_AREA_TYPE_RECTANGLE:
+					{
+						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Box2D>(areaPosition));
+						position[0] = centroid[0];
+						position[1] = centroid[1];
+						position[2] = 0.0f;
+						success = true;
+						break;
+					}
+					case STREAMER_AREA_TYPE_CUBOID:
+					{
+						position = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3D>(areaPosition));
+						success = true;
+						break;
+					}
+					case STREAMER_AREA_TYPE_POLYGON:
+					{
+						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2D>(areaPosition));
+						position[0] = centroid[0];
+						position[1] = centroid[1];
+						position[2] = 0.0f;
+						success = true;
+						break;
+					}
+				}
+			}
+			if (success)
+			{
+				break;
+			}
+			return 0;
+		}
+		case STREAMER_TYPE_ACTOR:
+		{
+			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
+			if (a != core->getData()->actors.end())
+			{
+				position = a->second->position;
+				break;
+			}
+			return 0;
+		}
+		default:
+		{
+			Utility::logError("Streamer_GetItemPos: Invalid type specified.");
+			return 0;
+		}
+	}
+	Utility::storeFloatInNative(amx, params[3], position[0]);
+	Utility::storeFloatInNative(amx, params[4], position[1]);
+	Utility::storeFloatInNative(amx, params[5], position[2]);
+	return 1;
+}
+
+cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(5, "Streamer_SetItemPos");
+	switch (static_cast<int>(params[1]))
+	{
+		case STREAMER_TYPE_OBJECT:
+		{
+			boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
+			if (o != core->getData()->objects.end())
+			{
+				Eigen::Vector3f position = o->second->position;
+				o->second->position = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
+				for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+				{
+					boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
+					if (i != p->second.internalObjects.end())
+					{
+						sampgdk::SetPlayerObjectPos(p->first, i->second, o->second->position[0], o->second->position[1], o->second->position[2]);
+					}
+				}
+				if (position[0] != o->second->position[0] || position[1] != o->second->position[1])
+				{
+					if (o->second->cell)
+					{
+						core->getGrid()->removeObject(o->second, true);
+					}
+				}
+				if (o->second->move)
+				{
+					o->second->move->duration = static_cast<int>((static_cast<float>(boost::geometry::distance(o->second->move->position.get<0>(), o->second->position) / o->second->move->speed) * 1000.0f));
+					o->second->move->position.get<1>() = o->second->position;
+					o->second->move->position.get<2>() = (o->second->move->position.get<0>() - o->second->position) / static_cast<float>(o->second->move->duration);
+					if ((o->second->move->rotation.get<0>().maxCoeff() + 1000.0f) > std::numeric_limits<float>::epsilon())
+					{
+						o->second->move->rotation.get<1>() = o->second->rotation;
+						o->second->move->rotation.get<2>() = (o->second->move->rotation.get<0>() - o->second->rotation) / static_cast<float>(o->second->move->duration);
+					}
+					o->second->move->time = boost::chrono::steady_clock::now();
+				}
+				return 1;
+			}
+			break;
+		}
+		case STREAMER_TYPE_PICKUP:
+		{
+			boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[2]));
+			if (p != core->getData()->pickups.end())
+			{
+				Eigen::Vector3f position = p->second->position;
+				p->second->position = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
+				if (position[0] != p->second->position[0] || position[1] != p->second->position[1])
+				{
+					if (p->second->cell)
+					{
+						core->getGrid()->removePickup(p->second, true);
+					}
+				}
+				boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.find(p->first);
+				if (i != core->getData()->internalPickups.end())
+				{
+					sampgdk::DestroyPickup(i->second);
+					i->second = sampgdk::CreatePickup(p->second->modelID, p->second->type, p->second->position[0], p->second->position[1], p->second->position[2], p->second->worldID);
+				}
+				return 1;
+			}
+			break;
+		}
+		case STREAMER_TYPE_CP:
+		{
+			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[2]));
+			if (c != core->getData()->checkpoints.end())
+			{
+				Eigen::Vector3f position = c->second->position;
+				c->second->position = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
+				if (position[0] != c->second->position[0] || position[1] != c->second->position[1])
+				{
+					if (c->second->cell)
+					{
+						core->getGrid()->removeCheckpoint(c->second, true);
+					}
+				}
+				for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+				{
+					if (p->second.visibleCheckpoint == c->first)
+					{
+						sampgdk::DisablePlayerCheckpoint(p->first);
+						p->second.activeCheckpoint = 0;
+						p->second.visibleCheckpoint = 0;
+					}
+				}
+				return 1;
+			}
+			break;
+		}
+		case STREAMER_TYPE_RACE_CP:
+		{
+			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[2]));
+			if (r != core->getData()->raceCheckpoints.end())
+			{
+				Eigen::Vector3f position = r->second->position;
+				r->second->position = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
+				if (position[0] != r->second->position[0] || position[1] != r->second->position[1])
+				{
+					if (r->second->cell)
+					{
+						core->getGrid()->removeRaceCheckpoint(r->second, true);
+					}
+				}
+				for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+				{
+					if (p->second.visibleRaceCheckpoint == r->first)
+					{
+						sampgdk::DisablePlayerRaceCheckpoint(p->first);
+						p->second.activeRaceCheckpoint = 0;
+						p->second.visibleRaceCheckpoint = 0;
+					}
+				}
+				return 1;
+			}
+			break;
+		}
+		case STREAMER_TYPE_MAP_ICON:
+		{
+			boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[2]));
+			if (m != core->getData()->mapIcons.end())
+			{
+				Eigen::Vector3f position = m->second->position;
+				m->second->position = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
+				if (position[0] != m->second->position[0] || position[1] != m->second->position[1])
+				{
+					if (m->second->cell)
+					{
+						core->getGrid()->removeMapIcon(m->second, true);
+					}
+				}
+				for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+				{
+					boost::unordered_map<int, int>::iterator i = p->second.internalMapIcons.find(m->first);
+					if (i != p->second.internalMapIcons.end())
+					{
+						sampgdk::RemovePlayerMapIcon(p->first, i->second);
+						sampgdk::SetPlayerMapIcon(p->first, i->second, m->second->position[0], m->second->position[1], m->second->position[2], m->second->type, m->second->color, m->second->style);
+					}
+				}
+				return 1;
+			}
+			break;
+		}
+		case STREAMER_TYPE_3D_TEXT_LABEL:
+		{
+			boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[2]));
+			if (t != core->getData()->textLabels.end())
+			{
+				Eigen::Vector3f position = t->second->position;
+				t->second->position = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
+				if (position[0] != t->second->position[0] || position[1] != t->second->position[1])
+				{
+					if (t->second->cell)
+					{
+						core->getGrid()->removeTextLabel(t->second, true);
+					}
+				}
+				for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+				{
+					boost::unordered_map<int, int>::iterator i = p->second.internalTextLabels.find(t->first);
+					if (i != p->second.internalTextLabels.end())
+					{
+						sampgdk::DeletePlayer3DTextLabel(p->first, i->second);
+						i->second = sampgdk::CreatePlayer3DTextLabel(p->first, t->second->text.c_str(), t->second->color, t->second->position[0], t->second->position[1], t->second->position[2], t->second->drawDistance, t->second->attach ? t->second->attach->player : INVALID_PLAYER_ID, t->second->attach ? t->second->attach->vehicle : INVALID_VEHICLE_ID, t->second->testLOS);
+					}
+				}
+				return 1;
+			}
+			break;
+		}
+		case STREAMER_TYPE_AREA:
+		{
+			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[2]));
+			if (a != core->getData()->areas.end())
+			{
+				switch (a->second->type)
+				{
+					case STREAMER_AREA_TYPE_CIRCLE:
+					case STREAMER_AREA_TYPE_CYLINDER:
+					{
+						a->second->position = Eigen::Vector2f(amx_ctof(params[3]), amx_ctof(params[4]));
+						break;
+					}
+					case STREAMER_AREA_TYPE_SPHERE:
+					{
+						a->second->position = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
+						break;
+					}
+					default:
+					{
+						Utility::logError("Streamer_SetItemPos: Invalid type specified.");
+						return 0;
+					}
+				}
+				core->getGrid()->removeArea(a->second, true);
+				return 1;
+			}
+			break;
+		}
+		case STREAMER_TYPE_ACTOR:
+		{
+			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
+			if (a != core->getData()->actors.end())
+			{
+				Eigen::Vector3f position = a->second->position;
+				a->second->position = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
+				if (position[0] != a->second->position[0] || position[1] != a->second->position[1])
+				{
+					if (a->second->cell)
+					{
+						core->getGrid()->removeActor(a->second, true);
+					}
+				}
+				boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
+				if (i != core->getData()->internalActors.end())
+				{
+					sampgdk::DestroyActor(i->second);
+					i->second = sampgdk::CreateActor(a->second->modelID, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
+					sampgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
+					sampgdk::SetActorHealth(i->second, a->second->health);
+					sampgdk::SetActorVirtualWorld(i->second, a->second->worldID);
+					if (a->second->anim)
+					{
+						sampgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);
+					}
+				}
+				return 1;
+			}
+			break;
+		}
+		default:
+		{
+			Utility::logError("Streamer_SetItemPos: Invalid type specified.");
+			return 0;
+		}
+	}
+	return 0;
+}
+
 cell AMX_NATIVE_CALL Natives::Streamer_GetItemOffset(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(5, "Streamer_GetItemOffset");
