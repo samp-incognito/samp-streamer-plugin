@@ -861,8 +861,6 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					case InteriorID:
 					{
 						return Utility::setFirstValueInContainer(c->second->interiors, static_cast<int>(params[4])) != 0;
-						update = true;
-						break;
 					}
 					case PlayerID:
 					{
