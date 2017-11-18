@@ -120,7 +120,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 				boost::variant<Polygon2D, Box2D, Box3D, Eigen::Vector2f, Eigen::Vector3f> areaPosition;
 				if (a->second->attach)
 				{
-					areaPosition = a->second->position;
+					areaPosition = a->second->attach->position;
 				}
 				else
 				{
