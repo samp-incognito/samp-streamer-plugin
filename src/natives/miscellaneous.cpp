@@ -1876,7 +1876,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemPos(AMX *amx, cell *params)
 				boost::variant<Polygon2D, Box2D, Box3D, Eigen::Vector2f, Eigen::Vector3f> areaPosition;
 				if (a->second->attach)
 				{
-					areaPosition = a->second->position;
+					areaPosition = a->second->attach->position;
 				}
 				else
 				{
@@ -1885,11 +1885,25 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemPos(AMX *amx, cell *params)
 				switch (a->second->type)
 				{
 					case STREAMER_AREA_TYPE_CIRCLE:
-					case STREAMER_AREA_TYPE_CYLINDER:
 					{
 						position[0] = boost::get<Eigen::Vector2f>(areaPosition)[0];
 						position[1] = boost::get<Eigen::Vector2f>(areaPosition)[1];
 						position[2] = 0.0f;
+						success = true;
+						break;
+					}
+					case STREAMER_AREA_TYPE_CYLINDER:
+					{
+						position[0] = boost::get<Eigen::Vector2f>(areaPosition)[0];
+						position[1] = boost::get<Eigen::Vector2f>(areaPosition)[1];
+						if (a->second->height[0] == -INFINITY || a->second->height[1] == INFINITY)
+						{
+							position[2] = 0.0f;
+						}
+						else
+						{
+							position[2] = (a->second->height[0] + a->second->height[1]) / 2.0f;
+						}
 						success = true;
 						break;
 					}
@@ -1919,7 +1933,14 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemPos(AMX *amx, cell *params)
 						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2D>(areaPosition));
 						position[0] = centroid[0];
 						position[1] = centroid[1];
-						position[2] = 0.0f;
+						if (a->second->height[0] == -INFINITY || a->second->height[1] == INFINITY)
+						{
+							position[2] = 0.0f;
+						}
+						else
+						{
+							position[2] = (a->second->height[0] + a->second->height[1]) / 2.0f;
+						}
 						success = true;
 						break;
 					}
@@ -1956,6 +1977,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemPos(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(5, "Streamer_SetItemPos");
+	Eigen::Vector3f newpos = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
 	switch (static_cast<int>(params[1]))
 	{
 		case STREAMER_TYPE_OBJECT:
@@ -1964,7 +1986,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 			if (o != core->getData()->objects.end())
 			{
 				Eigen::Vector3f position = o->second->position;
-				o->second->position = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
+				o->second->position = newpos;
 				for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 				{
 					boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
@@ -2002,7 +2024,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 			if (p != core->getData()->pickups.end())
 			{
 				Eigen::Vector3f position = p->second->position;
-				p->second->position = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
+				p->second->position = newpos;
 				if (position[0] != p->second->position[0] || position[1] != p->second->position[1])
 				{
 					if (p->second->cell)
@@ -2026,7 +2048,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 			if (c != core->getData()->checkpoints.end())
 			{
 				Eigen::Vector3f position = c->second->position;
-				c->second->position = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
+				c->second->position = newpos;
 				if (position[0] != c->second->position[0] || position[1] != c->second->position[1])
 				{
 					if (c->second->cell)
@@ -2053,7 +2075,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 			if (r != core->getData()->raceCheckpoints.end())
 			{
 				Eigen::Vector3f position = r->second->position;
-				r->second->position = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
+				r->second->position = newpos;
 				if (position[0] != r->second->position[0] || position[1] != r->second->position[1])
 				{
 					if (r->second->cell)
@@ -2080,7 +2102,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 			if (m != core->getData()->mapIcons.end())
 			{
 				Eigen::Vector3f position = m->second->position;
-				m->second->position = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
+				m->second->position = newpos;
 				if (position[0] != m->second->position[0] || position[1] != m->second->position[1])
 				{
 					if (m->second->cell)
@@ -2107,7 +2129,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 			if (t != core->getData()->textLabels.end())
 			{
 				Eigen::Vector3f position = t->second->position;
-				t->second->position = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
+				t->second->position = newpos;
 				if (position[0] != t->second->position[0] || position[1] != t->second->position[1])
 				{
 					if (t->second->cell)
@@ -2136,21 +2158,47 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 				switch (a->second->type)
 				{
 					case STREAMER_AREA_TYPE_CIRCLE:
+					{
+						a->second->position = Eigen::Vector2f(newpos.head<2>()); // Absolute
+						break;
+					}
 					case STREAMER_AREA_TYPE_CYLINDER:
 					{
-						a->second->position = Eigen::Vector2f(amx_ctof(params[3]), amx_ctof(params[4]));
+						a->second->height = Eigen::Vector2f(newpos[2], newpos[2]) + a->second->height; // Relative
+						a->second->position = Eigen::Vector2f(newpos.head<2>()); // Absolute
 						break;
 					}
 					case STREAMER_AREA_TYPE_SPHERE:
 					{
-						a->second->position = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
+						a->second->position = newpos; // Absolute
 						break;
 					}
-					default:
-					{
-						Utility::logError("Streamer_SetItemPos: Invalid type specified.");
-						return 0;
-					}
+					case STREAMER_AREA_TYPE_RECTANGLE:
+ 					{
+ 						boost::get<Box2D>(a->second->position).min_corner() = newpos.head<2>() + boost::get<Box2D>(a->second->position).min_corner(); // Relative
+ 						boost::get<Box2D>(a->second->position).max_corner() = newpos.head<2>() + boost::get<Box2D>(a->second->position).max_corner(); // Relative
+ 						boost::geometry::correct(boost::get<Box2D>(a->second->position));
+ 						break;
+ 					}
+					case STREAMER_AREA_TYPE_CUBOID:
+ 					{
+ 						boost::get<Box3D>(a->second->position).min_corner() = newpos + boost::get<Box3D>(a->second->position).min_corner(); // Relative
+ 						boost::get<Box3D>(a->second->position).max_corner() = newpos + boost::get<Box3D>(a->second->position).max_corner(); // Relative
+ 						boost::geometry::correct(boost::get<Box3D>(a->second->position));
+ 						break;
+ 					}
+ 					case STREAMER_AREA_TYPE_POLYGON:
+ 					{
+ 						a->second->height = newpos.head<2>() + a->second->height; // Relative
+ 						std::vector<Eigen::Vector2f> points;
+ 						for (std::vector<Eigen::Vector2f>::iterator p = boost::get<Polygon2D>(a->second->position).outer().begin(); p != boost::get<Polygon2D>(a->second->position).outer().end(); ++p)
+ 						{
+ 							points.push_back(newpos.head<2>() + Eigen::Vector2f(p->data()[0], p->data()[1])); // Relative
+ 						}
+ 						boost::geometry::assign_points(boost::get<Polygon2D>(a->second->position), points);
+ 						boost::geometry::correct(boost::get<Polygon2D>(a->second->position));
+ 						break;
+ 					}
 				}
 				core->getGrid()->removeArea(a->second, true);
 				return 1;
@@ -2163,7 +2211,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 			if (a != core->getData()->actors.end())
 			{
 				Eigen::Vector3f position = a->second->position;
-				a->second->position = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
+				a->second->position = newpos;
 				if (position[0] != a->second->position[0] || position[1] != a->second->position[1])
 				{
 					if (a->second->cell)
