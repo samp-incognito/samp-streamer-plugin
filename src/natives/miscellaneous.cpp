@@ -1896,7 +1896,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemPos(AMX *amx, cell *params)
 					{
 						position[0] = boost::get<Eigen::Vector2f>(areaPosition)[0];
 						position[1] = boost::get<Eigen::Vector2f>(areaPosition)[1];
-						if (a->second->height[0] == -INFINITY || a->second->height[1] == INFINITY)
+						if (a->second->height[0] == -std::numeric_limits<float>::infinity() || a->second->height[1] == std::numeric_limits<float>::infinity())
 						{
 							position[2] = 0.0f;
 						}
@@ -1933,7 +1933,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemPos(AMX *amx, cell *params)
 						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2D>(areaPosition));
 						position[0] = centroid[0];
 						position[1] = centroid[1];
-						if (a->second->height[0] == -INFINITY || a->second->height[1] == INFINITY)
+						if (a->second->height[0] == -std::numeric_limits<float>::infinity() || a->second->height[1] == std::numeric_limits<float>::infinity())
 						{
 							position[2] = 0.0f;
 						}
@@ -2159,46 +2159,19 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 				{
 					case STREAMER_AREA_TYPE_CIRCLE:
 					{
-						a->second->position = Eigen::Vector2f(newpos.head<2>()); // Absolute
-						break;
-					}
-					case STREAMER_AREA_TYPE_CYLINDER:
-					{
-						a->second->height = Eigen::Vector2f(newpos[2], newpos[2]) + a->second->height; // Relative
-						a->second->position = Eigen::Vector2f(newpos.head<2>()); // Absolute
+						a->second->position = Eigen::Vector2f(newpos.head<2>());
 						break;
 					}
 					case STREAMER_AREA_TYPE_SPHERE:
 					{
-						a->second->position = newpos; // Absolute
+						a->second->position = newpos;
 						break;
 					}
-					case STREAMER_AREA_TYPE_RECTANGLE:
- 					{
- 						boost::get<Box2D>(a->second->position).min_corner() = newpos.head<2>() + boost::get<Box2D>(a->second->position).min_corner(); // Relative
- 						boost::get<Box2D>(a->second->position).max_corner() = newpos.head<2>() + boost::get<Box2D>(a->second->position).max_corner(); // Relative
- 						boost::geometry::correct(boost::get<Box2D>(a->second->position));
- 						break;
- 					}
-					case STREAMER_AREA_TYPE_CUBOID:
- 					{
- 						boost::get<Box3D>(a->second->position).min_corner() = newpos + boost::get<Box3D>(a->second->position).min_corner(); // Relative
- 						boost::get<Box3D>(a->second->position).max_corner() = newpos + boost::get<Box3D>(a->second->position).max_corner(); // Relative
- 						boost::geometry::correct(boost::get<Box3D>(a->second->position));
- 						break;
- 					}
- 					case STREAMER_AREA_TYPE_POLYGON:
- 					{
- 						a->second->height = newpos.head<2>() + a->second->height; // Relative
- 						std::vector<Eigen::Vector2f> points;
- 						for (std::vector<Eigen::Vector2f>::iterator p = boost::get<Polygon2D>(a->second->position).outer().begin(); p != boost::get<Polygon2D>(a->second->position).outer().end(); ++p)
- 						{
- 							points.push_back(newpos.head<2>() + Eigen::Vector2f(p->data()[0], p->data()[1])); // Relative
- 						}
- 						boost::geometry::assign_points(boost::get<Polygon2D>(a->second->position), points);
- 						boost::geometry::correct(boost::get<Polygon2D>(a->second->position));
- 						break;
- 					}
+					default:
+					{
+						Utility::logError("Streamer_SetItemPos: Invalid area type specified (only circles and spheres are supported).");
+						return 0;
+					}
 				}
 				core->getGrid()->removeArea(a->second, true);
 				return 1;
