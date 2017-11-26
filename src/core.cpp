@@ -24,5 +24,6 @@ Core::Core()
 {
 	data.reset(new Data);
 	grid.reset(new Grid);
+	chunkStreamer.reset(new ChunkStreamer);
 	streamer.reset(new Streamer);
 }
