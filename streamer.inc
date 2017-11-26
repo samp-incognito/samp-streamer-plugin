@@ -355,7 +355,7 @@ native IsToggleDynAreaSpectateMode(STREAMER_TAG_AREA areaid);
 
 // Natives (Actors)
 
-native STREAMER_TAG_ACTOR CreateDynamicActor(modelid, Float:x, Float:y, Float:z, Float:r, invulnerable = 1, Float:health = 100.0, worldid = -1, interiorid = -1, playerid = -1, Float:streamdistance = STREAMER_ACTOR_SD, STREAMER_TAG_AREA areaid = STREAMER_TAG_AREA -1, priority = 0);
+native STREAMER_TAG_ACTOR CreateDynamicActor(modelid, Float:x, Float:y, Float:z, Float:r, invulnerable = true, Float:health = 100.0, worldid = -1, interiorid = -1, playerid = -1, Float:streamdistance = STREAMER_ACTOR_SD, STREAMER_TAG_AREA areaid = STREAMER_TAG_AREA -1, priority = 0);
 native DestroyDynamicActor(STREAMER_TAG_ACTOR actorid);
 native IsValidDynamicActor(STREAMER_TAG_ACTOR actorid);
 native IsDynamicActorStreamedIn(STREAMER_TAG_ACTOR actorid, forplayerid);
@@ -370,7 +370,7 @@ native GetDynamicActorPos(STREAMER_TAG_ACTOR actorid, &Float:x, &Float:y, &Float
 native SetDynamicActorPos(STREAMER_TAG_ACTOR actorid, Float:x, Float:y, Float:z);
 native GetDynamicActorHealth(STREAMER_TAG_ACTOR actorid, &Float:health);
 native SetDynamicActorHealth(STREAMER_TAG_ACTOR actorid, Float:health);
-native SetDynamicActorInvulnerable(STREAMER_TAG_ACTOR actorid, invulnerable = 1);
+native SetDynamicActorInvulnerable(STREAMER_TAG_ACTOR actorid, invulnerable = true);
 native IsDynamicActorInvulnerable(STREAMER_TAG_ACTOR actorid);
 native STREAMER_TAG_ACTOR GetPlayerTargetDynamicActor(playerid);
 native STREAMER_TAG_ACTOR GetPlayerCameraTargetDynActor(playerid);
