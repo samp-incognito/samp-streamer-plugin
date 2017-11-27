@@ -208,6 +208,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerEditObject(int playerid, bool playerobjec
 					for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
 					{
 						int amxIndex = 0;
+						cell amxRetVal = 0;
 						if (!amx_FindPublic(*a, "OnPlayerEditDynamicObject", &amxIndex))
 						{
 							amx_Push(*a, amx_ftoc(fRotZ));
@@ -219,10 +220,14 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerEditObject(int playerid, bool playerobjec
 							amx_Push(*a, static_cast<cell>(response));
 							amx_Push(*a, static_cast<cell>(objectid));
 							amx_Push(*a, static_cast<cell>(playerid));
-							amx_Exec(*a, NULL, amxIndex);
+							amx_Exec(*a, &amxRetVal, amxIndex);
+							if (amxRetVal)
+							{
+								break;
+							}
 						}
 					}
-					break;
+					return true;
 				}
 			}
 		}
@@ -245,6 +250,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerSelectObject(int playerid, int type, int 
 					for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
 					{
 						int amxIndex = 0;
+						cell amxRetVal = 0;
 						if (!amx_FindPublic(*a, "OnPlayerSelectDynamicObject", &amxIndex))
 						{
 							amx_Push(*a, amx_ftoc(z));
@@ -253,10 +259,14 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerSelectObject(int playerid, int type, int 
 							amx_Push(*a, static_cast<cell>(modelid));
 							amx_Push(*a, static_cast<cell>(objectid));
 							amx_Push(*a, static_cast<cell>(playerid));
-							amx_Exec(*a, NULL, amxIndex);
+							amx_Exec(*a, &amxRetVal, amxIndex);
+							if (amxRetVal)
+							{
+								break;
+							}
 						}
 					}
-					break;
+					return true;
 				}
 			}
 		}
@@ -314,6 +324,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerGiveDamageActor(int playerid, int actorid
 			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
 			{
 				int amxIndex = 0;
+				cell amxRetVal = 0;
 				if (!amx_FindPublic(*a, "OnPlayerGiveDamageDynamicActor", &amxIndex))
 				{
 					amx_Push(*a, static_cast<cell>(bodypart));
@@ -321,13 +332,17 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerGiveDamageActor(int playerid, int actorid
 					amx_Push(*a, amx_ftoc(amount));
 					amx_Push(*a, static_cast<cell>(actorid));
 					amx_Push(*a, static_cast<cell>(playerid));
-					amx_Exec(*a, NULL, amxIndex);
+					amx_Exec(*a, &amxRetVal, amxIndex);
+					if (amxRetVal)
+					{
+						break;
+					}
 				}
 			}
-			break;
+			return true;
 		}
 	}
-	return true;
+	return false;
 }
 
 PLUGIN_EXPORT bool PLUGIN_CALL OnActorStreamIn(int actorid, int forplayerid)
