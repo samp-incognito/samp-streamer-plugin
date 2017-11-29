@@ -39,19 +39,17 @@ public:
 		chunkStreamingEnabled = enabled;
 	}
 
-	friend void Streamer::performPlayerUpdate(Player &player, bool automatic);
 	void performPlayerChunkUpdate(Player &player, bool automatic);
+
+	void discoverMapIcons(Player &player, const std::vector<SharedCell> &cells);
+	void discoverObjects(Player &player, const std::vector<SharedCell> &cells);
+	void discoverTextLabels(Player &player, const std::vector<SharedCell> &cells);
 
 	std::size_t getChunkSize(int type);
 	bool setChunkSize(int type, std::size_t value);
 private:
-	void discoverMapIcons(Player &player, const std::vector<SharedCell> &cells);
 	void streamMapIcons(Player &player, bool automatic);
-
-	void discoverObjects(Player &player, const std::vector<SharedCell> &cells);
 	void streamObjects(Player &player, bool automatic);
-
-	void discoverTextLabels(Player &player, const std::vector<SharedCell> &cells);
 	void streamTextLabels(Player &player, bool automatic);
 
 	std::size_t chunkSize[STREAMER_MAX_TYPES];

@@ -809,8 +809,6 @@ void Streamer::processCheckpoints(Player &player, const std::vector<SharedCell> 
 	}
 }
 
-// Stable streaming code (map icons)
-
 void Streamer::processMapIcons(Player &player, const std::vector<SharedCell> &cells)
 {
 	std::multimap<std::pair<int, float>, Item::SharedMapIcon, Item::PairCompare> discoveredMapIcons, existingMapIcons;

@@ -71,6 +71,8 @@ private:
 
 	void executeCallbacks();
 
+	void performPlayerUpdate(Player &player, bool automatic);
+
 	void discoverActors(Player &player, const std::vector<SharedCell> &cells);
 	void streamActors();
 
@@ -103,8 +105,6 @@ private:
 
 	std::vector<int> objectMoveCallbacks;
 protected:
-	void performPlayerUpdate(Player &player, bool automatic);
-
 	std::vector<boost::tuple<int, int> > streamInCallbacks;
 	std::vector<boost::tuple<int, int> > streamOutCallbacks;
 
