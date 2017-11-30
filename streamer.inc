@@ -235,6 +235,7 @@ native Streamer_SetArrayData(type, STREAMER_ALL_TAGS id, data, const src[], maxs
 native Streamer_IsInArrayData(type, STREAMER_ALL_TAGS id, data, value);
 native Streamer_AppendArrayData(type, STREAMER_ALL_TAGS id, data, value);
 native Streamer_RemoveArrayData(type, STREAMER_ALL_TAGS id, data, value);
+native Streamer_GetArrayDataLength(type, STREAMER_ALL_TAGS id, data);
 native Streamer_GetUpperBound(type);
 
 // Natives (Miscellaneous)

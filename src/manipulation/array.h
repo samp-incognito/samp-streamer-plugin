@@ -27,6 +27,7 @@ namespace Manipulation
 	int isInArrayData(AMX *amx, cell *params);
 	int appendArrayData(AMX *amx, cell *params);
 	int removeArrayData(AMX *amx, cell *params);
+	int getArrayDataLength(AMX *amx, cell *params);
 
 	template <typename T>
 	int getArrayDataForItem(T &container, AMX *amx, int id, int data, cell output, cell size, int &error)
@@ -220,6 +221,51 @@ namespace Manipulation
 				case WorldID:
 				{
 					return Utility::removeFromContainer(i->second->worlds, value) != 0;
+				}
+				default:
+				{
+					error = InvalidData;
+					break;
+				}
+			}
+		}
+		else
+		{
+			error = InvalidID;
+		}
+		return 0;
+	}
+
+	template <typename T>
+	int getArrayDataLengthForItem(T &container, int id, int data, int &error)
+	{
+		typename T::iterator i = container.find(id);
+		if (i != container.end())
+		{
+			switch (data)
+			{
+				case AreaID:
+				{
+					int size = static_cast<int>(i->second->areas.size());
+					return size ? size : -1;
+				}
+				case ExtraID:
+				{
+					return static_cast<int>(i->second->extras.size());
+				}
+				case InteriorID:
+				{
+					int size = static_cast<int>(i->second->interiors.size());
+					return size ? size : -1;
+				}
+				case PlayerID:
+				{
+					return static_cast<int>(i->second->players.count());
+				}
+				case WorldID:
+				{
+					int size = static_cast<int>(i->second->worlds.size());
+					return size ? size : -1;
 				}
 				default:
 				{

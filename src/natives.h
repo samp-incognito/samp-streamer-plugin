@@ -92,6 +92,7 @@ namespace Natives
 	cell AMX_NATIVE_CALL Streamer_IsInArrayData(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_AppendArrayData(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_RemoveArrayData(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_GetArrayDataLength(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_GetUpperBound(AMX *amx, cell *params);
 	// Miscellaneous
 	cell AMX_NATIVE_CALL Streamer_GetDistanceToItem(AMX *amx, cell *params);
