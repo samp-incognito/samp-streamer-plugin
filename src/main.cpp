@@ -101,6 +101,7 @@ AMX_NATIVE_INFO natives[] =
 	{ "Streamer_IsInArrayData", Natives::Streamer_IsInArrayData },
 	{ "Streamer_AppendArrayData", Natives::Streamer_AppendArrayData },
 	{ "Streamer_RemoveArrayData", Natives::Streamer_RemoveArrayData },
+	{ "Streamer_GetArrayDataLength", Natives::Streamer_GetArrayDataLength },
 	{ "Streamer_GetUpperBound", Natives::Streamer_GetUpperBound },
 	// Miscellaneous
 	{ "Streamer_GetDistanceToItem", Natives::Streamer_GetDistanceToItem },

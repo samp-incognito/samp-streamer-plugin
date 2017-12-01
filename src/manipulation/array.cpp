@@ -469,3 +469,91 @@ int Manipulation::removeArrayData(AMX *amx, cell *params)
 	}
 	return 0;
 }
+
+int Manipulation::getArrayDataLength(AMX *amx, cell *params)
+{
+	int error = -1, result = -1;
+	switch (static_cast<int>(params[1]))
+	{
+		case STREAMER_TYPE_OBJECT:
+		{
+			result = getArrayDataLengthForItem(core->getData()->objects, static_cast<int>(params[2]), static_cast<int>(params[3]), error);
+			break;
+		}
+		case STREAMER_TYPE_PICKUP:
+		{
+			result = getArrayDataLengthForItem(core->getData()->pickups, static_cast<int>(params[2]), static_cast<int>(params[3]), error);
+			break;
+		}
+		case STREAMER_TYPE_CP:
+		{
+			result = getArrayDataLengthForItem(core->getData()->checkpoints, static_cast<int>(params[2]), static_cast<int>(params[3]), error);
+			break;
+		}
+		case STREAMER_TYPE_RACE_CP:
+		{
+			result = getArrayDataLengthForItem(core->getData()->raceCheckpoints, static_cast<int>(params[2]), static_cast<int>(params[3]), error);
+			break;
+		}
+		case STREAMER_TYPE_MAP_ICON:
+		{
+			result = getArrayDataLengthForItem(core->getData()->mapIcons, static_cast<int>(params[2]), static_cast<int>(params[3]), error);
+			break;
+		}
+		case STREAMER_TYPE_3D_TEXT_LABEL:
+		{
+			result = getArrayDataLengthForItem(core->getData()->textLabels, static_cast<int>(params[2]), static_cast<int>(params[3]), error);
+			break;
+		}
+		case STREAMER_TYPE_AREA:
+		{
+			switch (static_cast<int>(params[3]))
+			{
+				case AreaID:
+				{
+					error = InvalidData;
+					break;
+				}
+				default:
+				{
+					result = getArrayDataLengthForItem(core->getData()->areas, static_cast<int>(params[2]), static_cast<int>(params[3]), error);
+					break;
+				}
+			}
+			break;
+		}
+		case STREAMER_TYPE_ACTOR:
+		{
+			result = getArrayDataLengthForItem(core->getData()->actors, static_cast<int>(params[2]), static_cast<int>(params[3]), error);
+			break;
+		}
+		default:
+		{
+			error = InvalidType;
+			break;
+		}
+	}
+	switch (error)
+	{
+		case InvalidData:
+		{
+			Utility::logError("Streamer_GetArrayDataLength: Invalid data specified.");
+			break;
+		}
+		case InvalidID:
+		{
+			Utility::logError("Streamer_GetArrayDataLength: Invalid ID specified.");
+			break;
+		}
+		case InvalidType:
+		{
+			Utility::logError("Streamer_GetArrayDataLength: Invalid type specified.");
+			break;
+		}
+		default:
+		{
+			return result;
+		}
+	}
+	return 0;
+}

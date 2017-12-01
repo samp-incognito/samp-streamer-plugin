@@ -77,6 +77,12 @@ cell AMX_NATIVE_CALL Natives::Streamer_RemoveArrayData(AMX *amx, cell *params)
 	return static_cast<cell>(Manipulation::removeArrayData(amx, params));
 }
 
+cell AMX_NATIVE_CALL Natives::Streamer_GetArrayDataLength(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(3, "Streamer_GetArrayDataLength");
+	return static_cast<cell>(Manipulation::getArrayDataLength(amx, params));
+}
+
 cell AMX_NATIVE_CALL Natives::Streamer_GetUpperBound(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1, "Streamer_GetUpperBound");
