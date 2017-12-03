@@ -44,7 +44,7 @@
 #define STREAMER_OBJECT_TYPE_DYNAMIC (2)
 
 #define STREAMER_MAX_TYPES (8)
-#define STREAMER_MAX_AREA_TYPES (5)
+#define STREAMER_MAX_AREA_TYPES (6)
 #define STREAMER_MAX_OBJECT_TYPES (3)
 
 #define INVALID_STREAMER_ID (0)
@@ -332,6 +332,7 @@ native STREAMER_TAG_AREA CreateDynamicCube(Float:minx, Float:miny, Float:minz, F
 native STREAMER_TAG_AREA CreateDynamicPolygon(const Float:points[], Float:minz = -FLOAT_INFINITY, Float:maxz = FLOAT_INFINITY, maxpoints = sizeof points, worldid = -1, interiorid = -1, playerid = -1, priority = 0);
 native DestroyDynamicArea(STREAMER_TAG_AREA areaid);
 native IsValidDynamicArea(STREAMER_TAG_AREA areaid);
+native GetDynamicAreaType(STREAMER_TAG_AREA areaid);
 native GetDynamicPolygonPoints(STREAMER_TAG_AREA areaid, Float:points[], maxpoints = sizeof points);
 native GetDynamicPolygonNumberPoints(STREAMER_TAG_AREA areaid);
 native IsPlayerInDynamicArea(playerid, STREAMER_TAG_AREA areaid, recheck = 0);
