@@ -772,6 +772,25 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleErrorCallback(AMX *amx, cell *param
 
 cell AMX_NATIVE_CALL Natives::Streamer_IsToggleErrorCallback(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "Streamer_IsToggleErrorCallback");
 	return static_cast<cell>(core->getData()->errorCallbackEnabled != 0);
+}
+
+cell AMX_NATIVE_CALL Natives::Streamer_AmxUnloadDestroyItems(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "Streamer_AmxUnloadDestroyItems");
+	if(static_cast<int>(params[1]) != 0)
+	{
+		if(core->getData()->amxUnloadDestroyItems.find(amx) != core->getData()->amxUnloadDestroyItems.end())
+		{
+			return 0;
+		}
+		core->getData()->amxUnloadDestroyItems.insert(amx);
+		return 1;
+	}
+	if(core->getData()->amxUnloadDestroyItems.find(amx) == core->getData()->amxUnloadDestroyItems.end())
+	{
+		return 0;
+	}
+	core->getData()->amxUnloadDestroyItems.erase(amx);
+	return 1;
 }

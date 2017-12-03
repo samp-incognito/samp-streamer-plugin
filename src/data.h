@@ -45,6 +45,7 @@ public:
 	bool errorCallbackEnabled;
 
 	std::set<AMX*> interfaces;
+	std::set<AMX*> amxUnloadDestroyItems;
 
 	std::vector<int> destroyedActors;
 
