@@ -213,6 +213,17 @@ cell AMX_NATIVE_CALL Natives::IsValidDynamicArea(AMX *amx, cell *params)
 	return 0;
 }
 
+cell AMX_NATIVE_CALL Natives::GetDynamicAreaType(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(1, "GetDynamicAreaType");
+	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
+	if (a != core->getData()->areas.end())
+	{
+		return a->second->type;
+	}
+	return -1;
+}
+
 cell AMX_NATIVE_CALL Natives::GetDynamicPolygonPoints(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(3, "GetDynamicPolygonPoints");

@@ -182,6 +182,7 @@ AMX_NATIVE_INFO natives[] =
 	{ "CreateDynamicPolygon", Natives::CreateDynamicPolygon },
 	{ "DestroyDynamicArea", Natives::DestroyDynamicArea },
 	{ "IsValidDynamicArea", Natives::IsValidDynamicArea },
+	{ "GetDynamicAreaType", Natives::GetDynamicAreaType },
 	{ "GetDynamicPolygonPoints", Natives::GetDynamicPolygonPoints },
 	{ "GetDynamicPolygonNumberPoints", Natives::GetDynamicPolygonNumberPoints },
 	{ "IsPlayerInDynamicArea", Natives::IsPlayerInDynamicArea },
