@@ -1729,6 +1729,32 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetAllVisibleItems(AMX *amx, cell *params
 				}
 				break;
 			}
+			case STREAMER_TYPE_CP:
+			{
+				if(p->second.visibleCheckpoint != INVALID_STREAMER_ID)
+				{
+					boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(p->second.visibleCheckpoint);
+					if (c != core->getData()->checkpoints.end())
+					{
+						float distance = static_cast<float>(boost::geometry::comparable_distance(p->second.position, c->second->position));
+						orderedItems.insert(std::pair<float, int>(distance, c->first));
+					}
+				}
+				break;
+			}
+			case STREAMER_TYPE_RACE_CP:
+			{
+				if(p->second.visibleRaceCheckpoint != INVALID_STREAMER_ID)
+				{
+					boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator c = core->getData()->raceCheckpoints.find(p->second.visibleRaceCheckpoint);
+					if (c != core->getData()->raceCheckpoints.end())
+					{
+						float distance = static_cast<float>(boost::geometry::comparable_distance(p->second.position, c->second->position));
+						orderedItems.insert(std::pair<float, int>(distance, c->first));
+					}
+				}
+				break;
+			}
 			case STREAMER_TYPE_MAP_ICON:
 			{
 				for (boost::unordered_map<int, int>::iterator i = p->second.internalMapIcons.begin(); i != p->second.internalMapIcons.end(); ++i)
