@@ -80,6 +80,7 @@ AMX_NATIVE_INFO natives[] =
 	{ "Streamer_IsToggleItemCallbacks", Natives::Streamer_IsToggleItemCallbacks },
 	{ "Streamer_ToggleErrorCallback", Natives::Streamer_ToggleErrorCallback },
 	{ "Streamer_IsToggleErrorCallback", Natives::Streamer_IsToggleErrorCallback },
+	{ "Streamer_AmxUnloadDestroyItems", Natives::Streamer_AmxUnloadDestroyItems },
 	// Updates
 	{ "Streamer_ProcessActiveItems", Natives::Streamer_ProcessActiveItems },
 	{ "Streamer_ToggleIdleUpdate", Natives::Streamer_ToggleIdleUpdate },
@@ -272,13 +273,18 @@ AMX_NATIVE_INFO natives[] =
 PLUGIN_EXPORT int PLUGIN_CALL AmxLoad(AMX *amx)
 {
 	core->getData()->interfaces.insert(amx);
+	core->getData()->amxUnloadDestroyItems.insert(amx);
 	return Utility::checkInterfaceAndRegisterNatives(amx, natives);
 }
 
 PLUGIN_EXPORT int PLUGIN_CALL AmxUnload(AMX *amx)
 {
 	core->getData()->interfaces.erase(amx);
-	Utility::destroyAllItemsInInterface(amx);
+	if(core->getData()->amxUnloadDestroyItems.find(amx) != core->getData()->amxUnloadDestroyItems.end())
+	{
+		Utility::destroyAllItemsInInterface(amx);
+		core->getData()->amxUnloadDestroyItems.erase(amx);
+	}
 	return AMX_ERR_NONE;
 }
 

@@ -71,6 +71,7 @@ namespace Natives
 	cell AMX_NATIVE_CALL Streamer_IsToggleItemCallbacks(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_ToggleErrorCallback(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_IsToggleErrorCallback(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_AmxUnloadDestroyItems(AMX *amx, cell *params);
 	// Updates
 	cell AMX_NATIVE_CALL Streamer_ProcessActiveItems(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_ToggleIdleUpdate(AMX *amx, cell *params);

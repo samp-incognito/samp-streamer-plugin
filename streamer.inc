@@ -210,6 +210,7 @@ native Streamer_ToggleItemCallbacks(type, STREAMER_ALL_TAGS id, toggle);
 native Streamer_IsToggleItemCallbacks(type, STREAMER_ALL_TAGS id);
 native Streamer_ToggleErrorCallback(toggle);
 native Streamer_IsToggleErrorCallback();
+native Streamer_AmxUnloadDestroyItems(toggle);
 
 // Natives (Updates)
 
