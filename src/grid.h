@@ -90,11 +90,11 @@ private:
 		                     0.0f, cellSize, 0.0f, cellSize, 0.0f, cellSize * -1.0f, cellSize, cellSize * -1.0f, cellSize * -1.0f;
 	}
 
-	inline void eraseCellIfEmpty(const SharedCell &cell)
+	inline void eraseCellIfEmpty(const SharedCell &passedCell)
 	{
-		if (cell->areas.empty() && cell->checkpoints.empty() && cell->mapIcons.empty() && cell->objects.empty() && cell->pickups.empty() && cell->raceCheckpoints.empty() && cell->textLabels.empty() && cell->actors.empty())
+		if (passedCell->areas.empty() && passedCell->checkpoints.empty() && passedCell->mapIcons.empty() && passedCell->objects.empty() && passedCell->pickups.empty() && passedCell->raceCheckpoints.empty() && passedCell->textLabels.empty() && passedCell->actors.empty())
 		{
-			cells.erase(cell->cellID);
+			cells.erase(passedCell->cellID);
 		}
 	}
 

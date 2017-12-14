@@ -19,4 +19,4 @@
 #include "common.h"
 
 Cell::Cell() : references(0) {}
-Cell::Cell(CellID cellID) : cellID(cellID), references(0) {}
+Cell::Cell(CellID cCellID) : cellID(cCellID), references(0) {}

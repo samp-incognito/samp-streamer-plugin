@@ -216,14 +216,14 @@ void Utility::executeFinalAreaCallbacks(int areaid)
 	}
 	for (std::vector<boost::tuple<int, int> >::const_iterator c = callbacks.begin(); c != callbacks.end(); ++c)
 	{
-		for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
+		for (std::set<AMX*>::iterator amx = core->getData()->interfaces.begin(); amx != core->getData()->interfaces.end(); ++amx)
 		{
 			int amxIndex = 0;
-			if (!amx_FindPublic(*a, "OnPlayerLeaveDynamicArea", &amxIndex))
+			if (!amx_FindPublic(*amx, "OnPlayerLeaveDynamicArea", &amxIndex))
 			{
-				amx_Push(*a, static_cast<cell>(c->get<0>()));
-				amx_Push(*a, static_cast<cell>(c->get<1>()));
-				amx_Exec(*a, NULL, amxIndex);
+				amx_Push(*amx, static_cast<cell>(c->get<0>()));
+				amx_Push(*amx, static_cast<cell>(c->get<1>()));
+				amx_Exec(*amx, NULL, amxIndex);
 			}
 		}
 	}
