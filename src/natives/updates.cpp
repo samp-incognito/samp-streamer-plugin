@@ -86,7 +86,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleItemUpdate(AMX *amx, cell *params)
 	{
 		if (static_cast<int>(params[2]) >= 0 && static_cast<int>(params[2]) < STREAMER_MAX_TYPES)
 		{
-			p->second.enabledItems.set(static_cast<int>(params[2]), params[3] != 0);
+			p->second.enabledItems.set(static_cast<size_t>(params[2]), params[3] != 0);
 			return 1;
 		}
 	}
