@@ -1,0 +1,20 @@
+{
+    "user": "samp-incognito",
+    "repo": "samp-streamer-plugin",
+    "resources": [
+        {
+            "name": "^samp-streamer-plugin-(.*).zip$",
+            "platform": "linux",
+            "archive": true,
+            "includes": ["pawno/include"],
+            "plugins": ["plugins/streamer.so"]
+        },
+        {
+            "name": "^samp-streamer-plugin-(.*).zip$",
+            "platform": "windows",
+            "archive": true,
+            "includes": ["pawno/include"],
+            "plugins": ["plugins/streamer.dll"]
+        }
+    ]
+}
