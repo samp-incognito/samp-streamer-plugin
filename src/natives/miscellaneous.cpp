@@ -1493,10 +1493,11 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountItems(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(7, "Streamer_GetNearbyItems");
+	CHECK_PARAMS(8, "Streamer_GetNearbyItems");
 	Eigen::Vector2f position2D = Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2]));
 	Eigen::Vector3f position3D = Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]));
 	float range = amx_ctof(params[7]) * amx_ctof(params[7]);
+	int world = static_cast<int>(params[8]);
 	std::multimap<float, int> orderedItems;
 	std::vector<SharedCell> pointCells;
 	core->getGrid()->findMinimalCellsForPoint(position2D, pointCells);
@@ -1508,18 +1509,21 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 			{
 				for (boost::unordered_map<int, Item::SharedObject>::const_iterator o = (*p)->objects.begin(); o != (*p)->objects.end(); ++o)
 				{
-					float distance = 0.0f;
-					if (o->second->attach)
+					if (world == -1 || o->second->worlds.find(world) != o->second->worlds.end())
 					{
-						distance = static_cast<float>(boost::geometry::comparable_distance(position3D, o->second->attach->position));
-					}
-					else
-					{
-						distance = static_cast<float>(boost::geometry::comparable_distance(position3D, o->second->position));
-					}
-					if (distance < range)
-					{
-						orderedItems.insert(std::pair<float, int>(distance, o->first));
+						float distance = 0.0f;
+						if (o->second->attach)
+						{
+							distance = static_cast<float>(boost::geometry::comparable_distance(position3D, o->second->attach->position));
+						}
+						else
+						{
+							distance = static_cast<float>(boost::geometry::comparable_distance(position3D, o->second->position));
+						}
+						if (distance < range)
+						{
+							orderedItems.insert(std::pair<float, int>(distance, o->first));
+						}
 					}
 				}
 			}
@@ -1531,10 +1535,13 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 			{
 				for (boost::unordered_map<int, Item::SharedPickup>::const_iterator q = (*p)->pickups.begin(); q != (*p)->pickups.end(); ++q)
 				{
-					float distance = static_cast<float>(boost::geometry::comparable_distance(position3D, q->second->position));
-					if (distance < range)
+					if (world == -1 || q->second->worlds.find(world) != q->second->worlds.end())
 					{
-						orderedItems.insert(std::pair<float, int>(distance, q->first));
+						float distance = static_cast<float>(boost::geometry::comparable_distance(position3D, q->second->position));
+						if (distance < range)
+						{
+							orderedItems.insert(std::pair<float, int>(distance, q->first));
+						}
 					}
 				}
 			}
@@ -1546,10 +1553,13 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 			{
 				for (boost::unordered_map<int, Item::SharedCheckpoint>::const_iterator c = (*p)->checkpoints.begin(); c != (*p)->checkpoints.end(); ++c)
 				{
-					float distance = static_cast<float>(boost::geometry::comparable_distance(position3D, c->second->position));
-					if (distance < range)
+					if (world == -1 || c->second->worlds.find(world) != c->second->worlds.end())
 					{
-						orderedItems.insert(std::pair<float, int>(distance, c->first));
+						float distance = static_cast<float>(boost::geometry::comparable_distance(position3D, c->second->position));
+						if (distance < range)
+						{
+							orderedItems.insert(std::pair<float, int>(distance, c->first));
+						}
 					}
 				}
 			}
@@ -1561,10 +1571,13 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 			{
 				for (boost::unordered_map<int, Item::SharedRaceCheckpoint>::const_iterator r = (*p)->raceCheckpoints.begin(); r != (*p)->raceCheckpoints.end(); ++r)
 				{
-					float distance = static_cast<float>(boost::geometry::comparable_distance(position3D, r->second->position));
-					if (distance < range)
+					if (world == -1 || r->second->worlds.find(world) != r->second->worlds.end())
 					{
-						orderedItems.insert(std::pair<float, int>(distance, r->first));
+						float distance = static_cast<float>(boost::geometry::comparable_distance(position3D, r->second->position));
+						if (distance < range)
+						{
+							orderedItems.insert(std::pair<float, int>(distance, r->first));
+						}
 					}
 				}
 			}
@@ -1576,10 +1589,13 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 			{
 				for (boost::unordered_map<int, Item::SharedMapIcon>::const_iterator m = (*p)->mapIcons.begin(); m != (*p)->mapIcons.end(); ++m)
 				{
-					float distance = static_cast<float>(boost::geometry::comparable_distance(position3D, m->second->position));
-					if (distance < range)
+					if (world == -1 || m->second->worlds.find(world) != m->second->worlds.end())
 					{
-						orderedItems.insert(std::pair<float, int>(distance, m->first));
+						float distance = static_cast<float>(boost::geometry::comparable_distance(position3D, m->second->position));
+						if (distance < range)
+						{
+							orderedItems.insert(std::pair<float, int>(distance, m->first));
+						}
 					}
 				}
 			}
@@ -1591,10 +1607,13 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 			{
 				for (boost::unordered_map<int, Item::SharedTextLabel>::const_iterator t = (*p)->textLabels.begin(); t != (*p)->textLabels.end(); ++t)
 				{
-					float distance = static_cast<float>(boost::geometry::comparable_distance(position3D, t->second->position));
-					if (distance < range)
+					if (world == -1 || t->second->worlds.find(world) != t->second->worlds.end())
 					{
-						orderedItems.insert(std::pair<float, int>(distance, t->first));
+						float distance = static_cast<float>(boost::geometry::comparable_distance(position3D, t->second->position));
+						if (distance < range)
+						{
+							orderedItems.insert(std::pair<float, int>(distance, t->first));
+						}
 					}
 				}
 			}
@@ -1606,51 +1625,54 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 			{
 				for (boost::unordered_map<int, Item::SharedArea>::const_iterator a = (*p)->areas.begin(); a != (*p)->areas.end(); ++a)
 				{
-					boost::variant<Polygon2D, Box2D, Box3D, Eigen::Vector2f, Eigen::Vector3f> position;
-					if (a->second->attach)
+					if (world == -1 || a->second->worlds.find(world) != a->second->worlds.end())
 					{
-						position = a->second->position;
-					}
-					else
-					{
-						position = a->second->position;
-					}
-					float distance = 0.0f;
-					switch (a->second->type)
-					{
-						case STREAMER_AREA_TYPE_CIRCLE:
-						case STREAMER_AREA_TYPE_CYLINDER:
+						boost::variant<Polygon2D, Box2D, Box3D, Eigen::Vector2f, Eigen::Vector3f> position;
+						if (a->second->attach)
 						{
-							distance = static_cast<float>(boost::geometry::distance(position2D, boost::get<Eigen::Vector2f>(position)));
-							break;
+							position = a->second->position;
 						}
-						case STREAMER_AREA_TYPE_SPHERE:
+						else
 						{
-							distance = static_cast<float>(boost::geometry::comparable_distance(position3D, boost::get<Eigen::Vector3f>(position)));
-							break;
+							position = a->second->position;
 						}
-						case STREAMER_AREA_TYPE_RECTANGLE:
+						float distance = 0.0f;
+						switch (a->second->type)
 						{
-							Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Box2D>(position));
-							distance = static_cast<float>(boost::geometry::comparable_distance(position2D, centroid));
-							break;
+							case STREAMER_AREA_TYPE_CIRCLE:
+							case STREAMER_AREA_TYPE_CYLINDER:
+							{
+								distance = static_cast<float>(boost::geometry::distance(position2D, boost::get<Eigen::Vector2f>(position)));
+								break;
+							}
+							case STREAMER_AREA_TYPE_SPHERE:
+							{
+								distance = static_cast<float>(boost::geometry::comparable_distance(position3D, boost::get<Eigen::Vector3f>(position)));
+								break;
+							}
+							case STREAMER_AREA_TYPE_RECTANGLE:
+							{
+								Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Box2D>(position));
+								distance = static_cast<float>(boost::geometry::comparable_distance(position2D, centroid));
+								break;
+							}
+							case STREAMER_AREA_TYPE_CUBOID:
+							{
+								Eigen::Vector3f centroid = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3D>(position));
+								distance = static_cast<float>(boost::geometry::comparable_distance(position3D, centroid));
+								break;
+							}
+							case STREAMER_AREA_TYPE_POLYGON:
+							{
+								Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2D>(position));
+								distance = static_cast<float>(boost::geometry::comparable_distance(position2D, centroid));
+								break;
+							}
 						}
-						case STREAMER_AREA_TYPE_CUBOID:
+						if (distance < range)
 						{
-							Eigen::Vector3f centroid = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3D>(position));
-							distance = static_cast<float>(boost::geometry::comparable_distance(position3D, centroid));
-							break;
+							orderedItems.insert(std::pair<float, int>(distance, a->first));
 						}
-						case STREAMER_AREA_TYPE_POLYGON:
-						{
-							Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2D>(position));
-							distance = static_cast<float>(boost::geometry::comparable_distance(position2D, centroid));
-							break;
-						}
-					}
-					if (distance < range)
-					{
-						orderedItems.insert(std::pair<float, int>(distance, a->first));
 					}
 				}
 			}
@@ -1662,10 +1684,13 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 			{
 				for (boost::unordered_map<int, Item::SharedActor>::const_iterator a = (*p)->actors.begin(); a != (*p)->actors.end(); ++a)
 				{
-					float distance = static_cast<float>(boost::geometry::comparable_distance(position3D, a->second->position));
-					if (distance < range)
+					if (world == -1 || a->second->worlds.find(world) != a->second->worlds.end())
 					{
-						orderedItems.insert(std::pair<float, int>(distance, a->first));
+						float distance = static_cast<float>(boost::geometry::comparable_distance(position3D, a->second->position));
+						if (distance < range)
+						{
+							orderedItems.insert(std::pair<float, int>(distance, a->first));
+						}
 					}
 				}
 			}
