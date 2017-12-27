@@ -16,5 +16,8 @@
             "includes": ["pawno/include"],
             "plugins": ["plugins/streamer.dll"]
         }
-    ]
+    ],
+    "runtime": {
+        "plugins": ["samp-incognito/samp-streamer-plugin"]
+    }
 }
