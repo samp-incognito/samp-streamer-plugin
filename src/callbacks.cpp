@@ -164,13 +164,13 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerPickUpPickup(int playerid, int pickupid)
 	{
 		if (i->second == pickupid)
 		{
-			int dynPickupid = i->first;
+			int dynPickupId = i->first;
 			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
 			{
 				int amxIndex = 0;
 				if (!amx_FindPublic(*a, "OnPlayerPickUpDynamicPickup", &amxIndex))
 				{
-					amx_Push(*a, static_cast<cell>(dynPickupid));
+					amx_Push(*a, static_cast<cell>(dynPickupId));
 					amx_Push(*a, static_cast<cell>(playerid));
 					amx_Exec(*a, NULL, amxIndex);
 				}
@@ -192,10 +192,10 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerEditObject(int playerid, bool playerobjec
 			{
 				if (i->second == objectid)
 				{
-					int dynObjectid = i->first;
+					int dynObjectId = i->first;
 					if (response == EDIT_RESPONSE_CANCEL || response == EDIT_RESPONSE_FINAL)
 					{
-						boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(dynObjectid);
+						boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(dynObjectId);
 						if (o != core->getData()->objects.end())
 						{
 							if (o->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF && o->second->originalComparableStreamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
@@ -218,7 +218,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerEditObject(int playerid, bool playerobjec
 							amx_Push(*a, amx_ftoc(fY));
 							amx_Push(*a, amx_ftoc(fX));
 							amx_Push(*a, static_cast<cell>(response));
-							amx_Push(*a, static_cast<cell>(dynObjectid));
+							amx_Push(*a, static_cast<cell>(dynObjectId));
 							amx_Push(*a, static_cast<cell>(playerid));
 							amx_Exec(*a, &amxRetVal, amxIndex);
 							if (amxRetVal)
@@ -246,7 +246,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerSelectObject(int playerid, int type, int 
 			{
 				if (i->second == objectid)
 				{
-					int dynObjectid = i->first;
+					int dynObjectId = i->first;
 					for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
 					{
 						int amxIndex = 0;
@@ -257,7 +257,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerSelectObject(int playerid, int type, int 
 							amx_Push(*a, amx_ftoc(y));
 							amx_Push(*a, amx_ftoc(x));
 							amx_Push(*a, static_cast<cell>(modelid));
-							amx_Push(*a, static_cast<cell>(dynObjectid));
+							amx_Push(*a, static_cast<cell>(dynObjectId));
 							amx_Push(*a, static_cast<cell>(playerid));
 							amx_Exec(*a, &amxRetVal, amxIndex);
 							if (amxRetVal)
@@ -320,7 +320,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerGiveDamageActor(int playerid, int actorid
 	{
 		if (i->second == actorid)
 		{
-			int dynActorid = i->first;
+			int dynActorId = i->first;
 			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
 			{
 				int amxIndex = 0;
@@ -330,7 +330,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerGiveDamageActor(int playerid, int actorid
 					amx_Push(*a, static_cast<cell>(bodypart));
 					amx_Push(*a, static_cast<cell>(weaponid));
 					amx_Push(*a, amx_ftoc(amount));
-					amx_Push(*a, static_cast<cell>(dynActorid));
+					amx_Push(*a, static_cast<cell>(dynActorId));
 					amx_Push(*a, static_cast<cell>(playerid));
 					amx_Exec(*a, &amxRetVal, amxIndex);
 					if (amxRetVal)
@@ -351,14 +351,14 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnActorStreamIn(int actorid, int forplayerid)
 	{
 		if (i->second == actorid)
 		{
-			int dynActorid = i->first;
+			int dynActorId = i->first;
 			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
 			{
 				int amxIndex = 0;
 				if (!amx_FindPublic(*a, "OnDynamicActorStreamIn", &amxIndex))
 				{
 					amx_Push(*a, static_cast<cell>(forplayerid));
-					amx_Push(*a, static_cast<cell>(dynActorid));
+					amx_Push(*a, static_cast<cell>(dynActorId));
 					amx_Exec(*a, NULL, amxIndex);
 				}
 			}
@@ -374,14 +374,14 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnActorStreamOut(int actorid, int forplayerid)
 	{
 		if (i->second == actorid)
 		{
-			int dynActorid = i->first;
+			int dynActorId = i->first;
 			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
 			{
 				int amxIndex = 0;
 				if (!amx_FindPublic(*a, "OnDynamicActorStreamOut", &amxIndex))
 				{
 					amx_Push(*a, static_cast<cell>(forplayerid));
-					amx_Push(*a, static_cast<cell>(dynActorid));
+					amx_Push(*a, static_cast<cell>(dynActorId));
 					amx_Exec(*a, NULL, amxIndex);
 				}
 			}
