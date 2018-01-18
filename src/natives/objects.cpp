@@ -343,10 +343,10 @@ cell AMX_NATIVE_CALL Natives::AttachCameraToDynamicObject(AMX *amx, cell *params
 cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToObject(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(9, "AttachDynamicObjectToObject");
-	static AMX_NATIVE native = sampgdk::FindNative("SetPlayerGravity");
+	static AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToObject");
 	if (native == NULL)
 	{
-		Utility::logError("AttachDynamicObjectToObject: YSF plugin must be loaded to attach objects to objects.");
+		Utility::logError("AttachDynamicObjectToObject: YSF plugin (a version having the AttachPlayerObjectToObject function) must be loaded to attach objects to objects.");
 		return 0;
 	}
 	boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[1]));
@@ -372,7 +372,6 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToObject(AMX *amx, cell *params
 				boost::unordered_map<int, int>::iterator j = p->second.internalObjects.find(o->second->attach->object);
 				if (j != p->second.internalObjects.end())
 				{
-					static AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToObject");
 					if (native != NULL)
 					{
 						sampgdk::InvokeNative(native, "dddffffffb", p->first, i->second, j->second, o->second->attach->positionOffset[0], o->second->attach->positionOffset[1], o->second->attach->positionOffset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2], o->second->attach->syncRotation);
@@ -422,10 +421,10 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToObject(AMX *amx, cell *params
 cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToPlayer(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(8, "AttachDynamicObjectToPlayer");
-	static AMX_NATIVE native = sampgdk::FindNative("SetPlayerGravity");
+	static AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToPlayer");
 	if (native == NULL)
 	{
-		Utility::logError("AttachDynamicObjectToPlayer: YSF plugin must be loaded to attach objects to players.");
+		Utility::logError("AttachDynamicObjectToObject: YSF plugin (a version having the AttachPlayerObjectToPlayer function) must be loaded to attach objects to objects.");
 		return 0;
 	}
 	boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[1]));
@@ -447,7 +446,6 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToPlayer(AMX *amx, cell *params
 			boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
 			if (i != p->second.internalObjects.end())
 			{
-				static AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToPlayer");
 				if (native != NULL)
 				{
 					sampgdk::InvokeNative(native, "dddffffffd", p->first, i->second, o->second->attach->player, o->second->attach->positionOffset[0], o->second->attach->positionOffset[1], o->second->attach->positionOffset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2], 0);

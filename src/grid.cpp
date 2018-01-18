@@ -575,8 +575,7 @@ CellID Grid::getCellID(const Eigen::Vector2f &position, bool insert)
 		boost::unordered_map<CellID, SharedCell>::iterator c = cells.find(cellID);
 		if (c == cells.end())
 		{
-			SharedCell cell(new Cell(cellID));
-			cells[cellID] = cell;
+			cells[cellID] = SharedCell(new Cell(cellID));
 		}
 	}
 	return cellID;

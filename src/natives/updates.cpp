@@ -84,9 +84,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleItemUpdate(AMX *amx, cell *params)
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
-		if (static_cast<size_t>(params[2]) >= 0 && static_cast<size_t>(params[2]) < STREAMER_MAX_TYPES)
+		if (static_cast<int>(params[2]) >= 0 && static_cast<int>(params[2]) < STREAMER_MAX_TYPES)
 		{
-			p->second.enabledItems.set(static_cast<size_t>(params[2]), static_cast<int>(params[3]) != 0);
+			p->second.enabledItems.set(static_cast<size_t>(params[2]), params[3] != 0);
 			return 1;
 		}
 	}
@@ -99,7 +99,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItemUpdate(AMX *amx, cell *params
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
-		if (static_cast<size_t>(params[2]) >= 0 && static_cast<size_t>(params[2]) < STREAMER_MAX_TYPES)
+		if (static_cast<int>(params[2]) >= 0 && static_cast<int>(params[2]) < STREAMER_MAX_TYPES)
 		{
 			return static_cast<cell>(p->second.enabledItems.test(params[2]) != 0);
 		}

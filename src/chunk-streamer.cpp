@@ -226,16 +226,16 @@ void ChunkStreamer::streamMapIcons(Player &player, bool automatic)
 					{
 						if (e->first.get<0>() < d->first.get<0>() || (e->first.get<1>() > STREAMER_STATIC_DISTANCE_CUTOFF && d->first.get<1>() < e->first.get<1>()))
 						{
-							boost::unordered_map<int, int>::iterator i = player.internalMapIcons.find(e->second.get<0>());
-							if (i != player.internalMapIcons.end())
+							boost::unordered_map<int, int>::iterator j = player.internalMapIcons.find(e->second.get<0>());
+							if (j != player.internalMapIcons.end())
 							{
-								sampgdk::RemovePlayerMapIcon(player.playerID, i->second);
+								sampgdk::RemovePlayerMapIcon(player.playerID, j->second);
 								if (e->second.get<1>()->streamCallbacks)
 								{
 									streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_MAP_ICON, e->second.get<0>()));
 								}
-								player.mapIconIdentifier.remove(i->second, player.internalMapIcons.size());
-								player.internalMapIcons.erase(i);
+								player.mapIconIdentifier.remove(j->second, player.internalMapIcons.size());
+								player.internalMapIcons.erase(j);
 							}
 							if (e->second.get<1>()->cell)
 							{
@@ -382,13 +382,13 @@ void ChunkStreamer::streamObjects(Player &player, bool automatic)
 				{
 					if (d->second.get<1>()->attach->object != INVALID_STREAMER_ID)
 					{
-						boost::unordered_map<int, int>::iterator i = player.internalObjects.find(d->second.get<1>()->attach->object);
-						if (i == player.internalObjects.end())
+						boost::unordered_map<int, int>::iterator j = player.internalObjects.find(d->second.get<1>()->attach->object);
+						if (j == player.internalObjects.end())
 						{
 							d = player.discoveredObjects.left.erase(d);
 							continue;
 						}
-						internalBaseID = i->second;
+						internalBaseID = j->second;
 					}
 				}
 				if (player.internalObjects.size() == player.currentVisibleObjects)
@@ -398,15 +398,15 @@ void ChunkStreamer::streamObjects(Player &player, bool automatic)
 					{
 						if (e->first.get<0>() < d->first.get<0>() || (e->first.get<1>() > STREAMER_STATIC_DISTANCE_CUTOFF && d->first.get<1>() < e->first.get<1>()))
 						{
-							boost::unordered_map<int, int>::iterator i = player.internalObjects.find(e->second.get<0>());
-							if (i != player.internalObjects.end())
+							boost::unordered_map<int, int>::iterator j = player.internalObjects.find(e->second.get<0>());
+							if (j != player.internalObjects.end())
 							{
-								sampgdk::DestroyPlayerObject(player.playerID, i->second);
+								sampgdk::DestroyPlayerObject(player.playerID, j->second);
 								if (e->second.get<1>()->streamCallbacks)
 								{
 									streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_OBJECT, e->second.get<0>()));
 								}
-								player.internalObjects.erase(i);
+								player.internalObjects.erase(j);
 							}
 							if (e->second.get<1>()->cell)
 							{
@@ -606,15 +606,15 @@ void ChunkStreamer::streamTextLabels(Player &player, bool automatic)
 					{
 						if (e->first.get<0>() < d->first.get<0>() || (e->first.get<1>() > STREAMER_STATIC_DISTANCE_CUTOFF && d->first.get<1>() < e->first.get<1>()))
 						{
-							boost::unordered_map<int, int>::iterator i = player.internalTextLabels.find(e->second.get<0>());
-							if (i != player.internalTextLabels.end())
+							boost::unordered_map<int, int>::iterator j = player.internalTextLabels.find(e->second.get<0>());
+							if (j != player.internalTextLabels.end())
 							{
-								sampgdk::DeletePlayer3DTextLabel(player.playerID, i->second);
+								sampgdk::DeletePlayer3DTextLabel(player.playerID, j->second);
 								if (e->second.get<1>()->streamCallbacks)
 								{
 									streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_3D_TEXT_LABEL, e->second.get<0>()));
 								}
-								player.internalTextLabels.erase(i);
+								player.internalTextLabels.erase(j);
 							}
 							if (e->second.get<1>()->cell)
 							{
