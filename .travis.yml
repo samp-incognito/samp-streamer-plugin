@@ -1,0 +1,29 @@
+language: cpp
+
+env:
+  matrix:
+    - BUILD_TYPE=Release
+    - BUILD_TYPE=Debug
+
+addons:
+  apt:
+    packages:
+    - g++-multilib
+
+before_install:
+  - wget http://sourceforge.net/projects/boost/files/boost/1.66.0/boost_1_66_0.tar.gz
+  - tar xzf boost_1_66_0.tar.gz
+  - wget http://bitbucket.org/eigen/eigen/get/3.3.4.tar.gz
+  - tar xzf 3.3.4.tar.gz
+
+install:
+  - cd boost_1_66_0
+  - ./bootstrap.sh
+  - ./b2 --with-system address-model=32
+  - cd ..
+
+before_script:
+  - cmake . -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBOOST_ROOT=boost_1_66_0 -DEIGEN3_INCLUDE_DIR=eigen-eigen-5a0156e40feb
+
+script:
+  - make

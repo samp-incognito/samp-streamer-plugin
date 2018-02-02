@@ -1,0 +1,23 @@
+version: '{build}'
+image: Visual Studio 2015
+
+configuration:
+  - Debug
+  - Release
+
+install:
+  - git submodule update --init --recursive
+  - appveyor DownloadFile http://bitbucket.org/eigen/eigen/get/3.3.4.zip
+  - 7z x 3.3.4.zip
+
+before_build:
+  - cmake . -G "Visual Studio 14 2015" -DCMAKE_BUILD_TYPE="%BUILD_TYPE%" -DBOOST_ROOT="C:\Libraries\boost_1_63_0" -DEIGEN3_INCLUDE_DIR="%APPVEYOR_BUILD_FOLDER%\eigen-eigen-5a0156e40feb"
+
+build_script:
+  - cmake --build . --config %CONFIGURATION%
+  - cmake --build . --config %CONFIGURATION% --target install
+  - cmake --build . --config %CONFIGURATION% --target package
+
+artifacts:
+  - path: streamer-*-win32.zip
+    name: Streamer Plugin
