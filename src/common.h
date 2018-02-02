@@ -63,6 +63,8 @@ inline void intrusive_ptr_release(T *t)
 	}
 }
 
+#include "sampgdk.h"
+
 #include <boost/bimap.hpp>
 #include <boost/bimap/multiset_of.hpp>
 #include <boost/bimap/unordered_set_of.hpp>
@@ -72,8 +74,6 @@ inline void intrusive_ptr_release(T *t)
 #include <boost/tuple/tuple.hpp>
 
 #include <Eigen/Core>
-
-#include <sampgdk/sampgdk.h>
 
 #include <utility>
 
