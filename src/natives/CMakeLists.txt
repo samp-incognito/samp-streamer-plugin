@@ -1,0 +1,18 @@
+list(APPEND STREAMER_SOURCES
+	${CMAKE_CURRENT_SOURCE_DIR}/actors.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/areas.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/checkpoints.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/deprecated.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/extended.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/manipulation.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/map-icons.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/miscellaneous.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/objects.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/pickups.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/race-checkpoints.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/settings.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/text-labels.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/updates.cpp
+)
+
+set(STREAMER_SOURCES "${STREAMER_SOURCES}" PARENT_SCOPE)
