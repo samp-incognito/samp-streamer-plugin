@@ -1497,7 +1497,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 	Eigen::Vector2f position2d = Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2]));
 	Eigen::Vector3f position3d = Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]));
 	float range = amx_ctof(params[7]) * amx_ctof(params[7]);
-	int world = static_cast<int>(params[8]);
+	int worldId = static_cast<int>(params[8]);
 	std::multimap<float, int> orderedItems;
 	std::vector<SharedCell> pointCells;
 	core->getGrid()->findMinimalCellsForPoint(position2d, pointCells, range);
@@ -1509,7 +1509,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 			{
 				for (boost::unordered_map<int, Item::SharedObject>::const_iterator o = (*p)->objects.begin(); o != (*p)->objects.end(); ++o)
 				{
-					if (world == -1 || o->second->worlds.find(world) != o->second->worlds.end())
+					if (worldId == -1 || o->second->worlds.find(worldId) != o->second->worlds.end())
 					{
 						float distance = 0.0f;
 						if (o->second->attach)
@@ -1535,7 +1535,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 			{
 				for (boost::unordered_map<int, Item::SharedPickup>::const_iterator q = (*p)->pickups.begin(); q != (*p)->pickups.end(); ++q)
 				{
-					if (world == -1 || q->second->worlds.find(world) != q->second->worlds.end())
+					if (worldId == -1 || q->second->worlds.find(worldId) != q->second->worlds.end())
 					{
 						float distance = static_cast<float>(boost::geometry::comparable_distance(position3d, q->second->position));
 						if (distance < range)
@@ -1553,7 +1553,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 			{
 				for (boost::unordered_map<int, Item::SharedCheckpoint>::const_iterator c = (*p)->checkpoints.begin(); c != (*p)->checkpoints.end(); ++c)
 				{
-					if (world == -1 || c->second->worlds.find(world) != c->second->worlds.end())
+					if (worldId == -1 || c->second->worlds.find(worldId) != c->second->worlds.end())
 					{
 						float distance = static_cast<float>(boost::geometry::comparable_distance(position3d, c->second->position));
 						if (distance < range)
@@ -1571,7 +1571,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 			{
 				for (boost::unordered_map<int, Item::SharedRaceCheckpoint>::const_iterator r = (*p)->raceCheckpoints.begin(); r != (*p)->raceCheckpoints.end(); ++r)
 				{
-					if (world == -1 || r->second->worlds.find(world) != r->second->worlds.end())
+					if (worldId == -1 || r->second->worlds.find(worldId) != r->second->worlds.end())
 					{
 						float distance = static_cast<float>(boost::geometry::comparable_distance(position3d, r->second->position));
 						if (distance < range)
@@ -1589,7 +1589,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 			{
 				for (boost::unordered_map<int, Item::SharedMapIcon>::const_iterator m = (*p)->mapIcons.begin(); m != (*p)->mapIcons.end(); ++m)
 				{
-					if (world == -1 || m->second->worlds.find(world) != m->second->worlds.end())
+					if (worldId == -1 || m->second->worlds.find(worldId) != m->second->worlds.end())
 					{
 						float distance = static_cast<float>(boost::geometry::comparable_distance(position3d, m->second->position));
 						if (distance < range)
@@ -1607,7 +1607,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 			{
 				for (boost::unordered_map<int, Item::SharedTextLabel>::const_iterator t = (*p)->textLabels.begin(); t != (*p)->textLabels.end(); ++t)
 				{
-					if (world == -1 || t->second->worlds.find(world) != t->second->worlds.end())
+					if (worldId == -1 || t->second->worlds.find(worldId) != t->second->worlds.end())
 					{
 						float distance = static_cast<float>(boost::geometry::comparable_distance(position3d, t->second->position));
 						if (distance < range)
@@ -1625,7 +1625,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 			{
 				for (boost::unordered_map<int, Item::SharedArea>::const_iterator a = (*p)->areas.begin(); a != (*p)->areas.end(); ++a)
 				{
-					if (world == -1 || a->second->worlds.find(world) != a->second->worlds.end())
+					if (worldId == -1 || a->second->worlds.find(worldId) != a->second->worlds.end())
 					{
 						boost::variant<Polygon2d, Box2d, Box3d, Eigen::Vector2f, Eigen::Vector3f> position;
 						if (a->second->attach)
@@ -1684,7 +1684,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 			{
 				for (boost::unordered_map<int, Item::SharedActor>::const_iterator a = (*p)->actors.begin(); a != (*p)->actors.end(); ++a)
 				{
-					if (world == -1 || a->second->worlds.find(world) != a->second->worlds.end())
+					if (worldId == -1 || a->second->worlds.find(worldId) != a->second->worlds.end())
 					{
 						float distance = static_cast<float>(boost::geometry::comparable_distance(position3d, a->second->position));
 						if (distance < range)
