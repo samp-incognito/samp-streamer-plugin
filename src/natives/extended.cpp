@@ -32,7 +32,7 @@
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicObjectEx(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(18, "CreateDynamicObjectEx");
+	CHECK_PARAMS(18);
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_OBJECT) == core->getData()->objects.size())
 	{
 		return INVALID_STREAMER_ID;
@@ -64,7 +64,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicObjectEx(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicPickupEx(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(15, "CreateDynamicPickupEx");
+	CHECK_PARAMS(15);
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_PICKUP) == core->getData()->pickups.size())
 	{
 		return INVALID_STREAMER_ID;
@@ -94,7 +94,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPickupEx(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicCPEx(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(14, "CreateDynamicCPEx");
+	CHECK_PARAMS(14);
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_CP) == core->getData()->checkpoints.size())
 	{
 		return INVALID_STREAMER_ID;
@@ -123,7 +123,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCPEx(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicRaceCPEx(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(18, "CreateDynamicRaceCPEx");
+	CHECK_PARAMS(18);
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_RACE_CP) == core->getData()->raceCheckpoints.size())
 	{
 		return INVALID_STREAMER_ID;
@@ -154,7 +154,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicRaceCPEx(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicMapIconEx(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(16, "CreateDynamicMapIconEx");
+	CHECK_PARAMS(16);
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_MAP_ICON) == core->getData()->mapIcons.size())
 	{
 		return INVALID_STREAMER_ID;
@@ -185,7 +185,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicMapIconEx(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabelEx(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(19, "CreateDynamic3DTextLabelEx");
+	CHECK_PARAMS(19);
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_3D_TEXT_LABEL) == core->getData()->textLabels.size())
 	{
 		return INVALID_STREAMER_ID;
@@ -228,7 +228,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabelEx(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicCircleEx(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(10, "CreateDynamicCircleEx");
+	CHECK_PARAMS(10);
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return INVALID_STREAMER_ID;
@@ -253,7 +253,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCircleEx(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicCylinderEx(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(12, "CreateDynamicCylinderEx");
+	CHECK_PARAMS(12);
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return INVALID_STREAMER_ID;
@@ -279,7 +279,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCylinderEx(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicSphereEx(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(11, "CreateDynamicSphereEx");
+	CHECK_PARAMS(11);
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return INVALID_STREAMER_ID;
@@ -304,7 +304,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicSphereEx(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicRectangleEx(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(11, "CreateDynamicRectangleEx");
+	CHECK_PARAMS(11);
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return INVALID_STREAMER_ID;
@@ -330,7 +330,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicRectangleEx(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicCuboidEx(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(13, "CreateDynamicCuboidEx");
+	CHECK_PARAMS(13);
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return INVALID_STREAMER_ID;
@@ -356,7 +356,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCuboidEx(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicPolygonEx(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(11, "CreateDynamicPolygonEx");
+	CHECK_PARAMS(11);
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return INVALID_STREAMER_ID;
@@ -388,7 +388,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPolygonEx(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicActorEx(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(17, "CreateDynamicActorEx");
+	CHECK_PARAMS(17);
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_ACTOR) == core->getData()->actors.size())
 	{
 		return INVALID_STREAMER_ID;

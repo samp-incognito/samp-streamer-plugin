@@ -31,10 +31,10 @@
 #include "common.h"
 #include "utility.h"
 
-#define CHECK_PARAMS(m, n) \
-	if (params[0] != (m * 4)) \
+#define CHECK_PARAMS(n) \
+	if (params[0] != (n * 4)) \
 	{ \
-		Utility::logError("%s: Expecting %d parameter(s), but found %d.", n, m, params[0] / sizeof(cell)); \
+		Utility::logError("%s: Expecting %d parameter(s), but found %d.", __func__, n, params[0] / sizeof(cell)); \
 		return 0; \
 	}
 

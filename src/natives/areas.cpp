@@ -33,7 +33,7 @@
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicCircle(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(7, "CreateDynamicCircle");
+	CHECK_PARAMS(7);
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return INVALID_STREAMER_ID;
@@ -57,7 +57,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCircle(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicCylinder(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(9, "CreateDynamicCylinder");
+	CHECK_PARAMS(9);
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return INVALID_STREAMER_ID;
@@ -82,7 +82,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCylinder(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicSphere(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(8, "CreateDynamicSphere");
+	CHECK_PARAMS(8);
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return INVALID_STREAMER_ID;
@@ -107,7 +107,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicSphere(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicRectangle(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(8, "CreateDynamicRectangle");
+	CHECK_PARAMS(8);
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return INVALID_STREAMER_ID;
@@ -133,7 +133,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicRectangle(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicCuboid(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(10, "CreateDynamicCuboid");
+	CHECK_PARAMS(10);
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return INVALID_STREAMER_ID;
@@ -159,7 +159,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCuboid(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicPolygon(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(8, "CreateDynamicPolygon");
+	CHECK_PARAMS(8);
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_AREA) == core->getData()->areas.size())
 	{
 		return INVALID_STREAMER_ID;
@@ -191,7 +191,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPolygon(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::DestroyDynamicArea(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "DestroyDynamicArea");
+	CHECK_PARAMS(1);
 	Utility::executeFinalAreaCallbacks(static_cast<int>(params[1]));
 	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
 	if (a != core->getData()->areas.end())
@@ -204,7 +204,7 @@ cell AMX_NATIVE_CALL Natives::DestroyDynamicArea(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::IsValidDynamicArea(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "IsValidDynamicArea");
+	CHECK_PARAMS(1);
 	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
 	if (a != core->getData()->areas.end())
 	{
@@ -215,7 +215,7 @@ cell AMX_NATIVE_CALL Natives::IsValidDynamicArea(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::GetDynamicAreaType(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "GetDynamicAreaType");
+	CHECK_PARAMS(1);
 	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
 	if (a != core->getData()->areas.end())
 	{
@@ -226,7 +226,7 @@ cell AMX_NATIVE_CALL Natives::GetDynamicAreaType(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::GetDynamicPolygonPoints(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "GetDynamicPolygonPoints");
+	CHECK_PARAMS(3);
 	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
 	if (a != core->getData()->areas.end())
 	{
@@ -238,7 +238,7 @@ cell AMX_NATIVE_CALL Natives::GetDynamicPolygonPoints(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::GetDynamicPolygonNumberPoints(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "GetDynamicPolygonNumberPoints");
+	CHECK_PARAMS(1);
 	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
 	if (a != core->getData()->areas.end())
 	{
@@ -249,7 +249,7 @@ cell AMX_NATIVE_CALL Natives::GetDynamicPolygonNumberPoints(AMX *amx, cell *para
 
 cell AMX_NATIVE_CALL Natives::IsPlayerInDynamicArea(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "IsPlayerInDynamicArea");
+	CHECK_PARAMS(3);
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
@@ -276,7 +276,7 @@ cell AMX_NATIVE_CALL Natives::IsPlayerInDynamicArea(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::IsPlayerInAnyDynamicArea(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "IsPlayerInAnyDynamicArea");
+	CHECK_PARAMS(2);
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
@@ -305,7 +305,7 @@ cell AMX_NATIVE_CALL Natives::IsPlayerInAnyDynamicArea(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::IsAnyPlayerInDynamicArea(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "IsAnyPlayerInDynamicArea");
+	CHECK_PARAMS(2);
 	bool recheck = static_cast<int>(params[2]) != 0;
 	if (!recheck)
 	{
@@ -335,7 +335,7 @@ cell AMX_NATIVE_CALL Natives::IsAnyPlayerInDynamicArea(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::IsAnyPlayerInAnyDynamicArea(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "IsAnyPlayerInAnyDynamicArea");
+	CHECK_PARAMS(1);
 	bool recheck = static_cast<int>(params[1]) != 0;
 	if (!recheck)
 	{
@@ -366,7 +366,7 @@ cell AMX_NATIVE_CALL Natives::IsAnyPlayerInAnyDynamicArea(AMX *amx, cell *params
 
 cell AMX_NATIVE_CALL Natives::IsPointInDynamicArea(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(4, "IsPointInDynamicArea");
+	CHECK_PARAMS(4);
 	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
 	if (a != core->getData()->areas.end())
 	{
@@ -377,7 +377,7 @@ cell AMX_NATIVE_CALL Natives::IsPointInDynamicArea(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::IsPointInAnyDynamicArea(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "IsPointInAnyDynamicArea");
+	CHECK_PARAMS(3);
 	for (boost::unordered_map<int, Item::SharedArea>::const_iterator a = core->getData()->areas.begin(); a != core->getData()->areas.end(); ++a)
 	{
 		if (Utility::isPointInArea(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), a->second))
@@ -390,7 +390,7 @@ cell AMX_NATIVE_CALL Natives::IsPointInAnyDynamicArea(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::IsLineInDynamicArea(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(7, "IsLineInDynamicArea");
+	CHECK_PARAMS(7);
 	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
 	if (a != core->getData()->areas.end())
 	{
@@ -401,7 +401,7 @@ cell AMX_NATIVE_CALL Natives::IsLineInDynamicArea(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::IsLineInAnyDynamicArea(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(6, "IsLineInAnyDynamicArea");
+	CHECK_PARAMS(6);
 	for (boost::unordered_map<int, Item::SharedArea>::const_iterator a = core->getData()->areas.begin(); a != core->getData()->areas.end(); ++a)
 	{
 		if (Utility::doesLineSegmentIntersectArea(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), Eigen::Vector3f(amx_ctof(params[4]), amx_ctof(params[5]), amx_ctof(params[6])), a->second))
@@ -414,7 +414,7 @@ cell AMX_NATIVE_CALL Natives::IsLineInAnyDynamicArea(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::GetPlayerDynamicAreas(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "GetPlayerDynamicAreas");
+	CHECK_PARAMS(3);
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
@@ -483,7 +483,7 @@ cell AMX_NATIVE_CALL Natives::GetPlayerDynamicAreas(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::GetPlayerNumberDynamicAreas(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "GetPlayerNumberDynamicAreas");
+	CHECK_PARAMS(1);
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
@@ -494,7 +494,7 @@ cell AMX_NATIVE_CALL Natives::GetPlayerNumberDynamicAreas(AMX *amx, cell *params
 
 cell AMX_NATIVE_CALL Natives::GetDynamicAreasForPoint(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(5, "GetDynamicAreasForPoint");
+	CHECK_PARAMS(5);
 	std::multimap<float, int> orderedAreas;
 	std::vector<SharedCell> pointCells;
 	core->getGrid()->findMinimalCellsForPoint(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), pointCells);
@@ -562,7 +562,7 @@ cell AMX_NATIVE_CALL Natives::GetDynamicAreasForPoint(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::GetNumberDynamicAreasForPoint(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "GetNumberDynamicAreasForPoint");
+	CHECK_PARAMS(3);
 	int areaCount = 0;
 	std::vector<SharedCell> pointCells;
 	core->getGrid()->findMinimalCellsForPoint(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), pointCells);
@@ -581,7 +581,7 @@ cell AMX_NATIVE_CALL Natives::GetNumberDynamicAreasForPoint(AMX *amx, cell *para
 
 cell AMX_NATIVE_CALL Natives::GetDynamicAreasForLine(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(8, "GetDynamicAreasForLine");
+	CHECK_PARAMS(8);
 	std::multimap<float, int> orderedAreas;
 	for (boost::unordered_map<int, Item::SharedArea>::const_iterator a = core->getData()->areas.begin(); a != core->getData()->areas.end(); ++a)
 	{
@@ -644,7 +644,7 @@ cell AMX_NATIVE_CALL Natives::GetDynamicAreasForLine(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::GetNumberDynamicAreasForLine(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(6, "GetNumberDynamicAreasForLine");
+	CHECK_PARAMS(6);
 	int areaCount = 0;
 	for (boost::unordered_map<int, Item::SharedArea>::const_iterator a = core->getData()->areas.begin(); a != core->getData()->areas.end(); ++a)
 	{
@@ -658,7 +658,7 @@ cell AMX_NATIVE_CALL Natives::GetNumberDynamicAreasForLine(AMX *amx, cell *param
 
 cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToObject(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(7, "AttachDynamicAreaToObject");
+	CHECK_PARAMS(7);
 	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
 	if (a != core->getData()->areas.end())
 	{
@@ -691,7 +691,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToObject(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToPlayer(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(5, "AttachDynamicAreaToPlayer");
+	CHECK_PARAMS(5);
 	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
 	if (a != core->getData()->areas.end())
 	{
@@ -724,7 +724,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToPlayer(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToVehicle(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(5, "AttachDynamicAreaToVehicle");
+	CHECK_PARAMS(5);
 	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
 	if (a != core->getData()->areas.end())
 	{
@@ -757,7 +757,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicAreaToVehicle(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::ToggleDynAreaSpectateMode(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "ToggleDynAreaSpectateMode");
+	CHECK_PARAMS(2);
 	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
 	if (a != core->getData()->areas.end())
 	{
@@ -769,7 +769,7 @@ cell AMX_NATIVE_CALL Natives::ToggleDynAreaSpectateMode(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::IsToggleDynAreaSpectateMode(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "IsToggleDynAreaSpectateMode");
+	CHECK_PARAMS(1);
 	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
 	if (a != core->getData()->areas.end())
 	{

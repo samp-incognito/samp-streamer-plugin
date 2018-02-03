@@ -29,7 +29,7 @@
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicPickup(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(11, "CreateDynamicPickup");
+	CHECK_PARAMS(11);
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_PICKUP) == core->getData()->pickups.size())
 	{
 		return INVALID_STREAMER_ID;
@@ -59,7 +59,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPickup(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::DestroyDynamicPickup(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "DestroyDynamicPickup");
+	CHECK_PARAMS(1);
 	boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[1]));
 	if (p != core->getData()->pickups.end())
 	{
@@ -71,7 +71,7 @@ cell AMX_NATIVE_CALL Natives::DestroyDynamicPickup(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::IsValidDynamicPickup(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "IsValidDynamicPickup");
+	CHECK_PARAMS(1);
 	boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[1]));
 	if (p != core->getData()->pickups.end())
 	{

@@ -30,7 +30,7 @@
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicMapIcon(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(12, "CreateDynamicMapIcon");
+	CHECK_PARAMS(12);
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_MAP_ICON) == core->getData()->mapIcons.size())
 	{
 		return INVALID_STREAMER_ID;
@@ -61,7 +61,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicMapIcon(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::DestroyDynamicMapIcon(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "DestroyDynamicMapIcon");
+	CHECK_PARAMS(1);
 	boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[1]));
 	if (m != core->getData()->mapIcons.end())
 	{
@@ -73,7 +73,7 @@ cell AMX_NATIVE_CALL Natives::DestroyDynamicMapIcon(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::IsValidDynamicMapIcon(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "IsValidDynamicMapIcon");
+	CHECK_PARAMS(1);
 	boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[1]));
 	if (m != core->getData()->mapIcons.end())
 	{

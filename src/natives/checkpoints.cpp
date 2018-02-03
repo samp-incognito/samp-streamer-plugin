@@ -30,7 +30,7 @@
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicCP(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(10, "CreateDynamicCP");
+	CHECK_PARAMS(10);
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_CP) == core->getData()->checkpoints.size())
 	{
 		return INVALID_STREAMER_ID;
@@ -59,7 +59,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCP(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::DestroyDynamicCP(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "DestroyDynamicCP");
+	CHECK_PARAMS(1);
 	boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[1]));
 	if (c != core->getData()->checkpoints.end())
 	{
@@ -71,7 +71,7 @@ cell AMX_NATIVE_CALL Natives::DestroyDynamicCP(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::IsValidDynamicCP(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "IsValidDynamicCP");
+	CHECK_PARAMS(1);
 	boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[1]));
 	if (c != core->getData()->checkpoints.end())
 	{
@@ -82,7 +82,7 @@ cell AMX_NATIVE_CALL Natives::IsValidDynamicCP(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::IsPlayerInDynamicCP(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "IsPlayerInDynamicCP");
+	CHECK_PARAMS(2);
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
@@ -96,7 +96,7 @@ cell AMX_NATIVE_CALL Natives::IsPlayerInDynamicCP(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::GetPlayerVisibleDynamicCP(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "GetPlayerVisibleDynamicCP");
+	CHECK_PARAMS(1);
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{

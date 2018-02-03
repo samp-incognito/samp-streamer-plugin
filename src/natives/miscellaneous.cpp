@@ -32,7 +32,7 @@
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(7, "Streamer_GetDistanceToItem");
+	CHECK_PARAMS(7);
 	int dimensions = static_cast<int>(params[7]);
 	Eigen::Vector3f position = Eigen::Vector3f::Zero();
 	bool success = false;
@@ -211,7 +211,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_ToggleItem(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(4, "Streamer_ToggleItem");
+	CHECK_PARAMS(4);
 	switch (static_cast<int>(params[2]))
 	{
 		case STREAMER_TYPE_OBJECT:
@@ -353,7 +353,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleItem(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItem(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "Streamer_IsToggleItem");
+	CHECK_PARAMS(3);
 	switch (static_cast<int>(params[2]))
 	{
 		case STREAMER_TYPE_OBJECT:
@@ -439,7 +439,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItem(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_ToggleAllItems(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(5, "Streamer_ToggleAllItems");
+	CHECK_PARAMS(5);
 	boost::unordered_set<int> exceptions;
 	Utility::convertArrayToContainer(amx, params[4], params[5], exceptions);
 	switch (static_cast<int>(params[2]))
@@ -607,7 +607,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleAllItems(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetItemInternalID(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "Streamer_GetItemInternalID");
+	CHECK_PARAMS(3);
 	switch (static_cast<int>(params[2]))
 	{
 		case STREAMER_TYPE_PICKUP:
@@ -698,7 +698,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemInternalID(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetItemStreamerID(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "Streamer_GetItemStreamerID");
+	CHECK_PARAMS(3);
 	switch (static_cast<int>(params[2]))
 	{
 		case STREAMER_TYPE_PICKUP:
@@ -799,7 +799,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemStreamerID(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_IsItemVisible(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "Streamer_IsItemVisible");
+	CHECK_PARAMS(3);
 	switch (static_cast<int>(params[2]))
 	{
 		case STREAMER_TYPE_PICKUP:
@@ -889,7 +889,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsItemVisible(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "Streamer_DestroyAllVisibleItems");
+	CHECK_PARAMS(3);
 	bool serverWide = static_cast<int>(params[3]) != 0;
 	switch (static_cast<int>(params[2]))
 	{
@@ -1048,7 +1048,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 
 cell AMX_NATIVE_CALL Natives::Streamer_CountVisibleItems(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "Streamer_CountVisibleItems");
+	CHECK_PARAMS(3);
 	bool serverWide = static_cast<int>(params[3]) != 0;
 	switch (static_cast<int>(params[2]))
 	{
@@ -1182,7 +1182,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountVisibleItems(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllItems(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "Streamer_DestroyAllItems");
+	CHECK_PARAMS(2);
 	bool serverWide = static_cast<int>(params[2]) != 0;
 	switch (static_cast<int>(params[1]))
 	{
@@ -1326,7 +1326,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllItems(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_CountItems(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "Streamer_CountItems");
+	CHECK_PARAMS(2);
 	bool serverWide = static_cast<int>(params[2]) != 0;
 	switch (static_cast<int>(params[1]))
 	{
@@ -1493,7 +1493,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountItems(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(8, "Streamer_GetNearbyItems");
+	CHECK_PARAMS(8);
 	Eigen::Vector2f position2d = Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2]));
 	Eigen::Vector3f position3d = Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]));
 	float range = amx_ctof(params[7]) * amx_ctof(params[7]);
@@ -1713,7 +1713,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetAllVisibleItems(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(4, "Streamer_GetAllVisibleItems");
+	CHECK_PARAMS(4);
 	std::multimap<float, int> orderedItems;
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
@@ -1840,7 +1840,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetAllVisibleItems(AMX *amx, cell *params
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetItemPos(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(5, "Streamer_GetItemPos");
+	CHECK_PARAMS(5);
 	Eigen::Vector3f position = Eigen::Vector3f::Zero();
 	switch (static_cast<int>(params[1]))
 	{
@@ -2027,7 +2027,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemPos(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(5, "Streamer_SetItemPos");
+	CHECK_PARAMS(5);
 	Eigen::Vector3f newpos = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
 	switch (static_cast<int>(params[1]))
 	{
@@ -2271,7 +2271,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetItemOffset(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(5, "Streamer_GetItemOffset");
+	CHECK_PARAMS(5);
 	Eigen::Vector3f positionOffset = Eigen::Vector3f::Zero();
 	switch (static_cast<int>(params[1]))
 	{
@@ -2359,7 +2359,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemOffset(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_SetItemOffset(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(5, "Streamer_SetItemOffset");
+	CHECK_PARAMS(5);
 	switch (static_cast<int>(params[1]))
 	{
 		case STREAMER_TYPE_OBJECT:

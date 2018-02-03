@@ -25,67 +25,67 @@
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetFloatData(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(4, "Streamer_GetFloatData");
+	CHECK_PARAMS(4);
 	return static_cast<cell>(Manipulation::getFloatData(amx, params));
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_SetFloatData(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(4, "Streamer_SetFloatData");
+	CHECK_PARAMS(4);
 	return static_cast<cell>(Manipulation::setFloatData(amx, params));
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetIntData(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "Streamer_GetIntData");
+	CHECK_PARAMS(3);
 	return static_cast<cell>(Manipulation::getIntData(amx, params));
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_SetIntData(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(4, "Streamer_SetIntData");
+	CHECK_PARAMS(4);
 	return static_cast<cell>(Manipulation::setIntData(amx, params));
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetArrayData(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(5, "Streamer_GetArrayData");
+	CHECK_PARAMS(5);
 	return static_cast<cell>(Manipulation::getArrayData(amx, params));
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_SetArrayData(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(5, "Streamer_SetArrayData");
+	CHECK_PARAMS(5);
 	return static_cast<cell>(Manipulation::setArrayData(amx, params));
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_IsInArrayData(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(4, "Streamer_IsInArrayData");
+	CHECK_PARAMS(4);
 	return static_cast<cell>(Manipulation::isInArrayData(amx, params));
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_AppendArrayData(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(4, "Streamer_AppendArrayData");
+	CHECK_PARAMS(4);
 	return static_cast<cell>(Manipulation::appendArrayData(amx, params));
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_RemoveArrayData(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(4, "Streamer_RemoveArrayData");
+	CHECK_PARAMS(4);
 	return static_cast<cell>(Manipulation::removeArrayData(amx, params));
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetArrayDataLength(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "Streamer_GetArrayDataLength");
+	CHECK_PARAMS(3);
 	return static_cast<cell>(Manipulation::getArrayDataLength(amx, params));
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetUpperBound(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "Streamer_GetUpperBound");
+	CHECK_PARAMS(1);
 	switch (static_cast<int>(params[1]))
 	{
 		case STREAMER_TYPE_OBJECT:

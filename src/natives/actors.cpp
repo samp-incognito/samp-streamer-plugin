@@ -29,7 +29,7 @@
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicActor(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(13, "CreateDynamicActor");
+	CHECK_PARAMS(13);
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_ACTOR) == core->getData()->actors.size())
 	{
 		return INVALID_STREAMER_ID;
@@ -60,7 +60,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicActor(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::DestroyDynamicActor(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "DestroyDynamicActor");
+	CHECK_PARAMS(1);
 	boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[1]));
 	if (a != core->getData()->actors.end())
 	{
@@ -72,7 +72,7 @@ cell AMX_NATIVE_CALL Natives::DestroyDynamicActor(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::IsValidDynamicActor(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "IsValidDynamicActor");
+	CHECK_PARAMS(1);
 	boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[1]));
 	if (a != core->getData()->actors.end())
 	{
@@ -83,7 +83,7 @@ cell AMX_NATIVE_CALL Natives::IsValidDynamicActor(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::IsDynamicActorStreamedIn(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "IsDynamicActorStreamedIn");
+	CHECK_PARAMS(2);
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
@@ -102,7 +102,7 @@ cell AMX_NATIVE_CALL Natives::IsDynamicActorStreamedIn(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::GetDynamicActorVirtualWorld(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "GetDynamicActorVirtualWorld");
+	CHECK_PARAMS(1);
 	boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[1]));
 	if (a != core->getData()->actors.end())
 	{
@@ -113,7 +113,7 @@ cell AMX_NATIVE_CALL Natives::GetDynamicActorVirtualWorld(AMX *amx, cell *params
 
 cell AMX_NATIVE_CALL Natives::SetDynamicActorVirtualWorld(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "SetDynamicActorVirtualWorld");
+	CHECK_PARAMS(2);
 	boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[1]));
 	if (a != core->getData()->actors.end())
 	{
@@ -131,7 +131,7 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorVirtualWorld(AMX *amx, cell *params
 
 cell AMX_NATIVE_CALL Natives::GetDynamicActorAnimation(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(11, "GetDynamicActorAnimation");
+	CHECK_PARAMS(11);
 	boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[1]));
 	if (a != core->getData()->actors.end())
 	{
@@ -153,7 +153,7 @@ cell AMX_NATIVE_CALL Natives::GetDynamicActorAnimation(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::ApplyDynamicActorAnimation(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(9, "ApplyDynamicActorAnimation");
+	CHECK_PARAMS(9);
 	boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[1]));
 	if (a != core->getData()->actors.end())
 	{
@@ -178,7 +178,7 @@ cell AMX_NATIVE_CALL Natives::ApplyDynamicActorAnimation(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::ClearDynamicActorAnimations(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "ClearDynamicActorAnimations");
+	CHECK_PARAMS(1);
 	boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[1]));
 	if (a != core->getData()->actors.end())
 	{
@@ -195,7 +195,7 @@ cell AMX_NATIVE_CALL Natives::ClearDynamicActorAnimations(AMX *amx, cell *params
 
 cell AMX_NATIVE_CALL Natives::GetDynamicActorFacingAngle(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "GetDynamicActorFacingAngle");
+	CHECK_PARAMS(2);
 	boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[1]));
 	if (a != core->getData()->actors.end())
 	{
@@ -207,7 +207,7 @@ cell AMX_NATIVE_CALL Natives::GetDynamicActorFacingAngle(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::SetDynamicActorFacingAngle(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "SetDynamicActorFacingAngle");
+	CHECK_PARAMS(2);
 	boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[1]));
 	if (a != core->getData()->actors.end())
 	{
@@ -233,7 +233,7 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorFacingAngle(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::GetDynamicActorPos(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(4, "GetDynamicActorPos");
+	CHECK_PARAMS(4);
 	boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[1]));
 	if (a != core->getData()->actors.end())
 	{
@@ -247,7 +247,7 @@ cell AMX_NATIVE_CALL Natives::GetDynamicActorPos(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::SetDynamicActorPos(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(4, "SetDynamicActorPos");
+	CHECK_PARAMS(4);
 	boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[1]));
 	if (a != core->getData()->actors.end())
 	{
@@ -268,7 +268,7 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorPos(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::GetDynamicActorHealth(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "GetDynamicActorHealth");
+	CHECK_PARAMS(2);
 	boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[1]));
 	if (a != core->getData()->actors.end())
 	{
@@ -280,7 +280,7 @@ cell AMX_NATIVE_CALL Natives::GetDynamicActorHealth(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::SetDynamicActorHealth(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "SetDynamicActorFacingAngle");
+	CHECK_PARAMS(2);
 	boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[1]));
 	if (a != core->getData()->actors.end())
 	{
@@ -298,7 +298,7 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorHealth(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::SetDynamicActorInvulnerable(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "SetDynamicActorInvulnerable");
+	CHECK_PARAMS(2);
 	boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[1]));
 	if (a != core->getData()->actors.end())
 	{
@@ -324,7 +324,7 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorInvulnerable(AMX *amx, cell *params
 
 cell AMX_NATIVE_CALL Natives::IsDynamicActorInvulnerable(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "IsDynamicActorInvulnerable");
+	CHECK_PARAMS(1);
 	boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[1]));
 	if (a != core->getData()->actors.end())
 	{
@@ -335,7 +335,7 @@ cell AMX_NATIVE_CALL Natives::IsDynamicActorInvulnerable(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::GetPlayerTargetDynamicActor(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "GetPlayerTargetDynamicActor");
+	CHECK_PARAMS(1);
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
@@ -356,7 +356,7 @@ cell AMX_NATIVE_CALL Natives::GetPlayerTargetDynamicActor(AMX *amx, cell *params
 
 cell AMX_NATIVE_CALL Natives::GetPlayerCameraTargetDynActor(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "GetPlayerCameraTargetDynActor");
+	CHECK_PARAMS(1);
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{

@@ -28,13 +28,13 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetTickRate(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_SetTickRate(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "Streamer_SetTickRate");
+	CHECK_PARAMS(1);
 	return static_cast<cell>(core->getStreamer()->setTickRate(static_cast<std::size_t>(params[1])));
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetPlayerTickRate(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "Streamer_GetPlayerTickRate");
+	CHECK_PARAMS(1);
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
@@ -45,7 +45,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetPlayerTickRate(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_SetPlayerTickRate(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "Streamer_SetPlayerTickRate");
+	CHECK_PARAMS(2);
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
@@ -57,7 +57,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetPlayerTickRate(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_ToggleChunkStream(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "Streamer_ToggleChunkStream");
+	CHECK_PARAMS(1);
 	core->getChunkStreamer()->setChunkStreamingEnabled(static_cast<int>(params[1]) != 0);
 	return 1;
 }
@@ -69,55 +69,55 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleChunkStream(AMX *amx, cell *param
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetChunkTickRate(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "Streamer_GetChunkTickRate");
+	CHECK_PARAMS(2);
 	return static_cast<cell>(Utility::getChunkTickRate(static_cast<std::size_t>(params[1]), static_cast<std::size_t>(params[2])));
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_SetChunkTickRate(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "Streamer_SetChunkTickRate");
+	CHECK_PARAMS(3);
 	return static_cast<cell>(Utility::setChunkTickRate(static_cast<int>(params[1]), static_cast<std::size_t>(params[2]), static_cast<std::size_t>(params[3])) != 0);
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetChunkSize(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "Streamer_GetChunkSize");
+	CHECK_PARAMS(1);
 	return static_cast<cell>(core->getChunkStreamer()->getChunkSize(static_cast<std::size_t>(params[1])));
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_SetChunkSize(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "Streamer_SetChunkSize");
+	CHECK_PARAMS(2);
 	return static_cast<cell>(core->getChunkStreamer()->setChunkSize(static_cast<int>(params[1]), static_cast<std::size_t>(params[2])) != 0);
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetMaxItems(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "Streamer_GetMaxItems");
+	CHECK_PARAMS(1);
 	return static_cast<cell>(core->getData()->getGlobalMaxItems(static_cast<std::size_t>(params[1])));
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_SetMaxItems(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "Streamer_SetMaxItems");
+	CHECK_PARAMS(2);
 	return static_cast<cell>(core->getData()->setGlobalMaxItems(static_cast<int>(params[1]), static_cast<std::size_t>(params[2])) != 0);
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetVisibleItems(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "Streamer_GetVisibleItems");
+	CHECK_PARAMS(2);
 	return static_cast<cell>(Utility::getMaxVisibleItems(static_cast<std::size_t>(params[1]), static_cast<int>(params[2])));
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_SetVisibleItems(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "Streamer_SetVisibleItems");
+	CHECK_PARAMS(3);
 	return static_cast<cell>(Utility::setMaxVisibleItems(static_cast<int>(params[1]), static_cast<std::size_t>(params[2]), static_cast<int>(params[3])) != 0);
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetRadiusMultiplier(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "Streamer_GetRadiusMultiplier");
+	CHECK_PARAMS(3);
 	float radiusMultiplier = Utility::getRadiusMultiplier(static_cast<std::size_t>(params[1]), static_cast<int>(params[3]));
 	Utility::storeFloatInNative(amx, params[2], radiusMultiplier);
 	return 1;
@@ -125,25 +125,25 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetRadiusMultiplier(AMX *amx, cell *param
 
 cell AMX_NATIVE_CALL Natives::Streamer_SetRadiusMultiplier(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "Streamer_SetRadiusMultiplier");
+	CHECK_PARAMS(3);
 	return static_cast<cell>(Utility::setRadiusMultiplier(static_cast<int>(params[1]), amx_ctof(params[2]), static_cast<int>(params[3])) != 0);
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetTypePriority(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "Streamer_GetTypePriority");
+	CHECK_PARAMS(2);
 	return Utility::convertContainerToArray(amx, params[1], params[2], core->getData()->typePriority);
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_SetTypePriority(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "Streamer_SetTypePriority");
+	CHECK_PARAMS(2);
 	return Utility::convertArrayToContainer(amx, params[1], params[2], core->getData()->typePriority);
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetCellDistance(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "Streamer_GetCellDistance");
+	CHECK_PARAMS(1);
 	float cellDistance = core->getGrid()->getCellDistance();
 	Utility::storeFloatInNative(amx, params[1], cellDistance);
 	return 1;
@@ -151,7 +151,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetCellDistance(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_SetCellDistance(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "Streamer_SetCellDistance");
+	CHECK_PARAMS(1);
 	core->getGrid()->setCellDistance(amx_ctof(params[1]) * amx_ctof(params[1]));
 	core->getGrid()->rebuildGrid();
 	return 1;
@@ -159,7 +159,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetCellDistance(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetCellSize(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "Streamer_GetCellSize");
+	CHECK_PARAMS(1);
 	float cellSize = core->getGrid()->getCellSize();
 	Utility::storeFloatInNative(amx, params[1], cellSize);
 	return 1;
@@ -167,7 +167,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetCellSize(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_SetCellSize(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "Streamer_SetCellSize");
+	CHECK_PARAMS(1);
 	core->getGrid()->setCellSize(amx_ctof(params[1]));
 	core->getGrid()->rebuildGrid();
 	return 1;
@@ -175,7 +175,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetCellSize(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_ToggleItemStatic(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "Streamer_ToggleItemStatic");
+	CHECK_PARAMS(3);
 	switch (static_cast<int>(params[1]))
 	{
 		case STREAMER_TYPE_OBJECT:
@@ -364,7 +364,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleItemStatic(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItemStatic(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "Streamer_IsToggleItemStatic");
+	CHECK_PARAMS(2);
 	switch (static_cast<int>(params[1]))
 	{
 		case STREAMER_TYPE_OBJECT:
@@ -462,7 +462,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItemStatic(AMX *amx, cell *params
 
 cell AMX_NATIVE_CALL Natives::Streamer_ToggleItemInvAreas(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "Streamer_ToggleItemInvAreas");
+	CHECK_PARAMS(3);
 	switch (static_cast<int>(params[1]))
 	{
 		case STREAMER_TYPE_OBJECT:
@@ -546,7 +546,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleItemInvAreas(AMX *amx, cell *params
 
 cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItemInvAreas(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "Streamer_IsToggleItemInvAreas");
+	CHECK_PARAMS(2);
 	switch (static_cast<int>(params[1]))
 	{
 		case STREAMER_TYPE_OBJECT:
@@ -623,7 +623,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItemInvAreas(AMX *amx, cell *para
 
 cell AMX_NATIVE_CALL Natives::Streamer_ToggleItemCallbacks(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "Streamer_ToggleItemCallbacks");
+	CHECK_PARAMS(3);
 	switch (static_cast<int>(params[1]))
 	{
 		case STREAMER_TYPE_OBJECT:
@@ -697,7 +697,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleItemCallbacks(AMX *amx, cell *param
 
 cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItemCallbacks(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(2, "Streamer_IsToggleItemCallbacks");
+	CHECK_PARAMS(2);
 	switch (static_cast<int>(params[1]))
 	{
 		case STREAMER_TYPE_OBJECT:
@@ -765,7 +765,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItemCallbacks(AMX *amx, cell *par
 
 cell AMX_NATIVE_CALL Natives::Streamer_ToggleErrorCallback(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "Streamer_ToggleErrorCallback");
+	CHECK_PARAMS(1);
 	core->getData()->errorCallbackEnabled = static_cast<int>(params[1]) != 0;
 	return 1;
 }
@@ -777,7 +777,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleErrorCallback(AMX *amx, cell *par
 
 cell AMX_NATIVE_CALL Natives::Streamer_AmxUnloadDestroyItems(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "Streamer_AmxUnloadDestroyItems");
+	CHECK_PARAMS(1);
 	if(static_cast<int>(params[1]) != 0)
 	{
 		if(core->getData()->amxUnloadDestroyItems.find(amx) != core->getData()->amxUnloadDestroyItems.end())

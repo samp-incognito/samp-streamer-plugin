@@ -32,7 +32,7 @@
 
 cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabel(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(15, "CreateDynamic3DTextLabel");
+	CHECK_PARAMS(15);
 	if (core->getData()->getGlobalMaxItems(STREAMER_TYPE_3D_TEXT_LABEL) == core->getData()->textLabels.size())
 	{
 		return INVALID_STREAMER_ID;
@@ -75,7 +75,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabel(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::DestroyDynamic3DTextLabel(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "DestroyDynamic3DTextLabel");
+	CHECK_PARAMS(1);
 	boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[1]));
 	if (t != core->getData()->textLabels.end())
 	{
@@ -87,7 +87,7 @@ cell AMX_NATIVE_CALL Natives::DestroyDynamic3DTextLabel(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::IsValidDynamic3DTextLabel(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(1, "IsValidDynamic3DTextLabel");
+	CHECK_PARAMS(1);
 	boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[1]));
 	if (t != core->getData()->textLabels.end())
 	{
@@ -98,7 +98,7 @@ cell AMX_NATIVE_CALL Natives::IsValidDynamic3DTextLabel(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::GetDynamic3DTextLabelText(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "GetDynamic3DTextLabelText");
+	CHECK_PARAMS(3);
 	boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[1]));
 	if (t != core->getData()->textLabels.end())
 	{
@@ -112,7 +112,7 @@ cell AMX_NATIVE_CALL Natives::GetDynamic3DTextLabelText(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::UpdateDynamic3DTextLabelText(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(3, "UpdateDynamic3DTextLabelText");
+	CHECK_PARAMS(3);
 	boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[1]));
 	if (t != core->getData()->textLabels.end())
 	{
