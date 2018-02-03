@@ -294,7 +294,7 @@ void Utility::logError(const char *format, ...)
 	}
 }
 
-void Utility::convertArrayToPolygon(AMX *amx, cell input, cell size, Polygon2D &polygon)
+void Utility::convertArrayToPolygon(AMX *amx, cell input, cell size, Polygon2d &polygon)
 {
 	cell *array = NULL;
 	std::vector<Eigen::Vector2f> points;
@@ -307,7 +307,7 @@ void Utility::convertArrayToPolygon(AMX *amx, cell input, cell size, Polygon2D &
 	boost::geometry::correct(polygon);
 }
 
-bool Utility::convertPolygonToArray(AMX *amx, cell output, cell size, Polygon2D &polygon)
+bool Utility::convertPolygonToArray(AMX *amx, cell output, cell size, Polygon2d &polygon)
 {
 	cell *array = NULL;
 	std::size_t i = 0;

@@ -101,7 +101,7 @@ namespace Item
 		bool spectateMode;
 		int type;
 
-		boost::variant<Polygon2D, Box2D, Box3D, Eigen::Vector2f, Eigen::Vector3f> position;
+		boost::variant<Polygon2d, Box2d, Box3d, Eigen::Vector2f, Eigen::Vector3f> position;
 
 		struct Attach
 		{
@@ -110,7 +110,7 @@ namespace Item
 			Eigen::Vector2f height;
 			boost::tuple<int, int, int> object;
 			int player;
-			boost::variant<Polygon2D, Box2D, Box3D, Eigen::Vector2f, Eigen::Vector3f> position;
+			boost::variant<Polygon2d, Box2d, Box3d, Eigen::Vector2f, Eigen::Vector3f> position;
 			Eigen::Vector3f positionOffset;
 			int references;
 			int vehicle;

@@ -1493,19 +1493,19 @@ void Streamer::processAttachedAreas()
 					}
 					case STREAMER_AREA_TYPE_RECTANGLE:
 					{
-						boost::get<Box2D>((*a)->attach->position).min_corner().fill(std::numeric_limits<float>::infinity());
-						boost::get<Box2D>((*a)->attach->position).max_corner().fill(std::numeric_limits<float>::infinity());
+						boost::get<Box2d>((*a)->attach->position).min_corner().fill(std::numeric_limits<float>::infinity());
+						boost::get<Box2d>((*a)->attach->position).max_corner().fill(std::numeric_limits<float>::infinity());
 						break;
 					}
 					case STREAMER_AREA_TYPE_CUBOID:
 					{
-						boost::get<Box3D>((*a)->attach->position).min_corner().fill(std::numeric_limits<float>::infinity());
-						boost::get<Box3D>((*a)->attach->position).max_corner().fill(std::numeric_limits<float>::infinity());
+						boost::get<Box3d>((*a)->attach->position).min_corner().fill(std::numeric_limits<float>::infinity());
+						boost::get<Box3d>((*a)->attach->position).max_corner().fill(std::numeric_limits<float>::infinity());
 						break;
 					}
 					case STREAMER_AREA_TYPE_POLYGON:
 					{
-						boost::get<Polygon2D>((*a)->attach->position).clear();
+						boost::get<Polygon2d>((*a)->attach->position).clear();
 						break;
 					}
 				}

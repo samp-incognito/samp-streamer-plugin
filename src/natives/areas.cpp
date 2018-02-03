@@ -118,10 +118,10 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicRectangle(AMX *amx, cell *params)
 	area->areaId = areaId;
 	area->spectateMode = true;
 	area->type = STREAMER_AREA_TYPE_RECTANGLE;
-	area->position = Box2D(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), Eigen::Vector2f(amx_ctof(params[3]), amx_ctof(params[4])));
-	boost::geometry::correct(boost::get<Box2D>(area->position));
-	area->comparableSize = static_cast<float>(boost::geometry::comparable_distance(boost::get<Box2D>(area->position).min_corner(), boost::get<Box2D>(area->position).max_corner()));
-	area->size = static_cast<float>(boost::geometry::distance(boost::get<Box2D>(area->position).min_corner(), boost::get<Box2D>(area->position).max_corner()));
+	area->position = Box2d(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), Eigen::Vector2f(amx_ctof(params[3]), amx_ctof(params[4])));
+	boost::geometry::correct(boost::get<Box2d>(area->position));
+	area->comparableSize = static_cast<float>(boost::geometry::comparable_distance(boost::get<Box2d>(area->position).min_corner(), boost::get<Box2d>(area->position).max_corner()));
+	area->size = static_cast<float>(boost::geometry::distance(boost::get<Box2d>(area->position).min_corner(), boost::get<Box2d>(area->position).max_corner()));
 	Utility::addToContainer(area->worlds, static_cast<int>(params[5]));
 	Utility::addToContainer(area->interiors, static_cast<int>(params[6]));
 	Utility::addToContainer(area->players, static_cast<int>(params[7]));
@@ -144,10 +144,10 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCuboid(AMX *amx, cell *params)
 	area->areaId = areaId;
 	area->spectateMode = true;
 	area->type = STREAMER_AREA_TYPE_CUBOID;
-	area->position = Box3D(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), Eigen::Vector3f(amx_ctof(params[4]), amx_ctof(params[5]), amx_ctof(params[6])));
-	boost::geometry::correct(boost::get<Box3D>(area->position));
-	area->comparableSize = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector2f(boost::get<Box3D>(area->position).min_corner()[0], boost::get<Box3D>(area->position).min_corner()[1]), Eigen::Vector2f(boost::get<Box3D>(area->position).max_corner()[0], boost::get<Box3D>(area->position).max_corner()[1])));
-	area->size = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(boost::get<Box3D>(area->position).min_corner()[0], boost::get<Box3D>(area->position).min_corner()[1]), Eigen::Vector2f(boost::get<Box3D>(area->position).max_corner()[0], boost::get<Box3D>(area->position).max_corner()[1])));
+	area->position = Box3d(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), Eigen::Vector3f(amx_ctof(params[4]), amx_ctof(params[5]), amx_ctof(params[6])));
+	boost::geometry::correct(boost::get<Box3d>(area->position));
+	area->comparableSize = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector2f(boost::get<Box3d>(area->position).min_corner()[0], boost::get<Box3d>(area->position).min_corner()[1]), Eigen::Vector2f(boost::get<Box3d>(area->position).max_corner()[0], boost::get<Box3d>(area->position).max_corner()[1])));
+	area->size = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(boost::get<Box3d>(area->position).min_corner()[0], boost::get<Box3d>(area->position).min_corner()[1]), Eigen::Vector2f(boost::get<Box3d>(area->position).max_corner()[0], boost::get<Box3d>(area->position).max_corner()[1])));
 	Utility::addToContainer(area->worlds, static_cast<int>(params[7]));
 	Utility::addToContainer(area->interiors, static_cast<int>(params[8]));
 	Utility::addToContainer(area->players, static_cast<int>(params[9]));
@@ -175,9 +175,9 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPolygon(AMX *amx, cell *params)
 	area->areaId = areaId;
 	area->spectateMode = true;
 	area->type = STREAMER_AREA_TYPE_POLYGON;
-	Utility::convertArrayToPolygon(amx, params[1], params[4], boost::get<Polygon2D>(area->position));
+	Utility::convertArrayToPolygon(amx, params[1], params[4], boost::get<Polygon2d>(area->position));
 	area->height = Eigen::Vector2f(amx_ctof(params[2]), amx_ctof(params[3]));
-	Box2D box = boost::geometry::return_envelope<Box2D>(boost::get<Polygon2D>(area->position));
+	Box2d box = boost::geometry::return_envelope<Box2d>(boost::get<Polygon2d>(area->position));
 	area->comparableSize = static_cast<float>(boost::geometry::comparable_distance(box.min_corner(), box.max_corner()));
 	area->size = static_cast<float>(boost::geometry::distance(box.min_corner(), box.max_corner()));
 	Utility::addToContainer(area->worlds, static_cast<int>(params[5]));
@@ -230,8 +230,8 @@ cell AMX_NATIVE_CALL Natives::GetDynamicPolygonPoints(AMX *amx, cell *params)
 	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
 	if (a != core->getData()->areas.end())
 	{
-		Utility::convertPolygonToArray(amx, params[2], params[3], boost::get<Polygon2D>(a->second->position));
-		return static_cast<cell>(boost::get<Polygon2D>(a->second->position).outer().size());
+		Utility::convertPolygonToArray(amx, params[2], params[3], boost::get<Polygon2d>(a->second->position));
+		return static_cast<cell>(boost::get<Polygon2d>(a->second->position).outer().size());
 	}
 	return 0;
 }
@@ -242,7 +242,7 @@ cell AMX_NATIVE_CALL Natives::GetDynamicPolygonNumberPoints(AMX *amx, cell *para
 	boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[1]));
 	if (a != core->getData()->areas.end())
 	{
-		return static_cast<cell>(boost::get<Polygon2D>(a->second->position).outer().size());
+		return static_cast<cell>(boost::get<Polygon2d>(a->second->position).outer().size());
 	}
 	return 0;
 }
@@ -424,7 +424,7 @@ cell AMX_NATIVE_CALL Natives::GetPlayerDynamicAreas(AMX *amx, cell *params)
 			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(*i);
 			if (a != core->getData()->areas.end())
 			{
-				boost::variant<Polygon2D, Box2D, Box3D, Eigen::Vector2f, Eigen::Vector3f> position;
+				boost::variant<Polygon2d, Box2d, Box3d, Eigen::Vector2f, Eigen::Vector3f> position;
 				if (a->second->attach)
 				{
 					position = a->second->position;
@@ -449,20 +449,20 @@ cell AMX_NATIVE_CALL Natives::GetPlayerDynamicAreas(AMX *amx, cell *params)
 					}
 					case STREAMER_AREA_TYPE_RECTANGLE:
 					{
-						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Box2D>(position));
+						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Box2d>(position));
 						distance = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector2f(p->second.position[0], p->second.position[1]), centroid));
 						break;
 					}
 					case STREAMER_AREA_TYPE_CUBOID:
 					{
-						Eigen::Vector3f centroid = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3D>(position));
+						Eigen::Vector3f centroid = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3d>(position));
 						distance = static_cast<float>(boost::geometry::comparable_distance(p->second.position, centroid));
 						break;
 					
 					}
 					case STREAMER_AREA_TYPE_POLYGON:
 					{
-						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2D>(position));
+						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2d>(position));
 						distance = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector2f(p->second.position[0], p->second.position[1]), centroid));
 						break;
 					}
@@ -504,7 +504,7 @@ cell AMX_NATIVE_CALL Natives::GetDynamicAreasForPoint(AMX *amx, cell *params)
 		{
 			if (Utility::isPointInArea(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), a->second))
 			{
-				boost::variant<Polygon2D, Box2D, Box3D, Eigen::Vector2f, Eigen::Vector3f> position;
+				boost::variant<Polygon2d, Box2d, Box3d, Eigen::Vector2f, Eigen::Vector3f> position;
 				if (a->second->attach)
 				{
 					position = a->second->position;
@@ -529,20 +529,20 @@ cell AMX_NATIVE_CALL Natives::GetDynamicAreasForPoint(AMX *amx, cell *params)
 					}
 					case STREAMER_AREA_TYPE_RECTANGLE:
 					{
-						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Box2D>(position));
+						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Box2d>(position));
 						distance = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), centroid));
 						break;
 					}
 					case STREAMER_AREA_TYPE_CUBOID:
 					{
-						Eigen::Vector3f centroid = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3D>(position));
+						Eigen::Vector3f centroid = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3d>(position));
 						distance = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), centroid));
 						break;
 
 					}
 					case STREAMER_AREA_TYPE_POLYGON:
 					{
-						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2D>(position));
+						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2d>(position));
 						distance = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), centroid));
 						break;
 					}
@@ -587,7 +587,7 @@ cell AMX_NATIVE_CALL Natives::GetDynamicAreasForLine(AMX *amx, cell *params)
 	{
 		if (Utility::doesLineSegmentIntersectArea(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), Eigen::Vector3f(amx_ctof(params[4]), amx_ctof(params[5]), amx_ctof(params[6])), a->second))
 		{
-			boost::variant<Polygon2D, Box2D, Box3D, Eigen::Vector2f, Eigen::Vector3f> position;
+			boost::variant<Polygon2d, Box2d, Box3d, Eigen::Vector2f, Eigen::Vector3f> position;
 			if (a->second->attach)
 			{
 				position = a->second->position;
@@ -612,20 +612,20 @@ cell AMX_NATIVE_CALL Natives::GetDynamicAreasForLine(AMX *amx, cell *params)
 				}
 				case STREAMER_AREA_TYPE_RECTANGLE:
 				{
-					Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Box2D>(position));
+					Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Box2d>(position));
 					distance = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), centroid));
 					break;
 				}
 				case STREAMER_AREA_TYPE_CUBOID:
 				{
-					Eigen::Vector3f centroid = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3D>(position));
+					Eigen::Vector3f centroid = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3d>(position));
 					distance = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), centroid));
 					break;
 
 				}
 				case STREAMER_AREA_TYPE_POLYGON:
 				{
-					Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2D>(position));
+					Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2d>(position));
 					distance = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), centroid));
 					break;
 				}

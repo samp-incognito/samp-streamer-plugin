@@ -65,7 +65,7 @@ void Grid::addArea(const Item::SharedArea &area)
 	else
 	{
 		Eigen::Vector2f centroid = Eigen::Vector2f::Zero();
-		boost::variant<Polygon2D, Box2D, Box3D, Eigen::Vector2f, Eigen::Vector3f> position;
+		boost::variant<Polygon2d, Box2d, Box3d, Eigen::Vector2f, Eigen::Vector3f> position;
 		if (area->attach)
 		{
 			position = area->attach->position;
@@ -89,18 +89,18 @@ void Grid::addArea(const Item::SharedArea &area)
 			}
 			case STREAMER_AREA_TYPE_RECTANGLE:
 			{
-				boost::geometry::centroid(boost::get<Box2D>(position), centroid);
+				boost::geometry::centroid(boost::get<Box2d>(position), centroid);
 				break;
 			}
 			case STREAMER_AREA_TYPE_CUBOID:
 			{
-				Eigen::Vector3f point = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3D>(position));
+				Eigen::Vector3f point = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3d>(position));
 				centroid = Eigen::Vector2f(point[0], point[1]);
 				break;
 			}
 			case STREAMER_AREA_TYPE_POLYGON:
 			{
-				boost::geometry::centroid(boost::get<Polygon2D>(position), centroid);
+				boost::geometry::centroid(boost::get<Polygon2d>(position), centroid);
 				break;
 			}
 		}
@@ -564,7 +564,7 @@ void Grid::removeTextLabel(const Item::SharedTextLabel &textLabel, bool reassign
 
 CellId Grid::getCellId(const Eigen::Vector2f &position, bool insert)
 {
-	static Box2D box;
+	static Box2d box;
 	box.min_corner()[0] = std::floor((position[0] / cellSize)) * cellSize;
 	box.min_corner()[1] = std::floor((position[1] / cellSize)) * cellSize;
 	box.max_corner()[0] = box.min_corner()[0] + cellSize;

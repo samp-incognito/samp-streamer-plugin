@@ -88,9 +88,9 @@ class Streamer;
 typedef std::pair<int, int> CellId;
 typedef boost::intrusive_ptr<Cell> SharedCell;
 
-typedef boost::geometry::model::box<Eigen::Vector2f> Box2D;
-typedef boost::geometry::model::box<Eigen::Vector3f> Box3D;
-typedef boost::geometry::model::polygon<Eigen::Vector2f> Polygon2D;
+typedef boost::geometry::model::box<Eigen::Vector2f> Box2d;
+typedef boost::geometry::model::box<Eigen::Vector3f> Box3d;
+typedef boost::geometry::model::polygon<Eigen::Vector2f> Polygon2d;
 
 namespace Item
 {

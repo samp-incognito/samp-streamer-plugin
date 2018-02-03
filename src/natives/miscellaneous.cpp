@@ -117,7 +117,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[5]));
 			if (a != core->getData()->areas.end())
 			{
-				boost::variant<Polygon2D, Box2D, Box3D, Eigen::Vector2f, Eigen::Vector3f> areaPosition;
+				boost::variant<Polygon2d, Box2d, Box3d, Eigen::Vector2f, Eigen::Vector3f> areaPosition;
 				if (a->second->attach)
 				{
 					areaPosition = a->second->attach->position;
@@ -144,20 +144,20 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 					}
 					case STREAMER_AREA_TYPE_RECTANGLE:
 					{
-						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Box2D>(areaPosition));
+						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Box2d>(areaPosition));
 						float distance = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), centroid));
 						Utility::storeFloatInNative(amx, params[6], distance);
 						return 1;
 					}
 					case STREAMER_AREA_TYPE_CUBOID:
 					{
-						position = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3D>(areaPosition));
+						position = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3d>(areaPosition));
 						success = true;
 						break;
 					}
 					case STREAMER_AREA_TYPE_POLYGON:
 					{
-						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2D>(areaPosition));
+						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2d>(areaPosition));
 						float distance = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), centroid));
 						Utility::storeFloatInNative(amx, params[6], distance);
 						return 1;
@@ -1494,13 +1494,13 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountItems(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(8, "Streamer_GetNearbyItems");
-	Eigen::Vector2f position2D = Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2]));
-	Eigen::Vector3f position3D = Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]));
+	Eigen::Vector2f position2d = Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2]));
+	Eigen::Vector3f position3d = Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]));
 	float range = amx_ctof(params[7]) * amx_ctof(params[7]);
 	int world = static_cast<int>(params[8]);
 	std::multimap<float, int> orderedItems;
 	std::vector<SharedCell> pointCells;
-	core->getGrid()->findMinimalCellsForPoint(position2D, pointCells, range);
+	core->getGrid()->findMinimalCellsForPoint(position2d, pointCells, range);
 	switch (static_cast<int>(params[4]))
 	{
 		case STREAMER_TYPE_OBJECT:
@@ -1514,11 +1514,11 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 						float distance = 0.0f;
 						if (o->second->attach)
 						{
-							distance = static_cast<float>(boost::geometry::comparable_distance(position3D, o->second->attach->position));
+							distance = static_cast<float>(boost::geometry::comparable_distance(position3d, o->second->attach->position));
 						}
 						else
 						{
-							distance = static_cast<float>(boost::geometry::comparable_distance(position3D, o->second->position));
+							distance = static_cast<float>(boost::geometry::comparable_distance(position3d, o->second->position));
 						}
 						if (distance < range)
 						{
@@ -1537,7 +1537,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 				{
 					if (world == -1 || q->second->worlds.find(world) != q->second->worlds.end())
 					{
-						float distance = static_cast<float>(boost::geometry::comparable_distance(position3D, q->second->position));
+						float distance = static_cast<float>(boost::geometry::comparable_distance(position3d, q->second->position));
 						if (distance < range)
 						{
 							orderedItems.insert(std::pair<float, int>(distance, q->first));
@@ -1555,7 +1555,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 				{
 					if (world == -1 || c->second->worlds.find(world) != c->second->worlds.end())
 					{
-						float distance = static_cast<float>(boost::geometry::comparable_distance(position3D, c->second->position));
+						float distance = static_cast<float>(boost::geometry::comparable_distance(position3d, c->second->position));
 						if (distance < range)
 						{
 							orderedItems.insert(std::pair<float, int>(distance, c->first));
@@ -1573,7 +1573,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 				{
 					if (world == -1 || r->second->worlds.find(world) != r->second->worlds.end())
 					{
-						float distance = static_cast<float>(boost::geometry::comparable_distance(position3D, r->second->position));
+						float distance = static_cast<float>(boost::geometry::comparable_distance(position3d, r->second->position));
 						if (distance < range)
 						{
 							orderedItems.insert(std::pair<float, int>(distance, r->first));
@@ -1591,7 +1591,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 				{
 					if (world == -1 || m->second->worlds.find(world) != m->second->worlds.end())
 					{
-						float distance = static_cast<float>(boost::geometry::comparable_distance(position3D, m->second->position));
+						float distance = static_cast<float>(boost::geometry::comparable_distance(position3d, m->second->position));
 						if (distance < range)
 						{
 							orderedItems.insert(std::pair<float, int>(distance, m->first));
@@ -1609,7 +1609,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 				{
 					if (world == -1 || t->second->worlds.find(world) != t->second->worlds.end())
 					{
-						float distance = static_cast<float>(boost::geometry::comparable_distance(position3D, t->second->position));
+						float distance = static_cast<float>(boost::geometry::comparable_distance(position3d, t->second->position));
 						if (distance < range)
 						{
 							orderedItems.insert(std::pair<float, int>(distance, t->first));
@@ -1627,7 +1627,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 				{
 					if (world == -1 || a->second->worlds.find(world) != a->second->worlds.end())
 					{
-						boost::variant<Polygon2D, Box2D, Box3D, Eigen::Vector2f, Eigen::Vector3f> position;
+						boost::variant<Polygon2d, Box2d, Box3d, Eigen::Vector2f, Eigen::Vector3f> position;
 						if (a->second->attach)
 						{
 							position = a->second->position;
@@ -1642,30 +1642,30 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 							case STREAMER_AREA_TYPE_CIRCLE:
 							case STREAMER_AREA_TYPE_CYLINDER:
 							{
-								distance = static_cast<float>(boost::geometry::distance(position2D, boost::get<Eigen::Vector2f>(position)));
+								distance = static_cast<float>(boost::geometry::distance(position2d, boost::get<Eigen::Vector2f>(position)));
 								break;
 							}
 							case STREAMER_AREA_TYPE_SPHERE:
 							{
-								distance = static_cast<float>(boost::geometry::comparable_distance(position3D, boost::get<Eigen::Vector3f>(position)));
+								distance = static_cast<float>(boost::geometry::comparable_distance(position3d, boost::get<Eigen::Vector3f>(position)));
 								break;
 							}
 							case STREAMER_AREA_TYPE_RECTANGLE:
 							{
-								Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Box2D>(position));
-								distance = static_cast<float>(boost::geometry::comparable_distance(position2D, centroid));
+								Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Box2d>(position));
+								distance = static_cast<float>(boost::geometry::comparable_distance(position2d, centroid));
 								break;
 							}
 							case STREAMER_AREA_TYPE_CUBOID:
 							{
-								Eigen::Vector3f centroid = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3D>(position));
-								distance = static_cast<float>(boost::geometry::comparable_distance(position3D, centroid));
+								Eigen::Vector3f centroid = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3d>(position));
+								distance = static_cast<float>(boost::geometry::comparable_distance(position3d, centroid));
 								break;
 							}
 							case STREAMER_AREA_TYPE_POLYGON:
 							{
-								Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2D>(position));
-								distance = static_cast<float>(boost::geometry::comparable_distance(position2D, centroid));
+								Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2d>(position));
+								distance = static_cast<float>(boost::geometry::comparable_distance(position2d, centroid));
 								break;
 							}
 						}
@@ -1686,7 +1686,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 				{
 					if (world == -1 || a->second->worlds.find(world) != a->second->worlds.end())
 					{
-						float distance = static_cast<float>(boost::geometry::comparable_distance(position3D, a->second->position));
+						float distance = static_cast<float>(boost::geometry::comparable_distance(position3d, a->second->position));
 						if (distance < range)
 						{
 							orderedItems.insert(std::pair<float, int>(distance, a->first));
@@ -1924,7 +1924,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemPos(AMX *amx, cell *params)
 			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[2]));
 			if (a != core->getData()->areas.end())
 			{
-				boost::variant<Polygon2D, Box2D, Box3D, Eigen::Vector2f, Eigen::Vector3f> areaPosition;
+				boost::variant<Polygon2d, Box2d, Box3d, Eigen::Vector2f, Eigen::Vector3f> areaPosition;
 				if (a->second->attach)
 				{
 					areaPosition = a->second->attach->position;
@@ -1966,7 +1966,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemPos(AMX *amx, cell *params)
 					}
 					case STREAMER_AREA_TYPE_RECTANGLE:
 					{
-						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Box2D>(areaPosition));
+						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Box2d>(areaPosition));
 						position[0] = centroid[0];
 						position[1] = centroid[1];
 						position[2] = 0.0f;
@@ -1975,13 +1975,13 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemPos(AMX *amx, cell *params)
 					}
 					case STREAMER_AREA_TYPE_CUBOID:
 					{
-						position = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3D>(areaPosition));
+						position = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3d>(areaPosition));
 						success = true;
 						break;
 					}
 					case STREAMER_AREA_TYPE_POLYGON:
 					{
-						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2D>(areaPosition));
+						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2d>(areaPosition));
 						position[0] = centroid[0];
 						position[1] = centroid[1];
 						if (a->second->height[0] == -std::numeric_limits<float>::infinity() || a->second->height[1] == std::numeric_limits<float>::infinity())
