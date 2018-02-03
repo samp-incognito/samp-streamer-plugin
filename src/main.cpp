@@ -280,7 +280,7 @@ PLUGIN_EXPORT int PLUGIN_CALL AmxLoad(AMX *amx)
 PLUGIN_EXPORT int PLUGIN_CALL AmxUnload(AMX *amx)
 {
 	core->getData()->interfaces.erase(amx);
-	if(core->getData()->amxUnloadDestroyItems.find(amx) != core->getData()->amxUnloadDestroyItems.end())
+	if (core->getData()->amxUnloadDestroyItems.find(amx) != core->getData()->amxUnloadDestroyItems.end())
 	{
 		Utility::destroyAllItemsInInterface(amx);
 		core->getData()->amxUnloadDestroyItems.erase(amx);

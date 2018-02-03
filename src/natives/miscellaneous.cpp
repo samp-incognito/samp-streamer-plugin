@@ -1756,7 +1756,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetAllVisibleItems(AMX *amx, cell *params
 			}
 			case STREAMER_TYPE_CP:
 			{
-				if(p->second.visibleCheckpoint != INVALID_STREAMER_ID)
+				if (p->second.visibleCheckpoint != INVALID_STREAMER_ID)
 				{
 					boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(p->second.visibleCheckpoint);
 					if (c != core->getData()->checkpoints.end())
@@ -1769,7 +1769,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetAllVisibleItems(AMX *amx, cell *params
 			}
 			case STREAMER_TYPE_RACE_CP:
 			{
-				if(p->second.visibleRaceCheckpoint != INVALID_STREAMER_ID)
+				if (p->second.visibleRaceCheckpoint != INVALID_STREAMER_ID)
 				{
 					boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator c = core->getData()->raceCheckpoints.find(p->second.visibleRaceCheckpoint);
 					if (c != core->getData()->raceCheckpoints.end())
