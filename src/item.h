@@ -225,6 +225,8 @@ namespace Item
 			bool syncRotation;
 			int vehicle;
 
+			boost::unordered_set<int> worlds;
+
 			EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 		};
 
@@ -383,6 +385,10 @@ namespace Item
 			Eigen::Vector3f position;
 			int references;
 			int vehicle;
+
+			boost::unordered_set<int> worlds;
+
+			EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 		};
 
 		boost::intrusive_ptr<Attach> attach;

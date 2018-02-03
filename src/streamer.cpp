@@ -918,7 +918,7 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 		for (boost::unordered_map<int, Item::SharedObject>::const_iterator o = (*c)->objects.begin(); o != (*c)->objects.end(); ++o)
 		{
 			float distance = std::numeric_limits<float>::infinity();
-			if (doesPlayerSatisfyConditions(o->second->players, player.playerId, o->second->interiors, player.interiorId, o->second->worlds, player.worldId, o->second->areas, player.internalAreas, o->second->inverseAreaChecking))
+			if (doesPlayerSatisfyConditions(o->second->players, player.playerId, o->second->interiors, player.interiorId, o->second->attach ? o->second->attach->worlds : o->second->worlds, player.worldId, o->second->areas, player.internalAreas, o->second->inverseAreaChecking))
 			{
 				if (o->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
 				{
@@ -928,7 +928,7 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 				{
 					if (o->second->attach)
 					{
-						distance = static_cast<float>(boost::geometry::comparable_distance(player.position, o->second->attach->position)) +  std::numeric_limits<float>::epsilon();
+						distance = static_cast<float>(boost::geometry::comparable_distance(player.position, o->second->attach->position)) + std::numeric_limits<float>::epsilon();
 					}
 					else
 					{
@@ -1226,7 +1226,7 @@ void Streamer::processTextLabels(Player &player, const std::vector<SharedCell> &
 		for (boost::unordered_map<int, Item::SharedTextLabel>::const_iterator t = (*c)->textLabels.begin(); t != (*c)->textLabels.end(); ++t)
 		{
 			float distance = std::numeric_limits<float>::infinity();
-			if (doesPlayerSatisfyConditions(t->second->players, player.playerId, t->second->interiors, player.interiorId, t->second->worlds, player.worldId, t->second->areas, player.internalAreas, t->second->inverseAreaChecking))
+			if (doesPlayerSatisfyConditions(t->second->players, player.playerId, t->second->interiors, player.interiorId, t->second->attach ? t->second->attach->worlds : t->second->worlds, player.worldId, t->second->areas, player.internalAreas, t->second->inverseAreaChecking))
 			{
 				if (t->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
 				{
@@ -1528,16 +1528,19 @@ void Streamer::processAttachedObjects()
 				if (p != core->getData()->objects.end())
 				{
 					(*o)->attach->position = p->second->position;
+					(*o)->attach->worlds = p->second->worlds;
 					adjust = true;
 				}
 			}
 			else if ((*o)->attach->player != INVALID_PLAYER_ID)
 			{
 				adjust = sampgdk::GetPlayerPos((*o)->attach->player, &(*o)->attach->position[0], &(*o)->attach->position[1], &(*o)->attach->position[2]);
+				Utility::setFirstValueInContainer((*o)->attach->worlds, sampgdk::GetPlayerVirtualWorld((*o)->attach->player));
 			}
 			else if ((*o)->attach->vehicle != INVALID_VEHICLE_ID)
 			{
 				adjust = sampgdk::GetVehiclePos((*o)->attach->vehicle, &(*o)->attach->position[0], &(*o)->attach->position[1], &(*o)->attach->position[2]);
+				Utility::setFirstValueInContainer((*o)->attach->worlds, sampgdk::GetVehicleVirtualWorld((*o)->attach->vehicle));
 			}
 			if (adjust)
 			{
@@ -1565,10 +1568,12 @@ void Streamer::processAttachedTextLabels()
 			if ((*t)->attach->player != INVALID_PLAYER_ID)
 			{
 				adjust = sampgdk::GetPlayerPos((*t)->attach->player, &(*t)->attach->position[0], &(*t)->attach->position[1], &(*t)->attach->position[2]);
+				Utility::setFirstValueInContainer((*t)->attach->worlds, sampgdk::GetPlayerVirtualWorld((*t)->attach->player));
 			}
 			else if ((*t)->attach->vehicle != INVALID_VEHICLE_ID)
 			{
 				adjust = sampgdk::GetVehiclePos((*t)->attach->vehicle, &(*t)->attach->position[0], &(*t)->attach->position[1], &(*t)->attach->position[2]);
+				Utility::setFirstValueInContainer((*t)->attach->worlds, sampgdk::GetVehicleVirtualWorld((*t)->attach->vehicle));
 			}
 			if (adjust)
 			{
