@@ -116,7 +116,7 @@
 
 // Include File Version
 
-public Streamer_IncludeFileVersion = 0x292;
+public Streamer_IncludeFileVersion = 0x293;
 
 #pragma unused Streamer_IncludeFileVersion
 

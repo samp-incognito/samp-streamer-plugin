@@ -1,6 +1,16 @@
 SA-MP Streamer Plugin
 =====================
 
+v2.9.3
+------
+
+- Added Streamer_(G/S)etItemPos, Streamer_GetArrayDataLength,
+  GetDynamicAreaType, and Streamer_AmxUnloadDestroyItems (thanks
+  IstuntmanI)
+- Added virtual world support for Streamer_GetNearbyItems (thanks
+  TommyB)
+- Fixed various bugs
+
 v2.9.2
 ------
 

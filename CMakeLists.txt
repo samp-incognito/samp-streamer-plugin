@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 project(streamer)
 
-set(PLUGIN_VERSION "2.9.2")
+set(PLUGIN_VERSION "2.9.3")
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/lib/cmake-modules")
@@ -12,7 +12,7 @@ include_directories(${SAMPSDK_DIR})
 include_directories(${SAMPSDK_DIR}/amx)
 
 set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost 1.60.0 REQUIRED COMPONENTS system)
+find_package(Boost 1.63.0 REQUIRED COMPONENTS system)
 include_directories(${Boost_INCLUDE_DIRS})
 
 find_package(Eigen3 3.3.4 REQUIRED)
