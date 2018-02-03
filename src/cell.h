@@ -27,9 +27,9 @@ class Cell
 {
 public:
 	Cell();
-	Cell(CellID cellID);
+	Cell(CellId cellId);
 
-	CellID cellID;
+	CellId cellId;
 	int references;
 
 	boost::unordered_map<int, Item::SharedActor> actors;

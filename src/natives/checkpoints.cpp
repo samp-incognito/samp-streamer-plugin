@@ -35,10 +35,10 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCP(AMX *amx, cell *params)
 	{
 		return INVALID_STREAMER_ID;
 	}
-	int checkpointID = Item::Checkpoint::identifier.get();
+	int checkpointId = Item::Checkpoint::identifier.get();
 	Item::SharedCheckpoint checkpoint(new Item::Checkpoint);
 	checkpoint->amx = amx;
-	checkpoint->checkpointID = checkpointID;
+	checkpoint->checkpointId = checkpointId;
 	checkpoint->inverseAreaChecking = false;
 	checkpoint->originalComparableStreamDistance = -1.0f;
 	checkpoint->positionOffset = Eigen::Vector3f::Zero();
@@ -53,8 +53,8 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCP(AMX *amx, cell *params)
 	Utility::addToContainer(checkpoint->areas, static_cast<int>(params[9]));
 	checkpoint->priority = static_cast<int>(params[10]);
 	core->getGrid()->addCheckpoint(checkpoint);
-	core->getData()->checkpoints.insert(std::make_pair(checkpointID, checkpoint));
-	return static_cast<cell>(checkpointID);
+	core->getData()->checkpoints.insert(std::make_pair(checkpointId, checkpoint));
+	return static_cast<cell>(checkpointId);
 }
 
 cell AMX_NATIVE_CALL Natives::DestroyDynamicCP(AMX *amx, cell *params)

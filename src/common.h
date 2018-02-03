@@ -85,7 +85,7 @@ class Identifier;
 struct Player;
 class Streamer;
 
-typedef std::pair<int, int> CellID;
+typedef std::pair<int, int> CellId;
 typedef boost::intrusive_ptr<Cell> SharedCell;
 
 typedef boost::geometry::model::box<Eigen::Vector2f> Box2D;

@@ -39,16 +39,16 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicObject(AMX *amx, cell *params)
 	{
 		return INVALID_STREAMER_ID;
 	}
-	int objectID = Item::Object::identifier.get();
+	int objectId = Item::Object::identifier.get();
 	Item::SharedObject object(new Item::Object);
 	object->amx = amx;
-	object->objectID = objectID;
+	object->objectId = objectId;
 	object->inverseAreaChecking = false;
 	object->noCameraCollision = false;
 	object->originalComparableStreamDistance = -1.0f;
 	object->positionOffset = Eigen::Vector3f::Zero();
 	object->streamCallbacks = false;
-	object->modelID = static_cast<int>(params[1]);
+	object->modelId = static_cast<int>(params[1]);
 	object->position = Eigen::Vector3f(amx_ctof(params[2]), amx_ctof(params[3]), amx_ctof(params[4]));
 	object->rotation = Eigen::Vector3f(amx_ctof(params[5]), amx_ctof(params[6]), amx_ctof(params[7]));
 	Utility::addToContainer(object->worlds, static_cast<int>(params[8]));
@@ -60,8 +60,8 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicObject(AMX *amx, cell *params)
 	Utility::addToContainer(object->areas, static_cast<int>(params[13]));
 	object->priority = static_cast<int>(params[14]);
 	core->getGrid()->addObject(object);
-	core->getData()->objects.insert(std::make_pair(objectID, object));
-	return static_cast<cell>(objectID);
+	core->getData()->objects.insert(std::make_pair(objectId, object));
+	return static_cast<cell>(objectId);
 }
 
 cell AMX_NATIVE_CALL Natives::DestroyDynamicObject(AMX *amx, cell *params)
@@ -311,7 +311,7 @@ cell AMX_NATIVE_CALL Natives::AttachCameraToDynamicObject(AMX *amx, cell *params
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
-		int internalID = INVALID_OBJECT_ID;
+		int internalId = INVALID_OBJECT_ID;
 		boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(static_cast<int>(params[2]));
 		if (i == p->second.internalObjects.end())
 		{
@@ -324,16 +324,16 @@ cell AMX_NATIVE_CALL Natives::AttachCameraToDynamicObject(AMX *amx, cell *params
 			boost::unordered_map<int, int>::iterator j = p->second.internalObjects.find(static_cast<int>(params[2]));
 			if (j != p->second.internalObjects.end())
 			{
-				internalID = j->second;
+				internalId = j->second;
 			}
 		}
 		else
 		{
-			internalID = i->second;
+			internalId = i->second;
 		}
-		if (internalID != INVALID_OBJECT_ID)
+		if (internalId != INVALID_OBJECT_ID)
 		{
-			sampgdk::AttachCameraToPlayerObject(p->first, internalID);
+			sampgdk::AttachCameraToPlayerObject(p->first, internalId);
 			return 1;
 		}
 	}
@@ -380,7 +380,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToObject(AMX *amx, cell *params
 					{
 						if (m->second.main)
 						{
-							sampgdk::SetPlayerObjectMaterial(p->first, i->second, m->first, m->second.main->modelID, m->second.main->txdFileName.c_str(), m->second.main->textureName.c_str(), m->second.main->materialColor);
+							sampgdk::SetPlayerObjectMaterial(p->first, i->second, m->first, m->second.main->modelId, m->second.main->txdFileName.c_str(), m->second.main->textureName.c_str(), m->second.main->materialColor);
 						}
 						else if (m->second.text)
 						{
@@ -454,7 +454,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToPlayer(AMX *amx, cell *params
 				{
 					if (m->second.main)
 					{
-						sampgdk::SetPlayerObjectMaterial(p->first, i->second, m->first, m->second.main->modelID, m->second.main->txdFileName.c_str(), m->second.main->textureName.c_str(), m->second.main->materialColor);
+						sampgdk::SetPlayerObjectMaterial(p->first, i->second, m->first, m->second.main->modelId, m->second.main->txdFileName.c_str(), m->second.main->textureName.c_str(), m->second.main->materialColor);
 					}
 					else if (m->second.text)
 					{
@@ -505,7 +505,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToVehicle(AMX *amx, cell *param
 				{
 					if (m->second.main)
 					{
-						sampgdk::SetPlayerObjectMaterial(p->first, i->second, m->first, m->second.main->modelID, m->second.main->txdFileName.c_str(), m->second.main->textureName.c_str(), m->second.main->materialColor);
+						sampgdk::SetPlayerObjectMaterial(p->first, i->second, m->first, m->second.main->modelId, m->second.main->txdFileName.c_str(), m->second.main->textureName.c_str(), m->second.main->materialColor);
 					}
 					else if (m->second.text)
 					{
@@ -535,7 +535,7 @@ cell AMX_NATIVE_CALL Natives::EditDynamicObject(AMX *amx, cell *params)
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
-		int internalID = INVALID_OBJECT_ID;
+		int internalId = INVALID_OBJECT_ID;
 		boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(static_cast<int>(params[2]));
 		if (i == p->second.internalObjects.end())
 		{
@@ -553,16 +553,16 @@ cell AMX_NATIVE_CALL Natives::EditDynamicObject(AMX *amx, cell *params)
 			boost::unordered_map<int, int>::iterator j = p->second.internalObjects.find(static_cast<int>(params[2]));
 			if (j != p->second.internalObjects.end())
 			{
-				internalID = j->second;
+				internalId = j->second;
 			}
 		}
 		else
 		{
-			internalID = i->second;
+			internalId = i->second;
 		}
-		if (internalID != INVALID_OBJECT_ID)
+		if (internalId != INVALID_OBJECT_ID)
 		{
-			sampgdk::EditPlayerObject(p->first, internalID);
+			sampgdk::EditPlayerObject(p->first, internalId);
 			return 1;
 		}
 	}
@@ -598,7 +598,7 @@ cell AMX_NATIVE_CALL Natives::GetDynamicObjectMaterial(AMX *amx, cell *params)
 		{
 			if (m->second.main)
 			{
-				Utility::storeIntegerInNative(amx, params[3], m->second.main->modelID);
+				Utility::storeIntegerInNative(amx, params[3], m->second.main->modelId);
 				Utility::convertStringToNativeString(amx, params[4], params[7], m->second.main->txdFileName);
 				Utility::convertStringToNativeString(amx, params[5], params[8], m->second.main->textureName);
 				Utility::storeIntegerInNative(amx, params[6], m->second.main->materialColor);
@@ -617,7 +617,7 @@ cell AMX_NATIVE_CALL Natives::SetDynamicObjectMaterial(AMX *amx, cell *params)
 	{
 		int index = static_cast<int>(params[2]);
 		o->second->materials[index].main = boost::intrusive_ptr<Item::Object::Material::Main>(new Item::Object::Material::Main);
-		o->second->materials[index].main->modelID = static_cast<int>(params[3]);
+		o->second->materials[index].main->modelId = static_cast<int>(params[3]);
 		o->second->materials[index].main->txdFileName = Utility::convertNativeStringToString(amx, params[4]);
 		o->second->materials[index].main->textureName = Utility::convertNativeStringToString(amx, params[5]);
 		o->second->materials[index].main->materialColor = static_cast<int>(params[6]);
@@ -626,7 +626,7 @@ cell AMX_NATIVE_CALL Natives::SetDynamicObjectMaterial(AMX *amx, cell *params)
 			boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
 			if (i != p->second.internalObjects.end())
 			{
-				sampgdk::SetPlayerObjectMaterial(p->first, i->second, index, o->second->materials[index].main->modelID, o->second->materials[index].main->txdFileName.c_str(), o->second->materials[index].main->textureName.c_str(), o->second->materials[index].main->materialColor);
+				sampgdk::SetPlayerObjectMaterial(p->first, i->second, index, o->second->materials[index].main->modelId, o->second->materials[index].main->txdFileName.c_str(), o->second->materials[index].main->textureName.c_str(), o->second->materials[index].main->materialColor);
 			}
 		}
 		o->second->materials[index].text.reset();
@@ -715,7 +715,7 @@ cell AMX_NATIVE_CALL Natives::GetPlayerCameraTargetDynObject(AMX *amx, cell *par
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
-		int objectid = sampgdk::GetPlayerCameraTargetObject(p->second.playerID);
+		int objectid = sampgdk::GetPlayerCameraTargetObject(p->second.playerId);
 		if (objectid != INVALID_OBJECT_ID)
 		{
 			for (boost::unordered_map<int, int>::iterator i = p->second.internalObjects.begin(); i != p->second.internalObjects.end(); ++i)

@@ -30,9 +30,9 @@ public:
 	void remove(int id, std::size_t remaining);
 	void reset();
 private:
-	int highestID;
+	int highestId;
 
-	std::priority_queue<int, std::vector<int>, std::greater<int> > removedIDs;
+	std::priority_queue<int, std::vector<int>, std::greater<int> > removedIds;
 };
 
 #endif

@@ -74,7 +74,7 @@ int Manipulation::getArrayData(AMX *amx, cell *params)
 		{
 			switch (static_cast<int>(params[3]))
 			{
-				case AreaID:
+				case AreaId:
 				{
 					error = InvalidData;
 					break;
@@ -100,7 +100,7 @@ int Manipulation::getArrayData(AMX *amx, cell *params)
 			Utility::logError("Streamer_GetArrayData: Invalid data specified.");
 			break;
 		}
-		case InvalidID:
+		case InvalidId:
 		{
 			Utility::logError("Streamer_GetArrayData: Invalid ID specified.");
 			break;
@@ -157,7 +157,7 @@ int Manipulation::setArrayData(AMX *amx, cell *params)
 		{
 			switch (static_cast<int>(params[3]))
 			{
-				case AreaID:
+				case AreaId:
 				{
 					error = InvalidData;
 					break;
@@ -188,7 +188,7 @@ int Manipulation::setArrayData(AMX *amx, cell *params)
 			Utility::logError("Streamer_SetArrayData: Invalid data specified.");
 			break;
 		}
-		case InvalidID:
+		case InvalidId:
 		{
 			Utility::logError("Streamer_SetArrayData: Invalid ID specified.");
 			break;
@@ -245,7 +245,7 @@ int Manipulation::isInArrayData(AMX *amx, cell *params)
 		{
 			switch (static_cast<int>(params[3]))
 			{
-				case AreaID:
+				case AreaId:
 				{
 					error = InvalidData;
 					break;
@@ -276,7 +276,7 @@ int Manipulation::isInArrayData(AMX *amx, cell *params)
 			Utility::logError("Streamer_IsInArrayData: Invalid data specified.");
 			break;
 		}
-		case InvalidID:
+		case InvalidId:
 		{
 			Utility::logError("Streamer_IsInArrayData: Invalid ID specified.");
 			break;
@@ -333,7 +333,7 @@ int Manipulation::appendArrayData(AMX *amx, cell *params)
 		{
 			switch (static_cast<int>(params[3]))
 			{
-				case AreaID:
+				case AreaId:
 				{
 					error = InvalidData;
 					break;
@@ -364,7 +364,7 @@ int Manipulation::appendArrayData(AMX *amx, cell *params)
 			Utility::logError("Streamer_AppendArrayData: Invalid data specified.");
 			break;
 		}
-		case InvalidID:
+		case InvalidId:
 		{
 			Utility::logError("Streamer_AppendArrayData: Invalid ID specified.");
 			break;
@@ -421,7 +421,7 @@ int Manipulation::removeArrayData(AMX *amx, cell *params)
 		{
 			switch (static_cast<int>(params[3]))
 			{
-				case AreaID:
+				case AreaId:
 				{
 					error = InvalidData;
 					break;
@@ -452,7 +452,7 @@ int Manipulation::removeArrayData(AMX *amx, cell *params)
 			Utility::logError("Streamer_RemoveArrayData: Invalid data specified.");
 			break;
 		}
-		case InvalidID:
+		case InvalidId:
 		{
 			Utility::logError("Streamer_RemoveArrayData: Invalid ID specified.");
 			break;
@@ -509,7 +509,7 @@ int Manipulation::getArrayDataLength(AMX *amx, cell *params)
 		{
 			switch (static_cast<int>(params[3]))
 			{
-				case AreaID:
+				case AreaId:
 				{
 					error = InvalidData;
 					break;
@@ -540,7 +540,7 @@ int Manipulation::getArrayDataLength(AMX *amx, cell *params)
 			Utility::logError("Streamer_GetArrayDataLength: Invalid data specified.");
 			break;
 		}
-		case InvalidID:
+		case InvalidId:
 		{
 			Utility::logError("Streamer_GetArrayDataLength: Invalid ID specified.");
 			break;

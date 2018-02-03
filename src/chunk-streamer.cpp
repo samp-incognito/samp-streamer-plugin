@@ -130,7 +130,7 @@ void ChunkStreamer::discoverMapIcons(Player &player, const std::vector<SharedCel
 		for (boost::unordered_map<int, Item::SharedMapIcon>::const_iterator m = (*c)->mapIcons.begin(); m != (*c)->mapIcons.end(); ++m)
 		{
 			float distance = std::numeric_limits<float>::infinity();
-			if (doesPlayerSatisfyConditions(m->second->players, player.playerID, m->second->interiors, player.interiorID, m->second->worlds, player.worldID, m->second->areas, player.internalAreas, m->second->inverseAreaChecking))
+			if (doesPlayerSatisfyConditions(m->second->players, player.playerId, m->second->interiors, player.interiorId, m->second->worlds, player.worldId, m->second->areas, player.internalAreas, m->second->inverseAreaChecking))
 			{
 				if (m->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
 				{
@@ -189,7 +189,7 @@ void ChunkStreamer::streamMapIcons(Player &player, bool automatic)
 				boost::unordered_map<int, int>::iterator i = player.internalMapIcons.find(*r);
 				if (i != player.internalMapIcons.end())
 				{
-					sampgdk::RemovePlayerMapIcon(player.playerID, i->second);
+					sampgdk::RemovePlayerMapIcon(player.playerId, i->second);
 					boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(*r);
 					if (m != core->getData()->mapIcons.end())
 					{
@@ -213,7 +213,7 @@ void ChunkStreamer::streamMapIcons(Player &player, bool automatic)
 				{
 					break;
 				}
-				boost::unordered_map<int, int>::iterator i = player.internalMapIcons.find(d->second.get<1>()->mapIconID);
+				boost::unordered_map<int, int>::iterator i = player.internalMapIcons.find(d->second.get<1>()->mapIconId);
 				if (i != player.internalMapIcons.end())
 				{
 					d = player.discoveredMapIcons.left.erase(d);
@@ -229,7 +229,7 @@ void ChunkStreamer::streamMapIcons(Player &player, bool automatic)
 							boost::unordered_map<int, int>::iterator j = player.internalMapIcons.find(e->second.get<0>());
 							if (j != player.internalMapIcons.end())
 							{
-								sampgdk::RemovePlayerMapIcon(player.playerID, j->second);
+								sampgdk::RemovePlayerMapIcon(player.playerId, j->second);
 								if (e->second.get<1>()->streamCallbacks)
 								{
 									streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_MAP_ICON, e->second.get<0>()));
@@ -251,13 +251,13 @@ void ChunkStreamer::streamMapIcons(Player &player, bool automatic)
 						break;
 					}
 				}
-				int internalID = player.mapIconIdentifier.get();
-				sampgdk::SetPlayerMapIcon(player.playerID, internalID, d->second.get<1>()->position[0], d->second.get<1>()->position[1], d->second.get<1>()->position[2], d->second.get<1>()->type, d->second.get<1>()->color, d->second.get<1>()->style);
+				int internalId = player.mapIconIdentifier.get();
+				sampgdk::SetPlayerMapIcon(player.playerId, internalId, d->second.get<1>()->position[0], d->second.get<1>()->position[1], d->second.get<1>()->position[2], d->second.get<1>()->type, d->second.get<1>()->color, d->second.get<1>()->style);
 				if (d->second.get<1>()->streamCallbacks)
 				{
-					streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_MAP_ICON, d->second.get<1>()->mapIconID));
+					streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_MAP_ICON, d->second.get<1>()->mapIconId));
 				}
-				player.internalMapIcons.insert(std::make_pair(d->second.get<1>()->mapIconID, internalID));
+				player.internalMapIcons.insert(std::make_pair(d->second.get<1>()->mapIconId, internalId));
 				if (d->second.get<1>()->cell)
 				{
 					player.visibleCell->mapIcons.insert(std::make_pair(d->second.get<0>(), d->second.get<1>()));
@@ -281,7 +281,7 @@ void ChunkStreamer::discoverObjects(Player &player, const std::vector<SharedCell
 		for (boost::unordered_map<int, Item::SharedObject>::const_iterator o = (*c)->objects.begin(); o != (*c)->objects.end(); ++o)
 		{
 			float distance = std::numeric_limits<float>::infinity();
-			if (doesPlayerSatisfyConditions(o->second->players, player.playerID, o->second->interiors, player.interiorID, o->second->worlds, player.worldID, o->second->areas, player.internalAreas, o->second->inverseAreaChecking))
+			if (doesPlayerSatisfyConditions(o->second->players, player.playerId, o->second->interiors, player.interiorId, o->second->worlds, player.worldId, o->second->areas, player.internalAreas, o->second->inverseAreaChecking))
 			{
 				if (o->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
 				{
@@ -347,7 +347,7 @@ void ChunkStreamer::streamObjects(Player &player, bool automatic)
 				boost::unordered_map<int, int>::iterator i = player.internalObjects.find(*r);
 				if (i != player.internalObjects.end())
 				{
-					sampgdk::DestroyPlayerObject(player.playerID, i->second);
+					sampgdk::DestroyPlayerObject(player.playerId, i->second);
 					boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(*r);
 					if (o != core->getData()->objects.end())
 					{
@@ -371,13 +371,13 @@ void ChunkStreamer::streamObjects(Player &player, bool automatic)
 				{
 					break;
 				}
-				boost::unordered_map<int, int>::iterator i = player.internalObjects.find(d->second.get<1>()->objectID);
+				boost::unordered_map<int, int>::iterator i = player.internalObjects.find(d->second.get<1>()->objectId);
 				if (i != player.internalObjects.end())
 				{
 					d = player.discoveredObjects.left.erase(d);
 					continue;
 				}
-				int internalBaseID = INVALID_STREAMER_ID;
+				int internalBaseId = INVALID_STREAMER_ID;
 				if (d->second.get<1>()->attach)
 				{
 					if (d->second.get<1>()->attach->object != INVALID_STREAMER_ID)
@@ -388,7 +388,7 @@ void ChunkStreamer::streamObjects(Player &player, bool automatic)
 							d = player.discoveredObjects.left.erase(d);
 							continue;
 						}
-						internalBaseID = j->second;
+						internalBaseId = j->second;
 					}
 				}
 				if (player.internalObjects.size() == player.currentVisibleObjects)
@@ -401,7 +401,7 @@ void ChunkStreamer::streamObjects(Player &player, bool automatic)
 							boost::unordered_map<int, int>::iterator j = player.internalObjects.find(e->second.get<0>());
 							if (j != player.internalObjects.end())
 							{
-								sampgdk::DestroyPlayerObject(player.playerID, j->second);
+								sampgdk::DestroyPlayerObject(player.playerId, j->second);
 								if (e->second.get<1>()->streamCallbacks)
 								{
 									streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_OBJECT, e->second.get<0>()));
@@ -422,8 +422,8 @@ void ChunkStreamer::streamObjects(Player &player, bool automatic)
 					streamingCanceled = true;
 					break;
 				}
-				int internalID = sampgdk::CreatePlayerObject(player.playerID, d->second.get<1>()->modelID, d->second.get<1>()->position[0], d->second.get<1>()->position[1], d->second.get<1>()->position[2], d->second.get<1>()->rotation[0], d->second.get<1>()->rotation[1], d->second.get<1>()->rotation[2], d->second.get<1>()->drawDistance);
-				if (internalID == INVALID_OBJECT_ID)
+				int internalId = sampgdk::CreatePlayerObject(player.playerId, d->second.get<1>()->modelId, d->second.get<1>()->position[0], d->second.get<1>()->position[1], d->second.get<1>()->position[2], d->second.get<1>()->rotation[0], d->second.get<1>()->rotation[1], d->second.get<1>()->rotation[2], d->second.get<1>()->drawDistance);
+				if (internalId == INVALID_OBJECT_ID)
 				{
 					streamingCanceled = true;
 					break;
@@ -434,12 +434,12 @@ void ChunkStreamer::streamObjects(Player &player, bool automatic)
 				}
 				if (d->second.get<1>()->attach)
 				{
-					if (internalBaseID != INVALID_STREAMER_ID)
+					if (internalBaseId != INVALID_STREAMER_ID)
 					{
 						static AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToObject");
 						if (native != NULL)
 						{
-							sampgdk::InvokeNative(native, "dddffffffb", player.playerID, internalID, internalBaseID, d->second.get<1>()->attach->positionOffset[0], d->second.get<1>()->attach->positionOffset[1], d->second.get<1>()->attach->positionOffset[2], d->second.get<1>()->attach->rotation[0], d->second.get<1>()->attach->rotation[1], d->second.get<1>()->attach->rotation[2], d->second.get<1>()->attach->syncRotation);
+							sampgdk::InvokeNative(native, "dddffffffb", player.playerId, internalId, internalBaseId, d->second.get<1>()->attach->positionOffset[0], d->second.get<1>()->attach->positionOffset[1], d->second.get<1>()->attach->positionOffset[2], d->second.get<1>()->attach->rotation[0], d->second.get<1>()->attach->rotation[1], d->second.get<1>()->attach->rotation[2], d->second.get<1>()->attach->syncRotation);
 						}
 					}
 					else if (d->second.get<1>()->attach->player != INVALID_PLAYER_ID)
@@ -447,34 +447,34 @@ void ChunkStreamer::streamObjects(Player &player, bool automatic)
 						static AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToPlayer");
 						if (native != NULL)
 						{
-							sampgdk::InvokeNative(native, "dddffffffd", player.playerID, internalID, d->second.get<1>()->attach->player, d->second.get<1>()->attach->positionOffset[0], d->second.get<1>()->attach->positionOffset[1], d->second.get<1>()->attach->positionOffset[2], d->second.get<1>()->attach->rotation[0], d->second.get<1>()->attach->rotation[1], d->second.get<1>()->attach->rotation[2], 1);
+							sampgdk::InvokeNative(native, "dddffffffd", player.playerId, internalId, d->second.get<1>()->attach->player, d->second.get<1>()->attach->positionOffset[0], d->second.get<1>()->attach->positionOffset[1], d->second.get<1>()->attach->positionOffset[2], d->second.get<1>()->attach->rotation[0], d->second.get<1>()->attach->rotation[1], d->second.get<1>()->attach->rotation[2], 1);
 						}
 					}
 					else if (d->second.get<1>()->attach->vehicle != INVALID_VEHICLE_ID)
 					{
-						sampgdk::AttachPlayerObjectToVehicle(player.playerID, internalID, d->second.get<1>()->attach->vehicle, d->second.get<1>()->attach->positionOffset[0], d->second.get<1>()->attach->positionOffset[1], d->second.get<1>()->attach->positionOffset[2], d->second.get<1>()->attach->rotation[0], d->second.get<1>()->attach->rotation[1], d->second.get<1>()->attach->rotation[2]);
+						sampgdk::AttachPlayerObjectToVehicle(player.playerId, internalId, d->second.get<1>()->attach->vehicle, d->second.get<1>()->attach->positionOffset[0], d->second.get<1>()->attach->positionOffset[1], d->second.get<1>()->attach->positionOffset[2], d->second.get<1>()->attach->rotation[0], d->second.get<1>()->attach->rotation[1], d->second.get<1>()->attach->rotation[2]);
 					}
 				}
 				else if (d->second.get<1>()->move)
 				{
-					sampgdk::MovePlayerObject(player.playerID, internalID, d->second.get<1>()->move->position.get<0>()[0], d->second.get<1>()->move->position.get<0>()[1], d->second.get<1>()->move->position.get<0>()[2], d->second.get<1>()->move->speed, d->second.get<1>()->move->rotation.get<0>()[0], d->second.get<1>()->move->rotation.get<0>()[1], d->second.get<1>()->move->rotation.get<0>()[2]);
+					sampgdk::MovePlayerObject(player.playerId, internalId, d->second.get<1>()->move->position.get<0>()[0], d->second.get<1>()->move->position.get<0>()[1], d->second.get<1>()->move->position.get<0>()[2], d->second.get<1>()->move->speed, d->second.get<1>()->move->rotation.get<0>()[0], d->second.get<1>()->move->rotation.get<0>()[1], d->second.get<1>()->move->rotation.get<0>()[2]);
 				}
 				for (boost::unordered_map<int, Item::Object::Material>::iterator m = d->second.get<1>()->materials.begin(); m != d->second.get<1>()->materials.end(); ++m)
 				{
 					if (m->second.main)
 					{
-						sampgdk::SetPlayerObjectMaterial(player.playerID, internalID, m->first, m->second.main->modelID, m->second.main->txdFileName.c_str(), m->second.main->textureName.c_str(), m->second.main->materialColor);
+						sampgdk::SetPlayerObjectMaterial(player.playerId, internalId, m->first, m->second.main->modelId, m->second.main->txdFileName.c_str(), m->second.main->textureName.c_str(), m->second.main->materialColor);
 					}
 					else if (m->second.text)
 					{
-						sampgdk::SetPlayerObjectMaterialText(player.playerID, internalID, m->second.text->materialText.c_str(), m->first, m->second.text->materialSize, m->second.text->fontFace.c_str(), m->second.text->fontSize, m->second.text->bold, m->second.text->fontColor, m->second.text->backColor, m->second.text->textAlignment);
+						sampgdk::SetPlayerObjectMaterialText(player.playerId, internalId, m->second.text->materialText.c_str(), m->first, m->second.text->materialSize, m->second.text->fontFace.c_str(), m->second.text->fontSize, m->second.text->bold, m->second.text->fontColor, m->second.text->backColor, m->second.text->textAlignment);
 					}
 				}
 				if (d->second.get<1>()->noCameraCollision)
 				{
-					sampgdk::SetPlayerObjectNoCameraCol(player.playerID, internalID);
+					sampgdk::SetPlayerObjectNoCameraCol(player.playerId, internalId);
 				}
-				player.internalObjects.insert(std::make_pair(d->second.get<0>(), internalID));
+				player.internalObjects.insert(std::make_pair(d->second.get<0>(), internalId));
 				if (d->second.get<1>()->cell)
 				{
 					player.visibleCell->objects.insert(std::make_pair(d->second.get<0>(), d->second.get<1>()));
@@ -503,7 +503,7 @@ void ChunkStreamer::discoverTextLabels(Player &player, const std::vector<SharedC
 		for (boost::unordered_map<int, Item::SharedTextLabel>::const_iterator t = (*c)->textLabels.begin(); t != (*c)->textLabels.end(); ++t)
 		{
 			float distance = std::numeric_limits<float>::infinity();
-			if (doesPlayerSatisfyConditions(t->second->players, player.playerID, t->second->interiors, player.interiorID, t->second->worlds, player.worldID, t->second->areas, player.internalAreas, t->second->inverseAreaChecking))
+			if (doesPlayerSatisfyConditions(t->second->players, player.playerId, t->second->interiors, player.interiorId, t->second->worlds, player.worldId, t->second->areas, player.internalAreas, t->second->inverseAreaChecking))
 			{
 				if (t->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF)
 				{
@@ -569,7 +569,7 @@ void ChunkStreamer::streamTextLabels(Player &player, bool automatic)
 				boost::unordered_map<int, int>::iterator i = player.internalTextLabels.find(*r);
 				if (i != player.internalTextLabels.end())
 				{
-					sampgdk::DeletePlayer3DTextLabel(player.playerID, i->second);
+					sampgdk::DeletePlayer3DTextLabel(player.playerId, i->second);
 					boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(*r);
 					if (t != core->getData()->textLabels.end())
 					{
@@ -593,7 +593,7 @@ void ChunkStreamer::streamTextLabels(Player &player, bool automatic)
 				{
 					break;
 				}
-				boost::unordered_map<int, int>::iterator i = player.internalTextLabels.find(d->second.get<1>()->textLabelID);
+				boost::unordered_map<int, int>::iterator i = player.internalTextLabels.find(d->second.get<1>()->textLabelId);
 				if (i != player.internalTextLabels.end())
 				{
 					d = player.discoveredTextLabels.left.erase(d);
@@ -609,7 +609,7 @@ void ChunkStreamer::streamTextLabels(Player &player, bool automatic)
 							boost::unordered_map<int, int>::iterator j = player.internalTextLabels.find(e->second.get<0>());
 							if (j != player.internalTextLabels.end())
 							{
-								sampgdk::DeletePlayer3DTextLabel(player.playerID, j->second);
+								sampgdk::DeletePlayer3DTextLabel(player.playerId, j->second);
 								if (e->second.get<1>()->streamCallbacks)
 								{
 									streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_3D_TEXT_LABEL, e->second.get<0>()));
@@ -630,8 +630,8 @@ void ChunkStreamer::streamTextLabels(Player &player, bool automatic)
 					streamingCanceled = true;
 					break;
 				}
-				int internalID = sampgdk::CreatePlayer3DTextLabel(player.playerID, d->second.get<1>()->text.c_str(), d->second.get<1>()->color, d->second.get<1>()->position[0], d->second.get<1>()->position[1], d->second.get<1>()->position[2], d->second.get<1>()->drawDistance, d->second.get<1>()->attach ? d->second.get<1>()->attach->player : INVALID_PLAYER_ID, d->second.get<1>()->attach ? d->second.get<1>()->attach->vehicle : INVALID_VEHICLE_ID, d->second.get<1>()->testLOS);
-				if (internalID == INVALID_3DTEXT_ID)
+				int internalId = sampgdk::CreatePlayer3DTextLabel(player.playerId, d->second.get<1>()->text.c_str(), d->second.get<1>()->color, d->second.get<1>()->position[0], d->second.get<1>()->position[1], d->second.get<1>()->position[2], d->second.get<1>()->drawDistance, d->second.get<1>()->attach ? d->second.get<1>()->attach->player : INVALID_PLAYER_ID, d->second.get<1>()->attach ? d->second.get<1>()->attach->vehicle : INVALID_VEHICLE_ID, d->second.get<1>()->testLOS);
+				if (internalId == INVALID_3DTEXT_ID)
 				{
 					streamingCanceled = true;
 					break;
@@ -640,7 +640,7 @@ void ChunkStreamer::streamTextLabels(Player &player, bool automatic)
 				{
 					streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_3D_TEXT_LABEL, d->second.get<0>()));
 				}
-				player.internalTextLabels.insert(std::make_pair(d->second.get<0>(), internalID));
+				player.internalTextLabels.insert(std::make_pair(d->second.get<0>(), internalId));
 				if (d->second.get<1>()->cell)
 				{
 					player.visibleCell->textLabels.insert(std::make_pair(d->second.get<0>(), d->second.get<1>()));

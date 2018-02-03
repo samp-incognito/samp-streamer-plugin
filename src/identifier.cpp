@@ -22,20 +22,20 @@
 
 Identifier::Identifier()
 {
-	highestID = 0;
+	highestId = 0;
 }
 
 int Identifier::get()
 {
 	int id = 0;
-	if (!removedIDs.empty())
+	if (!removedIds.empty())
 	{
-		id = removedIDs.top();
-		removedIDs.pop();
+		id = removedIds.top();
+		removedIds.pop();
 	}
 	else
 	{
-		id = ++highestID;
+		id = ++highestId;
 	}
 	return id;
 }
@@ -44,7 +44,7 @@ void Identifier::remove(int id, std::size_t remaining)
 {
 	if (remaining > 1)
 	{
-		removedIDs.push(id);
+		removedIds.push(id);
 	}
 	else
 	{
@@ -54,6 +54,6 @@ void Identifier::remove(int id, std::size_t remaining)
 
 void Identifier::reset()
 {
-	highestID = 0;
-	removedIDs = std::priority_queue<int, std::vector<int>, std::greater<int> >();
+	highestId = 0;
+	removedIds = std::priority_queue<int, std::vector<int>, std::greater<int> >();
 }

@@ -34,15 +34,15 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPickup(AMX *amx, cell *params)
 	{
 		return INVALID_STREAMER_ID;
 	}
-	int pickupID = Item::Pickup::identifier.get();
+	int pickupId = Item::Pickup::identifier.get();
 	Item::SharedPickup pickup(new Item::Pickup);
 	pickup->amx = amx;
-	pickup->pickupID = pickupID;
+	pickup->pickupId = pickupId;
 	pickup->inverseAreaChecking = false;
 	pickup->originalComparableStreamDistance = -1.0f;
 	pickup->positionOffset = Eigen::Vector3f::Zero();
 	pickup->streamCallbacks = false;
-	pickup->modelID = static_cast<int>(params[1]);
+	pickup->modelId = static_cast<int>(params[1]);
 	pickup->type = static_cast<int>(params[2]);
 	pickup->position = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
 	Utility::addToContainer(pickup->worlds, static_cast<int>(params[6]));
@@ -53,8 +53,8 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPickup(AMX *amx, cell *params)
 	Utility::addToContainer(pickup->areas, static_cast<int>(params[10]));
 	pickup->priority = static_cast<int>(params[11]);
 	core->getGrid()->addPickup(pickup);
-	core->getData()->pickups.insert(std::make_pair(pickupID, pickup));
-	return static_cast<cell>(pickupID);
+	core->getData()->pickups.insert(std::make_pair(pickupId, pickup));
+	return static_cast<cell>(pickupId);
 }
 
 cell AMX_NATIVE_CALL Natives::DestroyDynamicPickup(AMX *amx, cell *params)

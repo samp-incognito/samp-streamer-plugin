@@ -38,10 +38,10 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCircle(AMX *amx, cell *params)
 	{
 		return INVALID_STREAMER_ID;
 	}
-	int areaID = Item::Area::identifier.get();
+	int areaId = Item::Area::identifier.get();
 	Item::SharedArea area(new Item::Area);
 	area->amx = amx;
-	area->areaID = areaID;
+	area->areaId = areaId;
 	area->type = STREAMER_AREA_TYPE_CIRCLE;
 	area->position = Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2]));
 	area->comparableSize = amx_ctof(params[3]) * amx_ctof(params[3]);
@@ -51,8 +51,8 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCircle(AMX *amx, cell *params)
 	Utility::addToContainer(area->players, static_cast<int>(params[6]));
 	area->priority = static_cast<int>(params[7]);
 	core->getGrid()->addArea(area);
-	core->getData()->areas.insert(std::make_pair(areaID, area));
-	return static_cast<cell>(areaID);
+	core->getData()->areas.insert(std::make_pair(areaId, area));
+	return static_cast<cell>(areaId);
 }
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicCylinder(AMX *amx, cell *params)
@@ -62,10 +62,10 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCylinder(AMX *amx, cell *params)
 	{
 		return INVALID_STREAMER_ID;
 	}
-	int areaID = Item::Area::identifier.get();
+	int areaId = Item::Area::identifier.get();
 	Item::SharedArea area(new Item::Area);
 	area->amx = amx;
-	area->areaID = areaID;
+	area->areaId = areaId;
 	area->type = STREAMER_AREA_TYPE_CYLINDER;
 	area->position = Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2]));
 	area->height = Eigen::Vector2f(amx_ctof(params[3]), amx_ctof(params[4]));
@@ -76,8 +76,8 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCylinder(AMX *amx, cell *params)
 	Utility::addToContainer(area->players, static_cast<int>(params[8]));
 	area->priority = static_cast<int>(params[9]);
 	core->getGrid()->addArea(area);
-	core->getData()->areas.insert(std::make_pair(areaID, area));
-	return static_cast<cell>(areaID);
+	core->getData()->areas.insert(std::make_pair(areaId, area));
+	return static_cast<cell>(areaId);
 }
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicSphere(AMX *amx, cell *params)
@@ -87,10 +87,10 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicSphere(AMX *amx, cell *params)
 	{
 		return INVALID_STREAMER_ID;
 	}
-	int areaID = Item::Area::identifier.get();
+	int areaId = Item::Area::identifier.get();
 	Item::SharedArea area(new Item::Area);
 	area->amx = amx;
-	area->areaID = areaID;
+	area->areaId = areaId;
 	area->spectateMode = true;
 	area->type = STREAMER_AREA_TYPE_SPHERE;
 	area->position = Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]));
@@ -101,8 +101,8 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicSphere(AMX *amx, cell *params)
 	Utility::addToContainer(area->players, static_cast<int>(params[7]));
 	area->priority = static_cast<int>(params[8]);
 	core->getGrid()->addArea(area);
-	core->getData()->areas.insert(std::make_pair(areaID, area));
-	return static_cast<cell>(areaID);
+	core->getData()->areas.insert(std::make_pair(areaId, area));
+	return static_cast<cell>(areaId);
 }
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicRectangle(AMX *amx, cell *params)
@@ -112,10 +112,10 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicRectangle(AMX *amx, cell *params)
 	{
 		return INVALID_STREAMER_ID;
 	}
-	int areaID = Item::Area::identifier.get();
+	int areaId = Item::Area::identifier.get();
 	Item::SharedArea area(new Item::Area);
 	area->amx = amx;
-	area->areaID = areaID;
+	area->areaId = areaId;
 	area->spectateMode = true;
 	area->type = STREAMER_AREA_TYPE_RECTANGLE;
 	area->position = Box2D(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), Eigen::Vector2f(amx_ctof(params[3]), amx_ctof(params[4])));
@@ -127,8 +127,8 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicRectangle(AMX *amx, cell *params)
 	Utility::addToContainer(area->players, static_cast<int>(params[7]));
 	area->priority = static_cast<int>(params[8]);
 	core->getGrid()->addArea(area);
-	core->getData()->areas.insert(std::make_pair(areaID, area));
-	return static_cast<cell>(areaID);
+	core->getData()->areas.insert(std::make_pair(areaId, area));
+	return static_cast<cell>(areaId);
 }
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicCuboid(AMX *amx, cell *params)
@@ -138,10 +138,10 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCuboid(AMX *amx, cell *params)
 	{
 		return INVALID_STREAMER_ID;
 	}
-	int areaID = Item::Area::identifier.get();
+	int areaId = Item::Area::identifier.get();
 	Item::SharedArea area(new Item::Area);
 	area->amx = amx;
-	area->areaID = areaID;
+	area->areaId = areaId;
 	area->spectateMode = true;
 	area->type = STREAMER_AREA_TYPE_CUBOID;
 	area->position = Box3D(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), Eigen::Vector3f(amx_ctof(params[4]), amx_ctof(params[5]), amx_ctof(params[6])));
@@ -153,8 +153,8 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCuboid(AMX *amx, cell *params)
 	Utility::addToContainer(area->players, static_cast<int>(params[9]));
 	area->priority = static_cast<int>(params[10]);
 	core->getGrid()->addArea(area);
-	core->getData()->areas.insert(std::make_pair(areaID, area));
-	return static_cast<cell>(areaID);
+	core->getData()->areas.insert(std::make_pair(areaId, area));
+	return static_cast<cell>(areaId);
 }
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicPolygon(AMX *amx, cell *params)
@@ -169,10 +169,10 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPolygon(AMX *amx, cell *params)
 		Utility::logError("CreateDynamicPolygon: Number of points must be divisible by 2 and bigger or equal to 6.");
 		return INVALID_STREAMER_ID;
 	}
-	int areaID = Item::Area::identifier.get();
+	int areaId = Item::Area::identifier.get();
 	Item::SharedArea area(new Item::Area);
 	area->amx = amx;
-	area->areaID = areaID;
+	area->areaId = areaId;
 	area->spectateMode = true;
 	area->type = STREAMER_AREA_TYPE_POLYGON;
 	Utility::convertArrayToPolygon(amx, params[1], params[4], boost::get<Polygon2D>(area->position));
@@ -185,8 +185,8 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPolygon(AMX *amx, cell *params)
 	Utility::addToContainer(area->players, static_cast<int>(params[7]));
 	area->priority = static_cast<int>(params[8]);
 	core->getGrid()->addArea(area);
-	core->getData()->areas.insert(std::make_pair(areaID, area));
-	return static_cast<cell>(areaID);
+	core->getData()->areas.insert(std::make_pair(areaId, area));
+	return static_cast<cell>(areaId);
 }
 
 cell AMX_NATIVE_CALL Natives::DestroyDynamicArea(AMX *amx, cell *params)
@@ -267,7 +267,7 @@ cell AMX_NATIVE_CALL Natives::IsPlayerInDynamicArea(AMX *amx, cell *params)
 			boost::unordered_map<int, Item::SharedArea>::const_iterator a = core->getData()->areas.find(static_cast<int>(params[2]));
 			if (a != core->getData()->areas.end())
 			{
-				return static_cast<cell>(core->getStreamer()->processPlayerArea(p->second, a->second, sampgdk::GetPlayerState(p->second.playerID)) != 0);
+				return static_cast<cell>(core->getStreamer()->processPlayerArea(p->second, a->second, sampgdk::GetPlayerState(p->second.playerId)) != 0);
 			}
 		}
 	}
@@ -290,7 +290,7 @@ cell AMX_NATIVE_CALL Natives::IsPlayerInAnyDynamicArea(AMX *amx, cell *params)
 		}
 		else
 		{
-			int state = sampgdk::GetPlayerState(p->second.playerID);
+			int state = sampgdk::GetPlayerState(p->second.playerId);
 			for (boost::unordered_map<int, Item::SharedArea>::const_iterator a = core->getData()->areas.begin(); a != core->getData()->areas.end(); ++a)
 			{
 				if (core->getStreamer()->processPlayerArea(p->second, a->second, state) != 0)
@@ -326,7 +326,7 @@ cell AMX_NATIVE_CALL Natives::IsAnyPlayerInDynamicArea(AMX *amx, cell *params)
 			a = core->getData()->areas.find(static_cast<int>(params[1]));
 			if (a != core->getData()->areas.end())
 			{
-				return static_cast<cell>(core->getStreamer()->processPlayerArea(p->second, a->second, sampgdk::GetPlayerState(p->second.playerID)) != 0);
+				return static_cast<cell>(core->getStreamer()->processPlayerArea(p->second, a->second, sampgdk::GetPlayerState(p->second.playerId)) != 0);
 			}
 		}
 	}
@@ -354,7 +354,7 @@ cell AMX_NATIVE_CALL Natives::IsAnyPlayerInAnyDynamicArea(AMX *amx, cell *params
 		{
 			for (a = core->getData()->areas.begin(); a != core->getData()->areas.end(); ++a)
 			{
-				if (core->getStreamer()->processPlayerArea(p->second, a->second, sampgdk::GetPlayerState(p->second.playerID)) != 0)
+				if (core->getStreamer()->processPlayerArea(p->second, a->second, sampgdk::GetPlayerState(p->second.playerId)) != 0)
 				{
 					return 1;
 				}

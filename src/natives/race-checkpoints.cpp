@@ -35,10 +35,10 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicRaceCP(AMX *amx, cell *params)
 	{
 		return INVALID_STREAMER_ID;
 	}
-	int raceCheckpointID = Item::RaceCheckpoint::identifier.get();
+	int raceCheckpointId = Item::RaceCheckpoint::identifier.get();
 	Item::SharedRaceCheckpoint raceCheckpoint(new Item::RaceCheckpoint);
 	raceCheckpoint->amx = amx;
-	raceCheckpoint->raceCheckpointID = raceCheckpointID;
+	raceCheckpoint->raceCheckpointId = raceCheckpointId;
 	raceCheckpoint->inverseAreaChecking = false;
 	raceCheckpoint->originalComparableStreamDistance = -1.0f;
 	raceCheckpoint->positionOffset = Eigen::Vector3f::Zero();
@@ -55,8 +55,8 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicRaceCP(AMX *amx, cell *params)
 	Utility::addToContainer(raceCheckpoint->areas, static_cast<int>(params[13]));
 	raceCheckpoint->priority = static_cast<int>(params[14]);
 	core->getGrid()->addRaceCheckpoint(raceCheckpoint);
-	core->getData()->raceCheckpoints.insert(std::make_pair(raceCheckpointID, raceCheckpoint));
-	return static_cast<cell>(raceCheckpointID);
+	core->getData()->raceCheckpoints.insert(std::make_pair(raceCheckpointId, raceCheckpoint));
+	return static_cast<cell>(raceCheckpointId);
 }
 
 cell AMX_NATIVE_CALL Natives::DestroyDynamicRaceCP(AMX *amx, cell *params)

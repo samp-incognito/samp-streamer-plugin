@@ -35,10 +35,10 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicMapIcon(AMX *amx, cell *params)
 	{
 		return INVALID_STREAMER_ID;
 	}
-	int mapIconID = Item::MapIcon::identifier.get();
+	int mapIconId = Item::MapIcon::identifier.get();
 	Item::SharedMapIcon mapIcon(new Item::MapIcon);
 	mapIcon->amx = amx;
-	mapIcon->mapIconID = mapIconID;
+	mapIcon->mapIconId = mapIconId;
 	mapIcon->inverseAreaChecking = false;
 	mapIcon->originalComparableStreamDistance = -1.0f;
 	mapIcon->positionOffset = Eigen::Vector3f::Zero();
@@ -55,8 +55,8 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicMapIcon(AMX *amx, cell *params)
 	Utility::addToContainer(mapIcon->areas, static_cast<int>(params[11]));
 	mapIcon->priority = static_cast<int>(params[12]);
 	core->getGrid()->addMapIcon(mapIcon);
-	core->getData()->mapIcons.insert(std::make_pair(mapIconID, mapIcon));
-	return static_cast<cell>(mapIconID);
+	core->getData()->mapIcons.insert(std::make_pair(mapIconId, mapIcon));
+	return static_cast<cell>(mapIconId);
 }
 
 cell AMX_NATIVE_CALL Natives::DestroyDynamicMapIcon(AMX *amx, cell *params)

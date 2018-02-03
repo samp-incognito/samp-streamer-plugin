@@ -2087,7 +2087,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 				if (i != core->getData()->internalPickups.end())
 				{
 					sampgdk::DestroyPickup(i->second);
-					i->second = sampgdk::CreatePickup(p->second->modelID, p->second->type, p->second->position[0], p->second->position[1], p->second->position[2], p->second->worldID);
+					i->second = sampgdk::CreatePickup(p->second->modelId, p->second->type, p->second->position[0], p->second->position[1], p->second->position[2], p->second->worldId);
 				}
 				return 1;
 			}
@@ -2247,10 +2247,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 				if (i != core->getData()->internalActors.end())
 				{
 					sampgdk::DestroyActor(i->second);
-					i->second = sampgdk::CreateActor(a->second->modelID, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
+					i->second = sampgdk::CreateActor(a->second->modelId, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
 					sampgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
 					sampgdk::SetActorHealth(i->second, a->second->health);
-					sampgdk::SetActorVirtualWorld(i->second, a->second->worldID);
+					sampgdk::SetActorVirtualWorld(i->second, a->second->worldId);
 					if (a->second->anim)
 					{
 						sampgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);

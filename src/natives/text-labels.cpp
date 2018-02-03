@@ -37,10 +37,10 @@ cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabel(AMX *amx, cell *params)
 	{
 		return INVALID_STREAMER_ID;
 	}
-	int textLabelID = Item::TextLabel::identifier.get();
+	int textLabelId = Item::TextLabel::identifier.get();
 	Item::SharedTextLabel textLabel(new Item::TextLabel);
 	textLabel->amx = amx;
-	textLabel->textLabelID = textLabelID;
+	textLabel->textLabelId = textLabelId;
 	textLabel->inverseAreaChecking = false;
 	textLabel->originalComparableStreamDistance = -1.0f;
 	textLabel->positionOffset = Eigen::Vector3f::Zero();
@@ -69,8 +69,8 @@ cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabel(AMX *amx, cell *params)
 	Utility::addToContainer(textLabel->areas, static_cast<int>(params[14]));
 	textLabel->priority = static_cast<int>(params[15]);
 	core->getGrid()->addTextLabel(textLabel);
-	core->getData()->textLabels.insert(std::make_pair(textLabelID, textLabel));
-	return static_cast<cell>(textLabelID);
+	core->getData()->textLabels.insert(std::make_pair(textLabelId, textLabel));
+	return static_cast<cell>(textLabelId);
 }
 
 cell AMX_NATIVE_CALL Natives::DestroyDynamic3DTextLabel(AMX *amx, cell *params)

@@ -41,14 +41,14 @@ namespace Item
 	{
 		Actor();
 
-		int actorID;
+		int actorId;
 		AMX *amx;
 		SharedCell cell;
 		float comparableStreamDistance;
 		float health;
 		bool inverseAreaChecking;
 		bool invulnerable;
-		int modelID;
+		int modelId;
 		float originalComparableStreamDistance;
 		Eigen::Vector3f position;
 		Eigen::Vector3f positionOffset;
@@ -56,7 +56,7 @@ namespace Item
 		int references;
 		float rotation;
 		float streamDistance;
-		int worldID;
+		int worldId;
 
 		struct Anim
 		{
@@ -91,7 +91,7 @@ namespace Item
 		Area();
 
 		AMX *amx;
-		int areaID;
+		int areaId;
 		SharedCell cell;
 		float comparableSize;
 		Eigen::Vector2f height;
@@ -137,7 +137,7 @@ namespace Item
 
 		AMX *amx;
 		SharedCell cell;
-		int checkpointID;
+		int checkpointId;
 		float comparableStreamDistance;
 		bool inverseAreaChecking;
 		float originalComparableStreamDistance;
@@ -169,7 +169,7 @@ namespace Item
 		int color;
 		float comparableStreamDistance;
 		bool inverseAreaChecking;
-		int mapIconID;
+		int mapIconId;
 		float originalComparableStreamDistance;
 		Eigen::Vector3f position;
 		Eigen::Vector3f positionOffset;
@@ -200,9 +200,9 @@ namespace Item
 		float comparableStreamDistance;
 		float drawDistance;
 		bool inverseAreaChecking;
-		int modelID;
+		int modelId;
 		bool noCameraCollision;
-		int objectID;
+		int objectId;
 		float originalComparableStreamDistance;
 		Eigen::Vector3f position;
 		Eigen::Vector3f positionOffset;
@@ -237,7 +237,7 @@ namespace Item
 				Main();
 
 				int materialColor;
-				int modelID;
+				int modelId;
 				int references;
 				std::string textureName;
 				std::string txdFileName;
@@ -300,9 +300,9 @@ namespace Item
 		SharedCell cell;
 		float comparableStreamDistance;
 		bool inverseAreaChecking;
-		int modelID;
+		int modelId;
 		float originalComparableStreamDistance;
-		int pickupID;
+		int pickupId;
 		Eigen::Vector3f position;
 		Eigen::Vector3f positionOffset;
 		int priority;
@@ -310,7 +310,7 @@ namespace Item
 		bool streamCallbacks;
 		float streamDistance;
 		int type;
-		int worldID;
+		int worldId;
 
 		boost::unordered_set<int> areas;
 		std::vector<int> extras;
@@ -336,7 +336,7 @@ namespace Item
 		Eigen::Vector3f position;
 		Eigen::Vector3f positionOffset;
 		int priority;
-		int raceCheckpointID;
+		int raceCheckpointId;
 		int references;
 		float size;
 		bool streamCallbacks;
@@ -373,7 +373,7 @@ namespace Item
 		float streamDistance;
 		bool testLOS;
 		std::string text;
-		int textLabelID;
+		int textLabelId;
 
 		struct Attach
 		{

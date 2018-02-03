@@ -48,11 +48,11 @@ struct Player
 	bool delayedUpdateFreeze;
 	boost::chrono::steady_clock::time_point delayedUpdateTime;
 	int delayedUpdateType;
-	int interiorID;
+	int interiorId;
 	std::size_t maxVisibleMapIcons;
 	std::size_t maxVisibleObjects;
 	std::size_t maxVisibleTextLabels;
-	int playerID;
+	int playerId;
 	Eigen::Vector3f position;
 	float radiusMultipliers[STREAMER_MAX_TYPES];
 	int references;
@@ -64,7 +64,7 @@ struct Player
 	SharedCell visibleCell;
 	int visibleCheckpoint;
 	int visibleRaceCheckpoint;
-	int worldID;
+	int worldId;
 
 	std::bitset<STREAMER_MAX_TYPES> enabledItems;
 	std::bitset<STREAMER_MAX_TYPES> processingChunks;

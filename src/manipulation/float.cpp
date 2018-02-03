@@ -240,7 +240,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 			}
 			else
 			{
-				error = InvalidID;
+				error = InvalidId;
 			}
 			break;
 		}
@@ -280,7 +280,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 			}
 			else
 			{
-				error = InvalidID;
+				error = InvalidId;
 			}
 			break;
 		}
@@ -325,7 +325,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 			}
 			else
 			{
-				error = InvalidID;
+				error = InvalidId;
 			}
 			break;
 		}
@@ -385,7 +385,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 			}
 			else
 			{
-				error = InvalidID;
+				error = InvalidId;
 			}
 			break;
 		}
@@ -425,7 +425,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 			}
 			else
 			{
-				error = InvalidID;
+				error = InvalidId;
 			}
 			break;
 		}
@@ -500,7 +500,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 			}
 			else
 			{
-				error = InvalidID;
+				error = InvalidId;
 			}
 			break;
 		}
@@ -761,7 +761,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 			}
 			else
 			{
-				error = InvalidID;
+				error = InvalidId;
 			}
 			break;
 		}
@@ -811,7 +811,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 			}
 			else
 			{
-				error = InvalidID;
+				error = InvalidId;
 			}
 			break;
 		}
@@ -828,7 +828,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 			Utility::logError("Streamer_GetFloatData: Invalid data specified.");
 			break;
 		}
-		case InvalidID:
+		case InvalidId:
 		{
 			Utility::logError("Streamer_GetFloatData: Invalid ID specified.");
 			break;
@@ -1010,7 +1010,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 						if (i != p->second.internalObjects.end())
 						{
 							sampgdk::DestroyPlayerObject(p->first, i->second);
-							i->second = sampgdk::CreatePlayerObject(p->first, o->second->modelID, o->second->position[0], o->second->position[1], o->second->position[2], o->second->rotation[0], o->second->rotation[1], o->second->rotation[2], o->second->drawDistance);
+							i->second = sampgdk::CreatePlayerObject(p->first, o->second->modelId, o->second->position[0], o->second->position[1], o->second->position[2], o->second->rotation[0], o->second->rotation[1], o->second->rotation[2], o->second->drawDistance);
 							if (o->second->attach)
 							{
 								if (o->second->attach->object != INVALID_STREAMER_ID)
@@ -1046,7 +1046,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 							{
 								if (m->second.main)
 								{
-									sampgdk::SetPlayerObjectMaterial(p->first, i->second, m->first, m->second.main->modelID, m->second.main->txdFileName.c_str(), m->second.main->textureName.c_str(), m->second.main->materialColor);
+									sampgdk::SetPlayerObjectMaterial(p->first, i->second, m->first, m->second.main->modelId, m->second.main->txdFileName.c_str(), m->second.main->textureName.c_str(), m->second.main->materialColor);
 								}
 								else if (m->second.text)
 								{
@@ -1067,7 +1067,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 			}
 			else
 			{
-				error = InvalidID;
+				error = InvalidId;
 			}
 			break;
 		}
@@ -1127,7 +1127,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					if (i != core->getData()->internalPickups.end())
 					{
 						sampgdk::DestroyPickup(i->second);
-						i->second = sampgdk::CreatePickup(p->second->modelID, p->second->type, p->second->position[0], p->second->position[1], p->second->position[2], p->second->worldID);
+						i->second = sampgdk::CreatePickup(p->second->modelId, p->second->type, p->second->position[0], p->second->position[1], p->second->position[2], p->second->worldId);
 					}
 				}
 				if (reassign || update)
@@ -1137,7 +1137,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 			}
 			else
 			{
-				error = InvalidID;
+				error = InvalidId;
 			}
 			break;
 		}
@@ -1216,7 +1216,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 			}
 			else
 			{
-				error = InvalidID;
+				error = InvalidId;
 			}
 			break;
 		}
@@ -1313,7 +1313,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 			}
 			else
 			{
-				error = InvalidID;
+				error = InvalidId;
 			}
 			break;
 		}
@@ -1386,7 +1386,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 			}
 			else
 			{
-				error = InvalidID;
+				error = InvalidId;
 			}
 			break;
 		}
@@ -1468,7 +1468,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 			}
 			else
 			{
-				error = InvalidID;
+				error = InvalidId;
 			}
 			break;
 		}
@@ -1717,7 +1717,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 			}
 			else
 			{
-				error = InvalidID;
+				error = InvalidId;
 			}
 			break;
 		}
@@ -1789,10 +1789,10 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					if (i != core->getData()->internalActors.end())
 					{
 						sampgdk::DestroyActor(i->second);
-						i->second = sampgdk::CreateActor(a->second->modelID, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
+						i->second = sampgdk::CreateActor(a->second->modelId, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
 						sampgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
 						sampgdk::SetActorHealth(i->second, a->second->health);
-						sampgdk::SetActorVirtualWorld(i->second, a->second->worldID);
+						sampgdk::SetActorVirtualWorld(i->second, a->second->worldId);
 						if (a->second->anim)
 						{
 							sampgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);
@@ -1806,7 +1806,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 			}
 			else
 			{
-				error = InvalidID;
+				error = InvalidId;
 			}
 			break;
 		}
@@ -1823,7 +1823,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 			Utility::logError("Streamer_SetFloatData: Invalid data specified.");
 			break;
 		}
-		case InvalidID:
+		case InvalidId:
 		{
 			Utility::logError("Streamer_SetFloatData: Invalid ID specified.");
 			break;
