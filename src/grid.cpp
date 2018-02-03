@@ -28,6 +28,7 @@
 
 #include <Eigen/Core>
 
+#include <algorithm>
 #include <cmath>
 #include <vector>
 
@@ -768,6 +769,20 @@ void Grid::findMinimalCellsForPoint(const Eigen::Vector2f &point, std::vector<Sh
 		Eigen::Vector2f position = point + translationMatrix.col(i);
 		boost::unordered_map<CellId, SharedCell>::iterator c = cells.find(getCellId(position, false));
 		if (c != cells.end())
+		{
+			pointCells.push_back(c->second);
+		}
+	}
+	pointCells.push_back(globalCell);
+}
+
+void Grid::findMinimalCellsForPoint(const Eigen::Vector2f &point, std::vector<SharedCell> &pointCells, float range)
+{
+	for (boost::unordered_map<CellId, SharedCell>::iterator c = cells.begin(); c != cells.end(); ++c)
+	{
+		Eigen::Vector2f corner(static_cast<float>(c->first.first) - (cellSize / 2.0f), static_cast<float>(c->first.second) - (cellSize / 2.0f));
+		Eigen::Vector2f delta(point[0] - std::max(corner[0], std::min(point[0], corner[0] + cellSize)), point[1] - std::max(corner[1], std::min(point[1], corner[1] + cellSize)));
+		if (((delta[0] * delta[0]) + (delta[1] * delta[1])) < range)
 		{
 			pointCells.push_back(c->second);
 		}

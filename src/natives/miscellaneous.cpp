@@ -1500,7 +1500,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 	int world = static_cast<int>(params[8]);
 	std::multimap<float, int> orderedItems;
 	std::vector<SharedCell> pointCells;
-	core->getGrid()->findMinimalCellsForPoint(position2D, pointCells);
+	core->getGrid()->findMinimalCellsForPoint(position2D, pointCells, range);
 	switch (static_cast<int>(params[4]))
 	{
 		case STREAMER_TYPE_OBJECT:

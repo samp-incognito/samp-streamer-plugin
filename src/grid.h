@@ -75,6 +75,7 @@ public:
 	void findAllCellsForPlayer(Player &player, std::vector<SharedCell> &playerCells);
 	void findMinimalCellsForPlayer(Player &player, std::vector<SharedCell> &playerCells);
 	void findMinimalCellsForPoint(const Eigen::Vector2f &point, std::vector<SharedCell> &pointCells);
+	void findMinimalCellsForPoint(const Eigen::Vector2f &point, std::vector<SharedCell> &pointCells, float range);
 private:
 	float cellDistance;
 	float cellSize;
