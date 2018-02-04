@@ -17,13 +17,7 @@
 #ifndef DATA_H
 #define DATA_H
 
-#include "common.h"
 #include "player.h"
-
-#include <boost/intrusive_ptr.hpp>
-#include <boost/unordered_map.hpp>
-
-#include <set>
 
 class Data
 {

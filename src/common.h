@@ -48,35 +48,6 @@
 
 #define STREAMER_STATIC_DISTANCE_CUTOFF (0.0f)
 
-template<typename T>
-inline void intrusive_ptr_add_ref(T *t)
-{
-	++t->references;
-}
-
-template<typename T>
-inline void intrusive_ptr_release(T *t)
-{
-	if (!(--t->references))
-	{
-		delete t;
-	}
-}
-
-#include "sampgdk.h"
-
-#include <boost/bimap.hpp>
-#include <boost/bimap/multiset_of.hpp>
-#include <boost/bimap/unordered_set_of.hpp>
-#include <boost/geometry.hpp>
-#include <boost/geometry/geometries/geometries.hpp>
-#include <boost/intrusive_ptr.hpp>
-#include <boost/tuple/tuple.hpp>
-
-#include <Eigen/Core>
-
-#include <utility>
-
 class Cell;
 class Data;
 class Events;

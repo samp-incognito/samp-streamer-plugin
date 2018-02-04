@@ -18,6 +18,9 @@ include_directories(${Boost_INCLUDE_DIRS})
 find_package(Eigen3 3.3.4 REQUIRED)
 include_directories(${EIGEN3_INCLUDE_DIR})
 
+set(CMAKE_SKIP_INSTALL_ALL_DEPENDENCY True)
+set(CMAKE_SKIP_PACKAGE_ALL_DEPENDENCY True)
+
 add_subdirectory(src)
 
 set(CPACK_PACKAGE_VERSION ${PLUGIN_VERSION})

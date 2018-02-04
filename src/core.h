@@ -22,8 +22,6 @@
 #include "grid.h"
 #include "streamer.h"
 
-#include <boost/scoped_ptr.hpp>
-
 class Core
 {
 public:

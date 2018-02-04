@@ -18,13 +18,6 @@
 #define GRID_H
 
 #include "cell.h"
-#include "common.h"
-
-#include <boost/unordered_map.hpp>
-#include <boost/unordered_set.hpp>
-
-#include <cmath>
-#include <vector>
 
 class Grid
 {

@@ -18,7 +18,6 @@
 #define CHUNK_STREAMER_H
 
 #include "cell.h"
-#include "common.h"
 #include "player.h"
 #include "streamer.h"
 

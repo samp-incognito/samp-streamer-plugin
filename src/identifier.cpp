@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-#include "identifier.h"
+#include "precompiled.h"
 
-#include <functional>
-#include <queue>
-#include <vector>
+#include "identifier.h"
 
 Identifier::Identifier()
 {

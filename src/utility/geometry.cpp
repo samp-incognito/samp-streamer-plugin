@@ -14,22 +14,11 @@
  * limitations under the License.
  */
 
-#include "geometry.h"
-#include "misc.h"
+#include "../precompiled.h"
 
+#include "geometry.h"
 #include "../core.h"
 #include "../main.h"
-
-#include <boost/geometry.hpp>
-#include <boost/geometry/geometries/geometries.hpp>
-#include <boost/intrusive_ptr.hpp>
-#include <boost/scoped_ptr.hpp>
-#include <boost/tuple/tuple.hpp>
-#include <boost/variant.hpp>
-
-#include <Eigen/Core>
-
-#include <cmath>
 
 using namespace Utility;
 

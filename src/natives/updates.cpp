@@ -14,17 +14,10 @@
  * limitations under the License.
  */
 
+#include "../precompiled.h"
+
 #include "../natives.h"
-
 #include "../core.h"
-
-#include <boost/intrusive_ptr.hpp>
-#include <boost/scoped_ptr.hpp>
-#include <boost/unordered_map.hpp>
-
-#include <Eigen/Core>
-
-#include <bitset>
 
 cell AMX_NATIVE_CALL Natives::Streamer_ProcessActiveItems(AMX *amx, cell *params)
 {

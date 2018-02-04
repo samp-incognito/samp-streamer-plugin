@@ -17,13 +17,7 @@
 #ifndef UTILITY_MISC_H
 #define UTILITY_MISC_H
 
-#include "../common.h"
 #include "../item.h"
-
-#include <boost/unordered_map.hpp>
-#include <boost/unordered_set.hpp>
-
-#include <Eigen/Core>
 
 namespace Utility
 {

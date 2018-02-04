@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-#include "item.h"
+#include "precompiled.h"
 
+#include "item.h"
 #include "identifier.h"
 
 Identifier Item::Area::identifier;

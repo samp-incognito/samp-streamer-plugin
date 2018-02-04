@@ -14,16 +14,10 @@
  * limitations under the License.
  */
 
+#include "precompiled.h"
+
 #include "player.h"
-
 #include "core.h"
-
-#include <boost/intrusive_ptr.hpp>
-#include <boost/scoped_ptr.hpp>
-
-#include <Eigen/Core>
-
-#include <bitset>
 
 Player::Player(int id)
 {

@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-#include "../natives.h"
+#include "../precompiled.h"
 
+#include "../natives.h"
 #include "../core.h"
 #include "../utility.h"
-
-#include <boost/scoped_ptr.hpp>
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetTickRate(AMX *amx, cell *params)
 {

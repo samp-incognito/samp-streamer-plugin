@@ -18,17 +18,7 @@
 #define PLAYER_H
 
 #include "cell.h"
-#include "common.h"
 #include "identifier.h"
-
-#include <boost/intrusive_ptr.hpp>
-#include <boost/unordered_map.hpp>
-#include <boost/unordered_set.hpp>
-
-#include <Eigen/Core>
-
-#include <bitset>
-#include <map>
 
 struct Player
 {

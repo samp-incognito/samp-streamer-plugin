@@ -18,13 +18,7 @@
 #define UTILITY_GEOMETRY_H
 
 #include "misc.h"
-
-#include "../common.h"
 #include "../item.h"
-
-#include <Eigen/Core>
-
-#define MAX_BUFFER (1024)
 
 namespace Utility
 {

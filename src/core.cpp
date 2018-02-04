@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-#include "core.h"
+#include "precompiled.h"
 
-#include <boost/scoped_ptr.hpp>
+#include "core.h"
 
 boost::scoped_ptr<Core> core;
 

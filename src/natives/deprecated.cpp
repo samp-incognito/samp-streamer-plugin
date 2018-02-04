@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
+#include "../precompiled.h"
+
 #include "../natives.h"
-
 #include "../core.h"
-
-#include <boost/scoped_ptr.hpp>
 
 cell AMX_NATIVE_CALL Natives::Streamer_CallbackHook(AMX *amx, cell *params)
 {

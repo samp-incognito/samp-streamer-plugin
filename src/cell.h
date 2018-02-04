@@ -17,11 +17,7 @@
 #ifndef CELL_H
 #define CELL_H
 
-#include "common.h"
 #include "item.h"
-
-#include <boost/intrusive_ptr.hpp>
-#include <boost/unordered_map.hpp>
 
 class Cell
 {

@@ -14,24 +14,11 @@
  * limitations under the License.
  */
 
-#include "misc.h"
+#include "../precompiled.h"
 
+#include "misc.h"
 #include "../core.h"
 #include "../main.h"
-
-#include <boost/bimap.hpp>
-#include <boost/bimap/multiset_of.hpp>
-#include <boost/bimap/unordered_set_of.hpp>
-#include <boost/geometry.hpp>
-#include <boost/geometry/geometries/geometries.hpp>
-#include <boost/intrusive_ptr.hpp>
-#include <boost/scoped_ptr.hpp>
-#include <boost/tuple/tuple.hpp>
-#include <boost/unordered_map.hpp>
-#include <boost/unordered_set.hpp>
-#include <boost/variant.hpp>
-
-#include <Eigen/Core>
 
 using namespace Utility;
 

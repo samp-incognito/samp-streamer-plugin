@@ -14,21 +14,11 @@
  * limitations under the License.
  */
 
-#include "../natives.h"
+#include "../precompiled.h"
 
+#include "../natives.h"
 #include "../core.h"
 #include "../utility.h"
-
-#include <boost/geometry.hpp>
-#include <boost/geometry/geometries/geometries.hpp>
-#include <boost/intrusive_ptr.hpp>
-#include <boost/scoped_ptr.hpp>
-#include <boost/unordered_map.hpp>
-#include <boost/unordered_set.hpp>
-
-#include <Eigen/Core>
-
-#include <string>
 
 cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabel(AMX *amx, cell *params)
 {

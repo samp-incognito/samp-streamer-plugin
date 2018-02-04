@@ -18,22 +18,7 @@
 #define ITEM_H
 
 #include "cell.h"
-#include "common.h"
 #include "identifier.h"
-
-#include <boost/chrono.hpp>
-#include <boost/geometry.hpp>
-#include <boost/geometry/geometries/geometries.hpp>
-#include <boost/intrusive_ptr.hpp>
-#include <boost/tuple/tuple.hpp>
-#include <boost/unordered_map.hpp>
-#include <boost/unordered_set.hpp>
-#include <boost/variant.hpp>
-
-#include <Eigen/Core>
-
-#include <bitset>
-#include <string>
 
 namespace Item
 {

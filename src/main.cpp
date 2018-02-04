@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-#include "main.h"
+#include "precompiled.h"
 
+#include "main.h"
 #include "core.h"
 #include "natives.h"
 #include "utility.h"
-
-#include <boost/scoped_ptr.hpp>
-
-#include <set>
 
 extern void *pAMXFunctions;
 

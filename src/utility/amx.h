@@ -18,16 +18,7 @@
 #define UTILITY_AMX_H
 
 #include "misc.h"
-
-#include "../common.h"
 #include "../item.h"
-
-#include <boost/unordered_map.hpp>
-#include <boost/unordered_set.hpp>
-
-#include <algorithm>
-#include <bitset>
-#include <string>
 
 #define MAX_BUFFER (1024)
 

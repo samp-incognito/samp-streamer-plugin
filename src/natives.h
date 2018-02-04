@@ -17,18 +17,6 @@
 #ifndef NATIVES_H
 #define NATIVES_H
 
-#define STREAMER_OPC (0)
-#define STREAMER_OPDC (1)
-#define STREAMER_OPEO (2)
-#define STREAMER_OPSO (3)
-#define STREAMER_OPPP (4)
-#define STREAMER_OPEC (5)
-#define STREAMER_OPLC (6)
-#define STREAMER_OPERC (7)
-#define STREAMER_OPLRC (8)
-#define STREAMER_OPWS (9)
-
-#include "common.h"
 #include "utility.h"
 
 #define CHECK_PARAMS(n) \

@@ -14,23 +14,10 @@
  * limitations under the License.
  */
 
+#include "precompiled.h"
+
 #include "grid.h"
-
 #include "core.h"
-
-#include <boost/geometry.hpp>
-#include <boost/geometry/geometries/geometries.hpp>
-#include <boost/intrusive_ptr.hpp>
-#include <boost/scoped_ptr.hpp>
-#include <boost/unordered_map.hpp>
-#include <boost/unordered_set.hpp>
-#include <boost/variant.hpp>
-
-#include <Eigen/Core>
-
-#include <algorithm>
-#include <cmath>
-#include <vector>
 
 Grid::Grid()
 {

@@ -14,13 +14,9 @@
  * limitations under the License.
  */
 
+#include "precompiled.h"
+
 #include "core.h"
-
-#include <boost/intrusive_ptr.hpp>
-#include <boost/scoped_ptr.hpp>
-#include <boost/unordered_map.hpp>
-
-#include <set>
 
 PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerConnect(int playerid)
 {

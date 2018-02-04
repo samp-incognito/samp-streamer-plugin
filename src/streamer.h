@@ -18,17 +18,9 @@
 #define STREAMER_H
 
 #include "cell.h"
-#include "common.h"
 #include "item.h"
 #include "player.h"
 #include "utility.h"
-
-#include <boost/tuple/tuple.hpp>
-#include <boost/unordered_set.hpp>
-
-#include <bitset>
-#include <map>
-#include <vector>
 
 class Streamer
 {

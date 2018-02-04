@@ -17,8 +17,6 @@
 #ifndef MANIPULATION_H
 #define MANIPULATION_H
 
-#include "common.h"
-
 namespace Manipulation
 {
 	enum
