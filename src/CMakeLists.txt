@@ -24,19 +24,19 @@ list(APPEND PLUGIN_SOURCES
 )
 
 if(WIN32)
-  list(APPEND PLUGIN_SOURCES
-	${PROJECT_SOURCE_DIR}/streamer.def
-	${PROJECT_SOURCE_DIR}/streamer.rc
-  )
+	list(APPEND PLUGIN_SOURCES
+		${PROJECT_SOURCE_DIR}/streamer.def
+		${PROJECT_SOURCE_DIR}/streamer.rc
+	)
 endif()
 
 add_samp_plugin(${PROJECT_NAME} ${PLUGIN_SOURCES})
 
 if(WIN32)
-  add_definitions(-DBOOST_ALL_NO_LIB -DNOMINMAX)
+	add_definitions(-DBOOST_ALL_NO_LIB -DNOMINMAX)
 else()
-  set_property(TARGET ${PROJECT_NAME} APPEND_STRING PROPERTY COMPILE_FLAGS " -fno-strict-aliasing")
-  set_property(TARGET ${PROJECT_NAME} APPEND_STRING PROPERTY LINK_FLAGS " -lrt -s")
+	set_property(TARGET ${PROJECT_NAME} APPEND_STRING PROPERTY COMPILE_FLAGS " -fno-strict-aliasing")
+	set_property(TARGET ${PROJECT_NAME} APPEND_STRING PROPERTY LINK_FLAGS " -lrt -s")
 endif()
 
 add_definitions(-DBOOST_CHRONO_HEADER_ONLY -DSAMPGDK_AMALGAMATION -DSAMPGDK_CPP_WRAPPERS)
