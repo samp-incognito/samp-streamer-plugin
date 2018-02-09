@@ -34,8 +34,8 @@ add_samp_plugin(${PROJECT_NAME} ${PLUGIN_SOURCES})
 
 if(WIN32)
   add_definitions(-DBOOST_ALL_NO_LIB -DNOMINMAX)
-elseif(UNIX)
-  add_compile_options(-fno-strict-aliasing)
+else()
+  set_property(TARGET ${PROJECT_NAME} APPEND_STRING PROPERTY COMPILE_FLAGS " -fno-strict-aliasing")
   set_property(TARGET ${PROJECT_NAME} APPEND_STRING PROPERTY LINK_FLAGS " -lrt -s")
 endif()
 

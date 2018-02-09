@@ -27,7 +27,7 @@ set(CPACK_PACKAGE_VERSION ${PLUGIN_VERSION})
 
 if(WIN32)
   set(CPACK_GENERATOR ZIP)
-elseif(UNIX)
+else()
   set(CPACK_GENERATOR TGZ)
 endif()
 
