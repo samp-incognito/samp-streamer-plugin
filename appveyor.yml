@@ -6,19 +6,28 @@ configuration:
   - Release
 
 install:
-  - git submodule update --init --recursive
-  - appveyor DownloadFile http://bitbucket.org/eigen/eigen/get/3.3.4.zip
-  - 7z x 3.3.4.zip
+  - git submodule update --init --recursive . ":(exclude)lib/boost"
 
 before_build:
   - mkdir build && cd build
-  - cmake .. -G "Visual Studio 14 2015" -DCPACK_OUTPUT_FILE_PREFIX=.. -DBOOST_ROOT="C:\Libraries\boost_1_63_0" -DEIGEN3_INCLUDE_DIR="%APPVEYOR_BUILD_FOLDER%\eigen-eigen-5a0156e40feb"
+  - cmake .. -G "Visual Studio 14 2015" -DCPACK_OUTPUT_FILE_PREFIX=.. -DCPACK_OUTPUT_FILE_POSTFIX=%CONFIGURATION% -DBOOST_ROOT="C:\Libraries\boost_1_65_1" -DEIGEN3_INCLUDE_DIR="%APPVEYOR_BUILD_FOLDER%\lib\eigen"
 
 build_script:
   - cmake --build . --config %CONFIGURATION% --target streamer_unity
-  - cmake --build . --config %CONFIGURATION% --target install
   - cmake --build . --config %CONFIGURATION% --target package
 
 artifacts:
-  - path: streamer-*-win32.zip
+  - path: streamer-*-win32-*.zip
     name: Streamer Plugin
+
+deploy:
+  - provider: BinTray
+    username: incognito
+    api_key:
+      secure: e0xOM0EZQFdpPDMOnEH6Zi8QD8YMMnSflcXFODRfwE/dHpWyNf25yNrSMR6gKjAT
+    subject: incognito
+    repo: streamer-plugin
+    package: builds
+    version: latest
+    publish: true
+    override: true

@@ -1,0 +1,20 @@
+{
+   "package": {
+      "name": "builds",
+      "repo": "streamer-plugin",
+      "subject": "incognito"
+   },
+   "version": {
+      "name": "latest"
+   },
+   "files": [
+      {
+         "includePattern": "build/install/(.*)",
+         "uploadPattern": "$1",
+         "matrixParams": {
+            "override": 1
+         }
+      }
+   ],
+   "publish": true
+}

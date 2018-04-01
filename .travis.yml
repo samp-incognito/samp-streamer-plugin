@@ -8,23 +8,35 @@ env:
 addons:
   apt:
     packages:
-    - g++-multilib
+      - g++-multilib
+
+git:
+  submodules: false
 
 before_install:
-  - wget http://sourceforge.net/projects/boost/files/boost/1.66.0/boost_1_66_0.tar.gz
-  - tar xzf boost_1_66_0.tar.gz
-  - wget http://bitbucket.org/eigen/eigen/get/3.3.4.tar.gz
-  - tar xzf 3.3.4.tar.gz
+  - git submodule update --init --recursive . ":(exclude)lib/boost"
+  - wget http://sourceforge.net/projects/boost/files/boost/1.65.1/boost_1_65_1.tar.gz
+  - tar xzf boost_1_65_1.tar.gz
 
 install:
-  - cd boost_1_66_0
+  - cd boost_1_65_1
   - ./bootstrap.sh
   - ./b2 --with-system address-model=32
   - cd ..
 
 before_script:
   - mkdir build && cd build
-  - cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DBOOST_ROOT=boost_1_66_0 -DEIGEN3_INCLUDE_DIR=eigen-eigen-5a0156e40feb
+  - cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCPACK_OUTPUT_FILE_PREFIX=install -DCPACK_OUTPUT_FILE_POSTFIX=${BUILD_TYPE} -DBOOST_ROOT=boost_1_65_1 -DEIGEN3_INCLUDE_DIR=lib/eigen
 
 script:
   - make streamer_unity
+  - make package
+  - cd ..
+
+deploy:
+  provider: bintray
+  file: bintray.json
+  user: incognito
+  key:
+    secure: F3+irfWdK1iw0pNmEgWhXsIcfYhfIKxKfVmHmP0lhC/tHYtr4bAF4GmPg1Wld96m/rW/pm89kcUfHIfn1bi5mp6YSfl1076a5f9wgsOURMFvMaH2R/psHW4BAHmrchCCLvxMHuvzXVZFxzg1wtgdhMUTWIyC+rfcK7C0TW+CLDpe0atoGpNSrYRVnaFjrwxDt0Xg7hx5pWYNogGEr0CGy/P3/5D7dJMJmlBlJOVR7VZRSRcpUwMSZkL04h056BK6uFLo8wjEh2q1wfqiL6Fvu0a7dA2Aec8JVbUT86OftFfacumTdPQSmwCAT+BZljU4+0vyK2K8UAoxovSSKzU6yucCK/6tZiDXMdK62eCAJ4c80hOk6IlB8eITNDHzt5nJLP+jbW20Z7DUNg4/Fr7dsDCltUt8VOhUq/ZF+poieWfK15GkN6kOCqOnGFTbZzwQ2QASLP299KfY5uWILcpXyWmt7VISP6Kk1Z6WcXgB4LbsGKSJiPU23dke6jCJfIxql7LME9k1jnhZYCyqWOXhHCfBT1gw/AcooictYY7SHHiD3K5ANUkB4iwJQtWncvwR8ZdYY+2xPhyfi8/x5d/eA7noMdHQnSSG6BUYmx6LsrmD/6/n/HykxHvh2NBeHyGzGpyMNcYfh5Ft0ldiURs59PfBLNySBsartQuEuLLYyuA=
+  skip_cleanup: true
