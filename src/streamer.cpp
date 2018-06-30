@@ -806,7 +806,7 @@ void Streamer::processMapIcons(Player &player, const std::vector<SharedCell> &ce
 				}
 				else
 				{
-					distance = static_cast<float>(boost::geometry::comparable_distance(player.position, m->second->position));
+					distance = static_cast<float>(boost::geometry::comparable_distance(player.position, Eigen::Vector3f(m->second->position + m->second->positionOffset)));
 				}
 			}
 			boost::unordered_map<int, int>::iterator i = player.internalMapIcons.find(m->first);
@@ -913,7 +913,7 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 					}
 					else
 					{
-						distance = static_cast<float>(boost::geometry::comparable_distance(player.position, o->second->position));
+						distance = static_cast<float>(boost::geometry::comparable_distance(player.position, Eigen::Vector3f(o->second->position + o->second->positionOffset)));
 					}
 				}
 			}
@@ -1221,7 +1221,7 @@ void Streamer::processTextLabels(Player &player, const std::vector<SharedCell> &
 					}
 					else
 					{
-						distance = static_cast<float>(boost::geometry::comparable_distance(player.position, t->second->position));
+						distance = static_cast<float>(boost::geometry::comparable_distance(player.position, Eigen::Vector3f(t->second->position + t->second->positionOffset)));
 					}
 				}
 			}
