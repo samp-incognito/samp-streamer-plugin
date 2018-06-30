@@ -44,7 +44,7 @@ int Utility::checkInterfaceAndRegisterNatives(AMX *amx, AMX_NATIVE_INFO *amxNati
 			foundNatives = true;
 			if (!amxNativeTable[i].address)
 			{
-				Utility::logError("Obsolete or invalid native \"%s\" found (script might recompiled with the correct include file).", name);
+				Utility::logError("Obsolete or invalid native \"%s\" found (script might need to be recompiled with the correct include file).", name);
 				amxNativeTable[i].address = reinterpret_cast<cell>(hookedNative);
 				hookedNatives = true;
 			}
