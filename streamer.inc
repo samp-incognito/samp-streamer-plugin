@@ -53,29 +53,7 @@
     #define FLOAT_INFINITY (Float:0x7F800000)
 #endif
 
-#if !defined STREAMER_ENABLE_TAGS
-	#define STREAMER_TAG_OBJECT _
-	#define STREAMER_TAG_OBJECT_ALT _
-	#define STREAMER_TAG_PICKUP _
-	#define STREAMER_TAG_CP _
-	#define STREAMER_TAG_RACE_CP _
-	#define STREAMER_TAG_MAP_ICON _
-	#define STREAMER_TAG_AREA _
-	#define STREAMER_TAG_ACTOR _
-
-	#if !defined STREAMER_REMOVE_TEXT3D_TAG
-		#if !defined STREAMER_USE_DYNAMIC_TEXT3D_TAG
-			#define STREAMER_TAG_3D_TEXT_LABEL Text3D
-			#define STREAMER_ALL_TAGS {Text3D,_}
-		#else
-			#define STREAMER_TAG_3D_TEXT_LABEL DynamicText3D
-			#define STREAMER_ALL_TAGS {DynamicText3D,_}
-		#endif
-	#else
-		#define STREAMER_TAG_3D_TEXT_LABEL _
-		#define STREAMER_ALL_TAGS _
-	#endif
-#else
+#if defined STREAMER_ENABLE_TAGS
 	#define STREAMER_TAG_OBJECT DynamicObject
 	#define STREAMER_TAG_OBJECT_ALT {DynamicObject,_}
 	#define STREAMER_TAG_PICKUP DynamicPickup
@@ -87,6 +65,28 @@
 	#define STREAMER_TAG_ACTOR DynamicActor
 
 	#define STREAMER_ALL_TAGS {DynamicObject,DynamicPickup,DynamicCP,DynamicRaceCP,DynamicMapIcon,DynamicText3D,DynamicArea,DynamicActor,_}
+#else
+	#define STREAMER_TAG_OBJECT _
+	#define STREAMER_TAG_OBJECT_ALT _
+	#define STREAMER_TAG_PICKUP _
+	#define STREAMER_TAG_CP _
+	#define STREAMER_TAG_RACE_CP _
+	#define STREAMER_TAG_MAP_ICON _
+	#define STREAMER_TAG_AREA _
+	#define STREAMER_TAG_ACTOR _
+
+	#if defined STREAMER_REMOVE_TEXT3D_TAG
+		#define STREAMER_TAG_3D_TEXT_LABEL _
+		#define STREAMER_ALL_TAGS _
+	#else
+		#if defined STREAMER_USE_DYNAMIC_TEXT3D_TAG
+			#define STREAMER_TAG_3D_TEXT_LABEL DynamicText3D
+			#define STREAMER_ALL_TAGS {DynamicText3D,_}
+		#else
+			#define STREAMER_TAG_3D_TEXT_LABEL Text3D
+			#define STREAMER_ALL_TAGS {Text3D,_}
+		#endif
+	#endif
 #endif
 
 #if !defined STREAMER_OBJECT_SD
