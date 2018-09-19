@@ -292,7 +292,7 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 				{
 					case STREAMER_TYPE_OBJECT:
 					{
-						if (!core->getData()->objects.empty() && player.enabledItems[STREAMER_TYPE_OBJECT] && !sampgdk::IsPlayerNPC(player.playerId))
+						if (!core->getData()->objects.empty() && player.enabledItems[STREAMER_TYPE_OBJECT])
 						{
 							if (core->getChunkStreamer()->getChunkStreamingEnabled())
 							{
