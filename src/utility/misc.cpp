@@ -433,7 +433,10 @@ void Utility::processPendingDestroyedActors()
 		std::vector<int>::iterator a = core->getData()->destroyedActors.begin();
 		while (a != core->getData()->destroyedActors.end())
 		{
-			sampgdk::DestroyActor(*a);
+			if (sampgdk::IsValidActor(*a))
+			{
+				sampgdk::DestroyActor(*a);
+			}
 			a = core->getData()->destroyedActors.erase(a);
 		}
 	}
