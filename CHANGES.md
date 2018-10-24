@@ -1,6 +1,13 @@
 SA-MP Streamer Plugin
 =====================
 
+v2.9.4
+------
+
+- Fixed map icon bug with Streamer_SetItemOffset
+- Improved tags in include file (thanks Y_Less)
+- Fixed crash on GMX that occurred when actors were streamed in
+
 v2.9.3
 ------
 
