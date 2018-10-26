@@ -323,7 +323,7 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 					}
 					case STREAMER_TYPE_MAP_ICON:
 					{
-						if (!core->getData()->mapIcons.empty() && player.enabledItems[STREAMER_TYPE_MAP_ICON] && !sampgdk::IsPlayerNPC(player.playerId))
+						if (!core->getData()->mapIcons.empty() && player.enabledItems[STREAMER_TYPE_MAP_ICON])
 						{
 							if (core->getChunkStreamer()->getChunkStreamingEnabled())
 							{
@@ -338,7 +338,7 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 					}
 					case STREAMER_TYPE_3D_TEXT_LABEL:
 					{
-						if (!core->getData()->textLabels.empty() && player.enabledItems[STREAMER_TYPE_3D_TEXT_LABEL] && !sampgdk::IsPlayerNPC(player.playerId))
+						if (!core->getData()->textLabels.empty() && player.enabledItems[STREAMER_TYPE_3D_TEXT_LABEL])
 						{
 							if (core->getChunkStreamer()->getChunkStreamingEnabled())
 							{
