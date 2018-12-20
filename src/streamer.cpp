@@ -1063,17 +1063,23 @@ void Streamer::discoverPickups(Player &player, const std::vector<SharedCell> &ce
 	{
 		for (boost::unordered_map<int, Item::SharedPickup>::const_iterator p = (*c)->pickups.begin(); p != (*c)->pickups.end(); ++p)
 		{
+			if (p->second->worlds.empty())
+			{
+				p->second->worlds.insert(-1);
+			}
+
 			for (boost::unordered_set<int>::const_iterator w = p->second->worlds.begin(); w != p->second->worlds.end(); ++w)
 			{
-				if (player.worldId != *w || *w == -1)
+				if (player.worldId != *w && *w != -1)
 				{
 					continue;
 				}
 
 				boost::unordered_map<std::pair<int, int>, Item::SharedPickup>::iterator d = core->getData()->discoveredPickups.find(std::make_pair(p->first, *w));
-				if (d == core->getData()->discoveredPickups.end() || d->second->worldId != player.worldId)
+				if (d == core->getData()->discoveredPickups.end())
 				{
-					if (doesPlayerSatisfyConditions(p->second->players, player.playerId, p->second->interiors, player.interiorId, p->second->worlds, player.worldId, p->second->areas, player.internalAreas, p->second->inverseAreaChecking))
+					const int playerWorldId = *w == -1 ? -1 : player.worldId;
+					if (doesPlayerSatisfyConditions(p->second->players, player.playerId, p->second->interiors, player.interiorId, p->second->worlds, playerWorldId, p->second->areas, player.internalAreas, p->second->inverseAreaChecking))
 					{
 						if (p->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF || boost::geometry::comparable_distance(player.position, Eigen::Vector3f(p->second->position + p->second->positionOffset)) < (p->second->comparableStreamDistance * player.radiusMultipliers[STREAMER_TYPE_PICKUP]))
 						{
