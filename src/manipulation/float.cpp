@@ -1110,11 +1110,14 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 				}
 				if (update)
 				{
-					boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.find(p->first);
-					if (i != core->getData()->internalPickups.end())
+					for (boost::unordered_set<int>::const_iterator w = p->second->worlds.begin(); w != p->second->worlds.end(); ++w)
 					{
-						sampgdk::DestroyPickup(i->second);
-						i->second = sampgdk::CreatePickup(p->second->modelId, p->second->type, p->second->position[0], p->second->position[1], p->second->position[2], p->second->worldId);
+						boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalPickups.find(std::make_pair(p->first, *w));
+						if (i != core->getData()->internalPickups.end())
+						{
+							sampgdk::DestroyPickup(i->second);
+							i->second = sampgdk::CreatePickup(p->second->modelId, p->second->type, p->second->position[0], p->second->position[1], p->second->position[2], *w);
+						}
 					}
 				}
 				if (reassign || update)
