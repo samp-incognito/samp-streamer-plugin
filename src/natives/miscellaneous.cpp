@@ -698,16 +698,11 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemStreamerID(AMX *amx, cell *params)
 	{
 		case STREAMER_TYPE_PICKUP:
 		{
-			int pickupId = static_cast<int>(params[3]);
-			Item::SharedPickup p = core->getData()->pickups[pickupId];
-			for (boost::unordered_set<int>::const_iterator w = p->worlds.begin(); w != p->worlds.end(); ++w)
+			for (boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalPickups.begin(); i != core->getData()->internalPickups.end(); ++i)
 			{
-				for (boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalPickups.begin(); i != core->getData()->internalPickups.end(); ++i)
+				if (i->second == static_cast<int>(params[3]))
 				{
-					if (i->second == pickupId)
-					{
-						return i->first.first;
-					}
+					return i->first.first;
 				}
 			}
 			return INVALID_STREAMER_ID;
