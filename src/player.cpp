@@ -37,7 +37,10 @@ Player::Player(int id)
 	delayedRaceCheckpoint = 0;
 	delayedUpdate = false;
 	delayedUpdateType = 0;
-	enabledItems.set();
+	if (!sampgdk::IsPlayerNPC(id))
+	{
+		enabledItems.set();
+	}
 	interiorId = 0;
 	maxVisibleMapIcons = core->getData()->getGlobalMaxVisibleItems(STREAMER_TYPE_MAP_ICON);
 	maxVisibleObjects = core->getData()->getGlobalMaxVisibleItems(STREAMER_TYPE_OBJECT);
