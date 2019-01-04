@@ -1063,12 +1063,13 @@ void Streamer::discoverPickups(Player &player, const std::vector<SharedCell> &ce
 	{
 		for (boost::unordered_map<int, Item::SharedPickup>::const_iterator p = (*c)->pickups.begin(); p != (*c)->pickups.end(); ++p)
 		{
-			if (p->second->worlds.empty())
+			boost::unordered_set<int> worlds = p->second->worlds;
+			if (worlds.empty())
 			{
-				p->second->worlds.insert(-1);
+				worlds.insert(-1);
 			}
 
-			for (boost::unordered_set<int>::const_iterator w = p->second->worlds.begin(); w != p->second->worlds.end(); ++w)
+			for (boost::unordered_set<int>::const_iterator w = worlds.begin(); w != worlds.end(); ++w)
 			{
 				if (player.worldId != *w && *w != -1)
 				{
