@@ -602,10 +602,15 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemInternalID(AMX *amx, cell *params)
 	{
 		case STREAMER_TYPE_PICKUP:
 		{
-			boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.find(static_cast<int>(params[3]));
-			if (i != core->getData()->internalPickups.end())
+			int pickupId = static_cast<int>(params[3]);
+			Item::SharedPickup p = core->getData()->pickups[pickupId];
+			for (boost::unordered_set<int>::const_iterator w = p->worlds.begin(); w != p->worlds.end(); ++w)
 			{
-				return static_cast<cell>(i->second);
+				boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalPickups.find(std::make_pair(pickupId, *w));
+				if (i != core->getData()->internalPickups.end())
+				{
+					return static_cast<cell>(i->second);
+				}
 			}
 			return INVALID_PICKUP_ID;
 		}
@@ -693,11 +698,11 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemStreamerID(AMX *amx, cell *params)
 	{
 		case STREAMER_TYPE_PICKUP:
 		{
-			for (boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.begin(); i != core->getData()->internalPickups.end(); ++i)
+			for (boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalPickups.begin(); i != core->getData()->internalPickups.end(); ++i)
 			{
 				if (i->second == static_cast<int>(params[3]))
 				{
-					return i->first;
+					return i->first.first;
 				}
 			}
 			return INVALID_STREAMER_ID;
@@ -794,10 +799,15 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsItemVisible(AMX *amx, cell *params)
 	{
 		case STREAMER_TYPE_PICKUP:
 		{
-			boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.find(static_cast<int>(params[3]));
-			if (i != core->getData()->internalPickups.end())
+			int pickupId = static_cast<int>(params[3]);
+			Item::SharedPickup p = core->getData()->pickups[pickupId];
+			for (boost::unordered_set<int>::const_iterator w = p->worlds.begin(); w != p->worlds.end(); ++w)
 			{
-				return 1;
+				boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalPickups.find(std::make_pair(pickupId, *w));
+				if (i != core->getData()->internalPickups.end())
+				{
+					return 1;
+				}
 			}
 			return 0;
 		}
@@ -885,10 +895,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 	{
 		case STREAMER_TYPE_PICKUP:
 		{
-			boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.begin();
+			boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalPickups.begin();
 			while (i != core->getData()->internalPickups.end())
 			{
-				boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(i->first);
+				boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(i->first.first);
 				if (serverWide || (p != core->getData()->pickups.end() && p->second->amx == amx))
 				{
 					sampgdk::DestroyPickup(i->second);
@@ -1733,9 +1743,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetAllVisibleItems(AMX *amx, cell *params
 			}
 			case STREAMER_TYPE_PICKUP:
 			{
-				for (boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.begin(); i != core->getData()->internalPickups.end(); ++i)
+				for (boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalPickups.begin(); i != core->getData()->internalPickups.end(); ++i)
 				{
-					boost::unordered_map<int, Item::SharedPickup>::iterator q = core->getData()->pickups.find(i->first);
+					boost::unordered_map<int, Item::SharedPickup>::iterator q = core->getData()->pickups.find(i->first.first);
 					if (q != core->getData()->pickups.end())
 					{
 						float distance = static_cast<float>(boost::geometry::comparable_distance(p->second.position, q->second->position));
@@ -2073,11 +2083,14 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 						core->getGrid()->removePickup(p->second, true);
 					}
 				}
-				boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.find(p->first);
-				if (i != core->getData()->internalPickups.end())
+				for (boost::unordered_set<int>::const_iterator w = p->second->worlds.begin(); w != p->second->worlds.end(); ++w)
 				{
-					sampgdk::DestroyPickup(i->second);
-					i->second = sampgdk::CreatePickup(p->second->modelId, p->second->type, p->second->position[0], p->second->position[1], p->second->position[2], p->second->worldId);
+					boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalPickups.find(std::make_pair(p->first, *w));
+					if (i != core->getData()->internalPickups.end())
+					{
+						sampgdk::DestroyPickup(i->second);
+						i->second = sampgdk::CreatePickup(p->second->modelId, p->second->type, p->second->position[0], p->second->position[1], p->second->position[2], *w);
+					}
 				}
 				return 1;
 			}
