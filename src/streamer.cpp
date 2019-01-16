@@ -1119,13 +1119,13 @@ void Streamer::streamPickups()
 			++i;
 		}
 	}
-	std::multimap<int, std::pair<int, Item::SharedPickup>> sortedPickups;
+	std::multimap<int, std::pair<int, Item::SharedPickup> > sortedPickups;
 	for (boost::unordered_map<std::pair<int, int>, Item::SharedPickup>::iterator d = core->getData()->discoveredPickups.begin(); d != core->getData()->discoveredPickups.end(); ++d)
 	{
 		sortedPickups.insert(std::make_pair(d->second->priority, std::make_pair(d->first.second, d->second)));
 	}
 	core->getData()->discoveredPickups.clear();
-	for (std::multimap<int, std::pair<int, Item::SharedPickup>>::iterator s = sortedPickups.begin(); s != sortedPickups.end(); ++s)
+	for (std::multimap<int, std::pair<int, Item::SharedPickup> >::iterator s = sortedPickups.begin(); s != sortedPickups.end(); ++s)
 	{
 		if (core->getData()->internalPickups.size() == core->getData()->getGlobalMaxVisibleItems(STREAMER_TYPE_PICKUP))
 		{
