@@ -44,7 +44,6 @@ int Utility::checkInterfaceAndRegisterNatives(AMX *amx, AMX_NATIVE_INFO *amxNati
 			foundNatives = true;
 			if (!amxNativeTable[i].address)
 			{
-				Utility::logError("Obsolete or invalid native \"%s\" found (script might need to be recompiled with the correct include file).", name);
 				amxNativeTable[i].address = reinterpret_cast<cell>(hookedNative);
 				hookedNatives = true;
 			}
@@ -53,27 +52,32 @@ int Utility::checkInterfaceAndRegisterNatives(AMX *amx, AMX_NATIVE_INFO *amxNati
 	if (foundNatives)
 	{
 		cell amxAddr = 0;
-		int includeFileValue = 0;
+		int includeFileVersion = 0;
 		if (!amx_FindPubVar(amx, "Streamer_IncludeFileVersion", &amxAddr))
 		{
 			cell *amxPhysAddr = NULL;
 			if (!amx_GetAddr(amx, amxAddr, &amxPhysAddr))
 			{
-				includeFileValue = static_cast<int>(*amxPhysAddr);
+				includeFileVersion = static_cast<int>(*amxPhysAddr);
 			}
 		}
-		if (includeFileValue != INCLUDE_FILE_VERSION)
+		std::ostringstream includeFileVersionStream;
+		if (includeFileVersion <= 0)
 		{
-			std::ostringstream includeFileVersion;
-			if (includeFileValue <= 0)
-			{
-				includeFileVersion << "unknown version";
-			}
-			else
-			{
-				includeFileVersion << std::hex << std::showbase << includeFileValue;
-			}
-			Utility::logError("Include file version (%s) does not match plugin version (%#x) (script might need to be recompiled with the correct include file).", includeFileVersion.str().c_str(), INCLUDE_FILE_VERSION);
+			includeFileVersionStream << "unknown version";
+		}
+		else
+		{
+			includeFileVersionStream << std::hex << std::showbase << includeFileVersion;
+			std::istringstream(includeFileVersionStream.str().substr(0, std::to_string(INCLUDE_FILE_VERSION).length() + 2)) >> std::hex >> includeFileVersion;
+		}
+		if (includeFileVersion < INCLUDE_FILE_VERSION)
+		{
+			Utility::logError("The include file version (%s) for this script is older than the plugin version (%#x). The script might need to be recompiled with the latest include file.", includeFileVersionStream.str().c_str(), INCLUDE_FILE_VERSION);
+		}
+		else if (includeFileVersion > INCLUDE_FILE_VERSION)
+		{
+			Utility::logError("The plugin version (%#x) is older than the include file version (%s) for this script. The plugin might need to be updated to the latest version.", INCLUDE_FILE_VERSION, includeFileVersionStream.str().c_str());
 		}
 	}
 	if (hookedNatives)
