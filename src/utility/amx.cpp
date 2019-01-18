@@ -74,11 +74,11 @@ int Utility::checkInterfaceAndRegisterNatives(AMX *amx, AMX_NATIVE_INFO *amxNati
 		}
 		if (includeFileVersion < INCLUDE_FILE_VERSION)
 		{
-			Utility::logError("The include file version (%s) for this script is older than the plugin version (%#x). The script might need to be recompiled with latest include file.", includeFileVersionStream.str().c_str(), INCLUDE_FILE_VERSION);
+			Utility::logError("The include file version (%s) for this script is older than the plugin version (%#x). The script might need to be recompiled with the latest include file.", includeFileVersionStream.str().c_str(), INCLUDE_FILE_VERSION);
 		}
 		else if (includeFileVersion > INCLUDE_FILE_VERSION)
 		{
-			Utility::logError("The plugin version (%#x) is older than the include file version (%s) for this script. The plugin might need to be updated to latest version.", INCLUDE_FILE_VERSION, includeFileVersionStream.str().c_str());
+			Utility::logError("The plugin version (%#x) is older than the include file version (%s) for this script. The plugin might need to be updated to the latest version.", INCLUDE_FILE_VERSION, includeFileVersionStream.str().c_str());
 		}
 	}
 	if (hookedNatives)
