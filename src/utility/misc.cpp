@@ -137,16 +137,19 @@ boost::unordered_map<int, Item::SharedObject>::iterator Utility::destroyObject(b
 boost::unordered_map<int, Item::SharedPickup>::iterator Utility::destroyPickup(boost::unordered_map<int, Item::SharedPickup>::iterator p)
 {
 	Item::Pickup::identifier.remove(p->first, core->getData()->pickups.size());
-	boost::unordered_map<int, int>::iterator i = core->getData()->internalPickups.find(p->first);
-	if (i != core->getData()->internalPickups.end())
+	for (boost::unordered_set<int>::const_iterator w = p->second->worlds.begin(); w != p->second->worlds.end(); ++w)
 	{
-		sampgdk::DestroyPickup(i->second);
-		core->getData()->internalPickups.erase(i);
-	}
-	boost::unordered_map<int, Item::SharedPickup>::iterator d = core->getData()->discoveredPickups.find(p->first);
-	if (d != core->getData()->discoveredPickups.end())
-	{
-		core->getData()->discoveredPickups.erase(d);
+		boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalPickups.find(std::make_pair(p->first, *w));
+		if (i != core->getData()->internalPickups.end())
+		{
+			sampgdk::DestroyPickup(i->second);
+			core->getData()->internalPickups.erase(i);
+		}
+		boost::unordered_map<std::pair<int, int>, Item::SharedPickup>::iterator d = core->getData()->discoveredPickups.find(std::make_pair(p->first, *w));
+		if (d != core->getData()->discoveredPickups.end())
+		{
+			core->getData()->discoveredPickups.erase(d);
+		}
 	}
 	core->getGrid()->removePickup(p->second);
 	return core->getData()->pickups.erase(p);

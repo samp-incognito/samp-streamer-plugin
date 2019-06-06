@@ -298,7 +298,7 @@ native STREAMER_TAG_CP:CreateDynamicCP(Float:x, Float:y, Float:z, Float:size, wo
 native DestroyDynamicCP(STREAMER_TAG_CP:checkpointid);
 native IsValidDynamicCP(STREAMER_TAG_CP:checkpointid);
 native IsPlayerInDynamicCP(playerid, STREAMER_TAG_CP:checkpointid);
-native GetPlayerVisibleDynamicCP(playerid);
+native STREAMER_TAG_CP:GetPlayerVisibleDynamicCP(playerid);
 
 // Natives (Race Checkpoints)
 
@@ -306,7 +306,7 @@ native STREAMER_TAG_RACE_CP:CreateDynamicRaceCP(type, Float:x, Float:y, Float:z,
 native DestroyDynamicRaceCP(STREAMER_TAG_RACE_CP:checkpointid);
 native IsValidDynamicRaceCP(STREAMER_TAG_RACE_CP:checkpointid);
 native IsPlayerInDynamicRaceCP(playerid, STREAMER_TAG_RACE_CP:checkpointid);
-native GetPlayerVisibleDynamicRaceCP(playerid);
+native STREAMER_TAG_RACE_CP:GetPlayerVisibleDynamicRaceCP(playerid);
 
 // Natives (Map Icons)
 
