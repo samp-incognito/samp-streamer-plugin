@@ -80,14 +80,20 @@ cell AMX_NATIVE_CALL Natives::IsDynamicActorStreamedIn(AMX *amx, cell *params)
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
-		boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
+		int actorId = static_cast<int>(params[2]);
+
+		boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(actorId);
 		if (a != core->getData()->actors.end())
 		{
-			boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
-			if (i != core->getData()->internalActors.end())
+			for (boost::unordered_set<int>::const_iterator w = a->second->worlds.begin(); w != a->second->worlds.end(); ++w)
 			{
-				return sampgdk::IsActorStreamedIn(i->second, p->first);
+				boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.find(std::make_pair(actorId, *w));
+				if (i != core->getData()->internalActors.end())
+				{
+					return sampgdk::IsActorStreamedIn(i->second, p->first);
+				}
 			}
+			return 1;
 		}
 	}
 	return 0;
@@ -111,11 +117,14 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorVirtualWorld(AMX *amx, cell *params
 	if (a != core->getData()->actors.end())
 	{
 		Utility::setFirstValueInContainer(a->second->worlds, static_cast<int>(params[2]));
-		boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
-		if (i != core->getData()->internalActors.end())
+
+		for (boost::unordered_set<int>::const_iterator w = a->second->worlds.begin(); w != a->second->worlds.end(); ++w)
 		{
-			a->second->worldId = !a->second->worlds.empty() ? static_cast<int>(params[2]) : 0;
-			sampgdk::SetActorVirtualWorld(i->second, a->second->worldId);
+			boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
+			if (i != core->getData()->internalActors.end())
+			{
+				sampgdk::SetActorVirtualWorld(i->second, *w);
+			}
 		}
 		return 1;
 	}
@@ -159,10 +168,14 @@ cell AMX_NATIVE_CALL Natives::ApplyDynamicActorAnimation(AMX *amx, cell *params)
 		a->second->anim->locky = static_cast<int>(params[7]) != 0;
 		a->second->anim->freeze = static_cast<int>(params[8]) != 0;
 		a->second->anim->time = static_cast<int>(params[9]);
-		boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
-		if (i != core->getData()->internalActors.end())
+
+		for (boost::unordered_set<int>::const_iterator w = a->second->worlds.begin(); w != a->second->worlds.end(); ++w)
 		{
-			sampgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);
+			boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
+			if (i != core->getData()->internalActors.end())
+			{
+				sampgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);
+			}
 		}
 		return 1;
 	}
@@ -176,10 +189,14 @@ cell AMX_NATIVE_CALL Natives::ClearDynamicActorAnimations(AMX *amx, cell *params
 	if (a != core->getData()->actors.end())
 	{
 		a->second->anim = NULL;
-		boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
-		if (i != core->getData()->internalActors.end())
+
+		for (boost::unordered_set<int>::const_iterator w = a->second->worlds.begin(); w != a->second->worlds.end(); ++w)
 		{
-			sampgdk::ClearActorAnimations(i->second);
+			boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
+			if (i != core->getData()->internalActors.end())
+			{
+				sampgdk::ClearActorAnimations(i->second);
+			}
 		}
 		return 1;
 	}
@@ -206,17 +223,20 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorFacingAngle(AMX *amx, cell *params)
 	{
 		a->second->rotation = amx_ctof(params[2]);
 
-		boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
-		if (i != core->getData()->internalActors.end())
+		for (boost::unordered_set<int>::const_iterator w = a->second->worlds.begin(); w != a->second->worlds.end(); ++w)
 		{
-			sampgdk::DestroyActor(i->second);
-			i->second = sampgdk::CreateActor(a->second->modelId, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
-			sampgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
-			sampgdk::SetActorHealth(i->second, a->second->health);
-			sampgdk::SetActorVirtualWorld(i->second, a->second->worldId);
-			if (a->second->anim)
+			boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
+			if (i != core->getData()->internalActors.end())
 			{
-				sampgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);
+				sampgdk::DestroyActor(i->second);
+				i->second = sampgdk::CreateActor(a->second->modelId, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
+				sampgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
+				sampgdk::SetActorHealth(i->second, a->second->health);
+				sampgdk::SetActorVirtualWorld(i->second, *w);
+				if (a->second->anim)
+				{
+					sampgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);
+				}
 			}
 		}
 		return 1;
@@ -247,12 +267,16 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorPos(AMX *amx, cell *params)
 		a->second->position[0] = amx_ctof(params[2]);
 		a->second->position[1] = amx_ctof(params[3]);
 		a->second->position[2] = amx_ctof(params[4]);
-		boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
-		if (i != core->getData()->internalActors.end())
-		{
-			core->getGrid()->removeActor(a->second, true);
 
-			sampgdk::SetActorPos(i->second, a->second->position[0], a->second->position[1], a->second->position[2]);
+		for (boost::unordered_set<int>::const_iterator w = a->second->worlds.begin(); w != a->second->worlds.end(); ++w)
+		{
+			boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
+			if (i != core->getData()->internalActors.end())
+			{
+				core->getGrid()->removeActor(a->second, true);
+
+				sampgdk::SetActorPos(i->second, a->second->position[0], a->second->position[1], a->second->position[2]);
+			}
 		}
 		return 1;
 	}
@@ -274,15 +298,19 @@ cell AMX_NATIVE_CALL Natives::GetDynamicActorHealth(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::SetDynamicActorHealth(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2);
-	boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[1]));
+	int actorId = static_cast<int>(params[1]);
+	boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(actorId);
 	if (a != core->getData()->actors.end())
 	{
 		a->second->health = amx_ctof(params[2]);
 
-		boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
-		if (i != core->getData()->internalActors.end())
+		for (boost::unordered_set<int>::const_iterator w = a->second->worlds.begin(); w != a->second->worlds.end(); ++w)
 		{
-			sampgdk::SetActorHealth(i->second, a->second->health);
+			boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
+			if (i != core->getData()->internalActors.end())
+			{
+				sampgdk::SetActorHealth(i->second, a->second->health);
+			}
 		}
 		return 1;
 	}
@@ -292,22 +320,26 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorHealth(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::SetDynamicActorInvulnerable(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2);
-	boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[1]));
+	int actorId = static_cast<int>(params[1]);
+	boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(actorId);
 	if (a != core->getData()->actors.end())
 	{
 		a->second->invulnerable = static_cast<int>(params[2]) != 0;
 
-		boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
-		if (i != core->getData()->internalActors.end())
+		for (boost::unordered_set<int>::const_iterator w = a->second->worlds.begin(); w != a->second->worlds.end(); ++w)
 		{
-			sampgdk::DestroyActor(i->second);
-			i->second = sampgdk::CreateActor(a->second->modelId, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
-			sampgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
-			sampgdk::SetActorHealth(i->second, a->second->health);
-			sampgdk::SetActorVirtualWorld(i->second, a->second->worldId);
-			if (a->second->anim)
+			boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
+			if (i != core->getData()->internalActors.end())
 			{
-				sampgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);
+				sampgdk::DestroyActor(i->second);
+				i->second = sampgdk::CreateActor(a->second->modelId, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
+				sampgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
+				sampgdk::SetActorHealth(i->second, a->second->health);
+				sampgdk::SetActorVirtualWorld(i->second, *w);
+				if (a->second->anim)
+				{
+					sampgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);
+				}
 			}
 		}
 		return 1;
@@ -335,11 +367,11 @@ cell AMX_NATIVE_CALL Natives::GetPlayerTargetDynamicActor(AMX *amx, cell *params
 		int actorid = sampgdk::GetPlayerTargetActor(p->second.playerId);
 		if (actorid != INVALID_ACTOR_ID)
 		{
-			for (boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
+			for (boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
 			{
 				if (i->second == actorid)
 				{
-					return i->first;
+					return i->first.first;
 				}
 			}
 		}
@@ -356,11 +388,11 @@ cell AMX_NATIVE_CALL Natives::GetPlayerCameraTargetDynActor(AMX *amx, cell *para
 		int actorid = sampgdk::GetPlayerCameraTargetActor(p->second.playerId);
 		if (actorid != INVALID_ACTOR_ID)
 		{
-			for (boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
+			for (boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
 			{
 				if (i->second == actorid)
 				{
-					return i->first;
+					return i->first.first;
 				}
 			}
 		}

@@ -1296,17 +1296,20 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 				}
 				if (update)
 				{
-					boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
-					if (i != core->getData()->internalActors.end())
+					for (boost::unordered_set<int>::const_iterator w = a->second->worlds.begin(); w != a->second->worlds.end(); ++w)
 					{
-						sampgdk::DestroyActor(i->second);
-						i->second = sampgdk::CreateActor(a->second->modelId, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
-						sampgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
-						sampgdk::SetActorHealth(i->second, a->second->health);
-						sampgdk::SetActorVirtualWorld(i->second, a->second->worldId);
-						if (a->second->anim)
+						boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
+						if (i != core->getData()->internalActors.end())
 						{
-							sampgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);
+							sampgdk::DestroyActor(i->second);
+							i->second = sampgdk::CreateActor(a->second->modelId, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
+							sampgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
+							sampgdk::SetActorHealth(i->second, a->second->health);
+							sampgdk::SetActorVirtualWorld(i->second, *w);
+							if (a->second->anim)
+							{
+								sampgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);
+							}
 						}
 					}
 				}
