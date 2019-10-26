@@ -575,6 +575,34 @@ cell AMX_NATIVE_CALL Natives::IsDynamicObjectMaterialUsed(AMX *amx, cell *params
 	return 0;
 }
 
+cell AMX_NATIVE_CALL Natives::RemoveDynamicObjectMaterial(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2);
+	boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[1]));
+	if (o != core->getData()->objects.end())
+	{
+		boost::unordered_map<int, Item::Object::Material>::iterator m = o->second->materials.find(static_cast<int>(params[2]));
+		if (m != o->second->materials.end())
+		{
+			int index = static_cast<int>(params[2]);
+			o->second->materials[index].main.reset();
+
+			for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+			{
+				boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
+				if (i != p->second.internalObjects.end())
+				{
+					sampgdk::DestroyPlayerObject(p->first, i->second);
+					p->second.internalObjects.erase(i);
+					core->getStreamer()->startManualUpdate(p->second, STREAMER_TYPE_OBJECT);
+				}
+			}
+			return 1;
+		}
+	}
+	return 0;
+}
+
 cell AMX_NATIVE_CALL Natives::GetDynamicObjectMaterial(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(8);
@@ -636,6 +664,34 @@ cell AMX_NATIVE_CALL Natives::IsDynamicObjectMaterialTextUsed(AMX *amx, cell *pa
 			{
 				return 1;
 			}
+		}
+	}
+	return 0;
+}
+
+cell AMX_NATIVE_CALL Natives::RemoveDynamicObjectMaterialText(AMX *amx, cell *params)
+{
+	CHECK_PARAMS(2);
+	boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[1]));
+	if (o != core->getData()->objects.end())
+	{
+		boost::unordered_map<int, Item::Object::Material>::iterator m = o->second->materials.find(static_cast<int>(params[2]));
+		if (m != o->second->materials.end())
+		{
+			int index = static_cast<int>(params[2]);
+			o->second->materials[index].text.reset();
+
+			for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+			{
+				boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
+				if (i != p->second.internalObjects.end())
+				{
+					sampgdk::DestroyPlayerObject(p->first, i->second);
+					p->second.internalObjects.erase(i);
+					core->getStreamer()->startManualUpdate(p->second, STREAMER_TYPE_OBJECT);
+				}
+			}
+			return 1;
 		}
 	}
 	return 0;
