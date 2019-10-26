@@ -614,19 +614,29 @@ void Streamer::discoverActors(Player &player, const std::vector<SharedCell> &cel
 		{
 			for (boost::unordered_map<int, Item::SharedActor>::const_iterator a = (*c)->actors.begin(); a != (*c)->actors.end(); ++a)
 			{
-				boost::unordered_map<int, Item::SharedActor>::iterator d = core->getData()->discoveredActors.find(a->first);
-				if (d == core->getData()->discoveredActors.end())
+				boost::unordered_set<int> worlds = a->second->worlds;
+				if (worlds.empty())
 				{
-					if (doesPlayerSatisfyConditions(a->second->players, player.playerId, a->second->interiors, player.interiorId, a->second->worlds, player.worldId, a->second->areas, player.internalAreas, a->second->inverseAreaChecking))
+					worlds.insert(-1);
+				}
+
+				for (boost::unordered_set<int>::const_iterator w = worlds.begin(); w != worlds.end(); ++w)
+				{
+					if (player.worldId != *w && *w != -1)
 					{
-						if (a->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF || boost::geometry::comparable_distance(player.position, Eigen::Vector3f(a->second->position + a->second->positionOffset)) < (a->second->comparableStreamDistance * player.radiusMultipliers[STREAMER_TYPE_ACTOR]))
+						continue;
+					}
+
+					boost::unordered_map<std::pair<int, int>, Item::SharedActor>::iterator d = core->getData()->discoveredActors.find(std::make_pair(a->first, *w));
+					if (d == core->getData()->discoveredActors.end())
+					{
+						const int playerWorldId = *w == -1 ? -1 : player.worldId;
+						if (doesPlayerSatisfyConditions(a->second->players, player.playerId, a->second->interiors, player.interiorId, a->second->worlds, playerWorldId, a->second->areas, player.internalAreas, a->second->inverseAreaChecking))
 						{
-							boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
-							if (i == core->getData()->internalActors.end())
+							if (a->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF || boost::geometry::comparable_distance(player.position, Eigen::Vector3f(a->second->position + a->second->positionOffset)) < (a->second->comparableStreamDistance * player.radiusMultipliers[STREAMER_TYPE_ACTOR]))
 							{
-								a->second->worldId = !a->second->worlds.empty() ? player.worldId : 0;
+								core->getData()->discoveredActors.insert(std::make_pair(std::make_pair(a->first, *w), a->second));
 							}
-							core->getData()->discoveredActors.insert(*a);
 						}
 					}
 				}
@@ -638,10 +648,10 @@ void Streamer::discoverActors(Player &player, const std::vector<SharedCell> &cel
 
 void Streamer::streamActors()
 {
-	boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.begin();
+	boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.begin();
 	while (i != core->getData()->internalActors.end())
 	{
-		boost::unordered_map<int, Item::SharedActor>::iterator d = core->getData()->discoveredActors.find(i->first);
+		boost::unordered_map<std::pair<int, int>, Item::SharedActor>::iterator d = core->getData()->discoveredActors.find(i->first);
 		if (d == core->getData()->discoveredActors.end())
 		{
 			sampgdk::DestroyActor(i->second);
@@ -653,31 +663,31 @@ void Streamer::streamActors()
 			++i;
 		}
 	}
-	std::multimap<int, Item::SharedActor> sortedActors;
-	for (boost::unordered_map<int, Item::SharedActor>::iterator d = core->getData()->discoveredActors.begin(); d != core->getData()->discoveredActors.end(); ++d)
+	std::multimap<int, std::pair<int, Item::SharedActor> > sortedActors;
+	for (boost::unordered_map<std::pair<int, int>, Item::SharedActor>::iterator d = core->getData()->discoveredActors.begin(); d != core->getData()->discoveredActors.end(); ++d)
 	{
-		sortedActors.insert(std::make_pair(d->second->priority, d->second));
+		sortedActors.insert(std::make_pair(d->second->priority, std::make_pair(d->first.second, d->second)));
 	}
 	core->getData()->discoveredActors.clear();
-	for (std::multimap<int, Item::SharedActor>::iterator s = sortedActors.begin(); s != sortedActors.end(); ++s)
+	for (std::multimap<int, std::pair<int, Item::SharedActor> >::iterator s = sortedActors.begin(); s != sortedActors.end(); ++s)
 	{
 		if (core->getData()->internalActors.size() == core->getData()->getGlobalMaxVisibleItems(STREAMER_TYPE_ACTOR))
 		{
 			break;
 		}
-		int internalId = sampgdk::CreateActor(s->second->modelId, s->second->position[0], s->second->position[1], s->second->position[2], s->second->rotation);
+		int internalId = sampgdk::CreateActor(s->second.second->modelId, s->second.second->position[0], s->second.second->position[1], s->second.second->position[2], s->second.second->rotation);
 		if (internalId == INVALID_ACTOR_ID)
 		{
 			break;
 		}
-		sampgdk::SetActorInvulnerable(internalId, s->second->invulnerable);
-		sampgdk::SetActorHealth(internalId, s->second->health);
-		sampgdk::SetActorVirtualWorld(internalId, s->second->worldId);
-		if (s->second->anim)
+		sampgdk::SetActorInvulnerable(internalId, s->second.second->invulnerable);
+		sampgdk::SetActorHealth(internalId, s->second.second->health);
+		sampgdk::SetActorVirtualWorld(internalId, s->second.first);
+		if (s->second.second->anim)
 		{
-			sampgdk::ApplyActorAnimation(internalId, s->second->anim->lib.c_str(), s->second->anim->name.c_str(), s->second->anim->delta, s->second->anim->loop, s->second->anim->lockx, s->second->anim->locky, s->second->anim->freeze, s->second->anim->time);
+			sampgdk::ApplyActorAnimation(internalId, s->second.second->anim->lib.c_str(), s->second.second->anim->name.c_str(), s->second.second->anim->delta, s->second.second->anim->loop, s->second.second->anim->lockx, s->second.second->anim->locky, s->second.second->anim->freeze, s->second.second->anim->time);
 		}
-		core->getData()->internalActors.insert(std::make_pair(s->second->actorId, internalId));
+		core->getData()->internalActors.insert(std::make_pair(std::make_pair(s->second.second->actorId, s->second.first), internalId));
 	}
 	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 	{

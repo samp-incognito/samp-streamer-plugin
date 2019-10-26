@@ -616,10 +616,15 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemInternalID(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_ACTOR:
 		{
-			boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(static_cast<int>(params[3]));
-			if (i != core->getData()->internalActors.end())
+			int actorId = static_cast<int>(params[3]);
+			Item::SharedActor a = core->getData()->actors[actorId];
+			for (boost::unordered_set<int>::const_iterator w = a->worlds.begin(); w != a->worlds.end(); ++w)
 			{
-				return static_cast<cell>(i->second);
+				boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.find(std::make_pair(actorId, *w));
+				if (i != core->getData()->internalActors.end())
+				{
+					return static_cast<cell>(i->second);
+				}
 			}
 			return INVALID_ACTOR_ID;
 		}
@@ -709,11 +714,11 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemStreamerID(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_ACTOR:
 		{
-			for (boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
+			for (boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
 			{
 				if (i->second == static_cast<int>(params[3]))
 				{
-					return i->first;
+					return i->first.first;
 				}
 			}
 			return INVALID_STREAMER_ID;
@@ -813,10 +818,15 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsItemVisible(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_ACTOR:
 		{
-			boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(static_cast<int>(params[3]));
-			if (i != core->getData()->internalActors.end())
+			int actorId = static_cast<int>(params[3]);
+			Item::SharedActor a = core->getData()->actors[actorId];
+			for (boost::unordered_set<int>::const_iterator w = a->worlds.begin(); w != a->worlds.end(); ++w)
 			{
-				return 1;
+				boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.find(std::make_pair(actorId, *w));
+				if (i != core->getData()->internalActors.end())
+				{
+					return 1;
+				}
 			}
 			return 0;
 		}
@@ -913,10 +923,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 		}
 		case STREAMER_TYPE_ACTOR:
 		{
-			boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.begin();
+			boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.begin();
 			while (i != core->getData()->internalActors.end())
 			{
-				boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(i->first);
+				boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(i->first.first);
 				if (serverWide || (a != core->getData()->actors.end() && a->second->amx == amx))
 				{
 					sampgdk::DestroyActor(i->second);
@@ -1816,9 +1826,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetAllVisibleItems(AMX *amx, cell *params
 			}
 			case STREAMER_TYPE_ACTOR:
 			{
-				for (boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
+				for (boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
 				{
-					boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(i->first);
+					boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(i->first.first);
 					if (a != core->getData()->actors.end())
 					{
 						float distance = static_cast<float>(boost::geometry::comparable_distance(p->second.position, a->second->position));
@@ -2246,17 +2256,20 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 						core->getGrid()->removeActor(a->second, true);
 					}
 				}
-				boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
-				if (i != core->getData()->internalActors.end())
+				for (boost::unordered_set<int>::const_iterator w = a->second->worlds.begin(); w != a->second->worlds.end(); ++w)
 				{
-					sampgdk::DestroyActor(i->second);
-					i->second = sampgdk::CreateActor(a->second->modelId, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
-					sampgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
-					sampgdk::SetActorHealth(i->second, a->second->health);
-					sampgdk::SetActorVirtualWorld(i->second, a->second->worldId);
-					if (a->second->anim)
+					boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
+					if (i != core->getData()->internalActors.end())
 					{
-						sampgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);
+						sampgdk::DestroyActor(i->second);
+						i->second = sampgdk::CreateActor(a->second->modelId, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
+						sampgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
+						sampgdk::SetActorHealth(i->second, a->second->health);
+						sampgdk::SetActorVirtualWorld(i->second, *w);
+						if (a->second->anim)
+						{
+							sampgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);
+						}
 					}
 				}
 				return 1;
