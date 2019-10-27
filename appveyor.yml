@@ -10,15 +10,17 @@ install:
 
 before_build:
   - mkdir build && cd build
-  - cmake .. -G "Visual Studio 14 2015" -DCPACK_OUTPUT_FILE_PREFIX=.. -DCPACK_OUTPUT_FILE_POSTFIX=%CONFIGURATION% -DBOOST_ROOT="C:\Libraries\boost_1_65_1" -DEIGEN3_INCLUDE_DIR="%APPVEYOR_BUILD_FOLDER%\lib\eigen"
+  - git rev-parse --short %APPVEYOR_REPO_COMMIT%>%TMP%/short.txt
+  - set /p APPVEYOR_REPO_COMMIT_SHORT=<%TMP%/short.txt
+  - cmake .. -G "Visual Studio 14 2015" -DCPACK_OUTPUT_FILE_POSTFIX=%CONFIGURATION% -DBOOST_ROOT="C:\Libraries\boost_1_65_1" -DEIGEN3_INCLUDE_DIR="%APPVEYOR_BUILD_FOLDER%\lib\eigen" -DCOMMIT_ID="%APPVEYOR_REPO_COMMIT_SHORT%"
 
 build_script:
   - cmake --build . --config %CONFIGURATION% --target streamer_unity
   - cmake --build . --config %CONFIGURATION% --target package
+  - cd ..
 
 artifacts:
-  - path: streamer-*-win32-*.zip
-    name: Streamer Plugin
+  - path: build\package
 
 deploy:
   - provider: BinTray
@@ -27,7 +29,8 @@ deploy:
       secure: e0xOM0EZQFdpPDMOnEH6Zi8QD8YMMnSflcXFODRfwE/dHpWyNf25yNrSMR6gKjAT
     subject: incognito
     repo: streamer-plugin
-    package: builds
-    version: latest
+    package: streamer-plugin
+    version: $(APPVEYOR_REPO_COMMIT_SHORT)
     publish: true
     override: true
+    explode: true
