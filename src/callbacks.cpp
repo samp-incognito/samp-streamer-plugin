@@ -312,11 +312,11 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerWeaponShot(int playerid, int weaponid, in
 
 PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerGiveDamageActor(int playerid, int actorid, float amount, int weaponid, int bodypart)
 {
-	for (boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
+	for (boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
 	{
 		if (i->second == actorid)
 		{
-			int dynActorId = i->first;
+			int dynActorId = i->first.first;
 			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
 			{
 				int amxIndex = 0;
@@ -343,11 +343,11 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerGiveDamageActor(int playerid, int actorid
 
 PLUGIN_EXPORT bool PLUGIN_CALL OnActorStreamIn(int actorid, int forplayerid)
 {
-	for (boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
+	for (boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
 	{
 		if (i->second == actorid)
 		{
-			int dynActorId = i->first;
+			int dynActorId = i->first.first;
 			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
 			{
 				int amxIndex = 0;
@@ -366,11 +366,11 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnActorStreamIn(int actorid, int forplayerid)
 
 PLUGIN_EXPORT bool PLUGIN_CALL OnActorStreamOut(int actorid, int forplayerid)
 {
-	for (boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
+	for (boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
 	{
 		if (i->second == actorid)
 		{
-			int dynActorId = i->first;
+			int dynActorId = i->first.first;
 			for (std::set<AMX*>::iterator a = core->getData()->interfaces.begin(); a != core->getData()->interfaces.end(); ++a)
 			{
 				int amxIndex = 0;

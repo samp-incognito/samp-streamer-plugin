@@ -25,16 +25,19 @@ using namespace Utility;
 boost::unordered_map<int, Item::SharedActor>::iterator Utility::destroyActor(boost::unordered_map<int, Item::SharedActor>::iterator a)
 {
 	Item::Actor::identifier.remove(a->first, core->getData()->actors.size());
-	boost::unordered_map<int, int>::iterator i = core->getData()->internalActors.find(a->first);
-	if (i != core->getData()->internalActors.end())
+	for (boost::unordered_set<int>::const_iterator w = a->second->worlds.begin(); w != a->second->worlds.end(); ++w)
 	{
-		core->getData()->destroyedActors.push_back(i->second);
-		core->getData()->internalActors.erase(i);
-	}
-	boost::unordered_map<int, Item::SharedActor>::iterator d = core->getData()->discoveredActors.find(a->first);
-	if (d != core->getData()->discoveredActors.end())
-	{
-		core->getData()->discoveredActors.erase(d);
+		boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
+		if (i != core->getData()->internalActors.end())
+		{
+			core->getData()->destroyedActors.push_back(i->second);
+			core->getData()->internalActors.erase(i);
+		}
+		boost::unordered_map<std::pair<int, int>, Item::SharedActor>::iterator d = core->getData()->discoveredActors.find(std::make_pair(a->first, *w));
+		if (d != core->getData()->discoveredActors.end())
+		{
+			core->getData()->discoveredActors.erase(d);
+		}
 	}
 	core->getGrid()->removeActor(a->second);
 	return core->getData()->actors.erase(a);

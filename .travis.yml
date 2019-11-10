@@ -26,12 +26,17 @@ install:
 
 before_script:
   - mkdir build && cd build
-  - cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCPACK_OUTPUT_FILE_PREFIX=install -DCPACK_OUTPUT_FILE_POSTFIX=${BUILD_TYPE} -DBOOST_ROOT=boost_1_65_1 -DEIGEN3_INCLUDE_DIR=lib/eigen
+  - export TRAVIS_COMMIT_SHORT="$(git rev-parse --short ${TRAVIS_COMMIT})"
+  - cmake .. -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DCPACK_OUTPUT_FILE_POSTFIX=${BUILD_TYPE} -DBOOST_ROOT=boost_1_65_1 -DEIGEN3_INCLUDE_DIR=lib/eigen -DCOMMIT_ID=${TRAVIS_COMMIT_SHORT}
 
 script:
   - make streamer_unity
   - make package
   - cd ..
+
+before_deploy:
+  - envsubst < bintray.json > bintray-temp.json
+  - cat bintray-temp.json > bintray.json
 
 deploy:
   provider: bintray

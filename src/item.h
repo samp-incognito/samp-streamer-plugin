@@ -41,7 +41,6 @@ namespace Item
 		int references;
 		float rotation;
 		float streamDistance;
-		int worldId;
 
 		struct Anim
 		{
@@ -297,7 +296,6 @@ namespace Item
 		bool streamCallbacks;
 		float streamDistance;
 		int type;
-		int worldId;
 
 		boost::unordered_set<int> areas;
 		std::vector<int> extras;

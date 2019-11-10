@@ -1,15 +1,15 @@
 {
    "package": {
-      "name": "builds",
+      "name": "streamer-plugin",
       "repo": "streamer-plugin",
       "subject": "incognito"
    },
    "version": {
-      "name": "latest"
+      "name": "$TRAVIS_COMMIT_SHORT"
    },
    "files": [
       {
-         "includePattern": "build/install/(.*)",
+         "includePattern": "build/package/(.*)",
          "uploadPattern": "$1",
          "matrixParams": {
             "override": 1
