@@ -179,7 +179,7 @@ void ChunkStreamer::streamMapIcons(Player &player, bool automatic)
 					{
 						if (m->second->streamCallbacks)
 						{
-							streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_MAP_ICON, *r));
+							streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_MAP_ICON, *r, player.playerId));
 						}
 					}
 					player.mapIconIdentifier.remove(i->second, player.internalMapIcons.size());
@@ -216,7 +216,7 @@ void ChunkStreamer::streamMapIcons(Player &player, bool automatic)
 								sampgdk::RemovePlayerMapIcon(player.playerId, j->second);
 								if (e->second.get<1>()->streamCallbacks)
 								{
-									streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_MAP_ICON, e->second.get<0>()));
+									streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_MAP_ICON, e->second.get<0>(), player.playerId));
 								}
 								player.mapIconIdentifier.remove(j->second, player.internalMapIcons.size());
 								player.internalMapIcons.erase(j);
@@ -239,7 +239,7 @@ void ChunkStreamer::streamMapIcons(Player &player, bool automatic)
 				sampgdk::SetPlayerMapIcon(player.playerId, internalId, d->second.get<1>()->position[0], d->second.get<1>()->position[1], d->second.get<1>()->position[2], d->second.get<1>()->type, d->second.get<1>()->color, d->second.get<1>()->style);
 				if (d->second.get<1>()->streamCallbacks)
 				{
-					streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_MAP_ICON, d->second.get<1>()->mapIconId));
+					streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_MAP_ICON, d->second.get<1>()->mapIconId, player.playerId));
 				}
 				player.internalMapIcons.insert(std::make_pair(d->second.get<1>()->mapIconId, internalId));
 				if (d->second.get<1>()->cell)
@@ -337,7 +337,7 @@ void ChunkStreamer::streamObjects(Player &player, bool automatic)
 					{
 						if (o->second->streamCallbacks)
 						{
-							streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_OBJECT, *r));
+							streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_OBJECT, *r, player.playerId));
 						}
 					}
 					player.internalObjects.erase(i);
@@ -388,7 +388,7 @@ void ChunkStreamer::streamObjects(Player &player, bool automatic)
 								sampgdk::DestroyPlayerObject(player.playerId, j->second);
 								if (e->second.get<1>()->streamCallbacks)
 								{
-									streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_OBJECT, e->second.get<0>()));
+									streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_OBJECT, e->second.get<0>(), player.playerId));
 								}
 								player.internalObjects.erase(j);
 							}
@@ -414,7 +414,7 @@ void ChunkStreamer::streamObjects(Player &player, bool automatic)
 				}
 				if (d->second.get<1>()->streamCallbacks)
 				{
-					streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_OBJECT, d->second.get<0>()));
+					streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_OBJECT, d->second.get<0>(), player.playerId));
 				}
 				if (d->second.get<1>()->attach)
 				{
@@ -559,7 +559,7 @@ void ChunkStreamer::streamTextLabels(Player &player, bool automatic)
 					{
 						if (t->second->streamCallbacks)
 						{
-							streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_3D_TEXT_LABEL, *r));
+							streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_3D_TEXT_LABEL, *r, player.playerId));
 						}
 					}
 					player.internalTextLabels.erase(i);
@@ -596,7 +596,7 @@ void ChunkStreamer::streamTextLabels(Player &player, bool automatic)
 								sampgdk::DeletePlayer3DTextLabel(player.playerId, j->second);
 								if (e->second.get<1>()->streamCallbacks)
 								{
-									streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_3D_TEXT_LABEL, e->second.get<0>()));
+									streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_3D_TEXT_LABEL, e->second.get<0>(), player.playerId));
 								}
 								player.internalTextLabels.erase(j);
 							}
@@ -622,7 +622,7 @@ void ChunkStreamer::streamTextLabels(Player &player, bool automatic)
 				}
 				if (d->second.get<1>()->streamCallbacks)
 				{
-					streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_3D_TEXT_LABEL, d->second.get<0>()));
+					streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_3D_TEXT_LABEL, d->second.get<0>(), player.playerId));
 				}
 				player.internalTextLabels.insert(std::make_pair(d->second.get<0>(), internalId));
 				if (d->second.get<1>()->cell)
