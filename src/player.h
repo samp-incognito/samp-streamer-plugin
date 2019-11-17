@@ -26,8 +26,6 @@ struct Player
 
 	int activeCheckpoint;
 	int activeRaceCheckpoint;
-	bool checkedActors;
-	bool checkedPickups;
 	std::size_t chunkTickCount[STREAMER_MAX_TYPES];
 	std::size_t chunkTickRate[STREAMER_MAX_TYPES];
 	std::size_t currentVisibleObjects;

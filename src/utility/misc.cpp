@@ -400,38 +400,6 @@ bool Utility::setRadiusMultiplier(int type, float value, int playerid)
 	return core->getData()->setGlobalRadiusMultiplier(type, value);
 }
 
-bool Utility::haveAllPlayersCheckedActors()
-{
-	if (!core->getData()->players.empty())
-	{
-		for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
-		{
-			if (!p->second.checkedActors && p->second.enabledItems[STREAMER_TYPE_ACTOR])
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-	return false;
-}
-
-bool Utility::haveAllPlayersCheckedPickups()
-{
-	if (!core->getData()->players.empty())
-	{
-		for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
-		{
-			if (!p->second.checkedPickups && p->second.enabledItems[STREAMER_TYPE_PICKUP])
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-	return false;
-}
-
 void Utility::processPendingDestroyedActors()
 {
 	if (!core->getData()->destroyedActors.empty())

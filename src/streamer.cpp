@@ -91,25 +91,48 @@ void Streamer::startAutomaticUpdate()
 		}
 		if (++tickCount >= tickRate)
 		{
+			for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+			{
+				std::vector<SharedCell> cells;
+				core->getGrid()->findAllCellsForPlayer(p->second, cells);
+
+				for (std::vector<int>::const_iterator t = core->getData()->typePriority.begin(); t != core->getData()->typePriority.end(); ++t)
+				{
+					switch (*t)
+					{
+						case STREAMER_TYPE_PICKUP:
+						{
+							if (!core->getData()->pickups.empty() && p->second.enabledItems[STREAMER_TYPE_PICKUP])
+							{
+								discoverPickups(p->second, cells);
+							}
+							break;
+						}
+						case STREAMER_TYPE_ACTOR:
+						{
+							if (!core->getData()->actors.empty() && p->second.enabledItems[STREAMER_TYPE_ACTOR])
+							{
+								discoverActors(p->second, cells);
+							}
+							break;
+						}
+					}
+				}
+			}
+
 			for (std::vector<int>::const_iterator t = core->getData()->typePriority.begin(); t != core->getData()->typePriority.end(); ++t)
 			{
 				switch (*t)
 				{
 					case STREAMER_TYPE_PICKUP:
 					{
-						if (Utility::haveAllPlayersCheckedPickups())
-						{
-							streamPickups();
-						}
+						streamPickups();
 						break;
 					}
 					case STREAMER_TYPE_ACTOR:
 					{
 						Utility::processPendingDestroyedActors();
-						if (Utility::haveAllPlayersCheckedActors())
-						{
-							streamActors();
-						}
+						streamActors();
 						break;
 					}
 				}
@@ -369,28 +392,6 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 					}
 				}
 			}
-			if (automatic)
-			{
-				switch (*t)
-				{
-					case STREAMER_TYPE_PICKUP:
-					{
-						if (!core->getData()->pickups.empty() && player.enabledItems[STREAMER_TYPE_PICKUP])
-						{
-							discoverPickups(player, cells);
-						}
-						break;
-					}
-					case STREAMER_TYPE_ACTOR:
-					{
-						if (!core->getData()->actors.empty() && player.enabledItems[STREAMER_TYPE_ACTOR])
-						{
-							discoverActors(player, cells);
-						}
-						break;
-					}
-				}
-			}
 		}
 		if (!delta.isZero())
 		{
@@ -643,7 +644,6 @@ void Streamer::discoverActors(Player &player, const std::vector<SharedCell> &cel
 			}
 		}
 	}
-	player.checkedActors = true;
 }
 
 void Streamer::streamActors()
@@ -688,10 +688,6 @@ void Streamer::streamActors()
 			sampgdk::ApplyActorAnimation(internalId, s->second.second->anim->lib.c_str(), s->second.second->anim->name.c_str(), s->second.second->anim->delta, s->second.second->anim->loop, s->second.second->anim->lockx, s->second.second->anim->locky, s->second.second->anim->freeze, s->second.second->anim->time);
 		}
 		core->getData()->internalActors.insert(std::make_pair(std::make_pair(s->second.second->actorId, s->second.first), internalId));
-	}
-	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
-	{
-		p->second.checkedActors = false;
 	}
 }
 
@@ -1101,7 +1097,6 @@ void Streamer::discoverPickups(Player &player, const std::vector<SharedCell> &ce
 			}
 		}
 	}
-	player.checkedPickups = true;
 }
 
 void Streamer::streamPickups()
@@ -1151,10 +1146,6 @@ void Streamer::streamPickups()
 			streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_PICKUP, s->second.second->pickupId));
 		}
 		core->getData()->internalPickups.insert(std::make_pair(std::make_pair(s->second.second->pickupId, s->second.first), internalId));
-	}
-	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
-	{
-		p->second.checkedPickups = false;
 	}
 }
 

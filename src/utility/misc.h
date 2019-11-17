@@ -39,9 +39,6 @@ namespace Utility
 	float getRadiusMultiplier(int type, int playerid);
 	bool setRadiusMultiplier(int type, float value, int playerid);
 
-	bool haveAllPlayersCheckedActors();
-	bool haveAllPlayersCheckedPickups();
-
 	void processPendingDestroyedActors();
 
 	template<typename T>
