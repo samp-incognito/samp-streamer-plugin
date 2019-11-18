@@ -94,7 +94,7 @@ void Streamer::startAutomaticUpdate()
 			for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 			{
 				std::vector<SharedCell> cells;
-				core->getGrid()->findAllCellsForPlayer(p->second, cells);
+				core->getGrid()->findMinimalCellsForPlayer(p->second, cells);
 
 				for (std::vector<int>::const_iterator t = core->getData()->typePriority.begin(); t != core->getData()->typePriority.end(); ++t)
 				{
