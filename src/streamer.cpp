@@ -528,7 +528,7 @@ void Streamer::executeCallbacks()
 				int amxIndex = 0;
 				if (!amx_FindPublic(*i, "Streamer_OnItemStreamIn", &amxIndex))
 				{
-                    amx_Push(*i, static_cast<cell>(c->get<2>()));
+					amx_Push(*i, static_cast<cell>(c->get<2>()));
 					amx_Push(*i, static_cast<cell>(c->get<1>()));
 					amx_Push(*i, static_cast<cell>(c->get<0>()));
 					amx_Exec(*i, NULL, amxIndex);
@@ -598,7 +598,7 @@ void Streamer::executeCallbacks()
 				int amxIndex = 0;
 				if (!amx_FindPublic(*i, "Streamer_OnItemStreamOut", &amxIndex))
 				{
-                    amx_Push(*i, static_cast<cell>(c->get<2>()));
+					amx_Push(*i, static_cast<cell>(c->get<2>()));
 					amx_Push(*i, static_cast<cell>(c->get<1>()));
 					amx_Push(*i, static_cast<cell>(c->get<0>()));
 					amx_Exec(*i, NULL, amxIndex);
