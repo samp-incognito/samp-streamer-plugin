@@ -97,8 +97,8 @@ private:
 
 	std::vector<int> objectMoveCallbacks;
 protected:
-	std::vector<boost::tuple<int, int> > streamInCallbacks;
-	std::vector<boost::tuple<int, int> > streamOutCallbacks;
+	std::vector<boost::tuple<int, int, int> > streamInCallbacks;
+	std::vector<boost::tuple<int, int, int> > streamOutCallbacks;
 
 	template<std::size_t N, typename T>
 	inline bool doesPlayerSatisfyConditions(const std::bitset<N> &a, const T &b, const boost::unordered_set<T> &c, const T &d, const boost::unordered_set<T> &e, const T &f)
