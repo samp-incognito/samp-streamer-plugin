@@ -59,6 +59,14 @@ namespace Manipulation
 				}
 				default:
 				{
+					if (data & 0x40000000)
+					{
+						boost::unordered_map<int, std::vector<int>>::iterator p = i->second->extraExtras.find(data & ~0xC0000000);
+						if (p != i->second->extraExtras.end())
+						{
+							return Utility::convertContainerToArray(amx, output, size, p->second) != 0;
+						}
+					}
 					error = InvalidData;
 					break;
 				}
@@ -101,6 +109,11 @@ namespace Manipulation
 				}
 				default:
 				{
+					if (data & 0x40000000)
+					{
+						i->second->extraExtras[data & ~0xC0000000] = std::vector<int>();
+						return Utility::convertArrayToContainer(amx, input, size, i->second->extraExtras[data & ~0xC0000000]) != 0;
+					}
 					error = InvalidData;
 					return 0;
 				}
@@ -140,6 +153,14 @@ namespace Manipulation
 				}
 				default:
 				{
+					if (data & 0x40000000)
+					{
+						boost::unordered_map<int, std::vector<int>>::iterator p = i->second->extraExtras.find(data & ~0xC0000000);
+						if (p != i->second->extraExtras.end())
+						{
+							return Utility::isInContainer(p->second, value) != 0;
+						}
+					}
 					error = InvalidData;
 					break;
 				}
@@ -182,6 +203,14 @@ namespace Manipulation
 				}
 				default:
 				{
+					if (data & 0x40000000)
+					{
+						boost::unordered_map<int, std::vector<int>>::iterator p = i->second->extraExtras.find(data & ~0xC0000000);
+						if (p != i->second->extraExtras.end())
+						{
+							return Utility::addToContainer(p->second, value) != 0;
+						}
+					}
 					error = InvalidData;
 					break;
 				}
@@ -224,6 +253,14 @@ namespace Manipulation
 				}
 				default:
 				{
+					if (data & 0x40000000)
+					{
+						boost::unordered_map<int, std::vector<int>>::iterator p = i->second->extraExtras.find(data & ~0xC0000000);
+						if (p != i->second->extraExtras.end())
+						{
+							return Utility::removeFromContainer(p->second, value) != 0;
+						}
+					}
 					error = InvalidData;
 					break;
 				}
@@ -269,6 +306,15 @@ namespace Manipulation
 				}
 				default:
 				{
+					if (data & 0x40000000)
+					{
+						boost::unordered_map<int, std::vector<int>>::iterator p = i->second->extraExtras.find(data & ~0xC0000000);
+						if (p != i->second->extraExtras.end())
+						{
+							int size = static_cast<int>(p->second.size());
+							return size ? size : -1;
+						}
+					}
 					error = InvalidData;
 					break;
 				}

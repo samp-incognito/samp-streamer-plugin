@@ -178,6 +178,8 @@ enum
 	E_STREAMER_Z
 }
 
+#define E_STREAMER_CUSTOM(%0) ((%0) | 0x40000000 & ~0x80000000)
+
 // Natives (Settings)
 
 native Streamer_GetTickRate();
@@ -231,11 +233,14 @@ native Streamer_GetFloatData(type, STREAMER_ALL_TAGS:id, data, &Float:result);
 native Streamer_SetFloatData(type, STREAMER_ALL_TAGS:id, data, Float:value);
 native Streamer_GetIntData(type, STREAMER_ALL_TAGS:id, data);
 native Streamer_SetIntData(type, STREAMER_ALL_TAGS:id, data, value);
+native Streamer_RemoveIntData(type, STREAMER_ALL_TAGS:id, data);
+native Streamer_HasIntData(type, STREAMER_ALL_TAGS:id, data);
 native Streamer_GetArrayData(type, STREAMER_ALL_TAGS:id, data, dest[], maxdest = sizeof dest);
 native Streamer_SetArrayData(type, STREAMER_ALL_TAGS:id, data, const src[], maxsrc = sizeof src);
 native Streamer_IsInArrayData(type, STREAMER_ALL_TAGS:id, data, value);
 native Streamer_AppendArrayData(type, STREAMER_ALL_TAGS:id, data, value);
 native Streamer_RemoveArrayData(type, STREAMER_ALL_TAGS:id, data, value);
+native Streamer_HasArrayData(type, STREAMER_ALL_TAGS:id, data);
 native Streamer_GetArrayDataLength(type, STREAMER_ALL_TAGS:id, data);
 native Streamer_GetUpperBound(type);
 

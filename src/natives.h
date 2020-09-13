@@ -76,6 +76,8 @@ namespace Natives
 	cell AMX_NATIVE_CALL Streamer_SetFloatData(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_GetIntData(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_SetIntData(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_RemoveIntData(AMX *amx, cell *params);
+	cell AMX_NATIVE_CALL Streamer_HasIntData(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_GetArrayData(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_SetArrayData(AMX *amx, cell *params);
 	cell AMX_NATIVE_CALL Streamer_IsInArrayData(AMX *amx, cell *params);

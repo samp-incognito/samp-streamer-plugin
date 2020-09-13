@@ -97,6 +97,14 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					}
 					default:
 					{
+						if (static_cast<int>(params[3]) & 0x40000000)
+						{
+							boost::unordered_map<int, std::vector<int>>::const_iterator p = o->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
+							if (p != o->second->extraExtras.end())
+							{
+								return Utility::getFirstValueInContainer(p->second);
+							}
+						}
 						error = InvalidData;
 						break;
 					}
@@ -149,6 +157,14 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					}
 					default:
 					{
+						if (static_cast<int>(params[3]) & 0x40000000)
+						{
+							boost::unordered_map<int, std::vector<int>>::iterator x = p->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
+							if (x != p->second->extraExtras.end())
+							{
+								return Utility::getFirstValueInContainer(x->second);
+							}
+						}
 						error = InvalidData;
 						break;
 					}
@@ -193,6 +209,14 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					}
 					default:
 					{
+						if (static_cast<int>(params[3]) & 0x40000000)
+						{
+							boost::unordered_map<int, std::vector<int>>::iterator p = c->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
+							if (p != c->second->extraExtras.end())
+							{
+								return Utility::getFirstValueInContainer(p->second);
+							}
+						}
 						error = InvalidData;
 						break;
 					}
@@ -241,6 +265,14 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					}
 					default:
 					{
+						if (static_cast<int>(params[3]) & 0x40000000)
+						{
+							boost::unordered_map<int, std::vector<int>>::iterator p = r->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
+							if (p != r->second->extraExtras.end())
+							{
+								return Utility::getFirstValueInContainer(p->second);
+							}
+						}
 						error = InvalidData;
 						break;
 					}
@@ -297,6 +329,14 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					}
 					default:
 					{
+						if (static_cast<int>(params[3]) & 0x40000000)
+						{
+							boost::unordered_map<int, std::vector<int>>::iterator p = m->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
+							if (p != m->second->extraExtras.end())
+							{
+								return Utility::getFirstValueInContainer(p->second);
+							}
+						}
 						error = InvalidData;
 						break;
 					}
@@ -365,6 +405,14 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					}
 					default:
 					{
+						if (static_cast<int>(params[3]) & 0x40000000)
+						{
+							boost::unordered_map<int, std::vector<int>>::iterator p = t->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
+							if (p != t->second->extraExtras.end())
+							{
+								return Utility::getFirstValueInContainer(p->second);
+							}
+						}
 						error = InvalidData;
 						break;
 					}
@@ -433,6 +481,14 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					}
 					default:
 					{
+						if (static_cast<int>(params[3]) & 0x40000000)
+						{
+							boost::unordered_map<int, std::vector<int>>::iterator p = a->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
+							if (p != a->second->extraExtras.end())
+							{
+								return Utility::getFirstValueInContainer(p->second);
+							}
+						}
 						error = InvalidData;
 						break;
 					}
@@ -485,6 +541,14 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					}
 					default:
 					{
+						if (static_cast<int>(params[3]) & 0x40000000)
+						{
+							boost::unordered_map<int, std::vector<int>>::iterator p = a->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
+							if (p != a->second->extraExtras.end())
+							{
+								return Utility::getFirstValueInContainer(p->second);
+							}
+						}
 						error = InvalidData;
 						break;
 					}
@@ -517,6 +581,342 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 		case InvalidType:
 		{
 			Utility::logError("Streamer_GetIntData: Invalid type specified.");
+			break;
+		}
+	}
+	return 0;
+}
+
+int Manipulation::hasIntData(AMX *amx, cell *params)
+{
+	int error = -1;
+	switch (static_cast<int>(params[1]))
+	{
+		case STREAMER_TYPE_OBJECT:
+		{
+			boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
+			if (o != core->getData()->objects.end())
+			{
+				if (static_cast<int>(params[3]) & 0x40000000)
+				{
+					return o->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000) != o->second->extraExtras.end();
+				}
+				error = InvalidData;
+			}
+			else
+			{
+				error = InvalidId;
+			}
+			break;
+		}
+		case STREAMER_TYPE_PICKUP:
+		{
+			boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[2]));
+			if (p != core->getData()->pickups.end())
+			{
+				if (static_cast<int>(params[3]) & 0x40000000)
+				{
+					return p->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000) != p->second->extraExtras.end();
+				}
+				error = InvalidData;
+			}
+			else
+			{
+				error = InvalidId;
+			}
+			break;
+		}
+		case STREAMER_TYPE_CP:
+		{
+			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[2]));
+			if (c != core->getData()->checkpoints.end())
+			{
+				if (static_cast<int>(params[3]) & 0x40000000)
+				{
+					return c->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000) != c->second->extraExtras.end();
+				}
+				error = InvalidData;
+			}
+			else
+			{
+				error = InvalidId;
+			}
+			break;
+		}
+		case STREAMER_TYPE_RACE_CP:
+		{
+			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[2]));
+			if (r != core->getData()->raceCheckpoints.end())
+			{
+				if (static_cast<int>(params[3]) & 0x40000000)
+				{
+					return r->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000) != r->second->extraExtras.end();
+				}
+				error = InvalidData;
+			}
+			else
+			{
+				error = InvalidId;
+			}
+			break;
+		}
+		case STREAMER_TYPE_MAP_ICON:
+		{
+			boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[2]));
+			if (m != core->getData()->mapIcons.end())
+			{
+				if (static_cast<int>(params[3]) & 0x40000000)
+				{
+					return m->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000) != m->second->extraExtras.end();
+				}
+				error = InvalidData;
+			}
+			else
+			{
+				error = InvalidId;
+			}
+			break;
+		}
+		case STREAMER_TYPE_3D_TEXT_LABEL:
+		{
+			boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[2]));
+			if (t != core->getData()->textLabels.end())
+			{
+				if (static_cast<int>(params[3]) & 0x40000000)
+				{
+					return t->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000) != t->second->extraExtras.end();
+				}
+				error = InvalidData;
+			}
+			else
+			{
+				error = InvalidId;
+			}
+			break;
+		}
+		case STREAMER_TYPE_AREA:
+		{
+			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[2]));
+			if (a != core->getData()->areas.end())
+			{
+				if (static_cast<int>(params[3]) & 0x40000000)
+				{
+					return a->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000) != a->second->extraExtras.end();
+				}
+				error = InvalidData;
+			}
+			else
+			{
+				error = InvalidId;
+			}
+			break;
+		}
+		case STREAMER_TYPE_ACTOR:
+		{
+			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
+			if (a != core->getData()->actors.end())
+			{
+				if (static_cast<int>(params[3]) & 0x40000000)
+				{
+					return a->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000) != a->second->extraExtras.end();
+				}
+				error = InvalidData;
+			}
+			else
+			{
+				error = InvalidId;
+			}
+			break;
+		}
+		default:
+		{
+			error = InvalidType;
+			break;
+		}
+	}
+	switch (error)
+	{
+		case InvalidData:
+		{
+			Utility::logError("Streamer_Has(Int|Array)Data: Invalid data specified.");
+			break;
+		}
+		case InvalidId:
+		{
+			Utility::logError("Streamer_Has(Int|Array)Data: Invalid ID specified.");
+			break;
+		}
+		case InvalidType:
+		{
+			Utility::logError("Streamer_Has(Int|Array)Data: Invalid type specified.");
+			break;
+		}
+	}
+	return 0;
+}
+
+int Manipulation::removeIntData(AMX *amx, cell *params)
+{
+	int error = -1;
+	switch (static_cast<int>(params[1]))
+	{
+		case STREAMER_TYPE_OBJECT:
+		{
+			boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
+			if (o != core->getData()->objects.end())
+			{
+				if (static_cast<int>(params[3]) & 0x40000000)
+				{
+					return o->second->extraExtras.erase(static_cast<int>(params[3]) & ~0xC0000000);
+				}
+				error = InvalidData;
+			}
+			else
+			{
+				error = InvalidId;
+			}
+			break;
+		}
+		case STREAMER_TYPE_PICKUP:
+		{
+			boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[2]));
+			if (p != core->getData()->pickups.end())
+			{
+				if (static_cast<int>(params[3]) & 0x40000000)
+				{
+					return p->second->extraExtras.erase(static_cast<int>(params[3]) & ~0xC0000000);
+				}
+				error = InvalidData;
+			}
+			else
+			{
+				error = InvalidId;
+			}
+			break;
+		}
+		case STREAMER_TYPE_CP:
+		{
+			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[2]));
+			if (c != core->getData()->checkpoints.end())
+			{
+				if (static_cast<int>(params[3]) & 0x40000000)
+				{
+					return c->second->extraExtras.erase(static_cast<int>(params[3]) & ~0xC0000000);
+				}
+				error = InvalidData;
+			}
+			else
+			{
+				error = InvalidId;
+			}
+			break;
+		}
+		case STREAMER_TYPE_RACE_CP:
+		{
+			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[2]));
+			if (r != core->getData()->raceCheckpoints.end())
+			{
+				if (static_cast<int>(params[3]) & 0x40000000)
+				{
+					return r->second->extraExtras.erase(static_cast<int>(params[3]) & ~0xC0000000);
+				}
+				error = InvalidData;
+			}
+			else
+			{
+				error = InvalidId;
+			}
+			break;
+		}
+		case STREAMER_TYPE_MAP_ICON:
+		{
+			boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[2]));
+			if (m != core->getData()->mapIcons.end())
+			{
+				if (static_cast<int>(params[3]) & 0x40000000)
+				{
+					return m->second->extraExtras.erase(static_cast<int>(params[3]) & ~0xC0000000);
+				}
+				error = InvalidData;
+			}
+			else
+			{
+				error = InvalidId;
+			}
+			break;
+		}
+		case STREAMER_TYPE_3D_TEXT_LABEL:
+		{
+			boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[2]));
+			if (t != core->getData()->textLabels.end())
+			{
+				if (static_cast<int>(params[3]) & 0x40000000)
+				{
+					return t->second->extraExtras.erase(static_cast<int>(params[3]) & ~0xC0000000);
+				}
+				error = InvalidData;
+			}
+			else
+			{
+				error = InvalidId;
+			}
+			break;
+		}
+		case STREAMER_TYPE_AREA:
+		{
+			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[2]));
+			if (a != core->getData()->areas.end())
+			{
+				if (static_cast<int>(params[3]) & 0x40000000)
+				{
+					return a->second->extraExtras.erase(static_cast<int>(params[3]) & ~0xC0000000);
+				}
+				error = InvalidData;
+			}
+			else
+			{
+				error = InvalidId;
+			}
+			break;
+		}
+		case STREAMER_TYPE_ACTOR:
+		{
+			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
+			if (a != core->getData()->actors.end())
+			{
+				if (static_cast<int>(params[3]) & 0x40000000)
+				{
+					return a->second->extraExtras.erase(static_cast<int>(params[3]) & ~0xC0000000);
+				}
+				error = InvalidData;
+			}
+			else
+			{
+				error = InvalidId;
+			}
+			break;
+		}
+		default:
+		{
+			error = InvalidType;
+			break;
+		}
+	}
+	switch (error)
+	{
+		case InvalidData:
+		{
+			Utility::logError("Streamer_RemoveIntData: Invalid data specified.");
+			break;
+		}
+		case InvalidId:
+		{
+			Utility::logError("Streamer_RemoveIntData: Invalid ID specified.");
+			break;
+		}
+		case InvalidType:
+		{
+			Utility::logError("Streamer_RemoveIntData: Invalid type specified.");
 			break;
 		}
 	}
@@ -693,6 +1093,11 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					}
 					default:
 					{
+						if (static_cast<int>(params[3]) & 0x40000000)
+						{
+							o->second->extraExtras[static_cast<int>(params[3]) & ~0xC0000000] = std::vector<int>(1, static_cast<int>(params[4]));
+							break;
+						}
 						error = InvalidData;
 						break;
 					}
@@ -809,6 +1214,11 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					}
 					default:
 					{
+						if (static_cast<int>(params[3]) & 0x40000000)
+						{
+							p->second->extraExtras[static_cast<int>(params[3]) & ~0xC0000000] = std::vector<int>(1, static_cast<int>(params[4]));
+							break;
+						}
 						error = InvalidData;
 						break;
 					}
@@ -867,6 +1277,11 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					}
 					default:
 					{
+						if (static_cast<int>(params[3]) & 0x40000000)
+						{
+							c->second->extraExtras[static_cast<int>(params[3]) & ~0xC0000000] = std::vector<int>(1, static_cast<int>(params[4]));
+							break;
+						}
 						error = InvalidData;
 						break;
 					}
@@ -918,6 +1333,11 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					}
 					default:
 					{
+						if (static_cast<int>(params[3]) & 0x40000000)
+						{
+							r->second->extraExtras[static_cast<int>(params[3]) & ~0xC0000000] = std::vector<int>(1, static_cast<int>(params[4]));
+							break;
+						}
 						error = InvalidData;
 						break;
 					}
@@ -993,6 +1413,11 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					}
 					default:
 					{
+						if (static_cast<int>(params[3]) & 0x40000000)
+						{
+							m->second->extraExtras[static_cast<int>(params[3]) & ~0xC0000000] = std::vector<int>(1, static_cast<int>(params[4]));
+							break;
+						}
 						error = InvalidData;
 						break;
 					}
@@ -1113,6 +1538,11 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					}
 					default:
 					{
+						if (static_cast<int>(params[3]) & 0x40000000)
+						{
+							t->second->extraExtras[static_cast<int>(params[3]) & ~0xC0000000] = std::vector<int>(1, static_cast<int>(params[4]));
+							break;
+						}
 						error = InvalidData;
 						break;
 					}
@@ -1233,6 +1663,11 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					}
 					default:
 					{
+						if (static_cast<int>(params[3]) & 0x40000000)
+						{
+							a->second->extraExtras[static_cast<int>(params[3]) & ~0xC0000000] = std::vector<int>(1, static_cast<int>(params[4]));
+							break;
+						}
 						error = InvalidData;
 						break;
 					}
@@ -1290,6 +1725,11 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					}
 					default:
 					{
+						if (static_cast<int>(params[3]) & 0x40000000)
+						{
+							a->second->extraExtras[static_cast<int>(params[3]) & ~0xC0000000] = std::vector<int>(1, static_cast<int>(params[4]));
+							break;
+						}
 						error = InvalidData;
 						break;
 					}

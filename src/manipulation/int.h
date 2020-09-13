@@ -23,6 +23,8 @@ namespace Manipulation
 {
 	int getIntData(AMX *amx, cell *params);
 	int setIntData(AMX *amx, cell *params);
+	int removeIntData(AMX *amx, cell *params);
+	int hasIntData(AMX *amx, cell *params);
 }
 
 #endif
