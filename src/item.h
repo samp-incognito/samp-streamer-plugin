@@ -61,7 +61,7 @@ namespace Item
 
 		boost::unordered_set<int> areas;
 		std::vector<int> extras;
-		boost::unordered_map<int, std::vector<int>> extraExtras;
+		boost::unordered_map<int, std::vector<int> > extraExtras;
 		boost::unordered_set<int> interiors;
 		std::bitset<MAX_PLAYERS> players;
 		boost::unordered_set<int> worlds;
@@ -107,7 +107,7 @@ namespace Item
 
 		boost::unordered_set<int> areas;
 		std::vector<int> extras;
-		boost::unordered_map<int, std::vector<int>> extraExtras;
+		boost::unordered_map<int, std::vector<int> > extraExtras;
 		boost::unordered_set<int> interiors;
 		std::bitset<MAX_PLAYERS> players;
 		boost::unordered_set<int> worlds;
@@ -137,7 +137,7 @@ namespace Item
 
 		boost::unordered_set<int> areas;
 		std::vector<int> extras;
-		boost::unordered_map<int, std::vector<int>> extraExtras;
+		boost::unordered_map<int, std::vector<int> > extraExtras;
 		boost::unordered_set<int> interiors;
 		std::bitset<MAX_PLAYERS> players;
 		boost::unordered_set<int> worlds;
@@ -169,7 +169,7 @@ namespace Item
 
 		boost::unordered_set<int> areas;
 		std::vector<int> extras;
-		boost::unordered_map<int, std::vector<int>> extraExtras;
+		boost::unordered_map<int, std::vector<int> > extraExtras;
 		boost::unordered_set<int> interiors;
 		std::bitset<MAX_PLAYERS> players;
 		boost::unordered_set<int> worlds;
@@ -273,7 +273,7 @@ namespace Item
 
 		boost::unordered_set<int> areas;
 		std::vector<int> extras;
-		boost::unordered_map<int, std::vector<int>> extraExtras;
+		boost::unordered_map<int, std::vector<int> > extraExtras;
 		boost::unordered_set<int> interiors;
 		std::bitset<MAX_PLAYERS> players;
 		boost::unordered_set<int> worlds;
@@ -304,7 +304,7 @@ namespace Item
 
 		boost::unordered_set<int> areas;
 		std::vector<int> extras;
-		boost::unordered_map<int, std::vector<int>> extraExtras;
+		boost::unordered_map<int, std::vector<int> > extraExtras;
 		boost::unordered_set<int> interiors;
 		std::bitset<MAX_PLAYERS> players;
 		boost::unordered_set<int> worlds;
@@ -336,7 +336,7 @@ namespace Item
 
 		boost::unordered_set<int> areas;
 		std::vector<int> extras;
-		boost::unordered_map<int, std::vector<int>> extraExtras;
+		boost::unordered_map<int, std::vector<int> > extraExtras;
 		boost::unordered_set<int> interiors;
 		std::bitset<MAX_PLAYERS> players;
 		boost::unordered_set<int> worlds;
@@ -385,7 +385,7 @@ namespace Item
 
 		boost::unordered_set<int> areas;
 		std::vector<int> extras;
-		boost::unordered_map<int, std::vector<int>> extraExtras;
+		boost::unordered_map<int, std::vector<int> > extraExtras;
 		boost::unordered_set<int> interiors;
 		std::bitset<MAX_PLAYERS> players;
 		boost::unordered_set<int> worlds;

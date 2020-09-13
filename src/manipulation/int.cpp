@@ -99,7 +99,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					{
 						if (static_cast<int>(params[3]) & 0x40000000)
 						{
-							boost::unordered_map<int, std::vector<int>>::const_iterator p = o->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
+							boost::unordered_map<int, std::vector<int> >::const_iterator p = o->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
 							if (p != o->second->extraExtras.end())
 							{
 								return Utility::getFirstValueInContainer(p->second);
@@ -159,7 +159,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					{
 						if (static_cast<int>(params[3]) & 0x40000000)
 						{
-							boost::unordered_map<int, std::vector<int>>::iterator x = p->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
+							boost::unordered_map<int, std::vector<int> >::iterator x = p->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
 							if (x != p->second->extraExtras.end())
 							{
 								return Utility::getFirstValueInContainer(x->second);
@@ -211,7 +211,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					{
 						if (static_cast<int>(params[3]) & 0x40000000)
 						{
-							boost::unordered_map<int, std::vector<int>>::iterator p = c->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
+							boost::unordered_map<int, std::vector<int> >::iterator p = c->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
 							if (p != c->second->extraExtras.end())
 							{
 								return Utility::getFirstValueInContainer(p->second);
@@ -267,7 +267,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					{
 						if (static_cast<int>(params[3]) & 0x40000000)
 						{
-							boost::unordered_map<int, std::vector<int>>::iterator p = r->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
+							boost::unordered_map<int, std::vector<int> >::iterator p = r->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
 							if (p != r->second->extraExtras.end())
 							{
 								return Utility::getFirstValueInContainer(p->second);
@@ -331,7 +331,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					{
 						if (static_cast<int>(params[3]) & 0x40000000)
 						{
-							boost::unordered_map<int, std::vector<int>>::iterator p = m->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
+							boost::unordered_map<int, std::vector<int> >::iterator p = m->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
 							if (p != m->second->extraExtras.end())
 							{
 								return Utility::getFirstValueInContainer(p->second);
@@ -407,7 +407,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					{
 						if (static_cast<int>(params[3]) & 0x40000000)
 						{
-							boost::unordered_map<int, std::vector<int>>::iterator p = t->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
+							boost::unordered_map<int, std::vector<int> >::iterator p = t->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
 							if (p != t->second->extraExtras.end())
 							{
 								return Utility::getFirstValueInContainer(p->second);
@@ -483,7 +483,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					{
 						if (static_cast<int>(params[3]) & 0x40000000)
 						{
-							boost::unordered_map<int, std::vector<int>>::iterator p = a->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
+							boost::unordered_map<int, std::vector<int> >::iterator p = a->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
 							if (p != a->second->extraExtras.end())
 							{
 								return Utility::getFirstValueInContainer(p->second);
@@ -543,7 +543,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					{
 						if (static_cast<int>(params[3]) & 0x40000000)
 						{
-							boost::unordered_map<int, std::vector<int>>::iterator p = a->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
+							boost::unordered_map<int, std::vector<int> >::iterator p = a->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
 							if (p != a->second->extraExtras.end())
 							{
 								return Utility::getFirstValueInContainer(p->second);
