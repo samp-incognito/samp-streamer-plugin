@@ -94,11 +94,14 @@ AMX_NATIVE_INFO natives[] =
 	{ "Streamer_SetFloatData", Natives::Streamer_SetFloatData },
 	{ "Streamer_GetIntData", Natives::Streamer_GetIntData },
 	{ "Streamer_SetIntData", Natives::Streamer_SetIntData },
+	{ "Streamer_RemoveIntData", Natives::Streamer_RemoveIntData },
+	{ "Streamer_HasIntData", Natives::Streamer_HasIntData },
 	{ "Streamer_GetArrayData", Natives::Streamer_GetArrayData },
 	{ "Streamer_SetArrayData", Natives::Streamer_SetArrayData },
 	{ "Streamer_IsInArrayData", Natives::Streamer_IsInArrayData },
 	{ "Streamer_AppendArrayData", Natives::Streamer_AppendArrayData },
 	{ "Streamer_RemoveArrayData", Natives::Streamer_RemoveArrayData },
+	{ "Streamer_HasArrayData", Natives::Streamer_HasIntData }, // Alias.
 	{ "Streamer_GetArrayDataLength", Natives::Streamer_GetArrayDataLength },
 	{ "Streamer_GetUpperBound", Natives::Streamer_GetUpperBound },
 	// Miscellaneous
