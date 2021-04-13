@@ -1,6 +1,20 @@
 SA-MP Streamer Plugin
 =====================
 
+v2.9.5
+------
+
+- Fixed GetPlayerVisibleDynamic(Race)CP return tags (thanks AGraber)
+- Allowed NPCs to stream items (thanks WoutProvost)
+- Fixed issues with pickups and actors in multiple virtual worlds
+  (thanks ziggi)
+- Added RemoveDynamicObject(Material/Text) (thanks TommyB123)
+- Fixed pickups and actors disappearing with high player tick rate
+  and/or high amount of new player connections (thanks ziggi)
+- Added player ID for Streamer_OnItemStream(In/Out) (thanks 0x416c69)
+- Added ability to use multiple "extra IDs" via E_STREAMER_CUSTOM(x)
+  in data manipulation natives (thanks Y_Less) 
+
 v2.9.4
 ------
 
