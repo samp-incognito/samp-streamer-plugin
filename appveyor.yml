@@ -21,16 +21,3 @@ build_script:
 
 artifacts:
   - path: build\package
-
-deploy:
-  - provider: BinTray
-    username: incognito
-    api_key:
-      secure: e0xOM0EZQFdpPDMOnEH6Zi8QD8YMMnSflcXFODRfwE/dHpWyNf25yNrSMR6gKjAT
-    subject: incognito
-    repo: streamer-plugin
-    package: streamer-plugin
-    version: $(APPVEYOR_REPO_COMMIT_SHORT)
-    publish: true
-    override: true
-    explode: true
