@@ -46,13 +46,13 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetIntData(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_RemoveIntData(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(4);
+	CHECK_PARAMS(3);
 	return static_cast<cell>(Manipulation::removeIntData(amx, params));
 }
 
 cell AMX_NATIVE_CALL Natives::Streamer_HasIntData(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(4);
+	CHECK_PARAMS(3);
 	return static_cast<cell>(Manipulation::hasIntData(amx, params));
 }
 
