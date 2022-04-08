@@ -15,7 +15,7 @@
  */
 
 #include "../precompiled.h"
-
+#include "ompgdk.hpp"
 #include "../natives.h"
 #include "../core.h"
 #include "../utility.h"
@@ -90,7 +90,7 @@ cell AMX_NATIVE_CALL Natives::IsDynamicActorStreamedIn(AMX *amx, cell *params)
 				boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.find(std::make_pair(actorId, *w));
 				if (i != core->getData()->internalActors.end())
 				{
-					return sampgdk::IsActorStreamedIn(i->second, p->first);
+					return ompgdk::IsActorStreamedIn(i->second, p->first);
 				}
 			}
 			return 1;
@@ -123,7 +123,7 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorVirtualWorld(AMX *amx, cell *params
 			boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
 			if (i != core->getData()->internalActors.end())
 			{
-				sampgdk::SetActorVirtualWorld(i->second, *w);
+				ompgdk::SetActorVirtualWorld(i->second, *w);
 			}
 		}
 		return 1;
@@ -174,7 +174,7 @@ cell AMX_NATIVE_CALL Natives::ApplyDynamicActorAnimation(AMX *amx, cell *params)
 			boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
 			if (i != core->getData()->internalActors.end())
 			{
-				sampgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);
+				ompgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);
 			}
 		}
 		return 1;
@@ -195,7 +195,7 @@ cell AMX_NATIVE_CALL Natives::ClearDynamicActorAnimations(AMX *amx, cell *params
 			boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
 			if (i != core->getData()->internalActors.end())
 			{
-				sampgdk::ClearActorAnimations(i->second);
+				ompgdk::ClearActorAnimations(i->second);
 			}
 		}
 		return 1;
@@ -228,14 +228,14 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorFacingAngle(AMX *amx, cell *params)
 			boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
 			if (i != core->getData()->internalActors.end())
 			{
-				sampgdk::DestroyActor(i->second);
-				i->second = sampgdk::CreateActor(a->second->modelId, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
-				sampgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
-				sampgdk::SetActorHealth(i->second, a->second->health);
-				sampgdk::SetActorVirtualWorld(i->second, *w);
+				ompgdk::DestroyActor(i->second);
+				i->second = ompgdk::CreateActor(a->second->modelId, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
+				ompgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
+				ompgdk::SetActorHealth(i->second, a->second->health);
+				ompgdk::SetActorVirtualWorld(i->second, *w);
 				if (a->second->anim)
 				{
-					sampgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);
+					ompgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);
 				}
 			}
 		}
@@ -275,7 +275,7 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorPos(AMX *amx, cell *params)
 			{
 				core->getGrid()->removeActor(a->second, true);
 
-				sampgdk::SetActorPos(i->second, a->second->position[0], a->second->position[1], a->second->position[2]);
+				ompgdk::SetActorPos(i->second, a->second->position[0], a->second->position[1], a->second->position[2]);
 			}
 		}
 		return 1;
@@ -309,7 +309,7 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorHealth(AMX *amx, cell *params)
 			boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
 			if (i != core->getData()->internalActors.end())
 			{
-				sampgdk::SetActorHealth(i->second, a->second->health);
+				ompgdk::SetActorHealth(i->second, a->second->health);
 			}
 		}
 		return 1;
@@ -331,14 +331,14 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorInvulnerable(AMX *amx, cell *params
 			boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
 			if (i != core->getData()->internalActors.end())
 			{
-				sampgdk::DestroyActor(i->second);
-				i->second = sampgdk::CreateActor(a->second->modelId, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
-				sampgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
-				sampgdk::SetActorHealth(i->second, a->second->health);
-				sampgdk::SetActorVirtualWorld(i->second, *w);
+				ompgdk::DestroyActor(i->second);
+				i->second = ompgdk::CreateActor(a->second->modelId, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
+				ompgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
+				ompgdk::SetActorHealth(i->second, a->second->health);
+				ompgdk::SetActorVirtualWorld(i->second, *w);
 				if (a->second->anim)
 				{
-					sampgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);
+					ompgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);
 				}
 			}
 		}
@@ -364,7 +364,7 @@ cell AMX_NATIVE_CALL Natives::GetPlayerTargetDynamicActor(AMX *amx, cell *params
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
-		int actorid = sampgdk::GetPlayerTargetActor(p->second.playerId);
+		int actorid = ompgdk::GetPlayerTargetActor(p->second.playerId);
 		if (actorid != INVALID_ACTOR_ID)
 		{
 			for (boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
@@ -385,7 +385,7 @@ cell AMX_NATIVE_CALL Natives::GetPlayerCameraTargetDynActor(AMX *amx, cell *para
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
-		int actorid = sampgdk::GetPlayerCameraTargetActor(p->second.playerId);
+		int actorid = ompgdk::GetPlayerCameraTargetActor(p->second.playerId);
 		if (actorid != INVALID_ACTOR_ID)
 		{
 			for (boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)

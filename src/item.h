@@ -63,7 +63,7 @@ namespace Item
 		std::vector<int> extras;
 		boost::unordered_map<int, std::vector<int> > extraExtras;
 		boost::unordered_set<int> interiors;
-		std::bitset<MAX_PLAYERS> players;
+		std::bitset<PLAYER_POOL_SIZE> players;
 		boost::unordered_set<int> worlds;
 
 		static Identifier identifier;
@@ -109,7 +109,7 @@ namespace Item
 		std::vector<int> extras;
 		boost::unordered_map<int, std::vector<int> > extraExtras;
 		boost::unordered_set<int> interiors;
-		std::bitset<MAX_PLAYERS> players;
+		std::bitset<PLAYER_POOL_SIZE> players;
 		boost::unordered_set<int> worlds;
 
 		static Identifier identifier;
@@ -139,7 +139,7 @@ namespace Item
 		std::vector<int> extras;
 		boost::unordered_map<int, std::vector<int> > extraExtras;
 		boost::unordered_set<int> interiors;
-		std::bitset<MAX_PLAYERS> players;
+		std::bitset<PLAYER_POOL_SIZE> players;
 		boost::unordered_set<int> worlds;
 
 		static Identifier identifier;
@@ -171,7 +171,7 @@ namespace Item
 		std::vector<int> extras;
 		boost::unordered_map<int, std::vector<int> > extraExtras;
 		boost::unordered_set<int> interiors;
-		std::bitset<MAX_PLAYERS> players;
+		std::bitset<PLAYER_POOL_SIZE> players;
 		boost::unordered_set<int> worlds;
 
 		static Identifier identifier;
@@ -275,7 +275,7 @@ namespace Item
 		std::vector<int> extras;
 		boost::unordered_map<int, std::vector<int> > extraExtras;
 		boost::unordered_set<int> interiors;
-		std::bitset<MAX_PLAYERS> players;
+		std::bitset<PLAYER_POOL_SIZE> players;
 		boost::unordered_set<int> worlds;
 
 		static Identifier identifier;
@@ -306,7 +306,7 @@ namespace Item
 		std::vector<int> extras;
 		boost::unordered_map<int, std::vector<int> > extraExtras;
 		boost::unordered_set<int> interiors;
-		std::bitset<MAX_PLAYERS> players;
+		std::bitset<PLAYER_POOL_SIZE> players;
 		boost::unordered_set<int> worlds;
 
 		static Identifier identifier;
@@ -338,7 +338,7 @@ namespace Item
 		std::vector<int> extras;
 		boost::unordered_map<int, std::vector<int> > extraExtras;
 		boost::unordered_set<int> interiors;
-		std::bitset<MAX_PLAYERS> players;
+		std::bitset<PLAYER_POOL_SIZE> players;
 		boost::unordered_set<int> worlds;
 
 		static Identifier identifier;
@@ -387,7 +387,7 @@ namespace Item
 		std::vector<int> extras;
 		boost::unordered_map<int, std::vector<int> > extraExtras;
 		boost::unordered_set<int> interiors;
-		std::bitset<MAX_PLAYERS> players;
+		std::bitset<PLAYER_POOL_SIZE> players;
 		boost::unordered_set<int> worlds;
 
 		static Identifier identifier;

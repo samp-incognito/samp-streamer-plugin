@@ -15,7 +15,7 @@
  */
 
 #include "precompiled.h"
-
+#include "ompgdk.hpp"
 #include "player.h"
 #include "core.h"
 
@@ -35,7 +35,7 @@ Player::Player(int id)
 	delayedRaceCheckpoint = 0;
 	delayedUpdate = false;
 	delayedUpdateType = 0;
-	if (!sampgdk::IsPlayerNPC(id))
+	if (!ompgdk::IsPlayerNPC(id))
 	{
 		enabledItems.set();
 	}

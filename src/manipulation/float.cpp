@@ -15,7 +15,7 @@
  */
 
 #include "../precompiled.h"
-
+#include "ompgdk.hpp"
 #include "float.h"
 #include "../core.h"
 #include "../utility.h"
@@ -996,8 +996,8 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 						boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
 						if (i != p->second.internalObjects.end())
 						{
-							sampgdk::DestroyPlayerObject(p->first, i->second);
-							i->second = sampgdk::CreatePlayerObject(p->first, o->second->modelId, o->second->position[0], o->second->position[1], o->second->position[2], o->second->rotation[0], o->second->rotation[1], o->second->rotation[2], o->second->drawDistance);
+							ompgdk::DestroyPlayerObject(p->first, i->second);
+							i->second = ompgdk::CreatePlayerObject(p->first, o->second->modelId, o->second->position[0], o->second->position[1], o->second->position[2], o->second->rotation[0], o->second->rotation[1], o->second->rotation[2], o->second->drawDistance);
 							if (o->second->attach)
 							{
 								if (o->second->attach->object != INVALID_STREAMER_ID)
@@ -1005,44 +1005,36 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 									boost::unordered_map<int, int>::iterator j = p->second.internalObjects.find(o->second->attach->object);
 									if (j != p->second.internalObjects.end())
 									{
-										static AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToObject");
-										if (native != NULL)
-										{
-											sampgdk::InvokeNative(native, "dddffffffb", p->first, i->second, j->second, o->second->attach->positionOffset[0], o->second->attach->positionOffset[1], o->second->attach->positionOffset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2], o->second->attach->syncRotation);
-										}
+										ompgdk::AttachPlayerObjectToObject(p->first, i->second, j->second, o->second->attach->positionOffset[0], o->second->attach->positionOffset[1], o->second->attach->positionOffset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
 									}
 								}
 								else if (o->second->attach->player != INVALID_PLAYER_ID)
 								{
-									static AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToPlayer");
-									if (native != NULL)
-									{
-										sampgdk::InvokeNative(native, "dddffffffd", p->first, i->second, o->second->attach->player, o->second->attach->positionOffset[0], o->second->attach->positionOffset[1], o->second->attach->positionOffset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2], 1);
-									}
+									ompgdk::AttachPlayerObjectToPlayer(p->first, i->second, o->second->attach->player, o->second->attach->positionOffset[0], o->second->attach->positionOffset[1], o->second->attach->positionOffset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
 								}
 								else if (o->second->attach->vehicle != INVALID_VEHICLE_ID)
 								{
-									sampgdk::AttachPlayerObjectToVehicle(p->first, i->second, o->second->attach->vehicle, o->second->attach->positionOffset[0], o->second->attach->positionOffset[1], o->second->attach->positionOffset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
+									ompgdk::AttachPlayerObjectToVehicle(p->first, i->second, o->second->attach->vehicle, o->second->attach->positionOffset[0], o->second->attach->positionOffset[1], o->second->attach->positionOffset[2], o->second->attach->rotation[0], o->second->attach->rotation[1], o->second->attach->rotation[2]);
 								}
 							}
 							else if (o->second->move)
 							{
-								sampgdk::MovePlayerObject(p->first, i->second, o->second->move->position.get<0>()[0], o->second->move->position.get<0>()[1], o->second->move->position.get<0>()[2], o->second->move->speed, o->second->move->rotation.get<0>()[0], o->second->move->rotation.get<0>()[1], o->second->move->rotation.get<0>()[2]);
+								ompgdk::MovePlayerObject(p->first, i->second, o->second->move->position.get<0>()[0], o->second->move->position.get<0>()[1], o->second->move->position.get<0>()[2], o->second->move->speed, o->second->move->rotation.get<0>()[0], o->second->move->rotation.get<0>()[1], o->second->move->rotation.get<0>()[2]);
 							}
 							for (boost::unordered_map<int, Item::Object::Material>::iterator m = o->second->materials.begin(); m != o->second->materials.end(); ++m)
 							{
 								if (m->second.main)
 								{
-									sampgdk::SetPlayerObjectMaterial(p->first, i->second, m->first, m->second.main->modelId, m->second.main->txdFileName.c_str(), m->second.main->textureName.c_str(), m->second.main->materialColor);
+									ompgdk::SetPlayerObjectMaterial(p->first, i->second, m->first, m->second.main->modelId, m->second.main->txdFileName.c_str(), m->second.main->textureName.c_str(), m->second.main->materialColor);
 								}
 								else if (m->second.text)
 								{
-									sampgdk::SetPlayerObjectMaterialText(p->first, i->second, m->second.text->materialText.c_str(), m->first, m->second.text->materialSize, m->second.text->fontFace.c_str(), m->second.text->fontSize, m->second.text->bold, m->second.text->fontColor, m->second.text->backColor, m->second.text->textAlignment);
+									ompgdk::SetPlayerObjectMaterialText(p->first, i->second, m->second.text->materialText.c_str(), m->first, m->second.text->materialSize, m->second.text->fontFace.c_str(), m->second.text->fontSize, m->second.text->bold, m->second.text->fontColor, m->second.text->backColor, m->second.text->textAlignment);
 								}
 							}
 							if (o->second->noCameraCollision)
 							{
-								sampgdk::SetPlayerObjectNoCameraCol(p->first, i->second);
+								ompgdk::SetPlayerObjectNoCameraCol(p->first, i->second);
 							}
 						}
 					}
@@ -1115,8 +1107,8 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 						boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalPickups.find(std::make_pair(p->first, *w));
 						if (i != core->getData()->internalPickups.end())
 						{
-							sampgdk::DestroyPickup(i->second);
-							i->second = sampgdk::CreatePickup(p->second->modelId, p->second->type, p->second->position[0], p->second->position[1], p->second->position[2], *w);
+							ompgdk::DestroyPickup(i->second);
+							i->second = ompgdk::CreatePickup(p->second->modelId, p->second->type, p->second->position[0], p->second->position[1], p->second->position[2], *w);
 						}
 					}
 				}
@@ -1193,7 +1185,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					{
 						if (p->second.visibleCheckpoint == c->first)
 						{
-							sampgdk::DisablePlayerCheckpoint(p->first);
+							ompgdk::DisablePlayerCheckpoint(p->first);
 							p->second.activeCheckpoint = 0;
 							p->second.visibleCheckpoint = 0;
 						}
@@ -1290,7 +1282,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					{
 						if (p->second.visibleRaceCheckpoint == r->first)
 						{
-							sampgdk::DisablePlayerRaceCheckpoint(p->first);
+							ompgdk::DisablePlayerRaceCheckpoint(p->first);
 							p->second.activeRaceCheckpoint = 0;
 							p->second.visibleRaceCheckpoint = 0;
 						}
@@ -1364,8 +1356,8 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 						boost::unordered_map<int, int>::iterator i = p->second.internalMapIcons.find(m->first);
 						if (i != p->second.internalMapIcons.end())
 						{
-							sampgdk::RemovePlayerMapIcon(p->first, i->second);
-							sampgdk::SetPlayerMapIcon(p->first, i->second, m->second->position[0], m->second->position[1], m->second->position[2], m->second->type, m->second->color, m->second->style);
+							ompgdk::RemovePlayerMapIcon(p->first, i->second);
+							ompgdk::SetPlayerMapIcon(p->first, i->second, m->second->position[0], m->second->position[1], m->second->position[2], m->second->type, m->second->color, m->second->style);
 						}
 					}
 				}
@@ -1446,8 +1438,8 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 						boost::unordered_map<int, int>::iterator i = p->second.internalTextLabels.find(t->first);
 						if (i != p->second.internalTextLabels.end())
 						{
-							sampgdk::DeletePlayer3DTextLabel(p->first, i->second);
-							i->second = sampgdk::CreatePlayer3DTextLabel(p->first, t->second->text.c_str(), t->second->color, t->second->position[0], t->second->position[1], t->second->position[2], t->second->drawDistance, t->second->attach ? t->second->attach->player : INVALID_PLAYER_ID, t->second->attach ? t->second->attach->vehicle : INVALID_VEHICLE_ID, t->second->testLOS);
+							ompgdk::DeletePlayer3DTextLabel(p->first, i->second);
+							i->second = ompgdk::CreatePlayer3DTextLabel(p->first, t->second->text.c_str(), t->second->color, t->second->position[0], t->second->position[1], t->second->position[2], t->second->drawDistance, t->second->attach ? t->second->attach->player : INVALID_PLAYER_ID, t->second->attach ? t->second->attach->vehicle : INVALID_VEHICLE_ID, t->second->testLOS);
 						}
 					}
 				}
@@ -1780,14 +1772,14 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 						boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
 						if (i != core->getData()->internalActors.end())
 						{
-							sampgdk::DestroyActor(i->second);
-							i->second = sampgdk::CreateActor(a->second->modelId, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
-							sampgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
-							sampgdk::SetActorHealth(i->second, a->second->health);
-							sampgdk::SetActorVirtualWorld(i->second, *w);
+							ompgdk::DestroyActor(i->second);
+							i->second = ompgdk::CreateActor(a->second->modelId, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
+							ompgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
+							ompgdk::SetActorHealth(i->second, a->second->health);
+							ompgdk::SetActorVirtualWorld(i->second, *w);
 							if (a->second->anim)
 							{
-								sampgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);
+								ompgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);
 							}
 						}
 					}

@@ -61,6 +61,7 @@ inline void intrusive_ptr_release(T *t)
 #include <utility>
 
 #include "common.h"
-#include "sampgdk.h"
+#include "plugin.h"
+#include "sdk.hpp"
 
 #endif

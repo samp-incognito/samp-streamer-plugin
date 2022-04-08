@@ -15,7 +15,7 @@
  */
 
 #include "../precompiled.h"
-
+#include "ompgdk.hpp"
 #include "../natives.h"
 #include "../core.h"
 #include "../utility.h"
@@ -675,7 +675,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemInternalID(AMX *amx, cell *params)
 				{
 					return static_cast<cell>(i->second);
 				}
-				return INVALID_3DTEXT_ID;
+				return INVALID_TEXT_LABEL_ID;
 			}
 			case STREAMER_TYPE_AREA:
 			{
@@ -911,7 +911,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 				boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(i->first.first);
 				if (serverWide || (p != core->getData()->pickups.end() && p->second->amx == amx))
 				{
-					sampgdk::DestroyPickup(i->second);
+					ompgdk::DestroyPickup(i->second);
 					i = core->getData()->internalPickups.erase(i);
 				}
 				else
@@ -929,7 +929,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 				boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(i->first.first);
 				if (serverWide || (a != core->getData()->actors.end() && a->second->amx == amx))
 				{
-					sampgdk::DestroyActor(i->second);
+					ompgdk::DestroyActor(i->second);
 					i = core->getData()->internalActors.erase(i);
 				}
 				else
@@ -953,7 +953,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 					boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(i->first);
 					if (serverWide || (o != core->getData()->objects.end() && o->second->amx == amx))
 					{
-						sampgdk::DestroyPlayerObject(p->first, i->second);
+						ompgdk::DestroyPlayerObject(p->first, i->second);
 						i = p->second.internalObjects.erase(i);
 					}
 					else
@@ -970,7 +970,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 					boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(p->second.visibleCheckpoint);
 					if (serverWide || (c != core->getData()->checkpoints.end() && c->second->amx == amx))
 					{
-						sampgdk::DisablePlayerCheckpoint(p->first);
+						ompgdk::DisablePlayerCheckpoint(p->first);
 						p->second.activeCheckpoint = 0;
 						p->second.visibleCheckpoint = 0;
 						return 1;
@@ -985,7 +985,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 					boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(p->second.visibleRaceCheckpoint);
 					if (serverWide || (r != core->getData()->raceCheckpoints.end() && r->second->amx == amx))
 					{
-						sampgdk::DisablePlayerRaceCheckpoint(p->first);
+						ompgdk::DisablePlayerRaceCheckpoint(p->first);
 						p->second.activeRaceCheckpoint = 0;
 						p->second.visibleRaceCheckpoint = 0;
 						return 1;
@@ -1001,7 +1001,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 					boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(i->first);
 					if (serverWide || (m != core->getData()->mapIcons.end() && m->second->amx == amx))
 					{
-						sampgdk::RemovePlayerMapIcon(p->first, i->second);
+						ompgdk::RemovePlayerMapIcon(p->first, i->second);
 						i = p->second.internalMapIcons.erase(i);
 					}
 					else
@@ -1019,7 +1019,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 					boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(i->first);
 					if (serverWide || (t != core->getData()->textLabels.end() && t->second->amx == amx))
 					{
-						sampgdk::DeletePlayer3DTextLabel(p->first, i->second);
+						ompgdk::DeletePlayer3DTextLabel(p->first, i->second);
 						i = p->second.internalTextLabels.erase(i);
 					}
 					else
@@ -2053,7 +2053,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 					boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
 					if (i != p->second.internalObjects.end())
 					{
-						sampgdk::SetPlayerObjectPos(p->first, i->second, o->second->position[0], o->second->position[1], o->second->position[2]);
+						ompgdk::SetPlayerObjectPos(p->first, i->second, o->second->position[0], o->second->position[1], o->second->position[2]);
 					}
 				}
 				if (position[0] != o->second->position[0] || position[1] != o->second->position[1])
@@ -2098,8 +2098,8 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 					boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalPickups.find(std::make_pair(p->first, *w));
 					if (i != core->getData()->internalPickups.end())
 					{
-						sampgdk::DestroyPickup(i->second);
-						i->second = sampgdk::CreatePickup(p->second->modelId, p->second->type, p->second->position[0], p->second->position[1], p->second->position[2], *w);
+						ompgdk::DestroyPickup(i->second);
+						i->second = ompgdk::CreatePickup(p->second->modelId, p->second->type, p->second->position[0], p->second->position[1], p->second->position[2], *w);
 					}
 				}
 				return 1;
@@ -2124,7 +2124,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 				{
 					if (p->second.visibleCheckpoint == c->first)
 					{
-						sampgdk::DisablePlayerCheckpoint(p->first);
+						ompgdk::DisablePlayerCheckpoint(p->first);
 						p->second.activeCheckpoint = 0;
 						p->second.visibleCheckpoint = 0;
 					}
@@ -2151,7 +2151,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 				{
 					if (p->second.visibleRaceCheckpoint == r->first)
 					{
-						sampgdk::DisablePlayerRaceCheckpoint(p->first);
+						ompgdk::DisablePlayerRaceCheckpoint(p->first);
 						p->second.activeRaceCheckpoint = 0;
 						p->second.visibleRaceCheckpoint = 0;
 					}
@@ -2179,8 +2179,8 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 					boost::unordered_map<int, int>::iterator i = p->second.internalMapIcons.find(m->first);
 					if (i != p->second.internalMapIcons.end())
 					{
-						sampgdk::RemovePlayerMapIcon(p->first, i->second);
-						sampgdk::SetPlayerMapIcon(p->first, i->second, m->second->position[0], m->second->position[1], m->second->position[2], m->second->type, m->second->color, m->second->style);
+						ompgdk::RemovePlayerMapIcon(p->first, i->second);
+						ompgdk::SetPlayerMapIcon(p->first, i->second, m->second->position[0], m->second->position[1], m->second->position[2], m->second->type, m->second->color, m->second->style);
 					}
 				}
 				return 1;
@@ -2206,8 +2206,8 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 					boost::unordered_map<int, int>::iterator i = p->second.internalTextLabels.find(t->first);
 					if (i != p->second.internalTextLabels.end())
 					{
-						sampgdk::DeletePlayer3DTextLabel(p->first, i->second);
-						i->second = sampgdk::CreatePlayer3DTextLabel(p->first, t->second->text.c_str(), t->second->color, t->second->position[0], t->second->position[1], t->second->position[2], t->second->drawDistance, t->second->attach ? t->second->attach->player : INVALID_PLAYER_ID, t->second->attach ? t->second->attach->vehicle : INVALID_VEHICLE_ID, t->second->testLOS);
+						ompgdk::DeletePlayer3DTextLabel(p->first, i->second);
+						i->second = ompgdk::CreatePlayer3DTextLabel(p->first, t->second->text.c_str(), t->second->color, t->second->position[0], t->second->position[1], t->second->position[2], t->second->drawDistance, t->second->attach ? t->second->attach->player : INVALID_PLAYER_ID, t->second->attach ? t->second->attach->vehicle : INVALID_VEHICLE_ID, t->second->testLOS);
 					}
 				}
 				return 1;
@@ -2261,14 +2261,14 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 					boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
 					if (i != core->getData()->internalActors.end())
 					{
-						sampgdk::DestroyActor(i->second);
-						i->second = sampgdk::CreateActor(a->second->modelId, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
-						sampgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
-						sampgdk::SetActorHealth(i->second, a->second->health);
-						sampgdk::SetActorVirtualWorld(i->second, *w);
+						ompgdk::DestroyActor(i->second);
+						i->second = ompgdk::CreateActor(a->second->modelId, a->second->position[0], a->second->position[1], a->second->position[2], a->second->rotation);
+						ompgdk::SetActorInvulnerable(i->second, a->second->invulnerable);
+						ompgdk::SetActorHealth(i->second, a->second->health);
+						ompgdk::SetActorVirtualWorld(i->second, *w);
 						if (a->second->anim)
 						{
-							sampgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);
+							ompgdk::ApplyActorAnimation(i->second, a->second->anim->lib.c_str(), a->second->anim->name.c_str(), a->second->anim->delta, a->second->anim->loop, a->second->anim->lockx, a->second->anim->locky, a->second->anim->freeze, a->second->anim->time);
 						}
 					}
 				}

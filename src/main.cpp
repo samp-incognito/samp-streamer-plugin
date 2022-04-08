@@ -15,34 +15,16 @@
  */
 
 #include "precompiled.h"
-
+#include "sdk.hpp"
+#include "Server/Components/Pawn/pawn.hpp"
+#include "ompgdk.hpp"
 #include "main.h"
 #include "core.h"
 #include "natives.h"
 #include "utility.h"
+#include "./events.hpp"
 
 extern void *pAMXFunctions;
-
-PLUGIN_EXPORT unsigned int PLUGIN_CALL Supports()
-{
-	return sampgdk::Supports() | SUPPORTS_VERSION | SUPPORTS_AMX_NATIVES | SUPPORTS_PROCESS_TICK;
-}
-
-PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
-{
-	core.reset(new Core);
-	pAMXFunctions = ppData[PLUGIN_DATA_AMX_EXPORTS];
-	bool load = sampgdk::Load(ppData);
-	sampgdk::logprintf("\n\n*** Streamer Plugin v%s by Incognito loaded ***\n", PLUGIN_VERSION);
-	return load;
-}
-
-PLUGIN_EXPORT void PLUGIN_CALL Unload()
-{
-	core.reset();
-	sampgdk::logprintf("\n\n*** Streamer Plugin v%s by Incognito unloaded ***\n", PLUGIN_VERSION);
-	sampgdk::Unload();
-}
 
 AMX_NATIVE_INFO natives[] =
 {
@@ -272,25 +254,111 @@ AMX_NATIVE_INFO natives[] =
 	{ 0, 0 }
 };
 
-PLUGIN_EXPORT int PLUGIN_CALL AmxLoad(AMX *amx)
-{
-	core->getData()->interfaces.insert(amx);
-	core->getData()->amxUnloadDestroyItems.insert(amx);
-	return Utility::checkInterfaceAndRegisterNatives(amx, natives);
-}
+class OmpStreamerComponent final : public IComponent, public CoreEventHandler, public PawnEventHandler {
+	PROVIDE_UID(0x11897f0dbabe4f7c);
 
-PLUGIN_EXPORT int PLUGIN_CALL AmxUnload(AMX *amx)
-{
-	core->getData()->interfaces.erase(amx);
-	if (core->getData()->amxUnloadDestroyItems.find(amx) != core->getData()->amxUnloadDestroyItems.end())
+	StringView componentName() const override
 	{
-		Utility::destroyAllItemsInInterface(amx);
-		core->getData()->amxUnloadDestroyItems.erase(amx);
+		return "open.mp streamer";
 	}
-	return AMX_ERR_NONE;
-}
 
-PLUGIN_EXPORT void PLUGIN_CALL ProcessTick()
-{
-	core->getStreamer()->startAutomaticUpdate();
+	SemanticVersion componentVersion() const override
+	{
+		return SemanticVersion(0, 0, 0, 1);
+	}
+
+	void onLoad(ICore* c) override
+	{
+		core.reset(new Core);
+		omp_core = c;
+		players = &c->getPlayers();
+		c->printLn("\n\n ***Streamer Plugin v%s by Incognito loaded ***", PLUGIN_VERSION);
+	}
+
+	void onInit(IComponentList* components) override 
+	{
+		ompgdk::GDKManager::Get()->Init(omp_core, components);
+		streamerEventHandler.Init(components, players);
+		pawnComponent = components->queryComponent<IPawnComponent>();
+		if (pawnComponent == nullptr)
+		{
+			StringView name = componentName();
+			omp_core->logLn(
+				LogLevel::Error,
+				"Error loading component %.*s: Pawn component not loaded",
+				name.length(),
+				name.data()
+			);
+			return;
+		}
+
+		// add event handlers
+		pawnComponent->getEventDispatcher().addEventHandler(this);
+		omp_core->getEventDispatcher().addEventHandler(this);
+		pAMXFunctions = (void*)&pawnComponent->getAmxFunctions();
+		streamerEventHandler.addEvents();
+	}
+
+	void onReady() override 
+	{
+		// Fire events here at earliest
+	}
+
+	void onTick(Microseconds elapsed, TimePoint now) override
+	{
+		core->getStreamer()->startAutomaticUpdate();
+	}
+
+	void onAmxLoad(void* amx) override
+	{
+		core->getData()->interfaces.insert((AMX*)amx);
+		core->getData()->amxUnloadDestroyItems.insert((AMX*)amx);
+		Utility::checkInterfaceAndRegisterNatives((AMX*)amx, natives);
+	};
+
+	void onAmxUnload(void* amx) override
+	{
+		core->getData()->interfaces.erase((AMX*)amx);
+		if (core->getData()->amxUnloadDestroyItems.find((AMX*)amx) != core->getData()->amxUnloadDestroyItems.end())
+		{
+			Utility::destroyAllItemsInInterface((AMX*)amx);
+			core->getData()->amxUnloadDestroyItems.erase((AMX*)amx);
+		}
+	};
+
+	void onFree(IComponent* component) override
+	{
+		if (component == pawnComponent) 
+		{
+			pawnComponent = nullptr;
+			pAMXFunctions = nullptr;
+			omp_core->printLn("\n\n*** Streamer Plugin v%s by Incognito unloaded ***\n", PLUGIN_VERSION);
+			core.reset();
+		}
+	}
+
+	void free() override
+	{
+		if (pawnComponent != nullptr)
+		{
+			pawnComponent->getEventDispatcher().removeEventHandler(this);
+			omp_core->getEventDispatcher().removeEventHandler(this);
+		}
+		delete this;
+	}
+
+	~OmpStreamerComponent()
+	{
+		// Clean up what you did above
+	}
+
+private:
+	ICore* omp_core = nullptr;
+	IPlayerPool* players = nullptr;
+	IPawnComponent* pawnComponent = nullptr;
+	EventHandler streamerEventHandler;
+};
+
+COMPONENT_ENTRY_POINT() {
+	return new OmpStreamerComponent();
 }

@@ -15,7 +15,7 @@
  */
 
 #include "../precompiled.h"
-
+#include "ompgdk.hpp"
 #include "misc.h"
 #include "../core.h"
 #include "../main.h"
@@ -62,7 +62,7 @@ boost::unordered_map<int, Item::SharedCheckpoint>::iterator Utility::destroyChec
 	{
 		if (p->second.visibleCheckpoint == c->first)
 		{
-			sampgdk::DisablePlayerCheckpoint(p->first);
+			ompgdk::DisablePlayerCheckpoint(p->first);
 			p->second.activeCheckpoint = 0;
 			p->second.visibleCheckpoint = 0;
 		}
@@ -90,7 +90,7 @@ boost::unordered_map<int, Item::SharedMapIcon>::iterator Utility::destroyMapIcon
 		boost::unordered_map<int, int>::iterator i = p->second.internalMapIcons.find(m->first);
 		if (i != p->second.internalMapIcons.end())
 		{
-			sampgdk::RemovePlayerMapIcon(p->first, i->second);
+			ompgdk::RemovePlayerMapIcon(p->first, i->second);
 			p->second.mapIconIdentifier.remove(i->second, p->second.internalMapIcons.size());
 			p->second.internalMapIcons.erase(i);
 		}
@@ -123,7 +123,7 @@ boost::unordered_map<int, Item::SharedObject>::iterator Utility::destroyObject(b
 		boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
 		if (i != p->second.internalObjects.end())
 		{
-			sampgdk::DestroyPlayerObject(p->first, i->second);
+			ompgdk::DestroyPlayerObject(p->first, i->second);
 			p->second.internalObjects.erase(i);
 		}
 		boost::unordered_set<int>::iterator r = p->second.removedObjects.find(o->first);
@@ -145,7 +145,7 @@ boost::unordered_map<int, Item::SharedPickup>::iterator Utility::destroyPickup(b
 		boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalPickups.find(std::make_pair(p->first, *w));
 		if (i != core->getData()->internalPickups.end())
 		{
-			sampgdk::DestroyPickup(i->second);
+			ompgdk::DestroyPickup(i->second);
 			core->getData()->internalPickups.erase(i);
 		}
 		boost::unordered_map<std::pair<int, int>, Item::SharedPickup>::iterator d = core->getData()->discoveredPickups.find(std::make_pair(p->first, *w));
@@ -165,7 +165,7 @@ boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator Utility::destroy
 	{
 		if (p->second.visibleRaceCheckpoint == r->first)
 		{
-			sampgdk::DisablePlayerRaceCheckpoint(p->first);
+			ompgdk::DisablePlayerRaceCheckpoint(p->first);
 			p->second.activeRaceCheckpoint = 0;
 			p->second.visibleRaceCheckpoint = 0;
 		}
@@ -193,7 +193,7 @@ boost::unordered_map<int, Item::SharedTextLabel>::iterator Utility::destroyTextL
 		boost::unordered_map<int, int>::iterator i = p->second.internalTextLabels.find(t->first);
 		if (i != p->second.internalTextLabels.end())
 		{
-			sampgdk::DeletePlayer3DTextLabel(p->first, i->second);
+			ompgdk::DeletePlayer3DTextLabel(p->first, i->second);
 			p->second.internalTextLabels.erase(i);
 		}
 		boost::unordered_set<int>::iterator r = p->second.removedTextLabels.find(t->first);
@@ -209,7 +209,7 @@ boost::unordered_map<int, Item::SharedTextLabel>::iterator Utility::destroyTextL
 
 std::size_t Utility::getChunkTickRate(int type, int playerid)
 {
-	if (playerid >= 0 && playerid < MAX_PLAYERS)
+	if (playerid >= 0 && playerid < PLAYER_POOL_SIZE)
 	{
 		boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 		if (p != core->getData()->players.end())
@@ -236,7 +236,7 @@ std::size_t Utility::getChunkTickRate(int type, int playerid)
 
 bool Utility::setChunkTickRate(int type, std::size_t value, int playerid)
 {
-	if (playerid >= 0 && playerid < MAX_PLAYERS)
+	if (playerid >= 0 && playerid < PLAYER_POOL_SIZE)
 	{
 		boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 		if (p != core->getData()->players.end())
@@ -287,7 +287,7 @@ bool Utility::setChunkTickRate(int type, std::size_t value, int playerid)
 
 std::size_t Utility::getMaxVisibleItems(int type, int playerid)
 {
-	if (playerid >= 0 && playerid < MAX_PLAYERS)
+	if (playerid >= 0 && playerid < PLAYER_POOL_SIZE)
 	{
 		boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 		if (p != core->getData()->players.end())
@@ -314,7 +314,7 @@ std::size_t Utility::getMaxVisibleItems(int type, int playerid)
 
 bool Utility::setMaxVisibleItems(int type, std::size_t value, int playerid)
 {
-	if (playerid >= 0 && playerid < MAX_PLAYERS)
+	if (playerid >= 0 && playerid < PLAYER_POOL_SIZE)
 	{
 		boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 		if (p != core->getData()->players.end())
@@ -367,7 +367,7 @@ float Utility::getRadiusMultiplier(int type, int playerid)
 {
 	if (type >= 0 && type < STREAMER_MAX_TYPES)
 	{
-		if (playerid >= 0 && playerid < MAX_PLAYERS)
+		if (playerid >= 0 && playerid < PLAYER_POOL_SIZE)
 		{
 			boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 			if (p != core->getData()->players.end())
@@ -383,7 +383,7 @@ bool Utility::setRadiusMultiplier(int type, float value, int playerid)
 {
 	if (type >= 0 && type < STREAMER_MAX_TYPES)
 	{
-		if (playerid >= 0 && playerid < MAX_PLAYERS)
+		if (playerid >= 0 && playerid < PLAYER_POOL_SIZE)
 		{
 			boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 			if (p != core->getData()->players.end())
@@ -407,9 +407,9 @@ void Utility::processPendingDestroyedActors()
 		std::vector<int>::iterator a = core->getData()->destroyedActors.begin();
 		while (a != core->getData()->destroyedActors.end())
 		{
-			if (sampgdk::IsValidActor(*a))
+			if (ompgdk::IsValidActor(*a))
 			{
-				sampgdk::DestroyActor(*a);
+				ompgdk::DestroyActor(*a);
 			}
 			a = core->getData()->destroyedActors.erase(a);
 		}

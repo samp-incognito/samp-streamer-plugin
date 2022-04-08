@@ -15,7 +15,7 @@
  */
 
 #include "precompiled.h"
-
+#include "ompgdk.hpp"
 #include "chunk-streamer.h"
 #include "core.h"
 
@@ -173,7 +173,7 @@ void ChunkStreamer::streamMapIcons(Player &player, bool automatic)
 				boost::unordered_map<int, int>::iterator i = player.internalMapIcons.find(*r);
 				if (i != player.internalMapIcons.end())
 				{
-					sampgdk::RemovePlayerMapIcon(player.playerId, i->second);
+					ompgdk::RemovePlayerMapIcon(player.playerId, i->second);
 					boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(*r);
 					if (m != core->getData()->mapIcons.end())
 					{
@@ -213,7 +213,7 @@ void ChunkStreamer::streamMapIcons(Player &player, bool automatic)
 							boost::unordered_map<int, int>::iterator j = player.internalMapIcons.find(e->second.get<0>());
 							if (j != player.internalMapIcons.end())
 							{
-								sampgdk::RemovePlayerMapIcon(player.playerId, j->second);
+								ompgdk::RemovePlayerMapIcon(player.playerId, j->second);
 								if (e->second.get<1>()->streamCallbacks)
 								{
 									streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_MAP_ICON, e->second.get<0>(), player.playerId));
@@ -236,7 +236,7 @@ void ChunkStreamer::streamMapIcons(Player &player, bool automatic)
 					}
 				}
 				int internalId = player.mapIconIdentifier.get();
-				sampgdk::SetPlayerMapIcon(player.playerId, internalId, d->second.get<1>()->position[0], d->second.get<1>()->position[1], d->second.get<1>()->position[2], d->second.get<1>()->type, d->second.get<1>()->color, d->second.get<1>()->style);
+				ompgdk::SetPlayerMapIcon(player.playerId, internalId, d->second.get<1>()->position[0], d->second.get<1>()->position[1], d->second.get<1>()->position[2], d->second.get<1>()->type, d->second.get<1>()->color, d->second.get<1>()->style);
 				if (d->second.get<1>()->streamCallbacks)
 				{
 					streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_MAP_ICON, d->second.get<1>()->mapIconId, player.playerId));
@@ -331,7 +331,7 @@ void ChunkStreamer::streamObjects(Player &player, bool automatic)
 				boost::unordered_map<int, int>::iterator i = player.internalObjects.find(*r);
 				if (i != player.internalObjects.end())
 				{
-					sampgdk::DestroyPlayerObject(player.playerId, i->second);
+					ompgdk::DestroyPlayerObject(player.playerId, i->second);
 					boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(*r);
 					if (o != core->getData()->objects.end())
 					{
@@ -385,7 +385,7 @@ void ChunkStreamer::streamObjects(Player &player, bool automatic)
 							boost::unordered_map<int, int>::iterator j = player.internalObjects.find(e->second.get<0>());
 							if (j != player.internalObjects.end())
 							{
-								sampgdk::DestroyPlayerObject(player.playerId, j->second);
+								ompgdk::DestroyPlayerObject(player.playerId, j->second);
 								if (e->second.get<1>()->streamCallbacks)
 								{
 									streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_OBJECT, e->second.get<0>(), player.playerId));
@@ -406,7 +406,7 @@ void ChunkStreamer::streamObjects(Player &player, bool automatic)
 					streamingCanceled = true;
 					break;
 				}
-				int internalId = sampgdk::CreatePlayerObject(player.playerId, d->second.get<1>()->modelId, d->second.get<1>()->position[0], d->second.get<1>()->position[1], d->second.get<1>()->position[2], d->second.get<1>()->rotation[0], d->second.get<1>()->rotation[1], d->second.get<1>()->rotation[2], d->second.get<1>()->drawDistance);
+				int internalId = ompgdk::CreatePlayerObject(player.playerId, d->second.get<1>()->modelId, d->second.get<1>()->position[0], d->second.get<1>()->position[1], d->second.get<1>()->position[2], d->second.get<1>()->rotation[0], d->second.get<1>()->rotation[1], d->second.get<1>()->rotation[2], d->second.get<1>()->drawDistance);
 				if (internalId == INVALID_OBJECT_ID)
 				{
 					streamingCanceled = true;
@@ -420,43 +420,35 @@ void ChunkStreamer::streamObjects(Player &player, bool automatic)
 				{
 					if (internalBaseId != INVALID_STREAMER_ID)
 					{
-						static AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToObject");
-						if (native != NULL)
-						{
-							sampgdk::InvokeNative(native, "dddffffffb", player.playerId, internalId, internalBaseId, d->second.get<1>()->attach->positionOffset[0], d->second.get<1>()->attach->positionOffset[1], d->second.get<1>()->attach->positionOffset[2], d->second.get<1>()->attach->rotation[0], d->second.get<1>()->attach->rotation[1], d->second.get<1>()->attach->rotation[2], d->second.get<1>()->attach->syncRotation);
-						}
+						ompgdk::AttachPlayerObjectToObject(player.playerId, internalId, internalBaseId, d->second.get<1>()->attach->positionOffset[0], d->second.get<1>()->attach->positionOffset[1], d->second.get<1>()->attach->positionOffset[2], d->second.get<1>()->attach->rotation[0], d->second.get<1>()->attach->rotation[1], d->second.get<1>()->attach->rotation[2]);
 					}
 					else if (d->second.get<1>()->attach->player != INVALID_PLAYER_ID)
 					{
-						static AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToPlayer");
-						if (native != NULL)
-						{
-							sampgdk::InvokeNative(native, "dddffffffd", player.playerId, internalId, d->second.get<1>()->attach->player, d->second.get<1>()->attach->positionOffset[0], d->second.get<1>()->attach->positionOffset[1], d->second.get<1>()->attach->positionOffset[2], d->second.get<1>()->attach->rotation[0], d->second.get<1>()->attach->rotation[1], d->second.get<1>()->attach->rotation[2], 1);
-						}
+						ompgdk::AttachPlayerObjectToPlayer(player.playerId, internalId, d->second.get<1>()->attach->player, d->second.get<1>()->attach->positionOffset[0], d->second.get<1>()->attach->positionOffset[1], d->second.get<1>()->attach->positionOffset[2], d->second.get<1>()->attach->rotation[0], d->second.get<1>()->attach->rotation[1], d->second.get<1>()->attach->rotation[2]);
 					}
 					else if (d->second.get<1>()->attach->vehicle != INVALID_VEHICLE_ID)
 					{
-						sampgdk::AttachPlayerObjectToVehicle(player.playerId, internalId, d->second.get<1>()->attach->vehicle, d->second.get<1>()->attach->positionOffset[0], d->second.get<1>()->attach->positionOffset[1], d->second.get<1>()->attach->positionOffset[2], d->second.get<1>()->attach->rotation[0], d->second.get<1>()->attach->rotation[1], d->second.get<1>()->attach->rotation[2]);
+						ompgdk::AttachPlayerObjectToVehicle(player.playerId, internalId, d->second.get<1>()->attach->vehicle, d->second.get<1>()->attach->positionOffset[0], d->second.get<1>()->attach->positionOffset[1], d->second.get<1>()->attach->positionOffset[2], d->second.get<1>()->attach->rotation[0], d->second.get<1>()->attach->rotation[1], d->second.get<1>()->attach->rotation[2]);
 					}
 				}
 				else if (d->second.get<1>()->move)
 				{
-					sampgdk::MovePlayerObject(player.playerId, internalId, d->second.get<1>()->move->position.get<0>()[0], d->second.get<1>()->move->position.get<0>()[1], d->second.get<1>()->move->position.get<0>()[2], d->second.get<1>()->move->speed, d->second.get<1>()->move->rotation.get<0>()[0], d->second.get<1>()->move->rotation.get<0>()[1], d->second.get<1>()->move->rotation.get<0>()[2]);
+					ompgdk::MovePlayerObject(player.playerId, internalId, d->second.get<1>()->move->position.get<0>()[0], d->second.get<1>()->move->position.get<0>()[1], d->second.get<1>()->move->position.get<0>()[2], d->second.get<1>()->move->speed, d->second.get<1>()->move->rotation.get<0>()[0], d->second.get<1>()->move->rotation.get<0>()[1], d->second.get<1>()->move->rotation.get<0>()[2]);
 				}
 				for (boost::unordered_map<int, Item::Object::Material>::iterator m = d->second.get<1>()->materials.begin(); m != d->second.get<1>()->materials.end(); ++m)
 				{
 					if (m->second.main)
 					{
-						sampgdk::SetPlayerObjectMaterial(player.playerId, internalId, m->first, m->second.main->modelId, m->second.main->txdFileName.c_str(), m->second.main->textureName.c_str(), m->second.main->materialColor);
+						ompgdk::SetPlayerObjectMaterial(player.playerId, internalId, m->first, m->second.main->modelId, m->second.main->txdFileName.c_str(), m->second.main->textureName.c_str(), m->second.main->materialColor);
 					}
 					else if (m->second.text)
 					{
-						sampgdk::SetPlayerObjectMaterialText(player.playerId, internalId, m->second.text->materialText.c_str(), m->first, m->second.text->materialSize, m->second.text->fontFace.c_str(), m->second.text->fontSize, m->second.text->bold, m->second.text->fontColor, m->second.text->backColor, m->second.text->textAlignment);
+						ompgdk::SetPlayerObjectMaterialText(player.playerId, internalId, m->second.text->materialText.c_str(), m->first, m->second.text->materialSize, m->second.text->fontFace.c_str(), m->second.text->fontSize, m->second.text->bold, m->second.text->fontColor, m->second.text->backColor, m->second.text->textAlignment);
 					}
 				}
 				if (d->second.get<1>()->noCameraCollision)
 				{
-					sampgdk::SetPlayerObjectNoCameraCol(player.playerId, internalId);
+					ompgdk::SetPlayerObjectNoCameraCol(player.playerId, internalId);
 				}
 				player.internalObjects.insert(std::make_pair(d->second.get<0>(), internalId));
 				if (d->second.get<1>()->cell)
@@ -553,7 +545,7 @@ void ChunkStreamer::streamTextLabels(Player &player, bool automatic)
 				boost::unordered_map<int, int>::iterator i = player.internalTextLabels.find(*r);
 				if (i != player.internalTextLabels.end())
 				{
-					sampgdk::DeletePlayer3DTextLabel(player.playerId, i->second);
+					ompgdk::DeletePlayer3DTextLabel(player.playerId, i->second);
 					boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(*r);
 					if (t != core->getData()->textLabels.end())
 					{
@@ -593,7 +585,7 @@ void ChunkStreamer::streamTextLabels(Player &player, bool automatic)
 							boost::unordered_map<int, int>::iterator j = player.internalTextLabels.find(e->second.get<0>());
 							if (j != player.internalTextLabels.end())
 							{
-								sampgdk::DeletePlayer3DTextLabel(player.playerId, j->second);
+								ompgdk::DeletePlayer3DTextLabel(player.playerId, j->second);
 								if (e->second.get<1>()->streamCallbacks)
 								{
 									streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_3D_TEXT_LABEL, e->second.get<0>(), player.playerId));
@@ -614,8 +606,8 @@ void ChunkStreamer::streamTextLabels(Player &player, bool automatic)
 					streamingCanceled = true;
 					break;
 				}
-				int internalId = sampgdk::CreatePlayer3DTextLabel(player.playerId, d->second.get<1>()->text.c_str(), d->second.get<1>()->color, d->second.get<1>()->position[0], d->second.get<1>()->position[1], d->second.get<1>()->position[2], d->second.get<1>()->drawDistance, d->second.get<1>()->attach ? d->second.get<1>()->attach->player : INVALID_PLAYER_ID, d->second.get<1>()->attach ? d->second.get<1>()->attach->vehicle : INVALID_VEHICLE_ID, d->second.get<1>()->testLOS);
-				if (internalId == INVALID_3DTEXT_ID)
+				int internalId = ompgdk::CreatePlayer3DTextLabel(player.playerId, d->second.get<1>()->text.c_str(), d->second.get<1>()->color, d->second.get<1>()->position[0], d->second.get<1>()->position[1], d->second.get<1>()->position[2], d->second.get<1>()->drawDistance, d->second.get<1>()->attach ? d->second.get<1>()->attach->player : INVALID_PLAYER_ID, d->second.get<1>()->attach ? d->second.get<1>()->attach->vehicle : INVALID_VEHICLE_ID, d->second.get<1>()->testLOS);
+				if (internalId == INVALID_TEXT_LABEL_ID)
 				{
 					streamingCanceled = true;
 					break;

@@ -15,7 +15,7 @@
  */
 
 #include "../precompiled.h"
-
+#include "ompgdk.hpp"
 #include "amx.h"
 #include "../core.h"
 #include "../main.h"
@@ -278,7 +278,10 @@ void Utility::logError(const char *format, ...)
 		static std::string lastErrorMessage;
 		if (lastErrorMessage != buffer)
 		{
-			sampgdk::logprintf("*** Streamer Plugin: %s", buffer);
+			if (ompgdk::GDKManager::Get()->GetCore())
+			{
+				ompgdk::GDKManager::Get()->GetCore()->printLn("*** Streamer Plugin: %s", buffer);
+			}
 		}
 		lastErrorMessage = buffer;
 	}

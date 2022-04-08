@@ -10,3 +10,9 @@
 [submodule "lib/samp-plugin-sdk"]
 	path = lib/samp-plugin-sdk
 	url = git://github.com/Zeex/samp-plugin-sdk
+[submodule "lib/omp-sdk"]
+	path = lib/omp-sdk
+	url = https://github.com/openmultiplayer/open.mp-sdk
+[submodule "lib/omp-gdk"]
+	path = lib/omp-gdk
+	url = https://github.com/openmultiplayer/open.mp-gdk

@@ -15,7 +15,7 @@
  */
 
 #include "../precompiled.h"
-
+#include "ompgdk.hpp"
 #include "../natives.h"
 #include "../core.h"
 
@@ -113,9 +113,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_Update(AMX *amx, cell *params)
 	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
-		p->second.interiorId = sampgdk::GetPlayerInterior(p->first);
-		p->second.worldId = sampgdk::GetPlayerVirtualWorld(p->first);
-		sampgdk::GetPlayerPos(p->first, &p->second.position[0], &p->second.position[1], &p->second.position[2]);
+		p->second.interiorId = ompgdk::GetPlayerInterior(p->first);
+		p->second.worldId = ompgdk::GetPlayerVirtualWorld(p->first);
+		ompgdk::GetPlayerPos(p->first, &p->second.position[0], &p->second.position[1], &p->second.position[2]);
 		core->getStreamer()->startManualUpdate(p->second, static_cast<int>(params[2]));
 		return 1;
 	}
@@ -135,7 +135,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_UpdateEx(AMX *amx, cell *params)
 		}
 		else
 		{
-			p->second.worldId = sampgdk::GetPlayerVirtualWorld(p->first);
+			p->second.worldId = ompgdk::GetPlayerVirtualWorld(p->first);
 		}
 		if (static_cast<int>(params[6]) >= 0)
 		{
@@ -143,14 +143,14 @@ cell AMX_NATIVE_CALL Natives::Streamer_UpdateEx(AMX *amx, cell *params)
 		}
 		else
 		{
-			p->second.interiorId = sampgdk::GetPlayerInterior(p->first);
+			p->second.interiorId = ompgdk::GetPlayerInterior(p->first);
 		}
 		if (static_cast<int>(params[8]) >= 0)
 		{
-			sampgdk::SetPlayerPos(p->first, p->second.position[0], p->second.position[1], p->second.position[2]);
+			ompgdk::SetPlayerPos(p->first, p->second.position[0], p->second.position[1], p->second.position[2]);
 			if (static_cast<int>(params[9]))
 			{
-				sampgdk::TogglePlayerControllable(p->first, false);
+				ompgdk::TogglePlayerControllable(p->first, false);
 			}
 			p->second.delayedUpdate = true;
 			p->second.delayedUpdateType = static_cast<int>(params[7]);
