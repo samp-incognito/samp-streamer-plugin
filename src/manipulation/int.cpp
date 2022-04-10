@@ -27,7 +27,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 	{
 		case STREAMER_TYPE_OBJECT:
 		{
-			boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
 			if (o != core->getData()->objects.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -99,7 +99,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					{
 						if (static_cast<int>(params[3]) & 0x40000000)
 						{
-							boost::unordered_map<int, std::vector<int> >::const_iterator p = o->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
+							std::unordered_map<int, std::vector<int> >::const_iterator p = o->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
 							if (p != o->second->extraExtras.end())
 							{
 								return Utility::getFirstValueInContainer(p->second);
@@ -118,7 +118,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_PICKUP:
 		{
-			boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[2]));
 			if (p != core->getData()->pickups.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -159,7 +159,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					{
 						if (static_cast<int>(params[3]) & 0x40000000)
 						{
-							boost::unordered_map<int, std::vector<int> >::iterator x = p->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
+							std::unordered_map<int, std::vector<int> >::iterator x = p->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
 							if (x != p->second->extraExtras.end())
 							{
 								return Utility::getFirstValueInContainer(x->second);
@@ -178,7 +178,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_CP:
 		{
-			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[2]));
 			if (c != core->getData()->checkpoints.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -211,7 +211,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					{
 						if (static_cast<int>(params[3]) & 0x40000000)
 						{
-							boost::unordered_map<int, std::vector<int> >::iterator p = c->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
+							std::unordered_map<int, std::vector<int> >::iterator p = c->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
 							if (p != c->second->extraExtras.end())
 							{
 								return Utility::getFirstValueInContainer(p->second);
@@ -230,7 +230,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_RACE_CP:
 		{
-			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[2]));
 			if (r != core->getData()->raceCheckpoints.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -267,7 +267,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					{
 						if (static_cast<int>(params[3]) & 0x40000000)
 						{
-							boost::unordered_map<int, std::vector<int> >::iterator p = r->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
+							std::unordered_map<int, std::vector<int> >::iterator p = r->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
 							if (p != r->second->extraExtras.end())
 							{
 								return Utility::getFirstValueInContainer(p->second);
@@ -286,7 +286,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_MAP_ICON:
 		{
-			boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[2]));
 			if (m != core->getData()->mapIcons.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -331,7 +331,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					{
 						if (static_cast<int>(params[3]) & 0x40000000)
 						{
-							boost::unordered_map<int, std::vector<int> >::iterator p = m->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
+							std::unordered_map<int, std::vector<int> >::iterator p = m->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
 							if (p != m->second->extraExtras.end())
 							{
 								return Utility::getFirstValueInContainer(p->second);
@@ -350,7 +350,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_3D_TEXT_LABEL:
 		{
-			boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[2]));
 			if (t != core->getData()->textLabels.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -407,7 +407,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					{
 						if (static_cast<int>(params[3]) & 0x40000000)
 						{
-							boost::unordered_map<int, std::vector<int> >::iterator p = t->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
+							std::unordered_map<int, std::vector<int> >::iterator p = t->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
 							if (p != t->second->extraExtras.end())
 							{
 								return Utility::getFirstValueInContainer(p->second);
@@ -426,7 +426,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_AREA:
 		{
-			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[2]));
 			if (a != core->getData()->areas.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -435,7 +435,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					{
 						if (a->second->attach)
 						{
-							return a->second->attach->object.get<0>();
+							return std::get<0>(a->second->attach->object);
 						}
 						return INVALID_STREAMER_ID;
 					}
@@ -483,7 +483,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					{
 						if (static_cast<int>(params[3]) & 0x40000000)
 						{
-							boost::unordered_map<int, std::vector<int> >::iterator p = a->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
+							std::unordered_map<int, std::vector<int> >::iterator p = a->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
 							if (p != a->second->extraExtras.end())
 							{
 								return Utility::getFirstValueInContainer(p->second);
@@ -502,7 +502,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_ACTOR:
 		{
-			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
 			if (a != core->getData()->actors.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -543,7 +543,7 @@ int Manipulation::getIntData(AMX *amx, cell *params)
 					{
 						if (static_cast<int>(params[3]) & 0x40000000)
 						{
-							boost::unordered_map<int, std::vector<int> >::iterator p = a->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
+							std::unordered_map<int, std::vector<int> >::iterator p = a->second->extraExtras.find(static_cast<int>(params[3]) & ~0xC0000000);
 							if (p != a->second->extraExtras.end())
 							{
 								return Utility::getFirstValueInContainer(p->second);
@@ -594,7 +594,7 @@ int Manipulation::hasIntData(AMX *amx, cell *params)
 	{
 		case STREAMER_TYPE_OBJECT:
 		{
-			boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
 			if (o != core->getData()->objects.end())
 			{
 				if (static_cast<int>(params[3]) & 0x40000000)
@@ -611,7 +611,7 @@ int Manipulation::hasIntData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_PICKUP:
 		{
-			boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[2]));
 			if (p != core->getData()->pickups.end())
 			{
 				if (static_cast<int>(params[3]) & 0x40000000)
@@ -628,7 +628,7 @@ int Manipulation::hasIntData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_CP:
 		{
-			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[2]));
 			if (c != core->getData()->checkpoints.end())
 			{
 				if (static_cast<int>(params[3]) & 0x40000000)
@@ -645,7 +645,7 @@ int Manipulation::hasIntData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_RACE_CP:
 		{
-			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[2]));
 			if (r != core->getData()->raceCheckpoints.end())
 			{
 				if (static_cast<int>(params[3]) & 0x40000000)
@@ -662,7 +662,7 @@ int Manipulation::hasIntData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_MAP_ICON:
 		{
-			boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[2]));
 			if (m != core->getData()->mapIcons.end())
 			{
 				if (static_cast<int>(params[3]) & 0x40000000)
@@ -679,7 +679,7 @@ int Manipulation::hasIntData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_3D_TEXT_LABEL:
 		{
-			boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[2]));
 			if (t != core->getData()->textLabels.end())
 			{
 				if (static_cast<int>(params[3]) & 0x40000000)
@@ -696,7 +696,7 @@ int Manipulation::hasIntData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_AREA:
 		{
-			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[2]));
 			if (a != core->getData()->areas.end())
 			{
 				if (static_cast<int>(params[3]) & 0x40000000)
@@ -713,7 +713,7 @@ int Manipulation::hasIntData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_ACTOR:
 		{
-			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
 			if (a != core->getData()->actors.end())
 			{
 				if (static_cast<int>(params[3]) & 0x40000000)
@@ -762,7 +762,7 @@ int Manipulation::removeIntData(AMX *amx, cell *params)
 	{
 		case STREAMER_TYPE_OBJECT:
 		{
-			boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
 			if (o != core->getData()->objects.end())
 			{
 				if (static_cast<int>(params[3]) & 0x40000000)
@@ -779,7 +779,7 @@ int Manipulation::removeIntData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_PICKUP:
 		{
-			boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[2]));
 			if (p != core->getData()->pickups.end())
 			{
 				if (static_cast<int>(params[3]) & 0x40000000)
@@ -796,7 +796,7 @@ int Manipulation::removeIntData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_CP:
 		{
-			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[2]));
 			if (c != core->getData()->checkpoints.end())
 			{
 				if (static_cast<int>(params[3]) & 0x40000000)
@@ -813,7 +813,7 @@ int Manipulation::removeIntData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_RACE_CP:
 		{
-			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[2]));
 			if (r != core->getData()->raceCheckpoints.end())
 			{
 				if (static_cast<int>(params[3]) & 0x40000000)
@@ -830,7 +830,7 @@ int Manipulation::removeIntData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_MAP_ICON:
 		{
-			boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[2]));
 			if (m != core->getData()->mapIcons.end())
 			{
 				if (static_cast<int>(params[3]) & 0x40000000)
@@ -847,7 +847,7 @@ int Manipulation::removeIntData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_3D_TEXT_LABEL:
 		{
-			boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[2]));
 			if (t != core->getData()->textLabels.end())
 			{
 				if (static_cast<int>(params[3]) & 0x40000000)
@@ -864,7 +864,7 @@ int Manipulation::removeIntData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_AREA:
 		{
-			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[2]));
 			if (a != core->getData()->areas.end())
 			{
 				if (static_cast<int>(params[3]) & 0x40000000)
@@ -881,7 +881,7 @@ int Manipulation::removeIntData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_ACTOR:
 		{
-			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
 			if (a != core->getData()->actors.end())
 			{
 				if (static_cast<int>(params[3]) & 0x40000000)
@@ -931,7 +931,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 	{
 		case STREAMER_TYPE_OBJECT:
 		{
-			boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
 			if (o != core->getData()->objects.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -955,7 +955,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 								Utility::logError("Streamer_SetIntData: YSF plugin must be loaded to attach objects to objects.");
 								return 0;
 							}
-							o->second->attach = boost::intrusive_ptr<Item::Object::Attach>(new Item::Object::Attach);
+							o->second->attach = std::make_shared<Item::Object::Attach>();
 							o->second->attach->player = INVALID_PLAYER_ID;
 							o->second->attach->vehicle = INVALID_VEHICLE_ID;
 							o->second->attach->object = static_cast<int>(params[4]);
@@ -995,7 +995,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 								Utility::logError("Streamer_SetIntData: YSF plugin must be loaded to attach objects to players.");
 								return 0;
 							}
-							o->second->attach = boost::intrusive_ptr<Item::Object::Attach>(new Item::Object::Attach);
+							o->second->attach = std::make_shared<Item::Object::Attach>();
 							o->second->attach->object = INVALID_STREAMER_ID;
 							o->second->attach->vehicle = INVALID_VEHICLE_ID;
 							o->second->attach->player = static_cast<int>(params[4]);
@@ -1028,7 +1028,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 								Utility::logError("Streamer_SetIntData: Object is currently moving and must be stopped first.");
 								return 0;
 							}
-							o->second->attach = boost::intrusive_ptr<Item::Object::Attach>(new Item::Object::Attach);
+							o->second->attach = std::make_shared<Item::Object::Attach>();
 							o->second->attach->object = INVALID_STREAMER_ID;
 							o->second->attach->player = INVALID_PLAYER_ID;
 							o->second->attach->vehicle = static_cast<int>(params[4]);
@@ -1104,9 +1104,9 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 				}
 				if (update)
 				{
-					for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+					for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 					{
-						boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
+						std::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
 						if (i != p->second.internalObjects.end())
 						{
 							sampgdk::DestroyPlayerObject(p->first, i->second);
@@ -1115,7 +1115,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 							{
 								if (o->second->attach->object != INVALID_STREAMER_ID)
 								{
-									boost::unordered_map<int, int>::iterator j = p->second.internalObjects.find(o->second->attach->object);
+									std::unordered_map<int, int>::iterator j = p->second.internalObjects.find(o->second->attach->object);
 									if (j != p->second.internalObjects.end())
 									{
 										static AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToObject");
@@ -1140,9 +1140,9 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 							}
 							else if (o->second->move)
 							{
-								sampgdk::MovePlayerObject(p->first, i->second, o->second->move->position.get<0>()[0], o->second->move->position.get<0>()[1], o->second->move->position.get<0>()[2], o->second->move->speed, o->second->move->rotation.get<0>()[0], o->second->move->rotation.get<0>()[1], o->second->move->rotation.get<0>()[2]);
+								sampgdk::MovePlayerObject(p->first, i->second, std::get<0>(o->second->move->position)[0], std::get<0>(o->second->move->position)[1], std::get<0>(o->second->move->position)[2], o->second->move->speed, std::get<0>(o->second->move->rotation)[0], std::get<0>(o->second->move->rotation)[1], std::get<0>(o->second->move->rotation)[2]);
 							}
-							for (boost::unordered_map<int, Item::Object::Material>::iterator m = o->second->materials.begin(); m != o->second->materials.end(); ++m)
+							for (std::unordered_map<int, Item::Object::Material>::iterator m = o->second->materials.begin(); m != o->second->materials.end(); ++m)
 							{
 								if (m->second.main)
 								{
@@ -1170,7 +1170,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_PICKUP:
 		{
-			boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[2]));
 			if (p != core->getData()->pickups.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -1225,9 +1225,9 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 				}
 				if (update)
 				{
-					for (boost::unordered_set<int>::const_iterator w = p->second->worlds.begin(); w != p->second->worlds.end(); ++w)
+					for (std::unordered_set<int>::const_iterator w = p->second->worlds.begin(); w != p->second->worlds.end(); ++w)
 					{
-						boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalPickups.find(std::make_pair(p->first, *w));
+						std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalPickups.find(std::make_pair(p->first, *w));
 						if (i != core->getData()->internalPickups.end())
 						{
 							sampgdk::DestroyPickup(i->second);
@@ -1245,7 +1245,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_CP:
 		{
-			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[2]));
 			if (c != core->getData()->checkpoints.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -1295,7 +1295,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_RACE_CP:
 		{
-			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[2]));
 			if (r != core->getData()->raceCheckpoints.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -1344,7 +1344,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 				}
 				if (update)
 				{
-					for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+					for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 					{
 						if (p->second.visibleRaceCheckpoint == r->first)
 						{
@@ -1363,7 +1363,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_MAP_ICON:
 		{
-			boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[2]));
 			if (m != core->getData()->mapIcons.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -1424,9 +1424,9 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 				}
 				if (update)
 				{
-					for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+					for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 					{
-						boost::unordered_map<int, int>::iterator i = p->second.internalMapIcons.find(m->first);
+						std::unordered_map<int, int>::iterator i = p->second.internalMapIcons.find(m->first);
 						if (i != p->second.internalMapIcons.end())
 						{
 							sampgdk::RemovePlayerMapIcon(p->first, i->second);
@@ -1444,7 +1444,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_3D_TEXT_LABEL:
 		{
-			boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[2]));
 			if (t != core->getData()->textLabels.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -1457,7 +1457,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					{
 						if (static_cast<int>(params[4]) != INVALID_PLAYER_ID)
 						{
-							t->second->attach = boost::intrusive_ptr<Item::TextLabel::Attach>(new Item::TextLabel::Attach);
+							t->second->attach = std::make_shared<Item::TextLabel::Attach>();
 							t->second->attach->player = static_cast<int>(params[4]);
 							t->second->attach->vehicle = INVALID_VEHICLE_ID;
 							core->getStreamer()->attachedTextLabels.insert(t->second);
@@ -1482,7 +1482,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					{
 						if (static_cast<int>(params[4]) != INVALID_VEHICLE_ID)
 						{
-							t->second->attach = boost::intrusive_ptr<Item::TextLabel::Attach>(new Item::TextLabel::Attach);
+							t->second->attach = std::make_shared<Item::TextLabel::Attach>();
 							t->second->attach->player = INVALID_PLAYER_ID;
 							t->second->attach->vehicle = static_cast<int>(params[4]);
 							core->getStreamer()->attachedTextLabels.insert(t->second);
@@ -1556,9 +1556,9 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 							t->second->position.setZero();
 						}
 					}
-					for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+					for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 					{
-						boost::unordered_map<int, int>::iterator i = p->second.internalTextLabels.find(t->first);
+						std::unordered_map<int, int>::iterator i = p->second.internalTextLabels.find(t->first);
 						if (i != p->second.internalTextLabels.end())
 						{
 							sampgdk::DeletePlayer3DTextLabel(p->first, i->second);
@@ -1576,7 +1576,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_AREA:
 		{
-			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[2]));
 			if (a != core->getData()->areas.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -1590,8 +1590,8 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					{
 						if (static_cast<int>(params[4]) != INVALID_PLAYER_ID)
 						{
-							a->second->attach = boost::intrusive_ptr<Item::Area::Attach>(new Item::Area::Attach);
-							a->second->attach->object = boost::make_tuple(INVALID_STREAMER_ID, STREAMER_OBJECT_TYPE_DYNAMIC, INVALID_PLAYER_ID);
+							a->second->attach = std::make_shared<Item::Area::Attach>();
+							a->second->attach->object = std::make_tuple(INVALID_STREAMER_ID, STREAMER_OBJECT_TYPE_DYNAMIC, INVALID_PLAYER_ID);
 							a->second->attach->vehicle = INVALID_VEHICLE_ID;
 							a->second->attach->position = a->second->position;
 							a->second->attach->player = static_cast<int>(params[4]);
@@ -1617,8 +1617,8 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					{
 						if (static_cast<int>(params[4]) != INVALID_VEHICLE_ID)
 						{
-							a->second->attach = boost::intrusive_ptr<Item::Area::Attach>(new Item::Area::Attach);
-							a->second->attach->object = boost::make_tuple(INVALID_STREAMER_ID, STREAMER_OBJECT_TYPE_DYNAMIC, INVALID_PLAYER_ID);
+							a->second->attach = std::make_shared<Item::Area::Attach>();
+							a->second->attach->object = std::make_tuple(INVALID_STREAMER_ID, STREAMER_OBJECT_TYPE_DYNAMIC, INVALID_PLAYER_ID);
 							a->second->attach->player = INVALID_PLAYER_ID;
 							a->second->attach->position = a->second->position;
 							a->second->attach->vehicle = static_cast<int>(params[4]);
@@ -1681,7 +1681,7 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_ACTOR:
 		{
-			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
 			if (a != core->getData()->actors.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -1736,9 +1736,9 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 				}
 				if (update)
 				{
-					for (boost::unordered_set<int>::const_iterator w = a->second->worlds.begin(); w != a->second->worlds.end(); ++w)
+					for (std::unordered_set<int>::const_iterator w = a->second->worlds.begin(); w != a->second->worlds.end(); ++w)
 					{
-						boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
+						std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
 						if (i != core->getData()->internalActors.end())
 						{
 							sampgdk::DestroyActor(i->second);

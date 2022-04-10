@@ -49,7 +49,7 @@ namespace Utility
 	}
 
 	template<typename T>
-	bool convertArrayToContainer(AMX *amx, cell input, cell size, boost::unordered_set<T> &container)
+	bool convertArrayToContainer(AMX *amx, cell input, cell size, std::unordered_set<T> &container)
 	{
 		cell *array = NULL;
 		amx_GetAddr(amx, input, &array);
@@ -98,12 +98,12 @@ namespace Utility
 	}
 
 	template<typename T>
-	bool convertContainerToArray(AMX *amx, cell output, cell size, const boost::unordered_set<T> &container)
+	bool convertContainerToArray(AMX *amx, cell output, cell size, const std::unordered_set<T> &container)
 	{
 		cell *array = NULL;
 		std::size_t i = 0;
 		amx_GetAddr(amx, output, &array);
-		for (typename boost::unordered_set<T>::const_iterator c = container.begin(); c != container.end(); ++c)
+		for (typename std::unordered_set<T>::const_iterator c = container.begin(); c != container.end(); ++c)
 		{
 			if (i == static_cast<std::size_t>(size))
 			{

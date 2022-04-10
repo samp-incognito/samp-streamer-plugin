@@ -29,7 +29,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 	{
 		case STREAMER_TYPE_OBJECT:
 		{
-			boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
 			if (o != core->getData()->objects.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -133,7 +133,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 					{
 						if (o->second->move)
 						{
-							Utility::storeFloatInNative(amx, params[4], o->second->move->rotation.get<0>()[0]);
+							Utility::storeFloatInNative(amx, params[4], std::get<0>(o->second->move->rotation)[0]);
 							return 1;
 						}
 						return 0;
@@ -142,7 +142,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 					{
 						if (o->second->move)
 						{
-							Utility::storeFloatInNative(amx, params[4], o->second->move->rotation.get<0>()[1]);
+							Utility::storeFloatInNative(amx, params[4], std::get<0>(o->second->move->rotation)[1]);
 							return 1;
 						}
 						return 0;
@@ -151,7 +151,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 					{
 						if (o->second->move)
 						{
-							Utility::storeFloatInNative(amx, params[4], o->second->move->rotation.get<0>()[2]);
+							Utility::storeFloatInNative(amx, params[4], std::get<0>(o->second->move->rotation)[2]);
 							return 1;
 						}
 						return 0;
@@ -160,7 +160,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 					{
 						if (o->second->move)
 						{
-							Utility::storeFloatInNative(amx, params[4], o->second->move->position.get<0>()[0]);
+							Utility::storeFloatInNative(amx, params[4], std::get<0>(o->second->move->position)[0]);
 							return 1;
 						}
 						return 0;
@@ -169,7 +169,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 					{
 						if (o->second->move)
 						{
-							Utility::storeFloatInNative(amx, params[4], o->second->move->position.get<0>()[1]);
+							Utility::storeFloatInNative(amx, params[4], std::get<0>(o->second->move->position)[1]);
 							return 1;
 						}
 						return 0;
@@ -178,7 +178,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 					{
 						if (o->second->move)
 						{
-							Utility::storeFloatInNative(amx, params[4], o->second->move->position.get<0>()[2]);
+							Utility::storeFloatInNative(amx, params[4], std::get<0>(o->second->move->position)[2]);
 							return 1;
 						}
 						return 0;
@@ -233,7 +233,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_PICKUP:
 		{
-			boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[2]));
 			if (p != core->getData()->pickups.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -273,7 +273,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_CP:
 		{
-			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[2]));
 			if (c != core->getData()->checkpoints.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -318,7 +318,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_RACE_CP:
 		{
-			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[2]));
 			if (r != core->getData()->raceCheckpoints.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -378,7 +378,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_MAP_ICON:
 		{
-			boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[2]));
 			if (m != core->getData()->mapIcons.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -418,7 +418,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_3D_TEXT_LABEL:
 		{
-			boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[2]));
 			if (t != core->getData()->textLabels.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -493,7 +493,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_AREA:
 		{
-			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[2]));
 			if (a != core->getData()->areas.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -507,12 +507,12 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 								case STREAMER_AREA_TYPE_CIRCLE:
 								case STREAMER_AREA_TYPE_CYLINDER:
 								{
-									Utility::storeFloatInNative(amx, params[4], boost::get<Eigen::Vector2f>(a->second->attach->position)[0]);
+									Utility::storeFloatInNative(amx, params[4], std::get<Eigen::Vector2f>(a->second->attach->position)[0]);
 									return 1;
 								}
 								case STREAMER_AREA_TYPE_SPHERE:
 								{
-									Utility::storeFloatInNative(amx, params[4], boost::get<Eigen::Vector3f>(a->second->attach->position)[0]);
+									Utility::storeFloatInNative(amx, params[4], std::get<Eigen::Vector3f>(a->second->attach->position)[0]);
 									return 1;
 								}
 							}
@@ -528,12 +528,12 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 								case STREAMER_AREA_TYPE_CIRCLE:
 								case STREAMER_AREA_TYPE_CYLINDER:
 								{
-									Utility::storeFloatInNative(amx, params[4], boost::get<Eigen::Vector2f>(a->second->attach->position)[1]);
+									Utility::storeFloatInNative(amx, params[4], std::get<Eigen::Vector2f>(a->second->attach->position)[1]);
 									return 1;
 								}
 								case STREAMER_AREA_TYPE_SPHERE:
 								{
-									Utility::storeFloatInNative(amx, params[4], boost::get<Eigen::Vector3f>(a->second->attach->position)[1]);
+									Utility::storeFloatInNative(amx, params[4], std::get<Eigen::Vector3f>(a->second->attach->position)[1]);
 									return 1;
 								}
 							}
@@ -548,7 +548,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 							{
 								case STREAMER_AREA_TYPE_SPHERE:
 								{
-									Utility::storeFloatInNative(amx, params[4], boost::get<Eigen::Vector3f>(a->second->attach->position)[2]);
+									Utility::storeFloatInNative(amx, params[4], std::get<Eigen::Vector3f>(a->second->attach->position)[2]);
 									return 1;
 								}
 							}
@@ -588,12 +588,12 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 						{
 							case STREAMER_AREA_TYPE_RECTANGLE:
 							{
-								Utility::storeFloatInNative(amx, params[4], boost::get<Box2d>(a->second->position).max_corner()[0]);
+								Utility::storeFloatInNative(amx, params[4], std::get<Box2d>(a->second->position).max_corner()[0]);
 								return 1;
 							}
 							case STREAMER_AREA_TYPE_CUBOID:
 							{
-								Utility::storeFloatInNative(amx, params[4], boost::get<Box3d>(a->second->position).max_corner()[0]);
+								Utility::storeFloatInNative(amx, params[4], std::get<Box3d>(a->second->position).max_corner()[0]);
 								return 1;
 							}
 						}
@@ -605,12 +605,12 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 						{
 							case STREAMER_AREA_TYPE_RECTANGLE:
 							{
-								Utility::storeFloatInNative(amx, params[4], boost::get<Box2d>(a->second->position).max_corner()[1]);
+								Utility::storeFloatInNative(amx, params[4], std::get<Box2d>(a->second->position).max_corner()[1]);
 								return 1;
 							}
 							case STREAMER_AREA_TYPE_CUBOID:
 							{
-								Utility::storeFloatInNative(amx, params[4], boost::get<Box3d>(a->second->position).max_corner()[1]);
+								Utility::storeFloatInNative(amx, params[4], std::get<Box3d>(a->second->position).max_corner()[1]);
 								return 1;
 							}
 						}
@@ -622,7 +622,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 						{
 							case STREAMER_AREA_TYPE_CUBOID:
 							{
-								Utility::storeFloatInNative(amx, params[4], boost::get<Box3d>(a->second->position).max_corner()[2]);
+								Utility::storeFloatInNative(amx, params[4], std::get<Box3d>(a->second->position).max_corner()[2]);
 								return 1;
 							}
 							case STREAMER_AREA_TYPE_CYLINDER:
@@ -640,12 +640,12 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 						{
 							case STREAMER_AREA_TYPE_RECTANGLE:
 							{
-								Utility::storeFloatInNative(amx, params[4], boost::get<Box2d>(a->second->position).min_corner()[0]);
+								Utility::storeFloatInNative(amx, params[4], std::get<Box2d>(a->second->position).min_corner()[0]);
 								return 1;
 							}
 							case STREAMER_AREA_TYPE_CUBOID:
 							{
-								Utility::storeFloatInNative(amx, params[4], boost::get<Box3d>(a->second->position).min_corner()[0]);
+								Utility::storeFloatInNative(amx, params[4], std::get<Box3d>(a->second->position).min_corner()[0]);
 								return 1;
 							}
 						}
@@ -657,12 +657,12 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 						{
 							case STREAMER_AREA_TYPE_RECTANGLE:
 							{
-								Utility::storeFloatInNative(amx, params[4], boost::get<Box2d>(a->second->position).min_corner()[1]);
+								Utility::storeFloatInNative(amx, params[4], std::get<Box2d>(a->second->position).min_corner()[1]);
 								return 1;
 							}
 							case STREAMER_AREA_TYPE_CUBOID:
 							{
-								Utility::storeFloatInNative(amx, params[4], boost::get<Box3d>(a->second->position).min_corner()[1]);
+								Utility::storeFloatInNative(amx, params[4], std::get<Box3d>(a->second->position).min_corner()[1]);
 								return 1;
 							}
 						}
@@ -674,7 +674,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 						{
 							case STREAMER_AREA_TYPE_CUBOID:
 							{
-								Utility::storeFloatInNative(amx, params[4], boost::get<Box3d>(a->second->position).min_corner()[2]);
+								Utility::storeFloatInNative(amx, params[4], std::get<Box3d>(a->second->position).min_corner()[2]);
 								return 1;
 							}
 							case STREAMER_AREA_TYPE_CYLINDER:
@@ -698,12 +698,12 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 							case STREAMER_AREA_TYPE_CIRCLE:
 							case STREAMER_AREA_TYPE_CYLINDER:
 							{
-								Utility::storeFloatInNative(amx, params[4], boost::get<Eigen::Vector2f>(a->second->position)[0]);
+								Utility::storeFloatInNative(amx, params[4], std::get<Eigen::Vector2f>(a->second->position)[0]);
 								return 1;
 							}
 							case STREAMER_AREA_TYPE_SPHERE:
 							{
-								Utility::storeFloatInNative(amx, params[4], boost::get<Eigen::Vector3f>(a->second->position)[0]);
+								Utility::storeFloatInNative(amx, params[4], std::get<Eigen::Vector3f>(a->second->position)[0]);
 								return 1;
 							}
 						}
@@ -716,12 +716,12 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 							case STREAMER_AREA_TYPE_CIRCLE:
 							case STREAMER_AREA_TYPE_CYLINDER:
 							{
-								Utility::storeFloatInNative(amx, params[4], boost::get<Eigen::Vector2f>(a->second->position)[1]);
+								Utility::storeFloatInNative(amx, params[4], std::get<Eigen::Vector2f>(a->second->position)[1]);
 								return 1;
 							}
 							case STREAMER_AREA_TYPE_SPHERE:
 							{
-								Utility::storeFloatInNative(amx, params[4], boost::get<Eigen::Vector3f>(a->second->position)[1]);
+								Utility::storeFloatInNative(amx, params[4], std::get<Eigen::Vector3f>(a->second->position)[1]);
 								return 1;
 							}
 						}
@@ -733,7 +733,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 						{
 							case STREAMER_AREA_TYPE_SPHERE:
 							{
-								Utility::storeFloatInNative(amx, params[4], boost::get<Eigen::Vector3f>(a->second->position)[2]);
+								Utility::storeFloatInNative(amx, params[4], std::get<Eigen::Vector3f>(a->second->position)[2]);
 								return 1;
 							}
 						}
@@ -754,7 +754,7 @@ int Manipulation::getFloatData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_ACTOR:
 		{
-			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
 			if (a != core->getData()->actors.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -837,7 +837,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 	{
 		case STREAMER_TYPE_OBJECT:
 		{
-			boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
 			if (o != core->getData()->objects.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -991,9 +991,9 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 				}
 				if (update)
 				{
-					for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+					for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 					{
-						boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
+						std::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
 						if (i != p->second.internalObjects.end())
 						{
 							sampgdk::DestroyPlayerObject(p->first, i->second);
@@ -1002,7 +1002,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 							{
 								if (o->second->attach->object != INVALID_STREAMER_ID)
 								{
-									boost::unordered_map<int, int>::iterator j = p->second.internalObjects.find(o->second->attach->object);
+									std::unordered_map<int, int>::iterator j = p->second.internalObjects.find(o->second->attach->object);
 									if (j != p->second.internalObjects.end())
 									{
 										static AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToObject");
@@ -1027,9 +1027,9 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 							}
 							else if (o->second->move)
 							{
-								sampgdk::MovePlayerObject(p->first, i->second, o->second->move->position.get<0>()[0], o->second->move->position.get<0>()[1], o->second->move->position.get<0>()[2], o->second->move->speed, o->second->move->rotation.get<0>()[0], o->second->move->rotation.get<0>()[1], o->second->move->rotation.get<0>()[2]);
+								sampgdk::MovePlayerObject(p->first, i->second, std::get<0>(o->second->move->position)[0], std::get<0>(o->second->move->position)[1], std::get<0>(o->second->move->position)[2], o->second->move->speed, std::get<0>(o->second->move->rotation)[0], std::get<0>(o->second->move->rotation)[1], std::get<0>(o->second->move->rotation)[2]);
 							}
-							for (boost::unordered_map<int, Item::Object::Material>::iterator m = o->second->materials.begin(); m != o->second->materials.end(); ++m)
+							for (std::unordered_map<int, Item::Object::Material>::iterator m = o->second->materials.begin(); m != o->second->materials.end(); ++m)
 							{
 								if (m->second.main)
 								{
@@ -1060,7 +1060,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_PICKUP:
 		{
-			boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[2]));
 			if (p != core->getData()->pickups.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -1110,9 +1110,9 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 				}
 				if (update)
 				{
-					for (boost::unordered_set<int>::const_iterator w = p->second->worlds.begin(); w != p->second->worlds.end(); ++w)
+					for (std::unordered_set<int>::const_iterator w = p->second->worlds.begin(); w != p->second->worlds.end(); ++w)
 					{
-						boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalPickups.find(std::make_pair(p->first, *w));
+						std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalPickups.find(std::make_pair(p->first, *w));
 						if (i != core->getData()->internalPickups.end())
 						{
 							sampgdk::DestroyPickup(i->second);
@@ -1133,7 +1133,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_CP:
 		{
-			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[2]));
 			if (c != core->getData()->checkpoints.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -1189,7 +1189,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 				}
 				if (update)
 				{
-					for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+					for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 					{
 						if (p->second.visibleCheckpoint == c->first)
 						{
@@ -1212,7 +1212,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_RACE_CP:
 		{
-			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[2]));
 			if (r != core->getData()->raceCheckpoints.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -1286,7 +1286,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 				}
 				if (update)
 				{
-					for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+					for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 					{
 						if (p->second.visibleRaceCheckpoint == r->first)
 						{
@@ -1309,7 +1309,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_MAP_ICON:
 		{
-			boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[2]));
 			if (m != core->getData()->mapIcons.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -1359,9 +1359,9 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 				}
 				if (update)
 				{
-					for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+					for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 					{
-						boost::unordered_map<int, int>::iterator i = p->second.internalMapIcons.find(m->first);
+						std::unordered_map<int, int>::iterator i = p->second.internalMapIcons.find(m->first);
 						if (i != p->second.internalMapIcons.end())
 						{
 							sampgdk::RemovePlayerMapIcon(p->first, i->second);
@@ -1382,7 +1382,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_3D_TEXT_LABEL:
 		{
-			boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[2]));
 			if (t != core->getData()->textLabels.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -1441,9 +1441,9 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 				}
 				if (update)
 				{
-					for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+					for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 					{
-						boost::unordered_map<int, int>::iterator i = p->second.internalTextLabels.find(t->first);
+						std::unordered_map<int, int>::iterator i = p->second.internalTextLabels.find(t->first);
 						if (i != p->second.internalTextLabels.end())
 						{
 							sampgdk::DeletePlayer3DTextLabel(p->first, i->second);
@@ -1464,7 +1464,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_AREA:
 		{
-			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[2]));
 			if (a != core->getData()->areas.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -1499,13 +1499,13 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 						{
 							case STREAMER_AREA_TYPE_RECTANGLE:
 							{
-								boost::get<Box2d>(a->second->position).max_corner()[0] = amx_ctof(params[4]);
+								std::get<Box2d>(a->second->position).max_corner()[0] = amx_ctof(params[4]);
 								reassign = true;
 								break;
 							}
 							case STREAMER_AREA_TYPE_CUBOID:
 							{
-								boost::get<Box3d>(a->second->position).max_corner()[0] = amx_ctof(params[4]);
+								std::get<Box3d>(a->second->position).max_corner()[0] = amx_ctof(params[4]);
 								reassign = true;
 								break;
 							}
@@ -1518,13 +1518,13 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 						{
 							case STREAMER_AREA_TYPE_RECTANGLE:
 							{
-								boost::get<Box2d>(a->second->position).max_corner()[1] = amx_ctof(params[4]);
+								std::get<Box2d>(a->second->position).max_corner()[1] = amx_ctof(params[4]);
 								reassign = true;
 								break;
 							}
 							case STREAMER_AREA_TYPE_CUBOID:
 							{
-								boost::get<Box3d>(a->second->position).max_corner()[1] = amx_ctof(params[4]);
+								std::get<Box3d>(a->second->position).max_corner()[1] = amx_ctof(params[4]);
 								reassign = true;
 								break;
 							}
@@ -1537,7 +1537,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 						{
 							case STREAMER_AREA_TYPE_CUBOID:
 							{
-								boost::get<Box3d>(a->second->position).max_corner()[2] = amx_ctof(params[4]);
+								std::get<Box3d>(a->second->position).max_corner()[2] = amx_ctof(params[4]);
 								return 1;
 							}
 							case STREAMER_AREA_TYPE_CYLINDER:
@@ -1555,13 +1555,13 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 						{
 							case STREAMER_AREA_TYPE_RECTANGLE:
 							{
-								boost::get<Box2d>(a->second->position).min_corner()[0] = amx_ctof(params[4]);
+								std::get<Box2d>(a->second->position).min_corner()[0] = amx_ctof(params[4]);
 								reassign = true;
 								break;
 							}
 							case STREAMER_AREA_TYPE_CUBOID:
 							{
-								boost::get<Box3d>(a->second->position).min_corner()[0] = amx_ctof(params[4]);
+								std::get<Box3d>(a->second->position).min_corner()[0] = amx_ctof(params[4]);
 								reassign = true;
 								break;
 							}
@@ -1574,13 +1574,13 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 						{
 							case STREAMER_AREA_TYPE_RECTANGLE:
 							{
-								boost::get<Box2d>(a->second->position).min_corner()[1] = amx_ctof(params[4]);
+								std::get<Box2d>(a->second->position).min_corner()[1] = amx_ctof(params[4]);
 								reassign = true;
 								break;
 							}
 							case STREAMER_AREA_TYPE_CUBOID:
 							{
-								boost::get<Box3d>(a->second->position).min_corner()[1] = amx_ctof(params[4]);
+								std::get<Box3d>(a->second->position).min_corner()[1] = amx_ctof(params[4]);
 								reassign = true;
 								break;
 							}
@@ -1593,7 +1593,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 						{
 							case STREAMER_AREA_TYPE_CUBOID:
 							{
-								boost::get<Box3d>(a->second->position).min_corner()[2] = amx_ctof(params[4]);
+								std::get<Box3d>(a->second->position).min_corner()[2] = amx_ctof(params[4]);
 								return 1;
 							}
 							case STREAMER_AREA_TYPE_CYLINDER:
@@ -1628,13 +1628,13 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 							case STREAMER_AREA_TYPE_CIRCLE:
 							case STREAMER_AREA_TYPE_CYLINDER:
 							{
-								boost::get<Eigen::Vector2f>(a->second->position)[0] = amx_ctof(params[4]);
+								std::get<Eigen::Vector2f>(a->second->position)[0] = amx_ctof(params[4]);
 								reassign = true;
 								break;
 							}
 							case STREAMER_AREA_TYPE_SPHERE:
 							{
-								boost::get<Eigen::Vector3f>(a->second->position)[0] = amx_ctof(params[4]);
+								std::get<Eigen::Vector3f>(a->second->position)[0] = amx_ctof(params[4]);
 								reassign = true;
 								break;
 							}
@@ -1648,13 +1648,13 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 							case STREAMER_AREA_TYPE_CIRCLE:
 							case STREAMER_AREA_TYPE_CYLINDER:
 							{
-								boost::get<Eigen::Vector2f>(a->second->position)[1] = amx_ctof(params[4]);
+								std::get<Eigen::Vector2f>(a->second->position)[1] = amx_ctof(params[4]);
 								reassign = true;
 								break;
 							}
 							case STREAMER_AREA_TYPE_SPHERE:
 							{
-								boost::get<Eigen::Vector3f>(a->second->position)[1] = amx_ctof(params[4]);
+								std::get<Eigen::Vector3f>(a->second->position)[1] = amx_ctof(params[4]);
 								reassign = true;
 								break;
 							}
@@ -1667,7 +1667,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 						{
 							case STREAMER_AREA_TYPE_SPHERE:
 							{
-								boost::get<Eigen::Vector3f>(a->second->position)[2] = amx_ctof(params[4]);
+								std::get<Eigen::Vector3f>(a->second->position)[2] = amx_ctof(params[4]);
 								return 1;
 							}
 						}
@@ -1685,16 +1685,16 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 					{
 						case STREAMER_AREA_TYPE_RECTANGLE:
 						{
-							boost::geometry::correct(boost::get<Box2d>(a->second->position));
-							a->second->comparableSize = static_cast<float>(boost::geometry::comparable_distance(boost::get<Box2d>(a->second->position).min_corner(), boost::get<Box2d>(a->second->position).max_corner()));
-							a->second->size = static_cast<float>(boost::geometry::distance(boost::get<Box2d>(a->second->position).min_corner(), boost::get<Box2d>(a->second->position).max_corner()));
+							boost::geometry::correct(std::get<Box2d>(a->second->position));
+							a->second->comparableSize = static_cast<float>(boost::geometry::comparable_distance(std::get<Box2d>(a->second->position).min_corner(), std::get<Box2d>(a->second->position).max_corner()));
+							a->second->size = static_cast<float>(boost::geometry::distance(std::get<Box2d>(a->second->position).min_corner(), std::get<Box2d>(a->second->position).max_corner()));
 							break;
 						}
 						case STREAMER_AREA_TYPE_CUBOID:
 						{
-							boost::geometry::correct(boost::get<Box3d>(a->second->position));
-							a->second->comparableSize = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector2f(boost::get<Box3d>(a->second->position).min_corner()[0], boost::get<Box3d>(a->second->position).min_corner()[1]), Eigen::Vector2f(boost::get<Box3d>(a->second->position).max_corner()[0], boost::get<Box3d>(a->second->position).max_corner()[1])));
-							a->second->size = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(boost::get<Box3d>(a->second->position).min_corner()[0], boost::get<Box3d>(a->second->position).min_corner()[1]), Eigen::Vector2f(boost::get<Box3d>(a->second->position).max_corner()[0], boost::get<Box3d>(a->second->position).max_corner()[1])));
+							boost::geometry::correct(std::get<Box3d>(a->second->position));
+							a->second->comparableSize = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector2f(std::get<Box3d>(a->second->position).min_corner()[0], std::get<Box3d>(a->second->position).min_corner()[1]), Eigen::Vector2f(std::get<Box3d>(a->second->position).max_corner()[0], std::get<Box3d>(a->second->position).max_corner()[1])));
+							a->second->size = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(std::get<Box3d>(a->second->position).min_corner()[0], std::get<Box3d>(a->second->position).min_corner()[1]), Eigen::Vector2f(std::get<Box3d>(a->second->position).max_corner()[0], std::get<Box3d>(a->second->position).max_corner()[1])));
 							break;
 						}
 					}
@@ -1713,7 +1713,7 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_ACTOR:
 		{
-			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
 			if (a != core->getData()->actors.end())
 			{
 				switch (static_cast<int>(params[3]))
@@ -1775,9 +1775,9 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 				}
 				if (update)
 				{
-					for (boost::unordered_set<int>::const_iterator w = a->second->worlds.begin(); w != a->second->worlds.end(); ++w)
+					for (std::unordered_set<int>::const_iterator w = a->second->worlds.begin(); w != a->second->worlds.end(); ++w)
 					{
-						boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
+						std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
 						if (i != core->getData()->internalActors.end())
 						{
 							sampgdk::DestroyActor(i->second);

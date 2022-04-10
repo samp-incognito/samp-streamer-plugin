@@ -195,7 +195,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabelEx(AMX *amx, cell *params)
 	textLabel->drawDistance = amx_ctof(params[6]);
 	if (static_cast<int>(params[7]) != INVALID_PLAYER_ID || static_cast<int>(params[8]) != INVALID_VEHICLE_ID)
 	{
-		textLabel->attach = boost::intrusive_ptr<Item::TextLabel::Attach>(new Item::TextLabel::Attach);
+		textLabel->attach = std::make_shared<Item::TextLabel::Attach>();
 		textLabel->attach->player = static_cast<int>(params[7]);
 		textLabel->attach->vehicle = static_cast<int>(params[8]);
 		if (textLabel->position.cwiseAbs().maxCoeff() > 50.0f)
@@ -307,9 +307,9 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicRectangleEx(AMX *amx, cell *params)
 	area->spectateMode = true;
 	area->type = STREAMER_AREA_TYPE_RECTANGLE;
 	area->position = Box2d(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), Eigen::Vector2f(amx_ctof(params[3]), amx_ctof(params[4])));
-	boost::geometry::correct(boost::get<Box2d>(area->position));
-	area->comparableSize = static_cast<float>(boost::geometry::comparable_distance(boost::get<Box2d>(area->position).min_corner(), boost::get<Box2d>(area->position).max_corner()));
-	area->size = static_cast<float>(boost::geometry::distance(boost::get<Box2d>(area->position).min_corner(), boost::get<Box2d>(area->position).max_corner()));
+	boost::geometry::correct(std::get<Box2d>(area->position));
+	area->comparableSize = static_cast<float>(boost::geometry::comparable_distance(std::get<Box2d>(area->position).min_corner(), std::get<Box2d>(area->position).max_corner()));
+	area->size = static_cast<float>(boost::geometry::distance(std::get<Box2d>(area->position).min_corner(), std::get<Box2d>(area->position).max_corner()));
 	Utility::convertArrayToContainer(amx, params[5], params[9], area->worlds);
 	Utility::convertArrayToContainer(amx, params[6], params[10], area->interiors);
 	Utility::convertArrayToContainer(amx, params[7], params[11], area->players);
@@ -333,9 +333,9 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicCuboidEx(AMX *amx, cell *params)
 	area->spectateMode = true;
 	area->type = STREAMER_AREA_TYPE_CUBOID;
 	area->position = Box3d(Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3])), Eigen::Vector3f(amx_ctof(params[4]), amx_ctof(params[5]), amx_ctof(params[6])));
-	boost::geometry::correct(boost::get<Box3d>(area->position));
-	area->comparableSize = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector2f(boost::get<Box3d>(area->position).min_corner()[0], boost::get<Box3d>(area->position).min_corner()[1]), Eigen::Vector2f(boost::get<Box3d>(area->position).max_corner()[0], boost::get<Box3d>(area->position).max_corner()[1])));
-	area->size = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(boost::get<Box3d>(area->position).min_corner()[0], boost::get<Box3d>(area->position).min_corner()[1]), Eigen::Vector2f(boost::get<Box3d>(area->position).max_corner()[0], boost::get<Box3d>(area->position).max_corner()[1])));
+	boost::geometry::correct(std::get<Box3d>(area->position));
+	area->comparableSize = static_cast<float>(boost::geometry::comparable_distance(Eigen::Vector2f(std::get<Box3d>(area->position).min_corner()[0], std::get<Box3d>(area->position).min_corner()[1]), Eigen::Vector2f(std::get<Box3d>(area->position).max_corner()[0], std::get<Box3d>(area->position).max_corner()[1])));
+	area->size = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(std::get<Box3d>(area->position).min_corner()[0], std::get<Box3d>(area->position).min_corner()[1]), Eigen::Vector2f(std::get<Box3d>(area->position).max_corner()[0], std::get<Box3d>(area->position).max_corner()[1])));
 	Utility::convertArrayToContainer(amx, params[7], params[11], area->worlds);
 	Utility::convertArrayToContainer(amx, params[8], params[12], area->interiors);
 	Utility::convertArrayToContainer(amx, params[9], params[13], area->players);
@@ -363,9 +363,9 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPolygonEx(AMX *amx, cell *params)
 	area->areaId = areaId;
 	area->spectateMode = true;
 	area->type = STREAMER_AREA_TYPE_POLYGON;
-	Utility::convertArrayToPolygon(amx, params[1], params[4], boost::get<Polygon2d>(area->position));
+	Utility::convertArrayToPolygon(amx, params[1], params[4], std::get<Polygon2d>(area->position));
 	area->height = Eigen::Vector2f(amx_ctof(params[2]), amx_ctof(params[3]));
-	Box2d box = boost::geometry::return_envelope<Box2d>(boost::get<Polygon2d>(area->position));
+	Box2d box = boost::geometry::return_envelope<Box2d>(std::get<Polygon2d>(area->position));
 	area->comparableSize = static_cast<float>(boost::geometry::comparable_distance(box.min_corner(), box.max_corner()));
 	area->size = static_cast<float>(boost::geometry::distance(box.min_corner(), box.max_corner()));
 	Utility::convertArrayToContainer(amx, params[5], params[9], area->worlds);

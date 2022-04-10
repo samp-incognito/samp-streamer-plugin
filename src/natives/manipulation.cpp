@@ -100,7 +100,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetUpperBound(AMX *amx, cell *params)
 		case STREAMER_TYPE_OBJECT:
 		{
 			int objectId = 0;
-			for (boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.begin(); o != core->getData()->objects.end(); ++o)
+			for (std::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.begin(); o != core->getData()->objects.end(); ++o)
 			{
 				if (o->first > objectId)
 				{
@@ -112,7 +112,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetUpperBound(AMX *amx, cell *params)
 		case STREAMER_TYPE_PICKUP:
 		{
 			int pickupId = 0;
-			for (boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.begin(); p != core->getData()->pickups.end(); ++p)
+			for (std::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.begin(); p != core->getData()->pickups.end(); ++p)
 			{
 				if (p->first > pickupId)
 				{
@@ -124,7 +124,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetUpperBound(AMX *amx, cell *params)
 		case STREAMER_TYPE_CP:
 		{
 			int checkpointId = 0;
-			for (boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.begin(); c != core->getData()->checkpoints.end(); ++c)
+			for (std::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.begin(); c != core->getData()->checkpoints.end(); ++c)
 			{
 				if (c->first > checkpointId)
 				{
@@ -136,7 +136,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetUpperBound(AMX *amx, cell *params)
 		case STREAMER_TYPE_RACE_CP:
 		{
 			int raceCheckpointId = 0;
-			for (boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.begin(); r != core->getData()->raceCheckpoints.end(); ++r)
+			for (std::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.begin(); r != core->getData()->raceCheckpoints.end(); ++r)
 			{
 				if (r->first > raceCheckpointId)
 				{
@@ -148,7 +148,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetUpperBound(AMX *amx, cell *params)
 		case STREAMER_TYPE_MAP_ICON:
 		{
 			int mapIconId = 0;
-			for (boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.begin(); m != core->getData()->mapIcons.end(); ++m)
+			for (std::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.begin(); m != core->getData()->mapIcons.end(); ++m)
 			{
 				if (m->first > mapIconId)
 				{
@@ -160,7 +160,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetUpperBound(AMX *amx, cell *params)
 		case STREAMER_TYPE_3D_TEXT_LABEL:
 		{
 			int textLabelId = 0;
-			for (boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.begin(); t != core->getData()->textLabels.end(); ++t)
+			for (std::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.begin(); t != core->getData()->textLabels.end(); ++t)
 			{
 				if (t->first > textLabelId)
 				{
@@ -172,7 +172,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetUpperBound(AMX *amx, cell *params)
 		case STREAMER_TYPE_AREA:
 		{
 			int areaId = 0;
-			for (boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.begin(); a != core->getData()->areas.end(); ++a)
+			for (std::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.begin(); a != core->getData()->areas.end(); ++a)
 			{
 				if (a->first > areaId)
 				{
@@ -184,7 +184,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetUpperBound(AMX *amx, cell *params)
 		case STREAMER_TYPE_ACTOR:
 		{
 			int actorId = 0;
-			for (boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.begin(); a != core->getData()->actors.end(); ++a)
+			for (std::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.begin(); a != core->getData()->actors.end(); ++a)
 			{
 				if (a->first > actorId)
 				{

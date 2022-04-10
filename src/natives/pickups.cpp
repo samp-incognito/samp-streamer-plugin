@@ -53,7 +53,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicPickup(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::DestroyDynamicPickup(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1);
-	boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[1]));
+	std::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[1]));
 	if (p != core->getData()->pickups.end())
 	{
 		Utility::destroyPickup(p);
@@ -65,7 +65,7 @@ cell AMX_NATIVE_CALL Natives::DestroyDynamicPickup(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::IsValidDynamicPickup(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1);
-	boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[1]));
+	std::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[1]));
 	if (p != core->getData()->pickups.end())
 	{
 		return 1;

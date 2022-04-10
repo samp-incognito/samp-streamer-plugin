@@ -35,15 +35,8 @@ inline void intrusive_ptr_release(T *t)
 #include <boost/bimap.hpp>
 #include <boost/bimap/multiset_of.hpp>
 #include <boost/bimap/unordered_set_of.hpp>
-#include <boost/chrono.hpp>
 #include <boost/geometry.hpp>
 #include <boost/geometry/geometries/geometries.hpp>
-#include <boost/intrusive_ptr.hpp>
-#include <boost/scoped_ptr.hpp>
-#include <boost/tuple/tuple.hpp>
-#include <boost/unordered_map.hpp>
-#include <boost/unordered_set.hpp>
-#include <boost/variant.hpp>
 
 #include <Eigen/Core>
 
@@ -59,8 +52,26 @@ inline void intrusive_ptr_release(T *t)
 #include <string>
 #include <vector>
 #include <utility>
+#include <unordered_set>
+#include <unordered_map>
+#include <memory>
+#include <chrono>
+#include <variant>
+#include <tuple>
 
 #include "common.h"
 #include "sampgdk.h"
+
+struct pair_hash
+{
+	template <class T1, class T2>
+	std::size_t operator () (std::pair<T1, T2> const& pair) const
+	{
+		std::size_t h1 = std::hash<T1>()(pair.first);
+		std::size_t h2 = std::hash<T2>()(pair.second);
+
+		return h1 ^ h2;
+	}
+};
 
 #endif

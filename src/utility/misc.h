@@ -21,14 +21,14 @@
 
 namespace Utility
 {
-	boost::unordered_map<int, Item::SharedActor>::iterator destroyActor(boost::unordered_map<int, Item::SharedActor>::iterator a);
-	boost::unordered_map<int, Item::SharedArea>::iterator destroyArea(boost::unordered_map<int, Item::SharedArea>::iterator a);
-	boost::unordered_map<int, Item::SharedCheckpoint>::iterator destroyCheckpoint(boost::unordered_map<int, Item::SharedCheckpoint>::iterator c);
-	boost::unordered_map<int, Item::SharedMapIcon>::iterator destroyMapIcon(boost::unordered_map<int, Item::SharedMapIcon>::iterator m);
-	boost::unordered_map<int, Item::SharedObject>::iterator destroyObject(boost::unordered_map<int, Item::SharedObject>::iterator o);
-	boost::unordered_map<int, Item::SharedPickup>::iterator destroyPickup(boost::unordered_map<int, Item::SharedPickup>::iterator p);
-	boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator destroyRaceCheckpoint(boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r);
-	boost::unordered_map<int, Item::SharedTextLabel>::iterator destroyTextLabel(boost::unordered_map<int, Item::SharedTextLabel>::iterator t);
+	std::unordered_map<int, Item::SharedActor>::iterator destroyActor(std::unordered_map<int, Item::SharedActor>::iterator a);
+	std::unordered_map<int, Item::SharedArea>::iterator destroyArea(std::unordered_map<int, Item::SharedArea>::iterator a);
+	std::unordered_map<int, Item::SharedCheckpoint>::iterator destroyCheckpoint(std::unordered_map<int, Item::SharedCheckpoint>::iterator c);
+	std::unordered_map<int, Item::SharedMapIcon>::iterator destroyMapIcon(std::unordered_map<int, Item::SharedMapIcon>::iterator m);
+	std::unordered_map<int, Item::SharedObject>::iterator destroyObject(std::unordered_map<int, Item::SharedObject>::iterator o);
+	std::unordered_map<int, Item::SharedPickup>::iterator destroyPickup(std::unordered_map<int, Item::SharedPickup>::iterator p);
+	std::unordered_map<int, Item::SharedRaceCheckpoint>::iterator destroyRaceCheckpoint(std::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r);
+	std::unordered_map<int, Item::SharedTextLabel>::iterator destroyTextLabel(std::unordered_map<int, Item::SharedTextLabel>::iterator t);
 
 	std::size_t getChunkTickRate(int type, int playerid);
 	bool setChunkTickRate(int type, std::size_t value, int playerid);
@@ -55,7 +55,7 @@ namespace Utility
 	}
 
 	template<typename T>
-	inline bool addToContainer(boost::unordered_set<T> &container, T value)
+	inline bool addToContainer(std::unordered_set<T> &container, T value)
 	{
 		if (value >= 0)
 		{
@@ -99,9 +99,9 @@ namespace Utility
 	}
 
 	template<typename T>
-	inline int getFirstValueInContainer(const boost::unordered_set<T> &container)
+	inline int getFirstValueInContainer(const std::unordered_set<T> &container)
 	{
-		boost::unordered_set<int>::iterator i = container.begin();
+		std::unordered_set<int>::iterator i = container.begin();
 		if (i != container.end())
 		{
 			return *i;
@@ -137,7 +137,7 @@ namespace Utility
 	}
 
 	template<typename T>
-	inline bool setFirstValueInContainer(boost::unordered_set<T> &container, T value)
+	inline bool setFirstValueInContainer(std::unordered_set<T> &container, T value)
 	{
 		container.clear();
 		return addToContainer(container, value);
@@ -161,7 +161,7 @@ namespace Utility
 	}
 
 	template<typename T>
-	inline bool isInContainer(const boost::unordered_set<T> &container, const T value)
+	inline bool isInContainer(const std::unordered_set<T> &container, const T value)
 	{
 		if (value >= 0)
 		{
@@ -201,9 +201,9 @@ namespace Utility
 	}
 
 	template<typename T>
-	inline bool isContainerWithinContainer(const boost::unordered_set<T> &mainContainer, const boost::unordered_set<T> &overlappingContainer)
+	inline bool isContainerWithinContainer(const std::unordered_set<T> &mainContainer, const std::unordered_set<T> &overlappingContainer)
 	{
-		for (typename boost::unordered_set<T>::const_iterator o = overlappingContainer.begin(); o != overlappingContainer.end(); ++o)
+		for (typename std::unordered_set<T>::const_iterator o = overlappingContainer.begin(); o != overlappingContainer.end(); ++o)
 		{
 			if (mainContainer.find(*o) != mainContainer.end())
 			{
@@ -226,7 +226,7 @@ namespace Utility
 	}
 
 	template<typename T>
-	inline bool removeFromContainer(boost::unordered_set<T> &container, T value)
+	inline bool removeFromContainer(std::unordered_set<T> &container, T value)
 	{
 		if (value >= 0)
 		{
