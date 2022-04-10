@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(streamer)
+project(Streamer)
 
 set(PLUGIN_VERSION "2.9.5")
 
