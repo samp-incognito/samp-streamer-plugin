@@ -1,6 +1,3 @@
-[submodule "lib/boost"]
-	path = lib/boost
-	url = git://github.com/boostorg/boost
 [submodule "lib/cmake-modules"]
 	path = lib/cmake-modules
 	url = git://github.com/Zeex/cmake-modules
