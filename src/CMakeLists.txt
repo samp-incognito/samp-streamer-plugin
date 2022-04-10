@@ -18,7 +18,6 @@ list(APPEND PLUGIN_SOURCES
 	item.cpp
 	main.cpp
 	player.cpp
-	precompiled.cpp
 	sampgdk.c
 	streamer.cpp
 )
@@ -33,20 +32,15 @@ endif()
 add_samp_plugin(${PROJECT_NAME} ${PLUGIN_SOURCES})
 
 if(WIN32)
-	add_definitions(-DBOOST_ALL_NO_LIB -DNOMINMAX)
+	add_definitions(-DNOMINMAX)
 else()
 	set_property(TARGET ${PROJECT_NAME} APPEND_STRING PROPERTY COMPILE_FLAGS " -fno-strict-aliasing")
 	set_property(TARGET ${PROJECT_NAME} APPEND_STRING PROPERTY LINK_FLAGS " -lrt")
 endif()
 
-add_definitions(-DBOOST_CHRONO_HEADER_ONLY -DSAMPGDK_AMALGAMATION -DSAMPGDK_CPP_WRAPPERS)
+add_definitions(-DSAMPGDK_AMALGAMATION -DSAMPGDK_CPP_WRAPPERS -D_SILENCE_CXX17_NEGATORS_DEPRECATION_WARNING -D_SILENCE_CXX17_ADAPTOR_TYPEDEFS_DEPRECATION_WARNING)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
-target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
-
-include(cotire)
-
-set_target_properties(${PROJECT_NAME} PROPERTIES COTIRE_CXX_PREFIX_HEADER_INIT "precompiled.h")
-cotire(${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME})
 
 install(TARGETS ${PROJECT_NAME} DESTINATION bin)

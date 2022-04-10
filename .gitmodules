@@ -7,3 +7,6 @@
 [submodule "lib/samp-plugin-sdk"]
 	path = lib/samp-plugin-sdk
 	url = git://github.com/Zeex/samp-plugin-sdk
+[submodule "lib/boost"]
+	path = lib/boost
+	url = https://github.com/scipy/boost-headers-only
