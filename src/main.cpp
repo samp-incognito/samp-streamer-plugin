@@ -259,7 +259,7 @@ class OmpStreamerComponent final : public IComponent, public CoreEventHandler, p
 
 	StringView componentName() const override
 	{
-		return "open.mp streamer";
+		return "Streamer";
 	}
 
 	SemanticVersion componentVersion() const override
