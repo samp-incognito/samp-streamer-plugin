@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-#include "../precompiled.h"
+#include "../main.h"
 
 #include "../natives.h"
 #include "../core.h"
-#include "../main.h"
 #include "../utility.h"
 
 cell AMX_NATIVE_CALL Natives::CreateDynamicCircle(AMX *amx, cell *params)

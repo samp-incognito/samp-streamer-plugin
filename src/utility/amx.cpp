@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-#include "../precompiled.h"
+#include "../main.h"
 
 #include "amx.h"
 #include "../core.h"
-#include "../main.h"
 
 using namespace Utility;
 

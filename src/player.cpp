@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "precompiled.h"
+#include "main.h"
 
 #include "player.h"
 #include "core.h"

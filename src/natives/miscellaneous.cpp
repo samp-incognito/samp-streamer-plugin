@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "../precompiled.h"
+#include "../main.h"
 #include "../natives.h"
 #include "../core.h"
 #include "../utility.h"
