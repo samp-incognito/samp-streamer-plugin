@@ -58,7 +58,7 @@ Player::Player(int id)
 	tickRate = 50;
 	updateUsingCameraPosition = false;
 	updateWhenIdle = false;
-	visibleCell = SharedCell(new Cell());
+	visibleCell = std::make_shared<Cell>();
 	visibleCheckpoint = 0;
 	visibleRaceCheckpoint = 0;
 	worldId = 0;

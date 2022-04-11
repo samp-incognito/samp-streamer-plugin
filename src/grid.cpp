@@ -23,7 +23,7 @@ Grid::Grid()
 {
 	cellDistance = 360000.0f;
 	cellSize = 300.0f;
-	globalCell = SharedCell(new Cell());
+	globalCell = std::make_shared<Cell>();
 	calculateTranslationMatrix();
 }
 
@@ -208,7 +208,7 @@ void Grid::addTextLabel(const Item::SharedTextLabel &textLabel)
 void Grid::rebuildGrid()
 {
 	cells.clear();
-	globalCell = SharedCell(new Cell());
+	globalCell = std::make_shared<Cell>();
 	calculateTranslationMatrix();
 	for (std::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.begin(); a != core->getData()->actors.end(); ++a)
 	{
@@ -563,7 +563,7 @@ CellId Grid::getCellId(const Eigen::Vector2f &position, bool insert)
 		std::unordered_map<CellId, SharedCell, pair_hash>::iterator c = cells.find(cellId);
 		if (c == cells.end())
 		{
-			cells[cellId] = SharedCell(new Cell(cellId));
+			cells[cellId] = std::make_shared<Cell>(cellId);
 		}
 	}
 	return cellId;
@@ -572,7 +572,7 @@ CellId Grid::getCellId(const Eigen::Vector2f &position, bool insert)
 
 void Grid::processDiscoveredCellsForPlayer(Player &player, std::vector<SharedCell> &playerCells, const std::unordered_set<CellId, pair_hash> &discoveredCells)
 {
-	playerCells.push_back(SharedCell());
+	playerCells.push_back(std::make_shared<Cell>());
 	if (player.enabledItems[STREAMER_TYPE_OBJECT])
 	{
 		std::unordered_map<int, Item::SharedObject>::iterator o = player.visibleCell->objects.begin();
