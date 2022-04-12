@@ -77,10 +77,10 @@ cell AMX_NATIVE_CALL Natives::IsValidDynamicActor(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::IsDynamicActorStreamedIn(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(2);
-	std::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
+	std::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[2]));
 	if (p != core->getData()->players.end())
 	{
-		int actorId = static_cast<int>(params[2]);
+		int actorId = static_cast<int>(params[1]);
 
 		std::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(actorId);
 		if (a != core->getData()->actors.end())
