@@ -580,7 +580,7 @@ void Grid::processDiscoveredCellsForPlayer(Player &player, std::vector<SharedCel
 		{
 			if (o->second->cell)
 			{
-				std::unordered_set<CellId, pair_hash>::iterator d = discoveredCells.find(o->second->cell->cellId);
+				auto d = discoveredCells.find(o->second->cell->cellId);
 				if (d != discoveredCells.end())
 				{
 					o = player.visibleCell->objects.erase(o);
@@ -604,7 +604,7 @@ void Grid::processDiscoveredCellsForPlayer(Player &player, std::vector<SharedCel
 		{
 			if (c->second->cell)
 			{
-				std::unordered_set<CellId, pair_hash>::iterator d = discoveredCells.find(c->second->cell->cellId);
+				auto d = discoveredCells.find(c->second->cell->cellId);
 				if (d != discoveredCells.end())
 				{
 					c = player.visibleCell->checkpoints.erase(c);
@@ -628,7 +628,7 @@ void Grid::processDiscoveredCellsForPlayer(Player &player, std::vector<SharedCel
 		{
 			if (r->second->cell)
 			{
-				std::unordered_set<CellId, pair_hash>::iterator d = discoveredCells.find(r->second->cell->cellId);
+				auto d = discoveredCells.find(r->second->cell->cellId);
 				if (d != discoveredCells.end())
 				{
 					r = player.visibleCell->raceCheckpoints.erase(r);
@@ -652,7 +652,7 @@ void Grid::processDiscoveredCellsForPlayer(Player &player, std::vector<SharedCel
 		{
 			if (m->second->cell)
 			{
-				std::unordered_set<CellId, pair_hash>::iterator d = discoveredCells.find(m->second->cell->cellId);
+				auto d = discoveredCells.find(m->second->cell->cellId);
 				if (d != discoveredCells.end())
 				{
 					m = player.visibleCell->mapIcons.erase(m);
@@ -676,7 +676,7 @@ void Grid::processDiscoveredCellsForPlayer(Player &player, std::vector<SharedCel
 		{
 			if (t->second->cell)
 			{
-				std::unordered_set<CellId, pair_hash>::iterator d = discoveredCells.find(t->second->cell->cellId);
+				auto d = discoveredCells.find(t->second->cell->cellId);
 				if (d != discoveredCells.end())
 				{
 					t = player.visibleCell->textLabels.erase(t);
@@ -700,7 +700,7 @@ void Grid::processDiscoveredCellsForPlayer(Player &player, std::vector<SharedCel
 		{
 			if (a->second->cell)
 			{
-				std::unordered_set<CellId, pair_hash>::iterator d = discoveredCells.find(a->second->cell->cellId);
+				auto d = discoveredCells.find(a->second->cell->cellId);
 				if (d != discoveredCells.end())
 				{
 					a = player.visibleCell->areas.erase(a);

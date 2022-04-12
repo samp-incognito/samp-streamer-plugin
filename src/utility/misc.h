@@ -101,7 +101,7 @@ namespace Utility
 	template<typename T>
 	inline int getFirstValueInContainer(const std::unordered_set<T> &container)
 	{
-		std::unordered_set<int>::iterator i = container.begin();
+		auto i = container.begin();
 		if (i != container.end())
 		{
 			return *i;
