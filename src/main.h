@@ -48,6 +48,8 @@
 #include <tuple>
 
 #include "common.h"
-#include "sampgdk.h"
+#include "plugin.h"
+#include "ompgdk.hpp"
+#include "sdk.hpp"
 
 #endif

@@ -17,6 +17,12 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include <utility>
+#include <memory>
+#include <boost/geometry.hpp>
+#include <boost/geometry/geometries/geometries.hpp>
+#include <Eigen/Core>
+
 #define INVALID_STREAMER_ID (0)
 
 #define STREAMER_MAX_TYPES (8)

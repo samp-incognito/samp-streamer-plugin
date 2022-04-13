@@ -221,7 +221,7 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 		if (!player.updateUsingCameraPosition)
 		{
 			int state = ompgdk::GetPlayerState(player.playerId);
-			if ((state != PLAYER_STATE_NONE && state != PLAYER_STATE_WASTED) || (state == PLAYER_STATE_SPECTATING && !player.requestingClass))
+			if ((state != PlayerState::PlayerState_None && state != PlayerState::PlayerState_Wasted) || (state == PlayerState::PlayerState_Spectating && !player.requestingClass))
 			{
 				if (!ompgdk::IsPlayerInAnyVehicle(player.playerId))
 				{
@@ -235,11 +235,11 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 				{
 					position = player.position;
 					Eigen::Vector3f velocity = Eigen::Vector3f::Zero();
-					if (state == PLAYER_STATE_ONFOOT)
+					if (state == PlayerState::PlayerState_OnFoot)
 					{
 						ompgdk::GetPlayerVelocity(player.playerId, &velocity[0], &velocity[1], &velocity[2]);
 					}
-					else if (state == PLAYER_STATE_DRIVER || state == PLAYER_STATE_PASSENGER)
+					else if (state == PlayerState::PlayerState_Driver || state == PlayerState::PlayerState_Passenger)
 					{
 						ompgdk::GetVehicleVelocity(ompgdk::GetPlayerVehicleID(player.playerId), &velocity[0], &velocity[1], &velocity[2]);
 					}
@@ -708,7 +708,7 @@ void Streamer::processAreas(Player &player, const std::vector<SharedCell> &cells
 bool Streamer::processPlayerArea(Player &player, const Item::SharedArea &a, const int state)
 {
 	bool inArea = false;
-	if (doesPlayerSatisfyConditions(a->players, player.playerId, a->interiors, player.interiorId, a->worlds, player.worldId) && ((!a->spectateMode && state != PLAYER_STATE_SPECTATING) || a->spectateMode))
+	if (doesPlayerSatisfyConditions(a->players, player.playerId, a->interiors, player.interiorId, a->worlds, player.worldId) && ((!a->spectateMode && state != PlayerState::PlayerState_Spectating) || a->spectateMode))
 	{
 		inArea = Utility::isPointInArea(player.position, a);
 	}
@@ -1298,7 +1298,7 @@ void Streamer::processTextLabels(Player &player, const std::vector<SharedCell> &
 			break;
 		}
 		int internalId = ompgdk::CreatePlayer3DTextLabel(player.playerId, d->second->text.c_str(), d->second->color, d->second->position[0], d->second->position[1], d->second->position[2], d->second->drawDistance, d->second->attach ? d->second->attach->player : INVALID_PLAYER_ID, d->second->attach ? d->second->attach->vehicle : INVALID_VEHICLE_ID, d->second->testLOS);
-		if (internalId == INVALID_3DTEXT_ID)
+		if (internalId == INVALID_TEXT_LABEL_ID)
 		{
 			player.currentVisibleTextLabels = player.internalTextLabels.size();
 			break;
@@ -1431,7 +1431,7 @@ void Streamer::processAttachedAreas()
 				bool occupied = false;
 				for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 				{
-					if (ompgdk::GetPlayerState(p->first) == PLAYER_STATE_DRIVER)
+					if (ompgdk::GetPlayerState(p->first) == PlayerState::PlayerState_Driver)
 					{
 						if (ompgdk::GetPlayerVehicleID(p->first) == (*a)->attach->vehicle)
 						{

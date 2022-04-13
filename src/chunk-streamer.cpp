@@ -607,7 +607,7 @@ void ChunkStreamer::streamTextLabels(Player &player, bool automatic)
 					break;
 				}
 				int internalId = ompgdk::CreatePlayer3DTextLabel(player.playerId, std::get<1>(d->second)->text.c_str(), std::get<1>(d->second)->color, std::get<1>(d->second)->position[0], std::get<1>(d->second)->position[1], std::get<1>(d->second)->position[2], std::get<1>(d->second)->drawDistance, std::get<1>(d->second)->attach ? std::get<1>(d->second)->attach->player : INVALID_PLAYER_ID, std::get<1>(d->second)->attach ? std::get<1>(d->second)->attach->vehicle : INVALID_VEHICLE_ID, std::get<1>(d->second)->testLOS);
-				if (internalId == INVALID_3DTEXT_ID)
+				if (internalId == INVALID_TEXT_LABEL_ID)
 				{
 					streamingCanceled = true;
 					break;
