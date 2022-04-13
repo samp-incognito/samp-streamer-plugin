@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-#include "precompiled.h"
-#include "sdk.hpp"
-#include "Server/Components/Pawn/pawn.hpp"
-#include "ompgdk.hpp"
 #include "main.h"
+#include "Server/Components/Pawn/pawn.hpp"
+
 #include "core.h"
 #include "natives.h"
 #include "utility.h"

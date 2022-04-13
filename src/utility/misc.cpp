@@ -14,26 +14,25 @@
  * limitations under the License.
  */
 
-#include "../precompiled.h"
-#include "ompgdk.hpp"
+#include "../main.h"
+
 #include "misc.h"
 #include "../core.h"
-#include "../main.h"
 
 using namespace Utility;
 
-boost::unordered_map<int, Item::SharedActor>::iterator Utility::destroyActor(boost::unordered_map<int, Item::SharedActor>::iterator a)
+std::unordered_map<int, Item::SharedActor>::iterator Utility::destroyActor(std::unordered_map<int, Item::SharedActor>::iterator a)
 {
 	Item::Actor::identifier.remove(a->first, core->getData()->actors.size());
-	for (boost::unordered_set<int>::const_iterator w = a->second->worlds.begin(); w != a->second->worlds.end(); ++w)
+	for (std::unordered_set<int>::const_iterator w = a->second->worlds.begin(); w != a->second->worlds.end(); ++w)
 	{
-		boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
+		std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
 		if (i != core->getData()->internalActors.end())
 		{
 			core->getData()->destroyedActors.push_back(i->second);
 			core->getData()->internalActors.erase(i);
 		}
-		boost::unordered_map<std::pair<int, int>, Item::SharedActor>::iterator d = core->getData()->discoveredActors.find(std::make_pair(a->first, *w));
+		std::unordered_map<std::pair<int, int>, Item::SharedActor, pair_hash>::iterator d = core->getData()->discoveredActors.find(std::make_pair(a->first, *w));
 		if (d != core->getData()->discoveredActors.end())
 		{
 			core->getData()->discoveredActors.erase(d);
@@ -43,10 +42,10 @@ boost::unordered_map<int, Item::SharedActor>::iterator Utility::destroyActor(boo
 	return core->getData()->actors.erase(a);
 }
 
-boost::unordered_map<int, Item::SharedArea>::iterator Utility::destroyArea(boost::unordered_map<int, Item::SharedArea>::iterator a)
+std::unordered_map<int, Item::SharedArea>::iterator Utility::destroyArea(std::unordered_map<int, Item::SharedArea>::iterator a)
 {
 	Item::Area::identifier.remove(a->first, core->getData()->areas.size());
-	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+	for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 	{
 		p->second.internalAreas.erase(a->first);
 		p->second.visibleCell->areas.erase(a->first);
@@ -55,10 +54,10 @@ boost::unordered_map<int, Item::SharedArea>::iterator Utility::destroyArea(boost
 	return core->getData()->areas.erase(a);
 }
 
-boost::unordered_map<int, Item::SharedCheckpoint>::iterator Utility::destroyCheckpoint(boost::unordered_map<int, Item::SharedCheckpoint>::iterator c)
+std::unordered_map<int, Item::SharedCheckpoint>::iterator Utility::destroyCheckpoint(std::unordered_map<int, Item::SharedCheckpoint>::iterator c)
 {
 	Item::Checkpoint::identifier.remove(c->first, core->getData()->checkpoints.size());
-	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+	for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 	{
 		if (p->second.visibleCheckpoint == c->first)
 		{
@@ -72,29 +71,29 @@ boost::unordered_map<int, Item::SharedCheckpoint>::iterator Utility::destroyChec
 	return core->getData()->checkpoints.erase(c);
 }
 
-boost::unordered_map<int, Item::SharedMapIcon>::iterator Utility::destroyMapIcon(boost::unordered_map<int, Item::SharedMapIcon>::iterator m)
+std::unordered_map<int, Item::SharedMapIcon>::iterator Utility::destroyMapIcon(std::unordered_map<int, Item::SharedMapIcon>::iterator m)
 {
 	Item::MapIcon::identifier.remove(m->first, core->getData()->mapIcons.size());
-	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+	for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 	{
-		Item::Bimap<Item::SharedMapIcon>::Type::right_iterator d = p->second.discoveredMapIcons.right.find(boost::make_tuple(m->first, m->second));
+		Item::Bimap<Item::SharedMapIcon>::Type::right_iterator d = p->second.discoveredMapIcons.right.find(std::make_tuple(m->first, m->second));
 		if (d != p->second.discoveredMapIcons.right.end())
 		{
 			p->second.discoveredMapIcons.right.erase(d);
 		}
-		Item::Bimap<Item::SharedMapIcon>::Type::right_iterator e = p->second.existingMapIcons.right.find(boost::make_tuple(m->first, m->second));
+		Item::Bimap<Item::SharedMapIcon>::Type::right_iterator e = p->second.existingMapIcons.right.find(std::make_tuple(m->first, m->second));
 		if (e != p->second.existingMapIcons.right.end())
 		{
 			p->second.existingMapIcons.right.erase(e);
 		}
-		boost::unordered_map<int, int>::iterator i = p->second.internalMapIcons.find(m->first);
+		std::unordered_map<int, int>::iterator i = p->second.internalMapIcons.find(m->first);
 		if (i != p->second.internalMapIcons.end())
 		{
 			ompgdk::RemovePlayerMapIcon(p->first, i->second);
 			p->second.mapIconIdentifier.remove(i->second, p->second.internalMapIcons.size());
 			p->second.internalMapIcons.erase(i);
 		}
-		boost::unordered_set<int>::iterator r = p->second.removedMapIcons.find(m->first);
+		std::unordered_set<int>::iterator r = p->second.removedMapIcons.find(m->first);
 		if (r != p->second.removedMapIcons.end())
 		{
 			p->second.removedMapIcons.erase(r);
@@ -105,28 +104,28 @@ boost::unordered_map<int, Item::SharedMapIcon>::iterator Utility::destroyMapIcon
 	return core->getData()->mapIcons.erase(m);
 }
 
-boost::unordered_map<int, Item::SharedObject>::iterator Utility::destroyObject(boost::unordered_map<int, Item::SharedObject>::iterator o)
+std::unordered_map<int, Item::SharedObject>::iterator Utility::destroyObject(std::unordered_map<int, Item::SharedObject>::iterator o)
 {
 	Item::Object::identifier.remove(o->first, core->getData()->objects.size());
-	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+	for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 	{
-		Item::Bimap<Item::SharedObject>::Type::right_iterator d = p->second.discoveredObjects.right.find(boost::make_tuple(o->first, o->second));
+		Item::Bimap<Item::SharedObject>::Type::right_iterator d = p->second.discoveredObjects.right.find(std::make_tuple(o->first, o->second));
 		if (d != p->second.discoveredObjects.right.end())
 		{
 			p->second.discoveredObjects.right.erase(d);
 		}
-		Item::Bimap<Item::SharedObject>::Type::right_iterator e = p->second.existingObjects.right.find(boost::make_tuple(o->first, o->second));
+		Item::Bimap<Item::SharedObject>::Type::right_iterator e = p->second.existingObjects.right.find(std::make_tuple(o->first, o->second));
 		if (e != p->second.existingObjects.right.end())
 		{
 			p->second.existingObjects.right.erase(e);
 		}
-		boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
+		std::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
 		if (i != p->second.internalObjects.end())
 		{
 			ompgdk::DestroyPlayerObject(p->first, i->second);
 			p->second.internalObjects.erase(i);
 		}
-		boost::unordered_set<int>::iterator r = p->second.removedObjects.find(o->first);
+		std::unordered_set<int>::iterator r = p->second.removedObjects.find(o->first);
 		if (r != p->second.removedObjects.end())
 		{
 			p->second.removedObjects.erase(r);
@@ -137,18 +136,18 @@ boost::unordered_map<int, Item::SharedObject>::iterator Utility::destroyObject(b
 	return core->getData()->objects.erase(o);
 }
 
-boost::unordered_map<int, Item::SharedPickup>::iterator Utility::destroyPickup(boost::unordered_map<int, Item::SharedPickup>::iterator p)
+std::unordered_map<int, Item::SharedPickup>::iterator Utility::destroyPickup(std::unordered_map<int, Item::SharedPickup>::iterator p)
 {
 	Item::Pickup::identifier.remove(p->first, core->getData()->pickups.size());
-	for (boost::unordered_set<int>::const_iterator w = p->second->worlds.begin(); w != p->second->worlds.end(); ++w)
+	for (std::unordered_set<int>::const_iterator w = p->second->worlds.begin(); w != p->second->worlds.end(); ++w)
 	{
-		boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalPickups.find(std::make_pair(p->first, *w));
+		std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalPickups.find(std::make_pair(p->first, *w));
 		if (i != core->getData()->internalPickups.end())
 		{
 			ompgdk::DestroyPickup(i->second);
 			core->getData()->internalPickups.erase(i);
 		}
-		boost::unordered_map<std::pair<int, int>, Item::SharedPickup>::iterator d = core->getData()->discoveredPickups.find(std::make_pair(p->first, *w));
+		std::unordered_map<std::pair<int, int>, Item::SharedPickup, pair_hash>::iterator d = core->getData()->discoveredPickups.find(std::make_pair(p->first, *w));
 		if (d != core->getData()->discoveredPickups.end())
 		{
 			core->getData()->discoveredPickups.erase(d);
@@ -158,10 +157,10 @@ boost::unordered_map<int, Item::SharedPickup>::iterator Utility::destroyPickup(b
 	return core->getData()->pickups.erase(p);
 }
 
-boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator Utility::destroyRaceCheckpoint(boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r)
+std::unordered_map<int, Item::SharedRaceCheckpoint>::iterator Utility::destroyRaceCheckpoint(std::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r)
 {
 	Item::RaceCheckpoint::identifier.remove(r->first, core->getData()->raceCheckpoints.size());
-	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+	for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 	{
 		if (p->second.visibleRaceCheckpoint == r->first)
 		{
@@ -175,28 +174,28 @@ boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator Utility::destroy
 	return core->getData()->raceCheckpoints.erase(r);
 }
 
-boost::unordered_map<int, Item::SharedTextLabel>::iterator Utility::destroyTextLabel(boost::unordered_map<int, Item::SharedTextLabel>::iterator t)
+std::unordered_map<int, Item::SharedTextLabel>::iterator Utility::destroyTextLabel(std::unordered_map<int, Item::SharedTextLabel>::iterator t)
 {
 	Item::TextLabel::identifier.remove(t->first, core->getData()->textLabels.size());
-	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+	for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 	{
-		Item::Bimap<Item::SharedTextLabel>::Type::right_iterator d = p->second.discoveredTextLabels.right.find(boost::make_tuple(t->first, t->second));
+		Item::Bimap<Item::SharedTextLabel>::Type::right_iterator d = p->second.discoveredTextLabels.right.find(std::make_tuple(t->first, t->second));
 		if (d != p->second.discoveredTextLabels.right.end())
 		{
 			p->second.discoveredTextLabels.right.erase(d);
 		}
-		Item::Bimap<Item::SharedTextLabel>::Type::right_iterator e = p->second.existingTextLabels.right.find(boost::make_tuple(t->first, t->second));
+		Item::Bimap<Item::SharedTextLabel>::Type::right_iterator e = p->second.existingTextLabels.right.find(std::make_tuple(t->first, t->second));
 		if (e != p->second.existingTextLabels.right.end())
 		{
 			p->second.existingTextLabels.right.erase(e);
 		}
-		boost::unordered_map<int, int>::iterator i = p->second.internalTextLabels.find(t->first);
+		std::unordered_map<int, int>::iterator i = p->second.internalTextLabels.find(t->first);
 		if (i != p->second.internalTextLabels.end())
 		{
 			ompgdk::DeletePlayer3DTextLabel(p->first, i->second);
 			p->second.internalTextLabels.erase(i);
 		}
-		boost::unordered_set<int>::iterator r = p->second.removedTextLabels.find(t->first);
+		std::unordered_set<int>::iterator r = p->second.removedTextLabels.find(t->first);
 		if (r != p->second.removedTextLabels.end())
 		{
 			p->second.removedTextLabels.erase(r);
@@ -211,7 +210,7 @@ std::size_t Utility::getChunkTickRate(int type, int playerid)
 {
 	if (playerid >= 0 && playerid < PLAYER_POOL_SIZE)
 	{
-		boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+		std::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 		if (p != core->getData()->players.end())
 		{
 			switch (type)
@@ -238,7 +237,7 @@ bool Utility::setChunkTickRate(int type, std::size_t value, int playerid)
 {
 	if (playerid >= 0 && playerid < PLAYER_POOL_SIZE)
 	{
-		boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+		std::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 		if (p != core->getData()->players.end())
 		{
 			switch (type)
@@ -261,7 +260,7 @@ bool Utility::setChunkTickRate(int type, std::size_t value, int playerid)
 			}
 		}
 	}
-	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+	for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 	{
 		switch (type)
 		{
@@ -289,7 +288,7 @@ std::size_t Utility::getMaxVisibleItems(int type, int playerid)
 {
 	if (playerid >= 0 && playerid < PLAYER_POOL_SIZE)
 	{
-		boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+		std::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 		if (p != core->getData()->players.end())
 		{
 			switch (type)
@@ -316,7 +315,7 @@ bool Utility::setMaxVisibleItems(int type, std::size_t value, int playerid)
 {
 	if (playerid >= 0 && playerid < PLAYER_POOL_SIZE)
 	{
-		boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+		std::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 		if (p != core->getData()->players.end())
 		{
 			switch (type)
@@ -339,7 +338,7 @@ bool Utility::setMaxVisibleItems(int type, std::size_t value, int playerid)
 			}
 		}
 	}
-	for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+	for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 	{
 		switch (type)
 		{
@@ -369,7 +368,7 @@ float Utility::getRadiusMultiplier(int type, int playerid)
 	{
 		if (playerid >= 0 && playerid < PLAYER_POOL_SIZE)
 		{
-			boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+			std::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 			if (p != core->getData()->players.end())
 			{
 				return p->second.radiusMultipliers[type];
@@ -385,14 +384,14 @@ bool Utility::setRadiusMultiplier(int type, float value, int playerid)
 	{
 		if (playerid >= 0 && playerid < PLAYER_POOL_SIZE)
 		{
-			boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+			std::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 			if (p != core->getData()->players.end())
 			{
 				p->second.radiusMultipliers[type] = value;
 				return true;
 			}
 		}
-		for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+		for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 		{
 			p->second.radiusMultipliers[type] = value;
 		}

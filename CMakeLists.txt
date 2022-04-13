@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 3.0)
 project(streamer)
 
 set(PLUGIN_VERSION "2.9.5")
+set(CMAKE_CXX_STANDARD 17)
+
+if (MSVC)
+    add_definitions("/MP")
+endif()
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/lib/cmake-modules")
@@ -12,15 +17,7 @@ find_package(SAMPSDK REQUIRED)
 include_directories(${SAMPSDK_DIR})
 include_directories(${SAMPSDK_DIR}/amx)
 
-if(BOOST_ROOT)
-	file(TO_CMAKE_PATH ${BOOST_ROOT} BOOST_ROOT)
-else()
-	set(BOOST_ROOT "${PROJECT_SOURCE_DIR}/lib/boost")
-endif()
-
-set(Boost_USE_STATIC_LIBS ON)
-find_package(Boost 1.65.1 REQUIRED COMPONENTS system)
-include_directories(${Boost_INCLUDE_DIRS})
+include_directories(${PROJECT_SOURCE_DIR}/lib/boost)
 
 if(EIGEN3_INCLUDE_DIR)
 	file(TO_CMAKE_PATH ${EIGEN3_INCLUDE_DIR} EIGEN3_INCLUDE_DIR)

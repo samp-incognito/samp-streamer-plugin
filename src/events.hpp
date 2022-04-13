@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-#include "precompiled.h"
+#include "main.h"
 #include "core.h"
-#include "sdk.hpp"
-#include "ompgdk.hpp"
 #include "Server/Components/Actors/actors.hpp"
 #include "Server/Components/Classes/classes.hpp"
 #include "Server/Components/Checkpoints/checkpoints.hpp"
@@ -31,7 +29,7 @@ class PlayerEvents : public PlayerEventHandler, public Singleton<PlayerEvents>
 		int playerid = player.getID();
 		if (playerid >= 0 && playerid < PLAYER_POOL_SIZE)
 		{
-			boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+			std::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 			if (p == core->getData()->players.end())
 			{
 				Player player(playerid);
@@ -43,7 +41,7 @@ class PlayerEvents : public PlayerEventHandler, public Singleton<PlayerEvents>
 	void onSpawn(IPlayer& player) override
 	{
 		int playerid = player.getID();
-		boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+		std::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 		if (p != core->getData()->players.end())
 		{
 			p->second.requestingClass = false;
@@ -60,10 +58,10 @@ class PlayerEvents : public PlayerEventHandler, public Singleton<PlayerEvents>
 	{
 		int playerid = player.getID();
 		bool retVal = true;
-		boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+		std::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 		if (p != core->getData()->players.end())
 		{
-			for (boost::unordered_map<int, int>::iterator i = p->second.internalObjects.begin(); i != p->second.internalObjects.end(); ++i)
+			for (std::unordered_map<int, int>::iterator i = p->second.internalObjects.begin(); i != p->second.internalObjects.end(); ++i)
 			{
 				if (i->second == bulletData.hitID)
 				{
@@ -101,7 +99,7 @@ class ActorEvents : public ActorEventHandler, public Singleton<ActorEvents>
 	{
 		int playerid = player.getID();
 		int actorid = actor.getID();
-		for (boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
+		for (std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
 		{
 			if (i->second == actorid)
 			{
@@ -132,7 +130,7 @@ class ActorEvents : public ActorEventHandler, public Singleton<ActorEvents>
 	{
 		int actorid = actor.getID();
 		int forplayerid = forPlayer.getID();
-		for (boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
+		for (std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
 		{
 			if (i->second == actorid)
 			{
@@ -156,7 +154,7 @@ class ActorEvents : public ActorEventHandler, public Singleton<ActorEvents>
 	{
 		int actorid = actor.getID();
 		int forplayerid = forPlayer.getID();
-		for (boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
+		for (std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
 		{
 			if (i->second == actorid)
 			{
@@ -182,7 +180,7 @@ class ClassEvents : public ClassEventHandler, public Singleton<ClassEvents>
 	bool onPlayerRequestClass(IPlayer& player, unsigned int classId) override
 	{
 		int playerid = player.getID();
-		boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+		std::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 		if (p != core->getData()->players.end())
 		{
 			p->second.requestingClass = true;
@@ -196,7 +194,7 @@ class CheckpointEvents : public PlayerCheckpointEventHandler, public Singleton<C
 	void onPlayerEnterCheckpoint(IPlayer& player) override
 	{
 		int playerid = player.getID();
-		boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+		std::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 		if (p != core->getData()->players.end())
 		{
 			if (p->second.activeCheckpoint != p->second.visibleCheckpoint)
@@ -220,7 +218,7 @@ class CheckpointEvents : public PlayerCheckpointEventHandler, public Singleton<C
 	void onPlayerLeaveCheckpoint(IPlayer& player) override
 	{
 		int playerid = player.getID();
-		boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+		std::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 		if (p != core->getData()->players.end())
 		{
 			if (p->second.activeCheckpoint == p->second.visibleCheckpoint)
@@ -244,7 +242,7 @@ class CheckpointEvents : public PlayerCheckpointEventHandler, public Singleton<C
 	void onPlayerEnterRaceCheckpoint(IPlayer& player) override
 	{
 		int playerid = player.getID();
-		boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+		std::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 		if (p != core->getData()->players.end())
 		{
 			if (p->second.activeRaceCheckpoint != p->second.visibleRaceCheckpoint)
@@ -268,7 +266,7 @@ class CheckpointEvents : public PlayerCheckpointEventHandler, public Singleton<C
 	void onPlayerLeaveRaceCheckpoint(IPlayer& player) override
 	{
 		int playerid = player.getID();
-		boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+		std::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 		if (p != core->getData()->players.end())
 		{
 			if (p->second.activeRaceCheckpoint == p->second.visibleRaceCheckpoint)
@@ -296,7 +294,7 @@ class PickupEvents : public PickupEventHandler, public Singleton<PickupEvents>
 	{
 		int playerid = player.getID();
 		int pickupid = pickup.getID();
-		for (boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalPickups.begin(); i != core->getData()->internalPickups.end(); ++i)
+		for (std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalPickups.begin(); i != core->getData()->internalPickups.end(); ++i)
 		{
 			if (i->second == pickupid)
 			{
@@ -323,17 +321,17 @@ class ObjectEvents : public ObjectEventHandler, public Singleton<ObjectEvents>
 	{
 		int playerid = player.getID();
 		int objectid = object.getID();
-		boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+		std::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 		if (p != core->getData()->players.end())
 		{
-			for (boost::unordered_map<int, int>::iterator i = p->second.internalObjects.begin(); i != p->second.internalObjects.end(); ++i)
+			for (std::unordered_map<int, int>::iterator i = p->second.internalObjects.begin(); i != p->second.internalObjects.end(); ++i)
 			{
 				if (i->second == objectid)
 				{
 					int dynObjectId = i->first;
 					if (response == ObjectEditResponse::ObjectEditResponse_Cancel || response == ObjectEditResponse::ObjectEditResponse_Final)
 					{
-						boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(dynObjectId);
+						std::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(dynObjectId);
 						if (o != core->getData()->objects.end())
 						{
 							if (o->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF && o->second->originalComparableStreamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
@@ -375,10 +373,10 @@ class ObjectEvents : public ObjectEventHandler, public Singleton<ObjectEvents>
 	{
 		int playerid = player.getID();
 		int objectid = object.getID();
-		boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+		std::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 		if (p != core->getData()->players.end())
 		{
-			for (boost::unordered_map<int, int>::iterator i = p->second.internalObjects.begin(); i != p->second.internalObjects.end(); ++i)
+			for (std::unordered_map<int, int>::iterator i = p->second.internalObjects.begin(); i != p->second.internalObjects.end(); ++i)
 			{
 				if (i->second == objectid)
 				{

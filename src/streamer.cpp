@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#include "precompiled.h"
-#include "ompgdk.hpp"
+#include "main.h"
+
 #include "streamer.h"
 #include "core.h"
 
@@ -25,19 +25,19 @@ Streamer::Streamer()
 	lastUpdateTime = 0.0f;
 	tickCount = 0;
 	tickRate = 50;
-	velocityBoundaries = boost::make_tuple(0.25f, 7.5f);
+	velocityBoundaries = std::make_tuple(0.25f, 7.5f);
 }
 
 void Streamer::calculateAverageElapsedTime()
 {
-	boost::chrono::steady_clock::time_point currentTime = boost::chrono::steady_clock::now();
-	static boost::chrono::steady_clock::time_point lastRecordedTime;
+	std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
+	static std::chrono::steady_clock::time_point lastRecordedTime;
 	static Eigen::Array<float, 5, 1> recordedTimes = Eigen::Array<float, 5, 1>::Zero();
 	if (lastRecordedTime.time_since_epoch().count())
 	{
 		if (!(recordedTimes > 0).all())
 		{
-			boost::chrono::duration<float> elapsedTime = currentTime - lastRecordedTime;
+			std::chrono::duration<float> elapsedTime = currentTime - lastRecordedTime;
 			recordedTimes[(recordedTimes > 0).count()] = elapsedTime.count();
 		}
 		else
@@ -53,11 +53,11 @@ void Streamer::startAutomaticUpdate()
 {
 	if (!core->getData()->interfaces.empty())
 	{
-		boost::chrono::steady_clock::time_point currentTime = boost::chrono::steady_clock::now();
+		std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
 		if (!core->getData()->players.empty())
 		{
 			bool updatedActiveItems = false;
-			for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+			for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 			{
 				if (core->getChunkStreamer()->getChunkStreamingEnabled() && p->second.processingChunks.any())
 				{
@@ -91,7 +91,7 @@ void Streamer::startAutomaticUpdate()
 		}
 		if (++tickCount >= tickRate)
 		{
-			for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+			for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 			{
 				std::vector<SharedCell> cells;
 				core->getGrid()->findMinimalCellsForPlayer(p->second, cells);
@@ -141,7 +141,7 @@ void Streamer::startAutomaticUpdate()
 			tickCount = 0;
 		}
 		calculateAverageElapsedTime();
-		lastUpdateTime = boost::chrono::duration<float, boost::milli>(boost::chrono::steady_clock::now() - currentTime).count();
+		lastUpdateTime = std::chrono::duration<float, std::milli>(std::chrono::steady_clock::now() - currentTime).count();
 	}
 }
 
@@ -150,7 +150,7 @@ void Streamer::startManualUpdate(Player &player, int type)
 	std::bitset<STREAMER_MAX_TYPES> enabledItems = player.enabledItems;
 	if (player.delayedUpdate)
 	{
-		if (player.delayedUpdateTime.time_since_epoch() <= boost::chrono::steady_clock::now().time_since_epoch())
+		if (player.delayedUpdateTime.time_since_epoch() <= std::chrono::steady_clock::now().time_since_epoch())
 		{
 			if (player.delayedUpdateFreeze)
 			{
@@ -221,7 +221,7 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 		if (!player.updateUsingCameraPosition)
 		{
 			int state = ompgdk::GetPlayerState(player.playerId);
-			if ((state != PlayerState::PlayerState_None && state != PlayerState::PlayerState_Wasted) || (state == PlayerState::PlayerState_Spectating && !player.requestingClass))
+			if ((state != PLAYER_STATE_NONE && state != PLAYER_STATE_WASTED) || (state == PLAYER_STATE_SPECTATING && !player.requestingClass))
 			{
 				if (!ompgdk::IsPlayerInAnyVehicle(player.playerId))
 				{
@@ -235,16 +235,16 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 				{
 					position = player.position;
 					Eigen::Vector3f velocity = Eigen::Vector3f::Zero();
-					if (state == PlayerState::PlayerState_OnFoot)
+					if (state == PLAYER_STATE_ONFOOT)
 					{
 						ompgdk::GetPlayerVelocity(player.playerId, &velocity[0], &velocity[1], &velocity[2]);
 					}
-					else if (state == PlayerState::PlayerState_Driver || state == PlayerState::PlayerState_Passenger)
+					else if (state == PLAYER_STATE_DRIVER || state == PLAYER_STATE_PASSENGER)
 					{
 						ompgdk::GetVehicleVelocity(ompgdk::GetPlayerVehicleID(player.playerId), &velocity[0], &velocity[1], &velocity[2]);
 					}
 					float velocityNorm = velocity.squaredNorm();
-					if (velocityNorm > velocityBoundaries.get<0>() && velocityNorm < velocityBoundaries.get<1>())
+					if (velocityNorm > std::get<0>(velocityBoundaries) && velocityNorm < std::get<1>(velocityBoundaries))
 					{
 						delta = velocity * averageElapsedTime;
 					}
@@ -265,13 +265,13 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 		}
 		if (player.delayedCheckpoint)
 		{
-			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(player.delayedCheckpoint);
+			std::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(player.delayedCheckpoint);
 			if (c != core->getData()->checkpoints.end())
 			{
 				ompgdk::SetPlayerCheckpoint(player.playerId, c->second->position[0], c->second->position[1], c->second->position[2], c->second->size);
 				if (c->second->streamCallbacks)
 				{
-					streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_CP, c->first, player.playerId));
+					streamInCallbacks.push_back(std::make_tuple(STREAMER_TYPE_CP, c->first, player.playerId));
 				}
 				player.visibleCheckpoint = c->first;
 			}
@@ -279,13 +279,13 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 		}
 		else if (player.delayedRaceCheckpoint)
 		{
-			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(player.delayedRaceCheckpoint);
+			std::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(player.delayedRaceCheckpoint);
 			if (r != core->getData()->raceCheckpoints.end())
 			{
 				ompgdk::SetPlayerRaceCheckpoint(player.playerId, r->second->type, r->second->position[0], r->second->position[1], r->second->position[2], r->second->next[0], r->second->next[1], r->second->next[2], r->second->size);
 				if (r->second->streamCallbacks)
 				{
-					streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_RACE_CP, r->first, player.playerId));
+					streamInCallbacks.push_back(std::make_tuple(STREAMER_TYPE_RACE_CP, r->first, player.playerId));
 				}
 				player.visibleRaceCheckpoint = r->first;
 			}
@@ -404,11 +404,11 @@ void Streamer::executeCallbacks()
 {
 	if (!areaLeaveCallbacks.empty())
 	{
-		std::multimap<int, boost::tuple<int, int> > callbacks;
+		std::multimap<int, std::tuple<int, int> > callbacks;
 		std::swap(areaLeaveCallbacks, callbacks);
-		for (std::multimap<int, boost::tuple<int, int> >::reverse_iterator c = callbacks.rbegin(); c != callbacks.rend(); ++c)
+		for (std::multimap<int, std::tuple<int, int> >::reverse_iterator c = callbacks.rbegin(); c != callbacks.rend(); ++c)
 		{
-			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(c->second.get<0>());
+			std::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(std::get<0>(c->second));
 			if (a != core->getData()->areas.end())
 			{
 				for (std::set<AMX*>::iterator i = core->getData()->interfaces.begin(); i != core->getData()->interfaces.end(); ++i)
@@ -416,8 +416,8 @@ void Streamer::executeCallbacks()
 					int amxIndex = 0;
 					if (!amx_FindPublic(*i, "OnPlayerLeaveDynamicArea", &amxIndex))
 					{
-						amx_Push(*i, static_cast<cell>(c->second.get<0>()));
-						amx_Push(*i, static_cast<cell>(c->second.get<1>()));
+						amx_Push(*i, static_cast<cell>(std::get<0>(c->second)));
+						amx_Push(*i, static_cast<cell>(std::get<1>(c->second)));
 						amx_Exec(*i, NULL, amxIndex);
 					}
 				}
@@ -426,11 +426,11 @@ void Streamer::executeCallbacks()
 	}
 	if (!areaEnterCallbacks.empty())
 	{
-		std::multimap<int, boost::tuple<int, int> > callbacks;
+		std::multimap<int, std::tuple<int, int> > callbacks;
 		std::swap(areaEnterCallbacks, callbacks);
-		for (std::multimap<int, boost::tuple<int, int> >::reverse_iterator c = callbacks.rbegin(); c != callbacks.rend(); ++c)
+		for (std::multimap<int, std::tuple<int, int> >::reverse_iterator c = callbacks.rbegin(); c != callbacks.rend(); ++c)
 		{
-			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(c->second.get<0>());
+			std::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(std::get<0>(c->second));
 			if (a != core->getData()->areas.end())
 			{
 				for (std::set<AMX*>::iterator i = core->getData()->interfaces.begin(); i != core->getData()->interfaces.end(); ++i)
@@ -438,8 +438,8 @@ void Streamer::executeCallbacks()
 					int amxIndex = 0;
 					if (!amx_FindPublic(*i, "OnPlayerEnterDynamicArea", &amxIndex))
 					{
-						amx_Push(*i, static_cast<cell>(c->second.get<0>()));
-						amx_Push(*i, static_cast<cell>(c->second.get<1>()));
+						amx_Push(*i, static_cast<cell>(std::get<0>(c->second)));
+						amx_Push(*i, static_cast<cell>(std::get<1>(c->second)));
 						amx_Exec(*i, NULL, amxIndex);
 					}
 				}
@@ -452,7 +452,7 @@ void Streamer::executeCallbacks()
 		std::swap(objectMoveCallbacks, callbacks);
 		for (std::vector<int>::const_iterator c = callbacks.begin(); c != callbacks.end(); ++c)
 		{
-			boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(*c);
+			std::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(*c);
 			if (o != core->getData()->objects.end())
 			{
 				for (std::set<AMX*>::iterator i = core->getData()->interfaces.begin(); i != core->getData()->interfaces.end(); ++i)
@@ -469,15 +469,15 @@ void Streamer::executeCallbacks()
 	}
 	if (!streamInCallbacks.empty())
 	{
-		std::vector<boost::tuple<int, int, int> > callbacks;
+		std::vector<std::tuple<int, int, int> > callbacks;
 		std::swap(streamInCallbacks, callbacks);
-		for (std::vector<boost::tuple<int, int, int> >::const_iterator c = callbacks.begin(); c != callbacks.end(); ++c)
+		for (std::vector<std::tuple<int, int, int> >::const_iterator c = callbacks.begin(); c != callbacks.end(); ++c)
 		{
-			switch (c->get<0>())
+			switch (std::get<0>(*c))
 			{
 				case STREAMER_TYPE_OBJECT:
 				{
-					if (core->getData()->objects.find(c->get<1>()) == core->getData()->objects.end())
+					if (core->getData()->objects.find(std::get<1>(*c)) == core->getData()->objects.end())
 					{
 						continue;
 					}
@@ -485,7 +485,7 @@ void Streamer::executeCallbacks()
 				}
 				case STREAMER_TYPE_PICKUP:
 				{
-					if (core->getData()->pickups.find(c->get<1>()) == core->getData()->pickups.end())
+					if (core->getData()->pickups.find(std::get<1>(*c)) == core->getData()->pickups.end())
 					{
 						continue;
 					}
@@ -493,7 +493,7 @@ void Streamer::executeCallbacks()
 				}
 				case STREAMER_TYPE_CP:
 				{
-					if (core->getData()->checkpoints.find(c->get<1>()) == core->getData()->checkpoints.end())
+					if (core->getData()->checkpoints.find(std::get<1>(*c)) == core->getData()->checkpoints.end())
 					{
 						continue;
 					}
@@ -501,7 +501,7 @@ void Streamer::executeCallbacks()
 				}
 				case STREAMER_TYPE_RACE_CP:
 				{
-					if (core->getData()->raceCheckpoints.find(c->get<1>()) == core->getData()->raceCheckpoints.end())
+					if (core->getData()->raceCheckpoints.find(std::get<1>(*c)) == core->getData()->raceCheckpoints.end())
 					{
 						continue;
 					}
@@ -509,7 +509,7 @@ void Streamer::executeCallbacks()
 				}
 				case STREAMER_TYPE_MAP_ICON:
 				{
-					if (core->getData()->mapIcons.find(c->get<1>()) == core->getData()->mapIcons.end())
+					if (core->getData()->mapIcons.find(std::get<1>(*c)) == core->getData()->mapIcons.end())
 					{
 						continue;
 					}
@@ -517,7 +517,7 @@ void Streamer::executeCallbacks()
 				}
 				case STREAMER_TYPE_3D_TEXT_LABEL:
 				{
-					if (core->getData()->textLabels.find(c->get<1>()) == core->getData()->textLabels.end())
+					if (core->getData()->textLabels.find(std::get<1>(*c)) == core->getData()->textLabels.end())
 					{
 						continue;
 					}
@@ -529,9 +529,9 @@ void Streamer::executeCallbacks()
 				int amxIndex = 0;
 				if (!amx_FindPublic(*i, "Streamer_OnItemStreamIn", &amxIndex))
 				{
-					amx_Push(*i, static_cast<cell>(c->get<2>()));
-					amx_Push(*i, static_cast<cell>(c->get<1>()));
-					amx_Push(*i, static_cast<cell>(c->get<0>()));
+					amx_Push(*i, static_cast<cell>(std::get<2>(*c)));
+					amx_Push(*i, static_cast<cell>(std::get<1>(*c)));
+					amx_Push(*i, static_cast<cell>(std::get<0>(*c)));
 					amx_Exec(*i, NULL, amxIndex);
 				}
 			}
@@ -539,15 +539,15 @@ void Streamer::executeCallbacks()
 	}
 	if (!streamOutCallbacks.empty())
 	{
-		std::vector<boost::tuple<int, int, int> > callbacks;
+		std::vector<std::tuple<int, int, int> > callbacks;
 		std::swap(streamOutCallbacks, callbacks);
-		for (std::vector<boost::tuple<int, int, int> >::const_iterator c = callbacks.begin(); c != callbacks.end(); ++c)
+		for (std::vector<std::tuple<int, int, int> >::const_iterator c = callbacks.begin(); c != callbacks.end(); ++c)
 		{
-			switch (c->get<0>())
+			switch (std::get<0>(*c))
 			{
 				case STREAMER_TYPE_OBJECT:
 				{
-					if (core->getData()->objects.find(c->get<1>()) == core->getData()->objects.end())
+					if (core->getData()->objects.find(std::get<1>(*c)) == core->getData()->objects.end())
 					{
 						continue;
 					}
@@ -555,7 +555,7 @@ void Streamer::executeCallbacks()
 				}
 				case STREAMER_TYPE_PICKUP:
 				{
-					if (core->getData()->pickups.find(c->get<1>()) == core->getData()->pickups.end())
+					if (core->getData()->pickups.find(std::get<1>(*c)) == core->getData()->pickups.end())
 					{
 						continue;
 					}
@@ -563,7 +563,7 @@ void Streamer::executeCallbacks()
 				}
 				case STREAMER_TYPE_CP:
 				{
-					if (core->getData()->checkpoints.find(c->get<1>()) == core->getData()->checkpoints.end())
+					if (core->getData()->checkpoints.find(std::get<1>(*c)) == core->getData()->checkpoints.end())
 					{
 						continue;
 					}
@@ -571,7 +571,7 @@ void Streamer::executeCallbacks()
 				}
 				case STREAMER_TYPE_RACE_CP:
 				{
-					if (core->getData()->raceCheckpoints.find(c->get<1>()) == core->getData()->raceCheckpoints.end())
+					if (core->getData()->raceCheckpoints.find(std::get<1>(*c)) == core->getData()->raceCheckpoints.end())
 					{
 						continue;
 					}
@@ -579,7 +579,7 @@ void Streamer::executeCallbacks()
 				}
 				case STREAMER_TYPE_MAP_ICON:
 				{
-					if (core->getData()->mapIcons.find(c->get<1>()) == core->getData()->mapIcons.end())
+					if (core->getData()->mapIcons.find(std::get<1>(*c)) == core->getData()->mapIcons.end())
 					{
 						continue;
 					}
@@ -587,7 +587,7 @@ void Streamer::executeCallbacks()
 				}
 				case STREAMER_TYPE_3D_TEXT_LABEL:
 				{
-					if (core->getData()->textLabels.find(c->get<1>()) == core->getData()->textLabels.end())
+					if (core->getData()->textLabels.find(std::get<1>(*c)) == core->getData()->textLabels.end())
 					{
 						continue;
 					}
@@ -599,9 +599,9 @@ void Streamer::executeCallbacks()
 				int amxIndex = 0;
 				if (!amx_FindPublic(*i, "Streamer_OnItemStreamOut", &amxIndex))
 				{
-					amx_Push(*i, static_cast<cell>(c->get<2>()));
-					amx_Push(*i, static_cast<cell>(c->get<1>()));
-					amx_Push(*i, static_cast<cell>(c->get<0>()));
+					amx_Push(*i, static_cast<cell>(std::get<2>(*c)));
+					amx_Push(*i, static_cast<cell>(std::get<1>(*c)));
+					amx_Push(*i, static_cast<cell>(std::get<0>(*c)));
 					amx_Exec(*i, NULL, amxIndex);
 				}
 			}
@@ -615,22 +615,22 @@ void Streamer::discoverActors(Player &player, const std::vector<SharedCell> &cel
 	{
 		for (std::vector<SharedCell>::const_iterator c = cells.begin(); c != cells.end(); ++c)
 		{
-			for (boost::unordered_map<int, Item::SharedActor>::const_iterator a = (*c)->actors.begin(); a != (*c)->actors.end(); ++a)
+			for (std::unordered_map<int, Item::SharedActor>::const_iterator a = (*c)->actors.begin(); a != (*c)->actors.end(); ++a)
 			{
-				boost::unordered_set<int> worlds = a->second->worlds;
+				std::unordered_set<int> worlds = a->second->worlds;
 				if (worlds.empty())
 				{
 					worlds.insert(-1);
 				}
 
-				for (boost::unordered_set<int>::const_iterator w = worlds.begin(); w != worlds.end(); ++w)
+				for (std::unordered_set<int>::const_iterator w = worlds.begin(); w != worlds.end(); ++w)
 				{
 					if (player.worldId != *w && *w != -1)
 					{
 						continue;
 					}
 
-					boost::unordered_map<std::pair<int, int>, Item::SharedActor>::iterator d = core->getData()->discoveredActors.find(std::make_pair(a->first, *w));
+					std::unordered_map<std::pair<int, int>, Item::SharedActor, pair_hash>::iterator d = core->getData()->discoveredActors.find(std::make_pair(a->first, *w));
 					if (d == core->getData()->discoveredActors.end())
 					{
 						const int playerWorldId = *w == -1 ? -1 : player.worldId;
@@ -650,10 +650,10 @@ void Streamer::discoverActors(Player &player, const std::vector<SharedCell> &cel
 
 void Streamer::streamActors()
 {
-	boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.begin();
+	std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalActors.begin();
 	while (i != core->getData()->internalActors.end())
 	{
-		boost::unordered_map<std::pair<int, int>, Item::SharedActor>::iterator d = core->getData()->discoveredActors.find(i->first);
+		std::unordered_map<std::pair<int, int>, Item::SharedActor, pair_hash>::iterator d = core->getData()->discoveredActors.find(i->first);
 		if (d == core->getData()->discoveredActors.end())
 		{
 			ompgdk::DestroyActor(i->second);
@@ -666,7 +666,7 @@ void Streamer::streamActors()
 		}
 	}
 	std::multimap<int, std::pair<int, Item::SharedActor> > sortedActors;
-	for (boost::unordered_map<std::pair<int, int>, Item::SharedActor>::iterator d = core->getData()->discoveredActors.begin(); d != core->getData()->discoveredActors.end(); ++d)
+	for (std::unordered_map<std::pair<int, int>, Item::SharedActor, pair_hash>::iterator d = core->getData()->discoveredActors.begin(); d != core->getData()->discoveredActors.end(); ++d)
 	{
 		sortedActors.insert(std::make_pair(d->second->priority, std::make_pair(d->first.second, d->second)));
 	}
@@ -698,7 +698,7 @@ void Streamer::processAreas(Player &player, const std::vector<SharedCell> &cells
 	int state = ompgdk::GetPlayerState(player.playerId);
 	for (std::vector<SharedCell>::const_iterator c = cells.begin(); c != cells.end(); ++c)
 	{
-		for (boost::unordered_map<int, Item::SharedArea>::const_iterator a = (*c)->areas.begin(); a != (*c)->areas.end(); ++a)
+		for (std::unordered_map<int, Item::SharedArea>::const_iterator a = (*c)->areas.begin(); a != (*c)->areas.end(); ++a)
 		{
 			Streamer::processPlayerArea(player, a->second, state);
 		}
@@ -708,17 +708,17 @@ void Streamer::processAreas(Player &player, const std::vector<SharedCell> &cells
 bool Streamer::processPlayerArea(Player &player, const Item::SharedArea &a, const int state)
 {
 	bool inArea = false;
-	if (doesPlayerSatisfyConditions(a->players, player.playerId, a->interiors, player.interiorId, a->worlds, player.worldId) && ((!a->spectateMode && state != PlayerState::PlayerState_Spectating) || a->spectateMode))
+	if (doesPlayerSatisfyConditions(a->players, player.playerId, a->interiors, player.interiorId, a->worlds, player.worldId) && ((!a->spectateMode && state != PLAYER_STATE_SPECTATING) || a->spectateMode))
 	{
 		inArea = Utility::isPointInArea(player.position, a);
 	}
-	boost::unordered_set<int>::iterator foundArea = player.internalAreas.find(a->areaId);
+	std::unordered_set<int>::iterator foundArea = player.internalAreas.find(a->areaId);
 	if (inArea)
 	{
 		if (foundArea == player.internalAreas.end())
 		{
 			player.internalAreas.insert(a->areaId);
-			areaEnterCallbacks.insert(std::make_pair(a->priority, boost::make_tuple(a->areaId, player.playerId)));
+			areaEnterCallbacks.insert(std::make_pair(a->priority, std::make_tuple(a->areaId, player.playerId)));
 		}
 		if (a->cell)
 		{
@@ -730,7 +730,7 @@ bool Streamer::processPlayerArea(Player &player, const Item::SharedArea &a, cons
 		if (foundArea != player.internalAreas.end())
 		{
 			player.internalAreas.erase(foundArea);
-			areaLeaveCallbacks.insert(std::make_pair(a->priority, boost::make_tuple(a->areaId, player.playerId)));
+			areaLeaveCallbacks.insert(std::make_pair(a->priority, std::make_tuple(a->areaId, player.playerId)));
 		}
 	}
 	return inArea;
@@ -741,7 +741,7 @@ void Streamer::processCheckpoints(Player &player, const std::vector<SharedCell> 
 	std::multimap<std::pair<int, float>, Item::SharedCheckpoint, Item::PairCompare> discoveredCheckpoints;
 	for (std::vector<SharedCell>::const_iterator c = cells.begin(); c != cells.end(); ++c)
 	{
-		for (boost::unordered_map<int, Item::SharedCheckpoint>::const_iterator d = (*c)->checkpoints.begin(); d != (*c)->checkpoints.end(); ++d)
+		for (std::unordered_map<int, Item::SharedCheckpoint>::const_iterator d = (*c)->checkpoints.begin(); d != (*c)->checkpoints.end(); ++d)
 		{
 			float distance = std::numeric_limits<float>::infinity();
 			if (doesPlayerSatisfyConditions(d->second->players, player.playerId, d->second->interiors, player.interiorId, d->second->worlds, player.worldId, d->second->areas, player.internalAreas, d->second->inverseAreaChecking))
@@ -766,7 +766,7 @@ void Streamer::processCheckpoints(Player &player, const std::vector<SharedCell> 
 					ompgdk::DisablePlayerCheckpoint(player.playerId);
 					if (d->second->streamCallbacks)
 					{
-						streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_CP, d->second->checkpointId, player.playerId));
+						streamOutCallbacks.push_back(std::make_tuple(STREAMER_TYPE_CP, d->second->checkpointId, player.playerId));
 					}
 					player.activeCheckpoint = 0;
 					player.visibleCheckpoint = 0;
@@ -785,7 +785,7 @@ void Streamer::processCheckpoints(Player &player, const std::vector<SharedCell> 
 				ompgdk::DisablePlayerCheckpoint(player.playerId);
 				if (d->second->streamCallbacks)
 				{
-					streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_CP, d->second->checkpointId, player.playerId));
+					streamOutCallbacks.push_back(std::make_tuple(STREAMER_TYPE_CP, d->second->checkpointId, player.playerId));
 				}
 				player.activeCheckpoint = 0;
 			}
@@ -803,7 +803,7 @@ void Streamer::processMapIcons(Player &player, const std::vector<SharedCell> &ce
 	std::multimap<std::pair<int, float>, Item::SharedMapIcon, Item::PairCompare> discoveredMapIcons, existingMapIcons;
 	for (std::vector<SharedCell>::const_iterator c = cells.begin(); c != cells.end(); ++c)
 	{
-		for (boost::unordered_map<int, Item::SharedMapIcon>::const_iterator m = (*c)->mapIcons.begin(); m != (*c)->mapIcons.end(); ++m)
+		for (std::unordered_map<int, Item::SharedMapIcon>::const_iterator m = (*c)->mapIcons.begin(); m != (*c)->mapIcons.end(); ++m)
 		{
 			float distance = std::numeric_limits<float>::infinity();
 			if (doesPlayerSatisfyConditions(m->second->players, player.playerId, m->second->interiors, player.interiorId, m->second->worlds, player.worldId, m->second->areas, player.internalAreas, m->second->inverseAreaChecking))
@@ -817,7 +817,7 @@ void Streamer::processMapIcons(Player &player, const std::vector<SharedCell> &ce
 					distance = static_cast<float>(boost::geometry::comparable_distance(player.position, Eigen::Vector3f(m->second->position + m->second->positionOffset)));
 				}
 			}
-			boost::unordered_map<int, int>::iterator i = player.internalMapIcons.find(m->first);
+			std::unordered_map<int, int>::iterator i = player.internalMapIcons.find(m->first);
 			if (distance < (m->second->comparableStreamDistance * player.radiusMultipliers[STREAMER_TYPE_MAP_ICON]))
 			{
 				if (i == player.internalMapIcons.end())
@@ -840,7 +840,7 @@ void Streamer::processMapIcons(Player &player, const std::vector<SharedCell> &ce
 					ompgdk::RemovePlayerMapIcon(player.playerId, i->second);
 					if (m->second->streamCallbacks)
 					{
-						streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_MAP_ICON, m->first, player.playerId));
+						streamOutCallbacks.push_back(std::make_tuple(STREAMER_TYPE_MAP_ICON, m->first, player.playerId));
 					}
 					player.mapIconIdentifier.remove(i->second, player.internalMapIcons.size());
 					player.internalMapIcons.erase(i);
@@ -850,7 +850,7 @@ void Streamer::processMapIcons(Player &player, const std::vector<SharedCell> &ce
 	}
 	for (std::multimap<std::pair<int, float>, Item::SharedMapIcon, Item::PairCompare>::iterator d = discoveredMapIcons.begin(); d != discoveredMapIcons.end(); ++d)
 	{
-		boost::unordered_map<int, int>::iterator i = player.internalMapIcons.find(d->second->mapIconId);
+		std::unordered_map<int, int>::iterator i = player.internalMapIcons.find(d->second->mapIconId);
 		if (i != player.internalMapIcons.end())
 		{
 			continue;
@@ -862,13 +862,13 @@ void Streamer::processMapIcons(Player &player, const std::vector<SharedCell> &ce
 			{
 				if (e->first.first < d->first.first || (e->first.second > STREAMER_STATIC_DISTANCE_CUTOFF && d->first.second < e->first.second))
 				{
-					boost::unordered_map<int, int>::iterator j = player.internalMapIcons.find(e->second->mapIconId);
+					std::unordered_map<int, int>::iterator j = player.internalMapIcons.find(e->second->mapIconId);
 					if (j != player.internalMapIcons.end())
 					{
 						ompgdk::RemovePlayerMapIcon(player.playerId, j->second);
 						if (e->second->streamCallbacks)
 						{
-							streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_MAP_ICON, e->second->mapIconId, player.playerId));
+							streamOutCallbacks.push_back(std::make_tuple(STREAMER_TYPE_MAP_ICON, e->second->mapIconId, player.playerId));
 						}
 						player.mapIconIdentifier.remove(j->second, player.internalMapIcons.size());
 						player.internalMapIcons.erase(j);
@@ -889,7 +889,7 @@ void Streamer::processMapIcons(Player &player, const std::vector<SharedCell> &ce
 		ompgdk::SetPlayerMapIcon(player.playerId, internalId, d->second->position[0], d->second->position[1], d->second->position[2], d->second->type, d->second->color, d->second->style);
 		if (d->second->streamCallbacks)
 		{
-			streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_MAP_ICON, d->second->mapIconId, player.playerId));
+			streamInCallbacks.push_back(std::make_tuple(STREAMER_TYPE_MAP_ICON, d->second->mapIconId, player.playerId));
 		}
 		player.internalMapIcons.insert(std::make_pair(d->second->mapIconId, internalId));
 		if (d->second->cell)
@@ -904,7 +904,7 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 	std::multimap<std::pair<int, float>, Item::SharedObject, Item::PairCompare> discoveredObjects, existingObjects;
 	for (std::vector<SharedCell>::const_iterator c = cells.begin(); c != cells.end(); ++c)
 	{
-		for (boost::unordered_map<int, Item::SharedObject>::const_iterator o = (*c)->objects.begin(); o != (*c)->objects.end(); ++o)
+		for (std::unordered_map<int, Item::SharedObject>::const_iterator o = (*c)->objects.begin(); o != (*c)->objects.end(); ++o)
 		{
 			float distance = std::numeric_limits<float>::infinity();
 			if (doesPlayerSatisfyConditions(o->second->players, player.playerId, o->second->interiors, player.interiorId, o->second->attach ? o->second->attach->worlds : o->second->worlds, player.worldId, o->second->areas, player.internalAreas, o->second->inverseAreaChecking))
@@ -925,7 +925,7 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 					}
 				}
 			}
-			boost::unordered_map<int, int>::iterator i = player.internalObjects.find(o->first);
+			std::unordered_map<int, int>::iterator i = player.internalObjects.find(o->first);
 			if (distance < (o->second->comparableStreamDistance * player.radiusMultipliers[STREAMER_TYPE_OBJECT]))
 			{
 				if (i == player.internalObjects.end())
@@ -948,7 +948,7 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 					ompgdk::DestroyPlayerObject(player.playerId, i->second);
 					if (o->second->streamCallbacks)
 					{
-						streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_OBJECT, o->first, player.playerId));
+						streamOutCallbacks.push_back(std::make_tuple(STREAMER_TYPE_OBJECT, o->first, player.playerId));
 					}
 					player.internalObjects.erase(i);
 				}
@@ -957,7 +957,7 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 	}
 	for (std::multimap<std::pair<int, float>, Item::SharedObject, Item::PairCompare>::iterator d = discoveredObjects.begin(); d != discoveredObjects.end(); ++d)
 	{
-		boost::unordered_map<int, int>::iterator i = player.internalObjects.find(d->second->objectId);
+		std::unordered_map<int, int>::iterator i = player.internalObjects.find(d->second->objectId);
 		if (i != player.internalObjects.end())
 		{
 			continue;
@@ -967,7 +967,7 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 		{
 			if (d->second->attach->object != INVALID_STREAMER_ID)
 			{
-				boost::unordered_map<int, int>::iterator j = player.internalObjects.find(d->second->attach->object);
+				std::unordered_map<int, int>::iterator j = player.internalObjects.find(d->second->attach->object);
 				if (j == player.internalObjects.end())
 				{
 					continue;
@@ -982,13 +982,13 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 			{
 				if (e->first.first < d->first.first || (e->first.second > STREAMER_STATIC_DISTANCE_CUTOFF && d->first.second < e->first.second))
 				{
-					boost::unordered_map<int, int>::iterator j = player.internalObjects.find(e->second->objectId);
+					std::unordered_map<int, int>::iterator j = player.internalObjects.find(e->second->objectId);
 					if (j != player.internalObjects.end())
 					{
 						ompgdk::DestroyPlayerObject(player.playerId, j->second);
 						if (e->second->streamCallbacks)
 						{
-							streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_OBJECT, e->second->objectId, player.playerId));
+							streamOutCallbacks.push_back(std::make_tuple(STREAMER_TYPE_OBJECT, e->second->objectId, player.playerId));
 						}
 						player.internalObjects.erase(j);
 					}
@@ -1013,7 +1013,7 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 		}
 		if (d->second->streamCallbacks)
 		{
-			streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_OBJECT, d->second->objectId, player.playerId));
+			streamInCallbacks.push_back(std::make_tuple(STREAMER_TYPE_OBJECT, d->second->objectId, player.playerId));
 		}
 		if (d->second->attach)
 		{
@@ -1032,9 +1032,9 @@ void Streamer::processObjects(Player &player, const std::vector<SharedCell> &cel
 		}
 		else if (d->second->move)
 		{
-			ompgdk::MovePlayerObject(player.playerId, internalId, d->second->move->position.get<0>()[0], d->second->move->position.get<0>()[1], d->second->move->position.get<0>()[2], d->second->move->speed, d->second->move->rotation.get<0>()[0], d->second->move->rotation.get<0>()[1], d->second->move->rotation.get<0>()[2]);
+			ompgdk::MovePlayerObject(player.playerId, internalId, std::get<0>(d->second->move->position)[0], std::get<0>(d->second->move->position)[1], std::get<0>(d->second->move->position)[2], d->second->move->speed, std::get<0>(d->second->move->rotation)[0], std::get<0>(d->second->move->rotation)[1], std::get<0>(d->second->move->rotation)[2]);
 		}
-		for (boost::unordered_map<int, Item::Object::Material>::iterator m = d->second->materials.begin(); m != d->second->materials.end(); ++m)
+		for (std::unordered_map<int, Item::Object::Material>::iterator m = d->second->materials.begin(); m != d->second->materials.end(); ++m)
 		{
 			if (m->second.main)
 			{
@@ -1061,22 +1061,22 @@ void Streamer::discoverPickups(Player &player, const std::vector<SharedCell> &ce
 {
 	for (std::vector<SharedCell>::const_iterator c = cells.begin(); c != cells.end(); ++c)
 	{
-		for (boost::unordered_map<int, Item::SharedPickup>::const_iterator p = (*c)->pickups.begin(); p != (*c)->pickups.end(); ++p)
+		for (std::unordered_map<int, Item::SharedPickup>::const_iterator p = (*c)->pickups.begin(); p != (*c)->pickups.end(); ++p)
 		{
-			boost::unordered_set<int> worlds = p->second->worlds;
+			std::unordered_set<int> worlds = p->second->worlds;
 			if (worlds.empty())
 			{
 				worlds.insert(-1);
 			}
 
-			for (boost::unordered_set<int>::const_iterator w = worlds.begin(); w != worlds.end(); ++w)
+			for (std::unordered_set<int>::const_iterator w = worlds.begin(); w != worlds.end(); ++w)
 			{
 				if (player.worldId != *w && *w != -1)
 				{
 					continue;
 				}
 
-				boost::unordered_map<std::pair<int, int>, Item::SharedPickup>::iterator d = core->getData()->discoveredPickups.find(std::make_pair(p->first, *w));
+				std::unordered_map<std::pair<int, int>, Item::SharedPickup, pair_hash>::iterator d = core->getData()->discoveredPickups.find(std::make_pair(p->first, *w));
 				if (d == core->getData()->discoveredPickups.end())
 				{
 					const int playerWorldId = *w == -1 ? -1 : player.worldId;
@@ -1095,19 +1095,19 @@ void Streamer::discoverPickups(Player &player, const std::vector<SharedCell> &ce
 
 void Streamer::streamPickups()
 {
-	boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalPickups.begin();
+	std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalPickups.begin();
 	while (i != core->getData()->internalPickups.end())
 	{
-		boost::unordered_map<std::pair<int, int>, Item::SharedPickup>::iterator d = core->getData()->discoveredPickups.find(i->first);
+		std::unordered_map<std::pair<int, int>, Item::SharedPickup, pair_hash>::iterator d = core->getData()->discoveredPickups.find(i->first);
 		if (d == core->getData()->discoveredPickups.end())
 		{
 			ompgdk::DestroyPickup(i->second);
-			boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(i->first.first);
+			std::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(i->first.first);
 			if (p != core->getData()->pickups.end())
 			{
 				if (p->second->streamCallbacks)
 				{
-					streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_PICKUP, i->first.first, INVALID_PLAYER_ID));
+					streamOutCallbacks.push_back(std::make_tuple(STREAMER_TYPE_PICKUP, i->first.first, INVALID_PLAYER_ID));
 				}
 			}
 			i = core->getData()->internalPickups.erase(i);
@@ -1119,7 +1119,7 @@ void Streamer::streamPickups()
 		}
 	}
 	std::multimap<int, std::pair<int, Item::SharedPickup> > sortedPickups;
-	for (boost::unordered_map<std::pair<int, int>, Item::SharedPickup>::iterator d = core->getData()->discoveredPickups.begin(); d != core->getData()->discoveredPickups.end(); ++d)
+	for (std::unordered_map<std::pair<int, int>, Item::SharedPickup, pair_hash>::iterator d = core->getData()->discoveredPickups.begin(); d != core->getData()->discoveredPickups.end(); ++d)
 	{
 		sortedPickups.insert(std::make_pair(d->second->priority, std::make_pair(d->first.second, d->second)));
 	}
@@ -1137,7 +1137,7 @@ void Streamer::streamPickups()
 		}
 		if (s->second.second->streamCallbacks)
 		{
-			streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_PICKUP, s->second.second->pickupId, INVALID_PLAYER_ID));
+			streamInCallbacks.push_back(std::make_tuple(STREAMER_TYPE_PICKUP, s->second.second->pickupId, INVALID_PLAYER_ID));
 		}
 		core->getData()->internalPickups.insert(std::make_pair(std::make_pair(s->second.second->pickupId, s->second.first), internalId));
 	}
@@ -1148,7 +1148,7 @@ void Streamer::processRaceCheckpoints(Player &player, const std::vector<SharedCe
 	std::multimap<std::pair<int, float>, Item::SharedRaceCheckpoint, Item::PairCompare> discoveredRaceCheckpoints;
 	for (std::vector<SharedCell>::const_iterator c = cells.begin(); c != cells.end(); ++c)
 	{
-		for (boost::unordered_map<int, Item::SharedRaceCheckpoint>::const_iterator r = (*c)->raceCheckpoints.begin(); r != (*c)->raceCheckpoints.end(); ++r)
+		for (std::unordered_map<int, Item::SharedRaceCheckpoint>::const_iterator r = (*c)->raceCheckpoints.begin(); r != (*c)->raceCheckpoints.end(); ++r)
 		{
 			float distance = std::numeric_limits<float>::infinity();
 			if (doesPlayerSatisfyConditions(r->second->players, player.playerId, r->second->interiors, player.interiorId, r->second->worlds, player.worldId, r->second->areas, player.internalAreas, r->second->inverseAreaChecking))
@@ -1173,7 +1173,7 @@ void Streamer::processRaceCheckpoints(Player &player, const std::vector<SharedCe
 					ompgdk::DisablePlayerRaceCheckpoint(player.playerId);
 					if (r->second->streamCallbacks)
 					{
-						streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_RACE_CP, r->second->raceCheckpointId, player.playerId));
+						streamOutCallbacks.push_back(std::make_tuple(STREAMER_TYPE_RACE_CP, r->second->raceCheckpointId, player.playerId));
 					}
 					player.activeRaceCheckpoint = 0;
 					player.visibleRaceCheckpoint = 0;
@@ -1191,7 +1191,7 @@ void Streamer::processRaceCheckpoints(Player &player, const std::vector<SharedCe
 				ompgdk::DisablePlayerRaceCheckpoint(player.playerId);
 				if (d->second->streamCallbacks)
 				{
-					streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_RACE_CP, d->second->raceCheckpointId, player.playerId));
+					streamOutCallbacks.push_back(std::make_tuple(STREAMER_TYPE_RACE_CP, d->second->raceCheckpointId, player.playerId));
 				}
 				player.activeRaceCheckpoint = 0;
 			}
@@ -1209,7 +1209,7 @@ void Streamer::processTextLabels(Player &player, const std::vector<SharedCell> &
 	std::multimap<std::pair<int, float>, Item::SharedTextLabel, Item::PairCompare> discoveredTextLabels, existingTextLabels;
 	for (std::vector<SharedCell>::const_iterator c = cells.begin(); c != cells.end(); ++c)
 	{
-		for (boost::unordered_map<int, Item::SharedTextLabel>::const_iterator t = (*c)->textLabels.begin(); t != (*c)->textLabels.end(); ++t)
+		for (std::unordered_map<int, Item::SharedTextLabel>::const_iterator t = (*c)->textLabels.begin(); t != (*c)->textLabels.end(); ++t)
 		{
 			float distance = std::numeric_limits<float>::infinity();
 			if (doesPlayerSatisfyConditions(t->second->players, player.playerId, t->second->interiors, player.interiorId, t->second->attach ? t->second->attach->worlds : t->second->worlds, player.worldId, t->second->areas, player.internalAreas, t->second->inverseAreaChecking))
@@ -1230,7 +1230,7 @@ void Streamer::processTextLabels(Player &player, const std::vector<SharedCell> &
 					}
 				}
 			}
-			boost::unordered_map<int, int>::iterator i = player.internalTextLabels.find(t->first);
+			std::unordered_map<int, int>::iterator i = player.internalTextLabels.find(t->first);
 			if (distance < (t->second->comparableStreamDistance * player.radiusMultipliers[STREAMER_TYPE_3D_TEXT_LABEL]))
 			{
 				if (i == player.internalTextLabels.end())
@@ -1253,7 +1253,7 @@ void Streamer::processTextLabels(Player &player, const std::vector<SharedCell> &
 					ompgdk::DeletePlayer3DTextLabel(player.playerId, i->second);
 					if (t->second->streamCallbacks)
 					{
-						streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_3D_TEXT_LABEL, t->first, player.playerId));
+						streamOutCallbacks.push_back(std::make_tuple(STREAMER_TYPE_3D_TEXT_LABEL, t->first, player.playerId));
 					}
 					player.internalTextLabels.erase(i);
 				}
@@ -1262,7 +1262,7 @@ void Streamer::processTextLabels(Player &player, const std::vector<SharedCell> &
 	}
 	for (std::multimap<std::pair<int, float>, Item::SharedTextLabel, Item::PairCompare>::iterator d = discoveredTextLabels.begin(); d != discoveredTextLabels.end(); ++d)
 	{
-		boost::unordered_map<int, int>::iterator i = player.internalTextLabels.find(d->second->textLabelId);
+		std::unordered_map<int, int>::iterator i = player.internalTextLabels.find(d->second->textLabelId);
 		if (i != player.internalTextLabels.end())
 		{
 			continue;
@@ -1274,13 +1274,13 @@ void Streamer::processTextLabels(Player &player, const std::vector<SharedCell> &
 			{
 				if (e->first.first < d->first.first || (e->first.second > STREAMER_STATIC_DISTANCE_CUTOFF && d->first.second < e->first.second))
 				{
-					boost::unordered_map<int, int>::iterator j = player.internalTextLabels.find(e->second->textLabelId);
+					std::unordered_map<int, int>::iterator j = player.internalTextLabels.find(e->second->textLabelId);
 					if (j != player.internalTextLabels.end())
 					{
 						ompgdk::DeletePlayer3DTextLabel(player.playerId, j->second);
 						if (e->second->streamCallbacks)
 						{
-							streamOutCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_3D_TEXT_LABEL, e->second->textLabelId, player.playerId));
+							streamOutCallbacks.push_back(std::make_tuple(STREAMER_TYPE_3D_TEXT_LABEL, e->second->textLabelId, player.playerId));
 						}
 						player.internalTextLabels.erase(j);
 					}
@@ -1298,14 +1298,14 @@ void Streamer::processTextLabels(Player &player, const std::vector<SharedCell> &
 			break;
 		}
 		int internalId = ompgdk::CreatePlayer3DTextLabel(player.playerId, d->second->text.c_str(), d->second->color, d->second->position[0], d->second->position[1], d->second->position[2], d->second->drawDistance, d->second->attach ? d->second->attach->player : INVALID_PLAYER_ID, d->second->attach ? d->second->attach->vehicle : INVALID_VEHICLE_ID, d->second->testLOS);
-		if (internalId == INVALID_TEXT_LABEL_ID)
+		if (internalId == INVALID_3DTEXT_ID)
 		{
 			player.currentVisibleTextLabels = player.internalTextLabels.size();
 			break;
 		}
 		if (d->second->streamCallbacks)
 		{
-			streamInCallbacks.push_back(boost::make_tuple(STREAMER_TYPE_3D_TEXT_LABEL, d->second->textLabelId, player.playerId));
+			streamInCallbacks.push_back(std::make_tuple(STREAMER_TYPE_3D_TEXT_LABEL, d->second->textLabelId, player.playerId));
 		}
 		player.internalTextLabels.insert(std::make_pair(d->second->textLabelId, internalId));
 		if (d->second->cell)
@@ -1337,27 +1337,27 @@ void Streamer::processActiveItems()
 
 void Streamer::processMovingObjects()
 {
-	boost::unordered_set<Item::SharedObject>::iterator o = movingObjects.begin();
+	std::unordered_set<Item::SharedObject>::iterator o = movingObjects.begin();
 	while (o != movingObjects.end())
 	{
 		bool objectFinishedMoving = false;
 		if ((*o)->move)
 		{
-			boost::chrono::duration<float, boost::milli> elapsedTime = boost::chrono::steady_clock::now() - (*o)->move->time;
-			if (boost::chrono::duration_cast<boost::chrono::milliseconds>(elapsedTime).count() < (*o)->move->duration)
+			std::chrono::duration<float, std::milli> elapsedTime = std::chrono::steady_clock::now() - (*o)->move->time;
+			if (std::chrono::duration_cast<std::chrono::milliseconds>(elapsedTime).count() < (*o)->move->duration)
 			{
-				(*o)->position = (*o)->move->position.get<1>() + ((*o)->move->position.get<2>() * elapsedTime.count());
-				if (!Utility::almostEquals((*o)->move->rotation.get<0>().maxCoeff(), -1000.0f))
+				(*o)->position = std::get<1>((*o)->move->position) + (std::get<2>((*o)->move->position) * elapsedTime.count());
+				if (!Utility::almostEquals(std::get<0>((*o)->move->rotation).maxCoeff(), -1000.0f))
 				{
-					(*o)->rotation = (*o)->move->rotation.get<1>() + ((*o)->move->rotation.get<2>() * elapsedTime.count());
+					(*o)->rotation = std::get<1>((*o)->move->rotation) + (std::get<2>((*o)->move->rotation) * elapsedTime.count());
 				}
 			}
 			else
 			{
-				(*o)->position = (*o)->move->position.get<0>();
-				if (!Utility::almostEquals((*o)->move->rotation.get<0>().maxCoeff(), -1000.0f))
+				(*o)->position = std::get<0>((*o)->move->position);
+				if (!Utility::almostEquals(std::get<0>((*o)->move->rotation).maxCoeff(), -1000.0f))
 				{
-					(*o)->rotation = (*o)->move->rotation.get<0>();
+					(*o)->rotation = std::get<0>((*o)->move->rotation);
 				}
 				(*o)->move.reset();
 				objectMoveCallbacks.push_back((*o)->objectId);
@@ -1381,37 +1381,37 @@ void Streamer::processMovingObjects()
 
 void Streamer::processAttachedAreas()
 {
-	for (boost::unordered_set<Item::SharedArea>::iterator a = attachedAreas.begin(); a != attachedAreas.end(); ++a)
+	for (std::unordered_set<Item::SharedArea>::iterator a = attachedAreas.begin(); a != attachedAreas.end(); ++a)
 	{
 		if ((*a)->attach)
 		{
 			bool adjust = false;
-			if (((*a)->attach->object.get<0>() != INVALID_OBJECT_ID && (*a)->attach->object.get<1>() != STREAMER_OBJECT_TYPE_DYNAMIC) || ((*a)->attach->object.get<0>() != INVALID_STREAMER_ID && (*a)->attach->object.get<1>() == STREAMER_OBJECT_TYPE_DYNAMIC))
+			if ((std::get<0>((*a)->attach->object) != INVALID_OBJECT_ID && std::get<1>((*a)->attach->object) != STREAMER_OBJECT_TYPE_DYNAMIC) || (std::get<0>((*a)->attach->object) != INVALID_STREAMER_ID && std::get<1>((*a)->attach->object) == STREAMER_OBJECT_TYPE_DYNAMIC))
 			{
-				switch ((*a)->attach->object.get<1>())
+				switch (std::get<1>((*a)->attach->object))
 				{
 					case STREAMER_OBJECT_TYPE_GLOBAL:
 					{
 						Eigen::Vector3f position = Eigen::Vector3f::Zero(), rotation = Eigen::Vector3f::Zero();
-						adjust = ompgdk::GetObjectPos((*a)->attach->object.get<0>(), &position[0], &position[1], &position[2]);
-						ompgdk::GetObjectRot((*a)->attach->object.get<0>(), &rotation[0], &rotation[1], &rotation[2]);
-						Utility::constructAttachedArea(*a, boost::variant<float, Eigen::Vector3f, Eigen::Vector4f>(rotation), position);
+						adjust = ompgdk::GetObjectPos(std::get<0>((*a)->attach->object), &position[0], &position[1], &position[2]);
+						ompgdk::GetObjectRot(std::get<0>((*a)->attach->object), &rotation[0], &rotation[1], &rotation[2]);
+						Utility::constructAttachedArea(*a, std::variant<float, Eigen::Vector3f, Eigen::Vector4f>(rotation), position);
 						break;
 					}
 					case STREAMER_OBJECT_TYPE_PLAYER:
 					{
 						Eigen::Vector3f position = Eigen::Vector3f::Zero(), rotation = Eigen::Vector3f::Zero();
-						adjust = ompgdk::GetPlayerObjectPos((*a)->attach->object.get<2>(), (*a)->attach->object.get<0>(), &position[0], &position[1], &position[2]);
-						ompgdk::GetPlayerObjectRot((*a)->attach->object.get<2>(), (*a)->attach->object.get<0>(), &rotation[0], &rotation[1], &rotation[2]);
-						Utility::constructAttachedArea(*a, boost::variant<float, Eigen::Vector3f, Eigen::Vector4f>(rotation), position);
+						adjust = ompgdk::GetPlayerObjectPos(std::get<2>((*a)->attach->object), std::get<0>((*a)->attach->object), &position[0], &position[1], &position[2]);
+						ompgdk::GetPlayerObjectRot(std::get<2>((*a)->attach->object), std::get<0>((*a)->attach->object), &rotation[0], &rotation[1], &rotation[2]);
+						Utility::constructAttachedArea(*a, std::variant<float, Eigen::Vector3f, Eigen::Vector4f>(rotation), position);
 						break;
 					}
 					case STREAMER_OBJECT_TYPE_DYNAMIC:
 					{
-						boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find((*a)->attach->object.get<0>());
+						std::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(std::get<0>((*a)->attach->object));
 						if (o != core->getData()->objects.end())
 						{
-							Utility::constructAttachedArea(*a, boost::variant<float, Eigen::Vector3f, Eigen::Vector4f>(o->second->rotation), o->second->position);
+							Utility::constructAttachedArea(*a, std::variant<float, Eigen::Vector3f, Eigen::Vector4f>(o->second->rotation), o->second->position);
 							adjust = true;
 						}
 						break;
@@ -1424,14 +1424,14 @@ void Streamer::processAttachedAreas()
 				Eigen::Vector3f position = Eigen::Vector3f::Zero();
 				adjust = ompgdk::GetPlayerPos((*a)->attach->player, &position[0], &position[1], &position[2]);
 				ompgdk::GetPlayerFacingAngle((*a)->attach->player, &heading);
-				Utility::constructAttachedArea(*a, boost::variant<float, Eigen::Vector3f, Eigen::Vector4f>(heading), position);
+				Utility::constructAttachedArea(*a, std::variant<float, Eigen::Vector3f, Eigen::Vector4f>(heading), position);
 			}
 			else if ((*a)->attach->vehicle != INVALID_VEHICLE_ID)
 			{
 				bool occupied = false;
-				for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+				for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 				{
-					if (ompgdk::GetPlayerState(p->first) == PlayerState::PlayerState_Driver)
+					if (ompgdk::GetPlayerState(p->first) == PLAYER_STATE_DRIVER)
 					{
 						if (ompgdk::GetPlayerVehicleID(p->first) == (*a)->attach->vehicle)
 						{
@@ -1446,13 +1446,13 @@ void Streamer::processAttachedAreas()
 				{
 					float heading = 0.0f;
 					ompgdk::GetVehicleZAngle((*a)->attach->vehicle, &heading);
-					Utility::constructAttachedArea(*a, boost::variant<float, Eigen::Vector3f, Eigen::Vector4f>(heading), position);
+					Utility::constructAttachedArea(*a, std::variant<float, Eigen::Vector3f, Eigen::Vector4f>(heading), position);
 				}
 				else
 				{
 					Eigen::Vector4f quaternion = Eigen::Vector4f::Zero();
 					ompgdk::GetVehicleRotationQuat((*a)->attach->vehicle, &quaternion[0], &quaternion[1], &quaternion[2], &quaternion[3]);
-					Utility::constructAttachedArea(*a, boost::variant<float, Eigen::Vector3f, Eigen::Vector4f>(quaternion), position);
+					Utility::constructAttachedArea(*a, std::variant<float, Eigen::Vector3f, Eigen::Vector4f>(quaternion), position);
 				}
 			}
 			if (adjust)
@@ -1469,29 +1469,29 @@ void Streamer::processAttachedAreas()
 					case STREAMER_AREA_TYPE_CIRCLE:
 					case STREAMER_AREA_TYPE_CYLINDER:
 					{
-						boost::get<Eigen::Vector2f>((*a)->attach->position).fill(std::numeric_limits<float>::infinity());
+						std::get<Eigen::Vector2f>((*a)->attach->position).fill(std::numeric_limits<float>::infinity());
 						break;
 					}
 					case STREAMER_AREA_TYPE_SPHERE:
 					{
-						boost::get<Eigen::Vector3f>((*a)->attach->position).fill(std::numeric_limits<float>::infinity());
+						std::get<Eigen::Vector3f>((*a)->attach->position).fill(std::numeric_limits<float>::infinity());
 						break;
 					}
 					case STREAMER_AREA_TYPE_RECTANGLE:
 					{
-						boost::get<Box2d>((*a)->attach->position).min_corner().fill(std::numeric_limits<float>::infinity());
-						boost::get<Box2d>((*a)->attach->position).max_corner().fill(std::numeric_limits<float>::infinity());
+						std::get<Box2d>((*a)->attach->position).min_corner().fill(std::numeric_limits<float>::infinity());
+						std::get<Box2d>((*a)->attach->position).max_corner().fill(std::numeric_limits<float>::infinity());
 						break;
 					}
 					case STREAMER_AREA_TYPE_CUBOID:
 					{
-						boost::get<Box3d>((*a)->attach->position).min_corner().fill(std::numeric_limits<float>::infinity());
-						boost::get<Box3d>((*a)->attach->position).max_corner().fill(std::numeric_limits<float>::infinity());
+						std::get<Box3d>((*a)->attach->position).min_corner().fill(std::numeric_limits<float>::infinity());
+						std::get<Box3d>((*a)->attach->position).max_corner().fill(std::numeric_limits<float>::infinity());
 						break;
 					}
 					case STREAMER_AREA_TYPE_POLYGON:
 					{
-						boost::get<Polygon2d>((*a)->attach->position).clear();
+						std::get<Polygon2d>((*a)->attach->position).clear();
 						break;
 					}
 				}
@@ -1502,7 +1502,7 @@ void Streamer::processAttachedAreas()
 
 void Streamer::processAttachedObjects()
 {
-	for (boost::unordered_set<Item::SharedObject>::iterator o = attachedObjects.begin(); o != attachedObjects.end(); ++o)
+	for (std::unordered_set<Item::SharedObject>::iterator o = attachedObjects.begin(); o != attachedObjects.end(); ++o)
 	{
 		if ((*o)->attach)
 		{
@@ -1510,7 +1510,7 @@ void Streamer::processAttachedObjects()
 			Eigen::Vector3f position = (*o)->attach->position;
 			if ((*o)->attach->object != INVALID_STREAMER_ID)
 			{
-				boost::unordered_map<int, Item::SharedObject>::iterator p = core->getData()->objects.find((*o)->attach->object);
+				std::unordered_map<int, Item::SharedObject>::iterator p = core->getData()->objects.find((*o)->attach->object);
 				if (p != core->getData()->objects.end())
 				{
 					(*o)->attach->position = p->second->position;
@@ -1545,7 +1545,7 @@ void Streamer::processAttachedObjects()
 
 void Streamer::processAttachedTextLabels()
 {
-	for (boost::unordered_set<Item::SharedTextLabel>::iterator t = attachedTextLabels.begin(); t != attachedTextLabels.end(); ++t)
+	for (std::unordered_set<Item::SharedTextLabel>::iterator t = attachedTextLabels.begin(); t != attachedTextLabels.end(); ++t)
 	{
 		bool adjust = false;
 		Eigen::Vector3f position = (*t)->attach->position;

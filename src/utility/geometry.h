@@ -25,9 +25,9 @@ namespace Utility
 	bool doesLineSegmentIntersectArea(const Eigen::Vector3f &lineSegmentStart, const Eigen::Vector3f &lineSegmentEnd, const Item::SharedArea &area);
 	bool isPointInArea(const Eigen::Vector3f &point, const Item::SharedArea &area);
 
-	void constructAttachedArea(const Item::SharedArea &area, const boost::variant<float, Eigen::Vector3f, Eigen::Vector4f> &orientation, const Eigen::Vector3f location);
+	void constructAttachedArea(const Item::SharedArea &area, const std::variant<float, Eigen::Vector3f, Eigen::Vector4f> &orientation, const Eigen::Vector3f location);
 
-	void projectPoint(const Eigen::Vector3f &point, const boost::variant<float, Eigen::Vector3f, Eigen::Vector4f> &orientation, Eigen::Vector3f &position);
+	void projectPoint(const Eigen::Vector3f &point, const std::variant<float, Eigen::Vector3f, Eigen::Vector4f> &orientation, Eigen::Vector3f &position);
 	void projectPoint(const Eigen::Vector3f &point, const float &heading, Eigen::Vector3f &position);
 	void projectPoint(const Eigen::Vector3f &point, const Eigen::Vector3f &rotation, Eigen::Vector3f &position);
 	void projectPoint(const Eigen::Vector3f &point, const Eigen::Vector4f &quaternion, Eigen::Vector3f &position);

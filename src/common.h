@@ -56,7 +56,7 @@ struct Player;
 class Streamer;
 
 typedef std::pair<int, int> CellId;
-typedef boost::intrusive_ptr<Cell> SharedCell;
+typedef std::shared_ptr<Cell> SharedCell;
 
 typedef boost::geometry::model::box<Eigen::Vector2f> Box2d;
 typedef boost::geometry::model::box<Eigen::Vector3f> Box3d;
@@ -73,23 +73,23 @@ namespace Item
 	struct RaceCheckpoint;
 	struct TextLabel;
 
-	typedef boost::intrusive_ptr<Actor> SharedActor;
-	typedef boost::intrusive_ptr<Area> SharedArea;
-	typedef boost::intrusive_ptr<Checkpoint> SharedCheckpoint;
-	typedef boost::intrusive_ptr<MapIcon> SharedMapIcon;
-	typedef boost::intrusive_ptr<Object> SharedObject;
-	typedef boost::intrusive_ptr<Pickup> SharedPickup;
-	typedef boost::intrusive_ptr<RaceCheckpoint> SharedRaceCheckpoint;
-	typedef boost::intrusive_ptr<TextLabel> SharedTextLabel;
+	typedef std::shared_ptr<Actor> SharedActor;
+	typedef std::shared_ptr<Area> SharedArea;
+	typedef std::shared_ptr<Checkpoint> SharedCheckpoint;
+	typedef std::shared_ptr<MapIcon> SharedMapIcon;
+	typedef std::shared_ptr<Object> SharedObject;
+	typedef std::shared_ptr<Pickup> SharedPickup;
+	typedef std::shared_ptr<RaceCheckpoint> SharedRaceCheckpoint;
+	typedef std::shared_ptr<TextLabel> SharedTextLabel;
 
 	template<typename T>
 	struct Hash
 	{
-		std::size_t operator()(boost::tuple<int, T> const &t) const
+		std::size_t operator()(std::tuple<int, T> const &t) const
 		{
 			std::size_t seed = 0;
-			boost::hash_combine(seed, boost::get<0>(t));
-			boost::hash_combine(seed, boost::get<1>(t));
+			boost::hash_combine(seed, std::get<0>(t));
+			boost::hash_combine(seed, std::get<1>(t));
 			return seed;
 		}
 	};
@@ -109,29 +109,29 @@ namespace Item
 	template<typename T>
 	struct LeftTupleCompare
 	{
-		bool operator()(boost::tuple<int, float> const &a, boost::tuple<int, float> const &b) const
+		bool operator()(std::tuple<int, float> const &a, std::tuple<int, float> const &b) const
 		{
-			if (boost::get<0>(a) != boost::get<0>(b))
+			if (std::get<0>(a) != std::get<0>(b))
 			{
-				return boost::get<0>(a) > boost::get<0>(b);
+				return std::get<0>(a) > std::get<0>(b);
 			}
-			return boost::get<1>(a) < boost::get<1>(b);
+			return std::get<1>(a) < std::get<1>(b);
 		}
 	};
 
 	template<typename T>
 	struct RightTupleCompare
 	{
-		bool operator()(boost::tuple<int, T> const &a, boost::tuple<int, T> const &b) const
+		bool operator()(std::tuple<int, T> const &a, std::tuple<int, T> const &b) const
 		{
-			return boost::get<0>(a) == boost::get<0>(b) && boost::get<1>(a) == boost::get<1>(b);
+			return std::get<0>(a) == std::get<0>(b) && std::get<1>(a) == std::get<1>(b);
 		}
 	};
 
 	template<typename T>
 	struct Bimap
 	{
-		typedef boost::bimap<boost::bimaps::multiset_of<boost::tuple<int, float>, LeftTupleCompare<T> >, boost::bimaps::unordered_set_of<boost::tuple<int, T>, Hash<T>, RightTupleCompare<T> > > Type;
+		typedef boost::bimap<boost::bimaps::multiset_of<std::tuple<int, float>, LeftTupleCompare<T> >, boost::bimaps::unordered_set_of<std::tuple<int, T>, Hash<T>, RightTupleCompare<T> > > Type;
 	};
 }
 
@@ -171,5 +171,17 @@ namespace boost { namespace geometry { namespace traits {
 		}
 	};
 }}}
+
+struct pair_hash
+{
+	template <class T1, class T2>
+	std::size_t operator () (std::pair<T1, T2> const& pair) const
+	{
+		std::size_t h1 = std::hash<T1>()(pair.first);
+		std::size_t h2 = std::hash<T2>()(pair.second);
+
+		return h1 ^ h2;
+	}
+};
 
 #endif

@@ -61,7 +61,7 @@ namespace Manipulation
 				{
 					if (data & 0x40000000)
 					{
-						boost::unordered_map<int, std::vector<int> >::iterator p = i->second->extraExtras.find(data & ~0xC0000000);
+						std::unordered_map<int, std::vector<int> >::iterator p = i->second->extraExtras.find(data & ~0xC0000000);
 						if (p != i->second->extraExtras.end())
 						{
 							return Utility::convertContainerToArray(amx, output, size, p->second) != 0;
@@ -155,7 +155,7 @@ namespace Manipulation
 				{
 					if (data & 0x40000000)
 					{
-						boost::unordered_map<int, std::vector<int> >::iterator p = i->second->extraExtras.find(data & ~0xC0000000);
+						std::unordered_map<int, std::vector<int> >::iterator p = i->second->extraExtras.find(data & ~0xC0000000);
 						if (p != i->second->extraExtras.end())
 						{
 							return Utility::isInContainer(p->second, value) != 0;
@@ -205,7 +205,7 @@ namespace Manipulation
 				{
 					if (data & 0x40000000)
 					{
-						boost::unordered_map<int, std::vector<int> >::iterator p = i->second->extraExtras.find(data & ~0xC0000000);
+						std::unordered_map<int, std::vector<int> >::iterator p = i->second->extraExtras.find(data & ~0xC0000000);
 						if (p != i->second->extraExtras.end())
 						{
 							return Utility::addToContainer(p->second, value) != 0;
@@ -255,7 +255,7 @@ namespace Manipulation
 				{
 					if (data & 0x40000000)
 					{
-						boost::unordered_map<int, std::vector<int> >::iterator p = i->second->extraExtras.find(data & ~0xC0000000);
+						std::unordered_map<int, std::vector<int> >::iterator p = i->second->extraExtras.find(data & ~0xC0000000);
 						if (p != i->second->extraExtras.end())
 						{
 							return Utility::removeFromContainer(p->second, value) != 0;
@@ -308,7 +308,7 @@ namespace Manipulation
 				{
 					if (data & 0x40000000)
 					{
-						boost::unordered_map<int, std::vector<int> >::iterator p = i->second->extraExtras.find(data & ~0xC0000000);
+						std::unordered_map<int, std::vector<int> >::iterator p = i->second->extraExtras.find(data & ~0xC0000000);
 						if (p != i->second->extraExtras.end())
 						{
 							int size = static_cast<int>(p->second.size());

@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-#include "../precompiled.h"
-#include "ompgdk.hpp"
+#include "../main.h"
 #include "../natives.h"
 #include "../core.h"
 #include "../utility.h"
@@ -30,7 +29,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 	{
 		case STREAMER_TYPE_OBJECT:
 		{
-			boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[5]));
+			std::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[5]));
 			if (o != core->getData()->objects.end())
 			{
 				if (o->second->attach)
@@ -47,7 +46,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_PICKUP:
 		{
-			boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[5]));
+			std::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[5]));
 			if (p != core->getData()->pickups.end())
 			{
 				position = p->second->position;
@@ -57,7 +56,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_CP:
 		{
-			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[5]));
+			std::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[5]));
 			if (c != core->getData()->checkpoints.end())
 			{
 				position = c->second->position;
@@ -67,7 +66,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_RACE_CP:
 		{
-			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[5]));
+			std::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[5]));
 			if (r != core->getData()->raceCheckpoints.end())
 			{
 				position = r->second->position;
@@ -77,7 +76,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_MAP_ICON:
 		{
-			boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[5]));
+			std::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[5]));
 			if (m != core->getData()->mapIcons.end())
 			{
 				position = m->second->position;
@@ -87,7 +86,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_3D_TEXT_LABEL:
 		{
-			boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[5]));
+			std::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[5]));
 			if (t != core->getData()->textLabels.end())
 			{
 				if (t->second->attach)
@@ -104,10 +103,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_AREA:
 		{
-			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[5]));
+			std::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[5]));
 			if (a != core->getData()->areas.end())
 			{
-				boost::variant<Polygon2d, Box2d, Box3d, Eigen::Vector2f, Eigen::Vector3f> areaPosition;
+				std::variant<Polygon2d, Box2d, Box3d, Eigen::Vector2f, Eigen::Vector3f> areaPosition;
 				if (a->second->attach)
 				{
 					areaPosition = a->second->attach->position;
@@ -122,32 +121,32 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 					case STREAMER_AREA_TYPE_CYLINDER:
 					{
 						float distance = 0.0f;
-						distance = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), boost::get<Eigen::Vector2f>(areaPosition)));
+						distance = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), std::get<Eigen::Vector2f>(areaPosition)));
 						Utility::storeFloatInNative(amx, params[6], distance);
 						return 1;
 					}
 					case STREAMER_AREA_TYPE_SPHERE:
 					{
-						position = boost::get<Eigen::Vector3f>(areaPosition);
+						position = std::get<Eigen::Vector3f>(areaPosition);
 						success = true;
 						break;
 					}
 					case STREAMER_AREA_TYPE_RECTANGLE:
 					{
-						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Box2d>(areaPosition));
+						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(std::get<Box2d>(areaPosition));
 						float distance = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), centroid));
 						Utility::storeFloatInNative(amx, params[6], distance);
 						return 1;
 					}
 					case STREAMER_AREA_TYPE_CUBOID:
 					{
-						position = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3d>(areaPosition));
+						position = boost::geometry::return_centroid<Eigen::Vector3f>(std::get<Box3d>(areaPosition));
 						success = true;
 						break;
 					}
 					case STREAMER_AREA_TYPE_POLYGON:
 					{
-						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2d>(areaPosition));
+						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(std::get<Polygon2d>(areaPosition));
 						float distance = static_cast<float>(boost::geometry::distance(Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2])), centroid));
 						Utility::storeFloatInNative(amx, params[6], distance);
 						return 1;
@@ -162,7 +161,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_ACTOR:
 		{
-			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[5]));
+			std::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[5]));
 			if (a != core->getData()->actors.end())
 			{
 				position = a->second->position;
@@ -206,7 +205,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleItem(AMX *amx, cell *params)
 	{
 		case STREAMER_TYPE_OBJECT:
 		{
-			boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[3]));
+			std::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[3]));
 			if (o != core->getData()->objects.end())
 			{
 				if (!static_cast<int>(params[4]))
@@ -222,7 +221,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleItem(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_PICKUP:
 		{
-			boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[3]));
+			std::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[3]));
 			if (p != core->getData()->pickups.end())
 			{
 				if (!static_cast<int>(params[4]))
@@ -238,7 +237,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleItem(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_CP:
 		{
-			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[3]));
+			std::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[3]));
 			if (c != core->getData()->checkpoints.end())
 			{
 				if (!static_cast<int>(params[4]))
@@ -254,7 +253,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleItem(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_RACE_CP:
 		{
-			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[3]));
+			std::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[3]));
 			if (r != core->getData()->raceCheckpoints.end())
 			{
 				if (!static_cast<int>(params[4]))
@@ -270,7 +269,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleItem(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_MAP_ICON:
 		{
-			boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[3]));
+			std::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[3]));
 			if (m != core->getData()->mapIcons.end())
 			{
 				if (!static_cast<int>(params[4]))
@@ -286,7 +285,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleItem(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_3D_TEXT_LABEL:
 		{
-			boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[3]));
+			std::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[3]));
 			if (t != core->getData()->textLabels.end())
 			{
 				if (!static_cast<int>(params[4]))
@@ -302,7 +301,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleItem(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_AREA:
 		{
-			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[3]));
+			std::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[3]));
 			if (a != core->getData()->areas.end())
 			{
 				if (!static_cast<int>(params[4]))
@@ -318,7 +317,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleItem(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_ACTOR:
 		{
-			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[3]));
+			std::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[3]));
 			if (a != core->getData()->actors.end())
 			{
 				if (!static_cast<int>(params[4]))
@@ -348,7 +347,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItem(AMX *amx, cell *params)
 	{
 		case STREAMER_TYPE_OBJECT:
 		{
-			boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[3]));
+			std::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[3]));
 			if (o != core->getData()->objects.end())
 			{
 				return static_cast<cell>(Utility::isInContainer(o->second->players, static_cast<int>(params[1])));
@@ -357,7 +356,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItem(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_PICKUP:
 		{
-			boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[3]));
+			std::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[3]));
 			if (p != core->getData()->pickups.end())
 			{
 				return static_cast<cell>(Utility::isInContainer(p->second->players, static_cast<int>(params[1])));
@@ -366,7 +365,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItem(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_CP:
 		{
-			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[3]));
+			std::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[3]));
 			if (c != core->getData()->checkpoints.end())
 			{
 				return static_cast<cell>(Utility::isInContainer(c->second->players, static_cast<int>(params[1])));
@@ -375,7 +374,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItem(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_RACE_CP:
 		{
-			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[3]));
+			std::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[3]));
 			if (r != core->getData()->raceCheckpoints.end())
 			{
 				return static_cast<cell>(Utility::isInContainer(r->second->players, static_cast<int>(params[1])));
@@ -384,7 +383,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItem(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_MAP_ICON:
 		{
-			boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[3]));
+			std::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[3]));
 			if (m != core->getData()->mapIcons.end())
 			{
 				return static_cast<cell>(Utility::isInContainer(m->second->players, static_cast<int>(params[1])));
@@ -393,7 +392,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItem(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_3D_TEXT_LABEL:
 		{
-			boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[3]));
+			std::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[3]));
 			if (t != core->getData()->textLabels.end())
 			{
 				return static_cast<cell>(Utility::isInContainer(t->second->players, static_cast<int>(params[1])));
@@ -402,7 +401,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItem(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_AREA:
 		{
-			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[3]));
+			std::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[3]));
 			if (a != core->getData()->areas.end())
 			{
 				return static_cast<cell>(Utility::isInContainer(a->second->players, static_cast<int>(params[1])));
@@ -411,7 +410,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItem(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_ACTOR:
 		{
-			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[3]));
+			std::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[3]));
 			if (a != core->getData()->actors.end())
 			{
 				return static_cast<cell>(Utility::isInContainer(a->second->players, static_cast<int>(params[1])));
@@ -430,15 +429,15 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsToggleItem(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::Streamer_ToggleAllItems(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(5);
-	boost::unordered_set<int> exceptions;
+	std::unordered_set<int> exceptions;
 	Utility::convertArrayToContainer(amx, params[4], params[5], exceptions);
 	switch (static_cast<int>(params[2]))
 	{
 		case STREAMER_TYPE_OBJECT:
 		{
-			for (boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.begin(); o != core->getData()->objects.end(); ++o)
+			for (std::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.begin(); o != core->getData()->objects.end(); ++o)
 			{
-				boost::unordered_set<int>::iterator e = exceptions.find(o->first);
+				std::unordered_set<int>::iterator e = exceptions.find(o->first);
 				if (e == exceptions.end())
 				{
 					if (!static_cast<int>(params[3]))
@@ -455,9 +454,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleAllItems(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_PICKUP:
 		{
-			for (boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.begin(); p != core->getData()->pickups.end(); ++p)
+			for (std::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.begin(); p != core->getData()->pickups.end(); ++p)
 			{
-				boost::unordered_set<int>::iterator e = exceptions.find(p->first);
+				std::unordered_set<int>::iterator e = exceptions.find(p->first);
 				if (e == exceptions.end())
 				{
 					if (!static_cast<int>(params[3]))
@@ -474,9 +473,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleAllItems(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_CP:
 		{
-			for (boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.begin(); c != core->getData()->checkpoints.end(); ++c)
+			for (std::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.begin(); c != core->getData()->checkpoints.end(); ++c)
 			{
-				boost::unordered_set<int>::iterator e = exceptions.find(c->first);
+				std::unordered_set<int>::iterator e = exceptions.find(c->first);
 				if (e == exceptions.end())
 				{
 					if (!static_cast<int>(params[3]))
@@ -493,9 +492,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleAllItems(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_RACE_CP:
 		{
-			for (boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.begin(); r != core->getData()->raceCheckpoints.end(); ++r)
+			for (std::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.begin(); r != core->getData()->raceCheckpoints.end(); ++r)
 			{
-				boost::unordered_set<int>::iterator e = exceptions.find(r->first);
+				std::unordered_set<int>::iterator e = exceptions.find(r->first);
 				if (e == exceptions.end())
 				{
 					if (!static_cast<int>(params[3]))
@@ -512,9 +511,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleAllItems(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_MAP_ICON:
 		{
-			for (boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.begin(); m != core->getData()->mapIcons.end(); ++m)
+			for (std::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.begin(); m != core->getData()->mapIcons.end(); ++m)
 			{
-				boost::unordered_set<int>::iterator e = exceptions.find(m->first);
+				std::unordered_set<int>::iterator e = exceptions.find(m->first);
 				if (e == exceptions.end())
 				{
 					if (!static_cast<int>(params[3]))
@@ -531,9 +530,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleAllItems(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_3D_TEXT_LABEL:
 		{
-			for (boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.begin(); t != core->getData()->textLabels.end(); ++t)
+			for (std::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.begin(); t != core->getData()->textLabels.end(); ++t)
 			{
-				boost::unordered_set<int>::iterator e = exceptions.find(t->first);
+				std::unordered_set<int>::iterator e = exceptions.find(t->first);
 				if (e == exceptions.end())
 				{
 					if (!static_cast<int>(params[3]))
@@ -550,9 +549,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleAllItems(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_AREA:
 		{
-			for (boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.begin(); a != core->getData()->areas.end(); ++a)
+			for (std::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.begin(); a != core->getData()->areas.end(); ++a)
 			{
-				boost::unordered_set<int>::iterator e = exceptions.find(a->first);
+				std::unordered_set<int>::iterator e = exceptions.find(a->first);
 				if (e == exceptions.end())
 				{
 					if (!static_cast<int>(params[3]))
@@ -569,9 +568,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_ToggleAllItems(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_ACTOR:
 		{
-			for (boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.begin(); a != core->getData()->actors.end(); ++a)
+			for (std::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.begin(); a != core->getData()->actors.end(); ++a)
 			{
-				boost::unordered_set<int>::iterator e = exceptions.find(a->first);
+				std::unordered_set<int>::iterator e = exceptions.find(a->first);
 				if (e == exceptions.end())
 				{
 					if (!static_cast<int>(params[3]))
@@ -604,9 +603,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemInternalID(AMX *amx, cell *params)
 		{
 			int pickupId = static_cast<int>(params[3]);
 			Item::SharedPickup p = core->getData()->pickups[pickupId];
-			for (boost::unordered_set<int>::const_iterator w = p->worlds.begin(); w != p->worlds.end(); ++w)
+			for (std::unordered_set<int>::const_iterator w = p->worlds.begin(); w != p->worlds.end(); ++w)
 			{
-				boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalPickups.find(std::make_pair(pickupId, *w));
+				std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalPickups.find(std::make_pair(pickupId, *w));
 				if (i != core->getData()->internalPickups.end())
 				{
 					return static_cast<cell>(i->second);
@@ -618,9 +617,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemInternalID(AMX *amx, cell *params)
 		{
 			int actorId = static_cast<int>(params[3]);
 			Item::SharedActor a = core->getData()->actors[actorId];
-			for (boost::unordered_set<int>::const_iterator w = a->worlds.begin(); w != a->worlds.end(); ++w)
+			for (std::unordered_set<int>::const_iterator w = a->worlds.begin(); w != a->worlds.end(); ++w)
 			{
-				boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.find(std::make_pair(actorId, *w));
+				std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalActors.find(std::make_pair(actorId, *w));
 				if (i != core->getData()->internalActors.end())
 				{
 					return static_cast<cell>(i->second);
@@ -629,14 +628,14 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemInternalID(AMX *amx, cell *params)
 			return INVALID_ACTOR_ID;
 		}
 	}
-	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
+	std::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
 		switch (static_cast<int>(params[2]))
 		{
 			case STREAMER_TYPE_OBJECT:
 			{
-				boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(static_cast<int>(params[3]));
+				std::unordered_map<int, int>::iterator i = p->second.internalObjects.find(static_cast<int>(params[3]));
 				if (i != p->second.internalObjects.end())
 				{
 					return static_cast<cell>(i->second);
@@ -661,7 +660,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemInternalID(AMX *amx, cell *params)
 			}
 			case STREAMER_TYPE_MAP_ICON:
 			{
-				boost::unordered_map<int, int>::iterator i = p->second.internalMapIcons.find(static_cast<int>(params[3]));
+				std::unordered_map<int, int>::iterator i = p->second.internalMapIcons.find(static_cast<int>(params[3]));
 				if (i != p->second.internalMapIcons.end())
 				{
 					return static_cast<cell>(i->second);
@@ -670,7 +669,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemInternalID(AMX *amx, cell *params)
 			}
 			case STREAMER_TYPE_3D_TEXT_LABEL:
 			{
-				boost::unordered_map<int, int>::iterator i = p->second.internalTextLabels.find(static_cast<int>(params[3]));
+				std::unordered_map<int, int>::iterator i = p->second.internalTextLabels.find(static_cast<int>(params[3]));
 				if (i != p->second.internalTextLabels.end())
 				{
 					return static_cast<cell>(i->second);
@@ -679,7 +678,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemInternalID(AMX *amx, cell *params)
 			}
 			case STREAMER_TYPE_AREA:
 			{
-				boost::unordered_set<int>::iterator i = p->second.internalAreas.find(static_cast<int>(params[3]));
+				std::unordered_set<int>::iterator i = p->second.internalAreas.find(static_cast<int>(params[3]));
 				if (i != p->second.internalAreas.end())
 				{
 					return *i;
@@ -703,7 +702,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemStreamerID(AMX *amx, cell *params)
 	{
 		case STREAMER_TYPE_PICKUP:
 		{
-			for (boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalPickups.begin(); i != core->getData()->internalPickups.end(); ++i)
+			for (std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalPickups.begin(); i != core->getData()->internalPickups.end(); ++i)
 			{
 				if (i->second == static_cast<int>(params[3]))
 				{
@@ -714,7 +713,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemStreamerID(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_ACTOR:
 		{
-			for (boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
+			for (std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
 			{
 				if (i->second == static_cast<int>(params[3]))
 				{
@@ -724,14 +723,14 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemStreamerID(AMX *amx, cell *params)
 			return INVALID_STREAMER_ID;
 		}
 	}
-	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
+	std::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
 		switch (static_cast<int>(params[2]))
 		{
 			case STREAMER_TYPE_OBJECT:
 			{
-				for (boost::unordered_map<int, int>::iterator i = p->second.internalObjects.begin(); i != p->second.internalObjects.end(); ++i)
+				for (std::unordered_map<int, int>::iterator i = p->second.internalObjects.begin(); i != p->second.internalObjects.end(); ++i)
 				{
 					if (i->second == static_cast<int>(params[3]))
 					{
@@ -758,7 +757,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemStreamerID(AMX *amx, cell *params)
 			}
 			case STREAMER_TYPE_MAP_ICON:
 			{
-				for (boost::unordered_map<int, int>::iterator i = p->second.internalMapIcons.begin(); i != p->second.internalMapIcons.end(); ++i)
+				for (std::unordered_map<int, int>::iterator i = p->second.internalMapIcons.begin(); i != p->second.internalMapIcons.end(); ++i)
 				{
 					if (i->second == static_cast<int>(params[3]))
 					{
@@ -769,7 +768,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemStreamerID(AMX *amx, cell *params)
 			}
 			case STREAMER_TYPE_3D_TEXT_LABEL:
 			{
-				for (boost::unordered_map<int, int>::iterator i = p->second.internalTextLabels.begin(); i != p->second.internalTextLabels.end(); ++i)
+				for (std::unordered_map<int, int>::iterator i = p->second.internalTextLabels.begin(); i != p->second.internalTextLabels.end(); ++i)
 				{
 					if (i->second == static_cast<int>(params[3]))
 					{
@@ -780,7 +779,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemStreamerID(AMX *amx, cell *params)
 			}
 			case STREAMER_TYPE_AREA:
 			{
-				boost::unordered_set<int>::iterator i = p->second.internalAreas.find(static_cast<int>(params[3]));
+				std::unordered_set<int>::iterator i = p->second.internalAreas.find(static_cast<int>(params[3]));
 				if (i != p->second.internalAreas.end())
 				{
 					return *i;
@@ -806,9 +805,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsItemVisible(AMX *amx, cell *params)
 		{
 			int pickupId = static_cast<int>(params[3]);
 			Item::SharedPickup p = core->getData()->pickups[pickupId];
-			for (boost::unordered_set<int>::const_iterator w = p->worlds.begin(); w != p->worlds.end(); ++w)
+			for (std::unordered_set<int>::const_iterator w = p->worlds.begin(); w != p->worlds.end(); ++w)
 			{
-				boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalPickups.find(std::make_pair(pickupId, *w));
+				std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalPickups.find(std::make_pair(pickupId, *w));
 				if (i != core->getData()->internalPickups.end())
 				{
 					return 1;
@@ -820,9 +819,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsItemVisible(AMX *amx, cell *params)
 		{
 			int actorId = static_cast<int>(params[3]);
 			Item::SharedActor a = core->getData()->actors[actorId];
-			for (boost::unordered_set<int>::const_iterator w = a->worlds.begin(); w != a->worlds.end(); ++w)
+			for (std::unordered_set<int>::const_iterator w = a->worlds.begin(); w != a->worlds.end(); ++w)
 			{
-				boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.find(std::make_pair(actorId, *w));
+				std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalActors.find(std::make_pair(actorId, *w));
 				if (i != core->getData()->internalActors.end())
 				{
 					return 1;
@@ -831,14 +830,14 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsItemVisible(AMX *amx, cell *params)
 			return 0;
 		}
 	}
-	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
+	std::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
 		switch (static_cast<int>(params[2]))
 		{
 			case STREAMER_TYPE_OBJECT:
 			{
-				boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(static_cast<int>(params[3]));
+				std::unordered_map<int, int>::iterator i = p->second.internalObjects.find(static_cast<int>(params[3]));
 				if (i != p->second.internalObjects.end())
 				{
 					return 1;
@@ -863,7 +862,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsItemVisible(AMX *amx, cell *params)
 			}
 			case STREAMER_TYPE_MAP_ICON:
 			{
-				boost::unordered_map<int, int>::iterator i = p->second.internalMapIcons.find(static_cast<int>(params[3]));
+				std::unordered_map<int, int>::iterator i = p->second.internalMapIcons.find(static_cast<int>(params[3]));
 				if (i != p->second.internalMapIcons.end())
 				{
 					return 1;
@@ -872,7 +871,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsItemVisible(AMX *amx, cell *params)
 			}
 			case STREAMER_TYPE_3D_TEXT_LABEL:
 			{
-				boost::unordered_map<int, int>::iterator i = p->second.internalTextLabels.find(static_cast<int>(params[3]));
+				std::unordered_map<int, int>::iterator i = p->second.internalTextLabels.find(static_cast<int>(params[3]));
 				if (i != p->second.internalTextLabels.end())
 				{
 					return 1;
@@ -880,7 +879,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_IsItemVisible(AMX *amx, cell *params)
 			}
 			case STREAMER_TYPE_AREA:
 			{
-				boost::unordered_set<int>::iterator i = p->second.internalAreas.find(static_cast<int>(params[3]));
+				std::unordered_set<int>::iterator i = p->second.internalAreas.find(static_cast<int>(params[3]));
 				if (i != p->second.internalAreas.end())
 				{
 					return 1;
@@ -905,10 +904,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 	{
 		case STREAMER_TYPE_PICKUP:
 		{
-			boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalPickups.begin();
+			std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalPickups.begin();
 			while (i != core->getData()->internalPickups.end())
 			{
-				boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(i->first.first);
+				std::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(i->first.first);
 				if (serverWide || (p != core->getData()->pickups.end() && p->second->amx == amx))
 				{
 					ompgdk::DestroyPickup(i->second);
@@ -923,10 +922,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 		}
 		case STREAMER_TYPE_ACTOR:
 		{
-			boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.begin();
+			std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalActors.begin();
 			while (i != core->getData()->internalActors.end())
 			{
-				boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(i->first.first);
+				std::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(i->first.first);
 				if (serverWide || (a != core->getData()->actors.end() && a->second->amx == amx))
 				{
 					ompgdk::DestroyActor(i->second);
@@ -940,17 +939,17 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 			return 1;
 		}
 	}
-	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
+	std::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
 		switch (static_cast<int>(params[2]))
 		{
 			case STREAMER_TYPE_OBJECT:
 			{
-				boost::unordered_map<int, int>::iterator i = p->second.internalObjects.begin();
+				std::unordered_map<int, int>::iterator i = p->second.internalObjects.begin();
 				while (i != p->second.internalObjects.end())
 				{
-					boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(i->first);
+					std::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(i->first);
 					if (serverWide || (o != core->getData()->objects.end() && o->second->amx == amx))
 					{
 						ompgdk::DestroyPlayerObject(p->first, i->second);
@@ -967,7 +966,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 			{
 				if (p->second.visibleCheckpoint)
 				{
-					boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(p->second.visibleCheckpoint);
+					std::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(p->second.visibleCheckpoint);
 					if (serverWide || (c != core->getData()->checkpoints.end() && c->second->amx == amx))
 					{
 						ompgdk::DisablePlayerCheckpoint(p->first);
@@ -982,7 +981,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 			{
 				if (p->second.visibleRaceCheckpoint)
 				{
-					boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(p->second.visibleRaceCheckpoint);
+					std::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(p->second.visibleRaceCheckpoint);
 					if (serverWide || (r != core->getData()->raceCheckpoints.end() && r->second->amx == amx))
 					{
 						ompgdk::DisablePlayerRaceCheckpoint(p->first);
@@ -995,10 +994,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 			}
 			case STREAMER_TYPE_MAP_ICON:
 			{
-				boost::unordered_map<int, int>::iterator i = p->second.internalMapIcons.begin();
+				std::unordered_map<int, int>::iterator i = p->second.internalMapIcons.begin();
 				while (i != p->second.internalMapIcons.end())
 				{
-					boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(i->first);
+					std::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(i->first);
 					if (serverWide || (m != core->getData()->mapIcons.end() && m->second->amx == amx))
 					{
 						ompgdk::RemovePlayerMapIcon(p->first, i->second);
@@ -1013,10 +1012,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 			}
 			case STREAMER_TYPE_3D_TEXT_LABEL:
 			{
-				boost::unordered_map<int, int>::iterator i = p->second.internalTextLabels.begin();
+				std::unordered_map<int, int>::iterator i = p->second.internalTextLabels.begin();
 				while (i != p->second.internalTextLabels.end())
 				{
-					boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(i->first);
+					std::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(i->first);
 					if (serverWide || (t != core->getData()->textLabels.end() && t->second->amx == amx))
 					{
 						ompgdk::DeletePlayer3DTextLabel(p->first, i->second);
@@ -1031,10 +1030,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllVisibleItems(AMX *amx, cell *pa
 			}
 			case STREAMER_TYPE_AREA:
 			{
-				boost::unordered_set<int>::iterator i = p->second.internalAreas.begin();
+				std::unordered_set<int>::iterator i = p->second.internalAreas.begin();
 				while (i != p->second.internalAreas.end())
 				{
-					boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(*i);
+					std::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(*i);
 					if (serverWide || (a != core->getData()->areas.end() && a->second->amx == amx))
 					{
 						i = p->second.internalAreas.erase(i);
@@ -1071,7 +1070,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountVisibleItems(AMX *amx, cell *params)
 			return static_cast<cell>(core->getData()->internalActors.size());
 		}
 	}
-	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
+	std::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
 		switch (static_cast<int>(params[2]))
@@ -1085,9 +1084,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountVisibleItems(AMX *amx, cell *params)
 				else
 				{
 					int count = 0;
-					for (boost::unordered_map<int, int>::iterator i = p->second.internalObjects.begin(); i != p->second.internalObjects.end(); ++i)
+					for (std::unordered_map<int, int>::iterator i = p->second.internalObjects.begin(); i != p->second.internalObjects.end(); ++i)
 					{
-						boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(i->first);
+						std::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(i->first);
 						if (o != core->getData()->objects.end() && o->second->amx == amx)
 						{
 							++count;
@@ -1100,7 +1099,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountVisibleItems(AMX *amx, cell *params)
 			{
 				if (p->second.visibleCheckpoint)
 				{
-					boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(p->second.visibleCheckpoint);
+					std::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(p->second.visibleCheckpoint);
 					if (serverWide || (c != core->getData()->checkpoints.end() && c->second->amx == amx))
 					{
 						return 1;
@@ -1112,7 +1111,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountVisibleItems(AMX *amx, cell *params)
 			{
 				if (p->second.visibleRaceCheckpoint)
 				{
-					boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(p->second.visibleRaceCheckpoint);
+					std::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(p->second.visibleRaceCheckpoint);
 					if (serverWide || (r != core->getData()->raceCheckpoints.end() && r->second->amx == amx))
 					{
 						return 1;
@@ -1129,9 +1128,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountVisibleItems(AMX *amx, cell *params)
 				else
 				{
 					int count = 0;
-					for (boost::unordered_map<int, int>::iterator i = p->second.internalMapIcons.begin(); i != p->second.internalMapIcons.end(); ++i)
+					for (std::unordered_map<int, int>::iterator i = p->second.internalMapIcons.begin(); i != p->second.internalMapIcons.end(); ++i)
 					{
-						boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(i->first);
+						std::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(i->first);
 						if (m != core->getData()->mapIcons.end() && m->second->amx == amx)
 						{
 							++count;
@@ -1149,9 +1148,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountVisibleItems(AMX *amx, cell *params)
 				else
 				{
 					int count = 0;
-					for (boost::unordered_map<int, int>::iterator i = p->second.internalTextLabels.begin(); i != p->second.internalTextLabels.end(); ++i)
+					for (std::unordered_map<int, int>::iterator i = p->second.internalTextLabels.begin(); i != p->second.internalTextLabels.end(); ++i)
 					{
-						boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(i->first);
+						std::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(i->first);
 						if (t != core->getData()->textLabels.end() && t->second->amx == amx)
 						{
 							++count;
@@ -1169,9 +1168,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountVisibleItems(AMX *amx, cell *params)
 				else
 				{
 					int count = 0;
-					for (boost::unordered_set<int>::iterator i = p->second.internalAreas.begin(); i != p->second.internalAreas.end(); ++i)
+					for (std::unordered_set<int>::iterator i = p->second.internalAreas.begin(); i != p->second.internalAreas.end(); ++i)
 					{
-						boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(*i);
+						std::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(*i);
 						if (a != core->getData()->areas.end() && a->second->amx == amx)
 						{
 							++count;
@@ -1198,7 +1197,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllItems(AMX *amx, cell *params)
 	{
 		case STREAMER_TYPE_OBJECT:
 		{
-			boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.begin();
+			std::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.begin();
 			while (o != core->getData()->objects.end())
 			{
 				if (serverWide || o->second->amx == amx)
@@ -1214,7 +1213,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllItems(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_PICKUP:
 		{
-			boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.begin();
+			std::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.begin();
 			while (p != core->getData()->pickups.end())
 			{
 				if (serverWide || p->second->amx == amx)
@@ -1230,7 +1229,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllItems(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_CP:
 		{
-			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.begin();
+			std::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.begin();
 			while (c != core->getData()->checkpoints.end())
 			{
 				if (serverWide || c->second->amx == amx)
@@ -1246,7 +1245,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllItems(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_RACE_CP:
 		{
-			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.begin();
+			std::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.begin();
 			while (r != core->getData()->raceCheckpoints.end())
 			{
 				if (serverWide || r->second->amx == amx)
@@ -1262,7 +1261,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllItems(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_MAP_ICON:
 		{
-			boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.begin();
+			std::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.begin();
 			while (m != core->getData()->mapIcons.end())
 			{
 				if (serverWide || m->second->amx == amx)
@@ -1278,7 +1277,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllItems(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_3D_TEXT_LABEL:
 		{
-			boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.begin();
+			std::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.begin();
 			while (t != core->getData()->textLabels.end())
 			{
 				if (serverWide || t->second->amx == amx)
@@ -1295,7 +1294,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllItems(AMX *amx, cell *params)
 		case STREAMER_TYPE_AREA:
 		{
 			Utility::executeFinalAreaCallbacksForAllAreas(amx, serverWide);
-			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.begin();
+			std::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.begin();
 			while (a != core->getData()->areas.end())
 			{
 				if (serverWide || a->second->amx == amx)
@@ -1311,7 +1310,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_DestroyAllItems(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_ACTOR:
 		{
-			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.begin();
+			std::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.begin();
 			while (a != core->getData()->actors.end())
 			{
 				if (serverWide || a->second->amx == amx)
@@ -1349,7 +1348,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountItems(AMX *amx, cell *params)
 			else
 			{
 				int count = 0;
-				for (boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.begin(); o != core->getData()->objects.end(); ++o)
+				for (std::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.begin(); o != core->getData()->objects.end(); ++o)
 				{
 					if (o->second->amx == amx)
 					{
@@ -1368,7 +1367,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountItems(AMX *amx, cell *params)
 			else
 			{
 				int count = 0;
-				for (boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.begin(); p != core->getData()->pickups.end(); ++p)
+				for (std::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.begin(); p != core->getData()->pickups.end(); ++p)
 				{
 					if (p->second->amx == amx)
 					{
@@ -1387,7 +1386,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountItems(AMX *amx, cell *params)
 			else
 			{
 				int count = 0;
-				for (boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.begin(); c != core->getData()->checkpoints.end(); ++c)
+				for (std::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.begin(); c != core->getData()->checkpoints.end(); ++c)
 				{
 					if (c->second->amx == amx)
 					{
@@ -1406,7 +1405,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountItems(AMX *amx, cell *params)
 			else
 			{
 				int count = 0;
-				for (boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.begin(); r != core->getData()->raceCheckpoints.end(); ++r)
+				for (std::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.begin(); r != core->getData()->raceCheckpoints.end(); ++r)
 				{
 					if (r->second->amx == amx)
 					{
@@ -1425,7 +1424,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountItems(AMX *amx, cell *params)
 			else
 			{
 				int count = 0;
-				for (boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.begin(); m != core->getData()->mapIcons.end(); ++m)
+				for (std::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.begin(); m != core->getData()->mapIcons.end(); ++m)
 				{
 					if (m->second->amx == amx)
 					{
@@ -1444,7 +1443,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountItems(AMX *amx, cell *params)
 			else
 			{
 				int count = 0;
-				for (boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.begin(); t != core->getData()->textLabels.end(); ++t)
+				for (std::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.begin(); t != core->getData()->textLabels.end(); ++t)
 				{
 					if (t->second->amx == amx)
 					{
@@ -1463,7 +1462,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountItems(AMX *amx, cell *params)
 			else
 			{
 				int count = 0;
-				for (boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.begin(); a != core->getData()->areas.end(); ++a)
+				for (std::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.begin(); a != core->getData()->areas.end(); ++a)
 				{
 					if (a->second->amx == amx)
 					{
@@ -1482,7 +1481,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountItems(AMX *amx, cell *params)
 			else
 			{
 				int count = 0;
-				for (boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.begin(); a != core->getData()->actors.end(); ++a)
+				for (std::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.begin(); a != core->getData()->actors.end(); ++a)
 				{
 					if (a->second->amx == amx)
 					{
@@ -1517,7 +1516,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 		{
 			for (std::vector<SharedCell>::const_iterator p = pointCells.begin(); p != pointCells.end(); ++p)
 			{
-				for (boost::unordered_map<int, Item::SharedObject>::const_iterator o = (*p)->objects.begin(); o != (*p)->objects.end(); ++o)
+				for (std::unordered_map<int, Item::SharedObject>::const_iterator o = (*p)->objects.begin(); o != (*p)->objects.end(); ++o)
 				{
 					if (worldId == -1 || o->second->worlds.find(worldId) != o->second->worlds.end())
 					{
@@ -1543,7 +1542,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 		{
 			for (std::vector<SharedCell>::const_iterator p = pointCells.begin(); p != pointCells.end(); ++p)
 			{
-				for (boost::unordered_map<int, Item::SharedPickup>::const_iterator q = (*p)->pickups.begin(); q != (*p)->pickups.end(); ++q)
+				for (std::unordered_map<int, Item::SharedPickup>::const_iterator q = (*p)->pickups.begin(); q != (*p)->pickups.end(); ++q)
 				{
 					if (worldId == -1 || q->second->worlds.find(worldId) != q->second->worlds.end())
 					{
@@ -1561,7 +1560,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 		{
 			for (std::vector<SharedCell>::const_iterator p = pointCells.begin(); p != pointCells.end(); ++p)
 			{
-				for (boost::unordered_map<int, Item::SharedCheckpoint>::const_iterator c = (*p)->checkpoints.begin(); c != (*p)->checkpoints.end(); ++c)
+				for (std::unordered_map<int, Item::SharedCheckpoint>::const_iterator c = (*p)->checkpoints.begin(); c != (*p)->checkpoints.end(); ++c)
 				{
 					if (worldId == -1 || c->second->worlds.find(worldId) != c->second->worlds.end())
 					{
@@ -1579,7 +1578,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 		{
 			for (std::vector<SharedCell>::const_iterator p = pointCells.begin(); p != pointCells.end(); ++p)
 			{
-				for (boost::unordered_map<int, Item::SharedRaceCheckpoint>::const_iterator r = (*p)->raceCheckpoints.begin(); r != (*p)->raceCheckpoints.end(); ++r)
+				for (std::unordered_map<int, Item::SharedRaceCheckpoint>::const_iterator r = (*p)->raceCheckpoints.begin(); r != (*p)->raceCheckpoints.end(); ++r)
 				{
 					if (worldId == -1 || r->second->worlds.find(worldId) != r->second->worlds.end())
 					{
@@ -1597,7 +1596,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 		{
 			for (std::vector<SharedCell>::const_iterator p = pointCells.begin(); p != pointCells.end(); ++p)
 			{
-				for (boost::unordered_map<int, Item::SharedMapIcon>::const_iterator m = (*p)->mapIcons.begin(); m != (*p)->mapIcons.end(); ++m)
+				for (std::unordered_map<int, Item::SharedMapIcon>::const_iterator m = (*p)->mapIcons.begin(); m != (*p)->mapIcons.end(); ++m)
 				{
 					if (worldId == -1 || m->second->worlds.find(worldId) != m->second->worlds.end())
 					{
@@ -1615,7 +1614,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 		{
 			for (std::vector<SharedCell>::const_iterator p = pointCells.begin(); p != pointCells.end(); ++p)
 			{
-				for (boost::unordered_map<int, Item::SharedTextLabel>::const_iterator t = (*p)->textLabels.begin(); t != (*p)->textLabels.end(); ++t)
+				for (std::unordered_map<int, Item::SharedTextLabel>::const_iterator t = (*p)->textLabels.begin(); t != (*p)->textLabels.end(); ++t)
 				{
 					if (worldId == -1 || t->second->worlds.find(worldId) != t->second->worlds.end())
 					{
@@ -1633,11 +1632,11 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 		{
 			for (std::vector<SharedCell>::const_iterator p = pointCells.begin(); p != pointCells.end(); ++p)
 			{
-				for (boost::unordered_map<int, Item::SharedArea>::const_iterator a = (*p)->areas.begin(); a != (*p)->areas.end(); ++a)
+				for (std::unordered_map<int, Item::SharedArea>::const_iterator a = (*p)->areas.begin(); a != (*p)->areas.end(); ++a)
 				{
 					if (worldId == -1 || a->second->worlds.find(worldId) != a->second->worlds.end())
 					{
-						boost::variant<Polygon2d, Box2d, Box3d, Eigen::Vector2f, Eigen::Vector3f> position;
+						std::variant<Polygon2d, Box2d, Box3d, Eigen::Vector2f, Eigen::Vector3f> position;
 						if (a->second->attach)
 						{
 							position = a->second->position;
@@ -1652,29 +1651,29 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 							case STREAMER_AREA_TYPE_CIRCLE:
 							case STREAMER_AREA_TYPE_CYLINDER:
 							{
-								distance = static_cast<float>(boost::geometry::distance(position2d, boost::get<Eigen::Vector2f>(position)));
+								distance = static_cast<float>(boost::geometry::distance(position2d, std::get<Eigen::Vector2f>(position)));
 								break;
 							}
 							case STREAMER_AREA_TYPE_SPHERE:
 							{
-								distance = static_cast<float>(boost::geometry::comparable_distance(position3d, boost::get<Eigen::Vector3f>(position)));
+								distance = static_cast<float>(boost::geometry::comparable_distance(position3d, std::get<Eigen::Vector3f>(position)));
 								break;
 							}
 							case STREAMER_AREA_TYPE_RECTANGLE:
 							{
-								Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Box2d>(position));
+								Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(std::get<Box2d>(position));
 								distance = static_cast<float>(boost::geometry::comparable_distance(position2d, centroid));
 								break;
 							}
 							case STREAMER_AREA_TYPE_CUBOID:
 							{
-								Eigen::Vector3f centroid = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3d>(position));
+								Eigen::Vector3f centroid = boost::geometry::return_centroid<Eigen::Vector3f>(std::get<Box3d>(position));
 								distance = static_cast<float>(boost::geometry::comparable_distance(position3d, centroid));
 								break;
 							}
 							case STREAMER_AREA_TYPE_POLYGON:
 							{
-								Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2d>(position));
+								Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(std::get<Polygon2d>(position));
 								distance = static_cast<float>(boost::geometry::comparable_distance(position2d, centroid));
 								break;
 							}
@@ -1692,7 +1691,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 		{
 			for (std::vector<SharedCell>::const_iterator p = pointCells.begin(); p != pointCells.end(); ++p)
 			{
-				for (boost::unordered_map<int, Item::SharedActor>::const_iterator a = (*p)->actors.begin(); a != (*p)->actors.end(); ++a)
+				for (std::unordered_map<int, Item::SharedActor>::const_iterator a = (*p)->actors.begin(); a != (*p)->actors.end(); ++a)
 				{
 					if (worldId == -1 || a->second->worlds.find(worldId) != a->second->worlds.end())
 					{
@@ -1725,16 +1724,16 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetAllVisibleItems(AMX *amx, cell *params
 {
 	CHECK_PARAMS(4);
 	std::multimap<float, int> orderedItems;
-	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
+	std::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
 		switch (static_cast<int>(params[2]))
 		{
 			case STREAMER_TYPE_OBJECT:
 			{
-				for (boost::unordered_map<int, int>::iterator i = p->second.internalObjects.begin(); i != p->second.internalObjects.end(); ++i)
+				for (std::unordered_map<int, int>::iterator i = p->second.internalObjects.begin(); i != p->second.internalObjects.end(); ++i)
 				{
-					boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(i->first);
+					std::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(i->first);
 					if (o != core->getData()->objects.end())
 					{
 						float distance = 0.0f;
@@ -1753,9 +1752,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetAllVisibleItems(AMX *amx, cell *params
 			}
 			case STREAMER_TYPE_PICKUP:
 			{
-				for (boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalPickups.begin(); i != core->getData()->internalPickups.end(); ++i)
+				for (std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalPickups.begin(); i != core->getData()->internalPickups.end(); ++i)
 				{
-					boost::unordered_map<int, Item::SharedPickup>::iterator q = core->getData()->pickups.find(i->first.first);
+					std::unordered_map<int, Item::SharedPickup>::iterator q = core->getData()->pickups.find(i->first.first);
 					if (q != core->getData()->pickups.end())
 					{
 						float distance = static_cast<float>(boost::geometry::comparable_distance(p->second.position, q->second->position));
@@ -1768,7 +1767,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetAllVisibleItems(AMX *amx, cell *params
 			{
 				if (p->second.visibleCheckpoint != INVALID_STREAMER_ID)
 				{
-					boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(p->second.visibleCheckpoint);
+					std::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(p->second.visibleCheckpoint);
 					if (c != core->getData()->checkpoints.end())
 					{
 						float distance = static_cast<float>(boost::geometry::comparable_distance(p->second.position, c->second->position));
@@ -1781,7 +1780,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetAllVisibleItems(AMX *amx, cell *params
 			{
 				if (p->second.visibleRaceCheckpoint != INVALID_STREAMER_ID)
 				{
-					boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator c = core->getData()->raceCheckpoints.find(p->second.visibleRaceCheckpoint);
+					std::unordered_map<int, Item::SharedRaceCheckpoint>::iterator c = core->getData()->raceCheckpoints.find(p->second.visibleRaceCheckpoint);
 					if (c != core->getData()->raceCheckpoints.end())
 					{
 						float distance = static_cast<float>(boost::geometry::comparable_distance(p->second.position, c->second->position));
@@ -1792,9 +1791,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetAllVisibleItems(AMX *amx, cell *params
 			}
 			case STREAMER_TYPE_MAP_ICON:
 			{
-				for (boost::unordered_map<int, int>::iterator i = p->second.internalMapIcons.begin(); i != p->second.internalMapIcons.end(); ++i)
+				for (std::unordered_map<int, int>::iterator i = p->second.internalMapIcons.begin(); i != p->second.internalMapIcons.end(); ++i)
 				{
-					boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(i->first);
+					std::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(i->first);
 					if (m != core->getData()->mapIcons.end())
 					{
 						float distance = static_cast<float>(boost::geometry::comparable_distance(p->second.position, m->second->position));
@@ -1805,9 +1804,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetAllVisibleItems(AMX *amx, cell *params
 			}
 			case STREAMER_TYPE_3D_TEXT_LABEL:
 			{
-				for (boost::unordered_map<int, int>::iterator i = p->second.internalTextLabels.begin(); i != p->second.internalTextLabels.end(); ++i)
+				for (std::unordered_map<int, int>::iterator i = p->second.internalTextLabels.begin(); i != p->second.internalTextLabels.end(); ++i)
 				{
-					boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(i->first);
+					std::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(i->first);
 					if (t != core->getData()->textLabels.end())
 					{
 						float distance = 0.0f;
@@ -1826,9 +1825,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetAllVisibleItems(AMX *amx, cell *params
 			}
 			case STREAMER_TYPE_ACTOR:
 			{
-				for (boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
+				for (std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
 				{
-					boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(i->first.first);
+					std::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(i->first.first);
 					if (a != core->getData()->actors.end())
 					{
 						float distance = static_cast<float>(boost::geometry::comparable_distance(p->second.position, a->second->position));
@@ -1856,7 +1855,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemPos(AMX *amx, cell *params)
 	{
 		case STREAMER_TYPE_OBJECT:
 		{
-			boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
 			if (o != core->getData()->objects.end())
 			{
 				if (o->second->attach)
@@ -1873,7 +1872,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemPos(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_PICKUP:
 		{
-			boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[2]));
 			if (p != core->getData()->pickups.end())
 			{
 				position = p->second->position;
@@ -1883,7 +1882,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemPos(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_CP:
 		{
-			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[2]));
 			if (c != core->getData()->checkpoints.end())
 			{
 				position = c->second->position;
@@ -1893,7 +1892,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemPos(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_RACE_CP:
 		{
-			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[2]));
 			if (r != core->getData()->raceCheckpoints.end())
 			{
 				position = r->second->position;
@@ -1903,7 +1902,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemPos(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_MAP_ICON:
 		{
-			boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[2]));
 			if (m != core->getData()->mapIcons.end())
 			{
 				position = m->second->position;
@@ -1913,7 +1912,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemPos(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_3D_TEXT_LABEL:
 		{
-			boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[2]));
 			if (t != core->getData()->textLabels.end())
 			{
 				if (t->second->attach)
@@ -1931,10 +1930,10 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemPos(AMX *amx, cell *params)
 		case STREAMER_TYPE_AREA:
 		{
 			bool success = false;
-			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[2]));
 			if (a != core->getData()->areas.end())
 			{
-				boost::variant<Polygon2d, Box2d, Box3d, Eigen::Vector2f, Eigen::Vector3f> areaPosition;
+				std::variant<Polygon2d, Box2d, Box3d, Eigen::Vector2f, Eigen::Vector3f> areaPosition;
 				if (a->second->attach)
 				{
 					areaPosition = a->second->attach->position;
@@ -1947,16 +1946,16 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemPos(AMX *amx, cell *params)
 				{
 					case STREAMER_AREA_TYPE_CIRCLE:
 					{
-						position[0] = boost::get<Eigen::Vector2f>(areaPosition)[0];
-						position[1] = boost::get<Eigen::Vector2f>(areaPosition)[1];
+						position[0] = std::get<Eigen::Vector2f>(areaPosition)[0];
+						position[1] = std::get<Eigen::Vector2f>(areaPosition)[1];
 						position[2] = 0.0f;
 						success = true;
 						break;
 					}
 					case STREAMER_AREA_TYPE_CYLINDER:
 					{
-						position[0] = boost::get<Eigen::Vector2f>(areaPosition)[0];
-						position[1] = boost::get<Eigen::Vector2f>(areaPosition)[1];
+						position[0] = std::get<Eigen::Vector2f>(areaPosition)[0];
+						position[1] = std::get<Eigen::Vector2f>(areaPosition)[1];
 						if (a->second->height[0] == -std::numeric_limits<float>::infinity() || a->second->height[1] == std::numeric_limits<float>::infinity())
 						{
 							position[2] = 0.0f;
@@ -1970,13 +1969,13 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemPos(AMX *amx, cell *params)
 					}
 					case STREAMER_AREA_TYPE_SPHERE:
 					{
-						position = boost::get<Eigen::Vector3f>(areaPosition);
+						position = std::get<Eigen::Vector3f>(areaPosition);
 						success = true;
 						break;
 					}
 					case STREAMER_AREA_TYPE_RECTANGLE:
 					{
-						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Box2d>(areaPosition));
+						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(std::get<Box2d>(areaPosition));
 						position[0] = centroid[0];
 						position[1] = centroid[1];
 						position[2] = 0.0f;
@@ -1985,13 +1984,13 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemPos(AMX *amx, cell *params)
 					}
 					case STREAMER_AREA_TYPE_CUBOID:
 					{
-						position = boost::geometry::return_centroid<Eigen::Vector3f>(boost::get<Box3d>(areaPosition));
+						position = boost::geometry::return_centroid<Eigen::Vector3f>(std::get<Box3d>(areaPosition));
 						success = true;
 						break;
 					}
 					case STREAMER_AREA_TYPE_POLYGON:
 					{
-						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(boost::get<Polygon2d>(areaPosition));
+						Eigen::Vector2f centroid = boost::geometry::return_centroid<Eigen::Vector2f>(std::get<Polygon2d>(areaPosition));
 						position[0] = centroid[0];
 						position[1] = centroid[1];
 						if (a->second->height[0] == -std::numeric_limits<float>::infinity() || a->second->height[1] == std::numeric_limits<float>::infinity())
@@ -2015,7 +2014,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemPos(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_ACTOR:
 		{
-			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
 			if (a != core->getData()->actors.end())
 			{
 				position = a->second->position;
@@ -2043,14 +2042,14 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 	{
 		case STREAMER_TYPE_OBJECT:
 		{
-			boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
 			if (o != core->getData()->objects.end())
 			{
 				Eigen::Vector3f position = o->second->position;
 				o->second->position = newpos;
-				for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+				for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 				{
-					boost::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
+					std::unordered_map<int, int>::iterator i = p->second.internalObjects.find(o->first);
 					if (i != p->second.internalObjects.end())
 					{
 						ompgdk::SetPlayerObjectPos(p->first, i->second, o->second->position[0], o->second->position[1], o->second->position[2]);
@@ -2065,15 +2064,15 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 				}
 				if (o->second->move)
 				{
-					o->second->move->duration = static_cast<int>((static_cast<float>(boost::geometry::distance(o->second->move->position.get<0>(), o->second->position) / o->second->move->speed) * 1000.0f));
-					o->second->move->position.get<1>() = o->second->position;
-					o->second->move->position.get<2>() = (o->second->move->position.get<0>() - o->second->position) / static_cast<float>(o->second->move->duration);
-					if ((o->second->move->rotation.get<0>().maxCoeff() + 1000.0f) > std::numeric_limits<float>::epsilon())
+					o->second->move->duration = static_cast<int>((static_cast<float>(boost::geometry::distance(std::get<0>(o->second->move->position), o->second->position) / o->second->move->speed) * 1000.0f));
+					std::get<1>(o->second->move->position) = o->second->position;
+					std::get<2>(o->second->move->position) = (std::get<0>(o->second->move->position) - o->second->position) / static_cast<float>(o->second->move->duration);
+					if ((std::get<0>(o->second->move->rotation).maxCoeff() + 1000.0f) > std::numeric_limits<float>::epsilon())
 					{
-						o->second->move->rotation.get<1>() = o->second->rotation;
-						o->second->move->rotation.get<2>() = (o->second->move->rotation.get<0>() - o->second->rotation) / static_cast<float>(o->second->move->duration);
+						std::get<1>(o->second->move->rotation) = o->second->rotation;
+						std::get<2>(o->second->move->rotation) = (std::get<0>(o->second->move->rotation) - o->second->rotation) / static_cast<float>(o->second->move->duration);
 					}
-					o->second->move->time = boost::chrono::steady_clock::now();
+					o->second->move->time = std::chrono::steady_clock::now();
 				}
 				return 1;
 			}
@@ -2081,7 +2080,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_PICKUP:
 		{
-			boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[2]));
 			if (p != core->getData()->pickups.end())
 			{
 				Eigen::Vector3f position = p->second->position;
@@ -2093,9 +2092,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 						core->getGrid()->removePickup(p->second, true);
 					}
 				}
-				for (boost::unordered_set<int>::const_iterator w = p->second->worlds.begin(); w != p->second->worlds.end(); ++w)
+				for (std::unordered_set<int>::const_iterator w = p->second->worlds.begin(); w != p->second->worlds.end(); ++w)
 				{
-					boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalPickups.find(std::make_pair(p->first, *w));
+					std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalPickups.find(std::make_pair(p->first, *w));
 					if (i != core->getData()->internalPickups.end())
 					{
 						ompgdk::DestroyPickup(i->second);
@@ -2108,7 +2107,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_CP:
 		{
-			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[2]));
 			if (c != core->getData()->checkpoints.end())
 			{
 				Eigen::Vector3f position = c->second->position;
@@ -2120,7 +2119,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 						core->getGrid()->removeCheckpoint(c->second, true);
 					}
 				}
-				for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+				for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 				{
 					if (p->second.visibleCheckpoint == c->first)
 					{
@@ -2135,7 +2134,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_RACE_CP:
 		{
-			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[2]));
 			if (r != core->getData()->raceCheckpoints.end())
 			{
 				Eigen::Vector3f position = r->second->position;
@@ -2147,7 +2146,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 						core->getGrid()->removeRaceCheckpoint(r->second, true);
 					}
 				}
-				for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+				for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 				{
 					if (p->second.visibleRaceCheckpoint == r->first)
 					{
@@ -2162,7 +2161,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_MAP_ICON:
 		{
-			boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[2]));
 			if (m != core->getData()->mapIcons.end())
 			{
 				Eigen::Vector3f position = m->second->position;
@@ -2174,9 +2173,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 						core->getGrid()->removeMapIcon(m->second, true);
 					}
 				}
-				for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+				for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 				{
-					boost::unordered_map<int, int>::iterator i = p->second.internalMapIcons.find(m->first);
+					std::unordered_map<int, int>::iterator i = p->second.internalMapIcons.find(m->first);
 					if (i != p->second.internalMapIcons.end())
 					{
 						ompgdk::RemovePlayerMapIcon(p->first, i->second);
@@ -2189,7 +2188,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_3D_TEXT_LABEL:
 		{
-			boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[2]));
 			if (t != core->getData()->textLabels.end())
 			{
 				Eigen::Vector3f position = t->second->position;
@@ -2201,9 +2200,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 						core->getGrid()->removeTextLabel(t->second, true);
 					}
 				}
-				for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+				for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 				{
-					boost::unordered_map<int, int>::iterator i = p->second.internalTextLabels.find(t->first);
+					std::unordered_map<int, int>::iterator i = p->second.internalTextLabels.find(t->first);
 					if (i != p->second.internalTextLabels.end())
 					{
 						ompgdk::DeletePlayer3DTextLabel(p->first, i->second);
@@ -2216,7 +2215,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_AREA:
 		{
-			boost::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(static_cast<int>(params[2]));
 			if (a != core->getData()->areas.end())
 			{
 				switch (a->second->type)
@@ -2244,7 +2243,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_ACTOR:
 		{
-			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
 			if (a != core->getData()->actors.end())
 			{
 				Eigen::Vector3f position = a->second->position;
@@ -2256,9 +2255,9 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemPos(AMX *amx, cell *params)
 						core->getGrid()->removeActor(a->second, true);
 					}
 				}
-				for (boost::unordered_set<int>::const_iterator w = a->second->worlds.begin(); w != a->second->worlds.end(); ++w)
+				for (std::unordered_set<int>::const_iterator w = a->second->worlds.begin(); w != a->second->worlds.end(); ++w)
 				{
-					boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
+					std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
 					if (i != core->getData()->internalActors.end())
 					{
 						ompgdk::DestroyActor(i->second);
@@ -2293,7 +2292,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemOffset(AMX *amx, cell *params)
 	{
 		case STREAMER_TYPE_OBJECT:
 		{
-			boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
 			if (o != core->getData()->objects.end())
 			{
 				positionOffset = o->second->positionOffset;
@@ -2303,7 +2302,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemOffset(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_PICKUP:
 		{
-			boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[2]));
 			if (p != core->getData()->pickups.end())
 			{
 				positionOffset = p->second->positionOffset;
@@ -2313,7 +2312,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemOffset(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_CP:
 		{
-			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[2]));
 			if (c != core->getData()->checkpoints.end())
 			{
 				positionOffset = c->second->positionOffset;
@@ -2323,7 +2322,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemOffset(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_RACE_CP:
 		{
-			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[2]));
 			if (r != core->getData()->raceCheckpoints.end())
 			{
 				positionOffset = r->second->positionOffset;
@@ -2333,7 +2332,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemOffset(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_MAP_ICON:
 		{
-			boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[2]));
 			if (m != core->getData()->mapIcons.end())
 			{
 				positionOffset = m->second->positionOffset;
@@ -2343,7 +2342,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemOffset(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_3D_TEXT_LABEL:
 		{
-			boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[2]));
 			if (t != core->getData()->textLabels.end())
 			{
 				positionOffset = t->second->positionOffset;
@@ -2353,7 +2352,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetItemOffset(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_ACTOR:
 		{
-			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
 			if (a != core->getData()->actors.end())
 			{
 				positionOffset = a->second->positionOffset;
@@ -2380,7 +2379,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemOffset(AMX *amx, cell *params)
 	{
 		case STREAMER_TYPE_OBJECT:
 		{
-			boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[2]));
 			if (o != core->getData()->objects.end())
 			{
 				o->second->positionOffset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
@@ -2390,7 +2389,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemOffset(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_PICKUP:
 		{
-			boost::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedPickup>::iterator p = core->getData()->pickups.find(static_cast<int>(params[2]));
 			if (p != core->getData()->pickups.end())
 			{
 				p->second->positionOffset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
@@ -2400,7 +2399,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemOffset(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_CP:
 		{
-			boost::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(static_cast<int>(params[2]));
 			if (c != core->getData()->checkpoints.end())
 			{
 				c->second->positionOffset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
@@ -2410,7 +2409,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemOffset(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_RACE_CP:
 		{
-			boost::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedRaceCheckpoint>::iterator r = core->getData()->raceCheckpoints.find(static_cast<int>(params[2]));
 			if (r != core->getData()->raceCheckpoints.end())
 			{
 				r->second->positionOffset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
@@ -2420,7 +2419,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemOffset(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_MAP_ICON:
 		{
-			boost::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(static_cast<int>(params[2]));
 			if (m != core->getData()->mapIcons.end())
 			{
 				m->second->positionOffset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
@@ -2430,7 +2429,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemOffset(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_3D_TEXT_LABEL:
 		{
-			boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[2]));
 			if (t != core->getData()->textLabels.end())
 			{
 				t->second->positionOffset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));
@@ -2440,7 +2439,7 @@ cell AMX_NATIVE_CALL Natives::Streamer_SetItemOffset(AMX *amx, cell *params)
 		}
 		case STREAMER_TYPE_ACTOR:
 		{
-			boost::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
+			std::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(static_cast<int>(params[2]));
 			if (a != core->getData()->actors.end())
 			{
 				a->second->positionOffset = Eigen::Vector3f(amx_ctof(params[3]), amx_ctof(params[4]), amx_ctof(params[5]));

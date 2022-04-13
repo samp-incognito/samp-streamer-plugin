@@ -28,14 +28,14 @@ public:
 	CellId cellId;
 	int references;
 
-	boost::unordered_map<int, Item::SharedActor> actors;
-	boost::unordered_map<int, Item::SharedArea> areas;
-	boost::unordered_map<int, Item::SharedCheckpoint> checkpoints;
-	boost::unordered_map<int, Item::SharedMapIcon> mapIcons;
-	boost::unordered_map<int, Item::SharedObject> objects;
-	boost::unordered_map<int, Item::SharedPickup> pickups;
-	boost::unordered_map<int, Item::SharedRaceCheckpoint> raceCheckpoints;
-	boost::unordered_map<int, Item::SharedTextLabel> textLabels;
+	std::unordered_map<int, Item::SharedActor> actors;
+	std::unordered_map<int, Item::SharedArea> areas;
+	std::unordered_map<int, Item::SharedCheckpoint> checkpoints;
+	std::unordered_map<int, Item::SharedMapIcon> mapIcons;
+	std::unordered_map<int, Item::SharedObject> objects;
+	std::unordered_map<int, Item::SharedPickup> pickups;
+	std::unordered_map<int, Item::SharedRaceCheckpoint> raceCheckpoints;
+	std::unordered_map<int, Item::SharedTextLabel> textLabels;
 };
 
 #endif

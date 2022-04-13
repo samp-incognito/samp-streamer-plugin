@@ -34,7 +34,7 @@ struct Player
 	int delayedRaceCheckpoint;
 	bool delayedUpdate;
 	bool delayedUpdateFreeze;
-	boost::chrono::steady_clock::time_point delayedUpdateTime;
+	std::chrono::steady_clock::time_point delayedUpdateTime;
 	int delayedUpdateType;
 	int interiorId;
 	std::size_t maxVisibleMapIcons;
@@ -65,14 +65,14 @@ struct Player
 	Item::Bimap<Item::SharedObject>::Type existingObjects;
 	Item::Bimap<Item::SharedTextLabel>::Type existingTextLabels;
 
-	boost::unordered_set<int> internalAreas;
-	boost::unordered_map<int, int> internalMapIcons;
-	boost::unordered_map<int, int> internalObjects;
-	boost::unordered_map<int, int> internalTextLabels;
+	std::unordered_set<int> internalAreas;
+	std::unordered_map<int, int> internalMapIcons;
+	std::unordered_map<int, int> internalObjects;
+	std::unordered_map<int, int> internalTextLabels;
 
-	boost::unordered_set<int> removedMapIcons;
-	boost::unordered_set<int> removedObjects;
-	boost::unordered_set<int> removedTextLabels;
+	std::unordered_set<int> removedMapIcons;
+	std::unordered_set<int> removedObjects;
+	std::unordered_set<int> removedTextLabels;
 
 	Identifier mapIconIdentifier;
 

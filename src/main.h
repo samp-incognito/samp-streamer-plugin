@@ -20,4 +20,34 @@
 #define INCLUDE_FILE_VERSION (0x295)
 #define PLUGIN_VERSION "2.9.5"
 
+#include <boost/bimap.hpp>
+#include <boost/bimap/multiset_of.hpp>
+#include <boost/bimap/unordered_set_of.hpp>
+#include <boost/geometry.hpp>
+#include <boost/geometry/geometries/geometries.hpp>
+
+#include <Eigen/Core>
+
+#include <algorithm>
+#include <bitset>
+#include <cmath>
+#include <functional>
+#include <limits>
+#include <map>
+#include <queue>
+#include <set>
+#include <sstream>
+#include <string>
+#include <vector>
+#include <utility>
+#include <unordered_set>
+#include <unordered_map>
+#include <memory>
+#include <chrono>
+#include <variant>
+#include <tuple>
+
+#include "common.h"
+#include "sampgdk.h"
+
 #endif

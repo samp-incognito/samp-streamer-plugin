@@ -57,14 +57,14 @@ namespace Item
 			int time;
 		};
 
-		boost::intrusive_ptr<Anim> anim;
+		std::shared_ptr<Anim> anim;
 
-		boost::unordered_set<int> areas;
+		std::unordered_set<int> areas;
 		std::vector<int> extras;
-		boost::unordered_map<int, std::vector<int> > extraExtras;
-		boost::unordered_set<int> interiors;
+		std::unordered_map<int, std::vector<int>> extraExtras;
+		std::unordered_set<int> interiors;
 		std::bitset<PLAYER_POOL_SIZE> players;
-		boost::unordered_set<int> worlds;
+		std::unordered_set<int> worlds;
 
 		static Identifier identifier;
 
@@ -86,16 +86,16 @@ namespace Item
 		bool spectateMode;
 		int type;
 
-		boost::variant<Polygon2d, Box2d, Box3d, Eigen::Vector2f, Eigen::Vector3f> position;
+		std::variant<Polygon2d, Box2d, Box3d, Eigen::Vector2f, Eigen::Vector3f> position;
 
 		struct Attach
 		{
 			Attach();
 
 			Eigen::Vector2f height;
-			boost::tuple<int, int, int> object;
+			std::tuple<int, int, int> object;
 			int player;
-			boost::variant<Polygon2d, Box2d, Box3d, Eigen::Vector2f, Eigen::Vector3f> position;
+			std::variant<Polygon2d, Box2d, Box3d, Eigen::Vector2f, Eigen::Vector3f> position;
 			Eigen::Vector3f positionOffset;
 			int references;
 			int vehicle;
@@ -103,14 +103,14 @@ namespace Item
 			EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 		};
 
-		boost::intrusive_ptr<Attach> attach;
+		std::shared_ptr<Attach> attach;
 
-		boost::unordered_set<int> areas;
+		std::unordered_set<int> areas;
 		std::vector<int> extras;
-		boost::unordered_map<int, std::vector<int> > extraExtras;
-		boost::unordered_set<int> interiors;
+		std::unordered_map<int, std::vector<int>> extraExtras;
+		std::unordered_set<int> interiors;
 		std::bitset<PLAYER_POOL_SIZE> players;
-		boost::unordered_set<int> worlds;
+		std::unordered_set<int> worlds;
 
 		static Identifier identifier;
 
@@ -135,12 +135,12 @@ namespace Item
 		bool streamCallbacks;
 		float streamDistance;
 
-		boost::unordered_set<int> areas;
+		std::unordered_set<int> areas;
 		std::vector<int> extras;
-		boost::unordered_map<int, std::vector<int> > extraExtras;
-		boost::unordered_set<int> interiors;
+		std::unordered_map<int, std::vector<int>> extraExtras;
+		std::unordered_set<int> interiors;
 		std::bitset<PLAYER_POOL_SIZE> players;
-		boost::unordered_set<int> worlds;
+		std::unordered_set<int> worlds;
 
 		static Identifier identifier;
 
@@ -167,12 +167,12 @@ namespace Item
 		int style;
 		int type;
 
-		boost::unordered_set<int> areas;
+		std::unordered_set<int> areas;
 		std::vector<int> extras;
-		boost::unordered_map<int, std::vector<int> > extraExtras;
-		boost::unordered_set<int> interiors;
+		std::unordered_map<int, std::vector<int>> extraExtras;
+		std::unordered_set<int> interiors;
 		std::bitset<PLAYER_POOL_SIZE> players;
-		boost::unordered_set<int> worlds;
+		std::unordered_set<int> worlds;
 
 		static Identifier identifier;
 
@@ -213,12 +213,12 @@ namespace Item
 			bool syncRotation;
 			int vehicle;
 
-			boost::unordered_set<int> worlds;
+			std::unordered_set<int> worlds;
 
 			EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 		};
 
-		boost::intrusive_ptr<Attach> attach;
+		std::shared_ptr<Attach> attach;
 
 		struct Material
 		{
@@ -233,7 +233,7 @@ namespace Item
 				std::string txdFileName;
 			};
 
-			boost::intrusive_ptr<Main> main;
+			std::shared_ptr<Main> main;
 
 			struct Text
 			{
@@ -250,33 +250,33 @@ namespace Item
 				int textAlignment;
 			};
 
-			boost::intrusive_ptr<Text> text;
+			std::shared_ptr<Text> text;
 		};
 
-		boost::unordered_map<int, Material> materials;
+		std::unordered_map<int, Material> materials;
 
 		struct Move
 		{
 			Move();
 
 			int duration;
-			boost::tuple<Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f> position;
+			std::tuple<Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f> position;
 			int references;
-			boost::tuple<Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f> rotation;
+			std::tuple<Eigen::Vector3f, Eigen::Vector3f, Eigen::Vector3f> rotation;
 			float speed;
-			boost::chrono::steady_clock::time_point time;
+			std::chrono::steady_clock::time_point time;
 
 			EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 		};
 
-		boost::intrusive_ptr<Move> move;
+		std::shared_ptr<Move> move;
 
-		boost::unordered_set<int> areas;
+		std::unordered_set<int> areas;
 		std::vector<int> extras;
-		boost::unordered_map<int, std::vector<int> > extraExtras;
-		boost::unordered_set<int> interiors;
+		std::unordered_map<int, std::vector<int>> extraExtras;
+		std::unordered_set<int> interiors;
 		std::bitset<PLAYER_POOL_SIZE> players;
-		boost::unordered_set<int> worlds;
+		std::unordered_set<int> worlds;
 
 		static Identifier identifier;
 
@@ -302,12 +302,12 @@ namespace Item
 		float streamDistance;
 		int type;
 
-		boost::unordered_set<int> areas;
+		std::unordered_set<int> areas;
 		std::vector<int> extras;
-		boost::unordered_map<int, std::vector<int> > extraExtras;
-		boost::unordered_set<int> interiors;
+		std::unordered_map<int, std::vector<int>> extraExtras;
+		std::unordered_set<int> interiors;
 		std::bitset<PLAYER_POOL_SIZE> players;
-		boost::unordered_set<int> worlds;
+		std::unordered_set<int> worlds;
 
 		static Identifier identifier;
 
@@ -334,12 +334,12 @@ namespace Item
 		float streamDistance;
 		int type;
 
-		boost::unordered_set<int> areas;
+		std::unordered_set<int> areas;
 		std::vector<int> extras;
-		boost::unordered_map<int, std::vector<int> > extraExtras;
-		boost::unordered_set<int> interiors;
+		std::unordered_map<int, std::vector<int>> extraExtras;
+		std::unordered_set<int> interiors;
 		std::bitset<PLAYER_POOL_SIZE> players;
-		boost::unordered_set<int> worlds;
+		std::unordered_set<int> worlds;
 
 		static Identifier identifier;
 
@@ -376,19 +376,19 @@ namespace Item
 			int references;
 			int vehicle;
 
-			boost::unordered_set<int> worlds;
+			std::unordered_set<int> worlds;
 
 			EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 		};
 
-		boost::intrusive_ptr<Attach> attach;
+		std::shared_ptr<Attach> attach;
 
-		boost::unordered_set<int> areas;
+		std::unordered_set<int> areas;
 		std::vector<int> extras;
-		boost::unordered_map<int, std::vector<int> > extraExtras;
-		boost::unordered_set<int> interiors;
+		std::unordered_map<int, std::vector<int>> extraExtras;
+		std::unordered_set<int> interiors;
 		std::bitset<PLAYER_POOL_SIZE> players;
-		boost::unordered_set<int> worlds;
+		std::unordered_set<int> worlds;
 
 		static Identifier identifier;
 
