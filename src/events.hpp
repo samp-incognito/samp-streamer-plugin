@@ -95,7 +95,7 @@ class PlayerEvents : public PlayerEventHandler, public Singleton<PlayerEvents>
 
 class ActorEvents : public ActorEventHandler, public Singleton<ActorEvents> 
 {
-	void onPlayerDamageActor(IPlayer& player, IActor& actor, float amount, unsigned weapon, BodyPart part) override
+	void onPlayerGiveDamageActor(IPlayer& player, IActor& actor, float amount, unsigned weapon, BodyPart part) override
 	{
 		int playerid = player.getID();
 		int actorid = actor.getID();

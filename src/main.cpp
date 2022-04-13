@@ -330,9 +330,13 @@ class OmpStreamerComponent final : public IComponent, public CoreEventHandler, p
 		{
 			pawnComponent = nullptr;
 			pAMXFunctions = nullptr;
-			omp_core->printLn("\n\n*** Streamer Plugin v%s by Incognito unloaded ***\n", PLUGIN_VERSION);
+			omp_core->printLn("\n\n*** Streamer Plugin v%s by Incognito unloaded ***\n\n", PLUGIN_VERSION);
 			core.reset();
 		}
+	}
+
+	void reset() override
+	{
 	}
 
 	void free() override
