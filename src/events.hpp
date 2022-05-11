@@ -24,7 +24,7 @@
 
 class PlayerEvents : public PlayerEventHandler, public Singleton<PlayerEvents>
 {
-	void onConnect(IPlayer& player) override
+	void onPlayerConnect(IPlayer& player) override
 	{
 		int playerid = player.getID();
 		if (playerid >= 0 && playerid < PLAYER_POOL_SIZE)
@@ -38,7 +38,7 @@ class PlayerEvents : public PlayerEventHandler, public Singleton<PlayerEvents>
 		}
 	}
 
-	void onSpawn(IPlayer& player) override
+	void onPlayerSpawn(IPlayer& player) override
 	{
 		int playerid = player.getID();
 		std::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
@@ -48,13 +48,13 @@ class PlayerEvents : public PlayerEventHandler, public Singleton<PlayerEvents>
 		}
 	}
 
-	void onDisconnect(IPlayer& player, PeerDisconnectReason reason) override
+	void onPlayerDisconnect(IPlayer& player, PeerDisconnectReason reason) override
 	{
 		int playerid = player.getID();
 		core->getData()->players.erase(playerid);
 	}
 
-	bool onShotPlayerObject(IPlayer& player, IPlayerObject& target, const PlayerBulletData& bulletData) override
+	bool onPlayerShotPlayerObject(IPlayer& player, IPlayerObject& target, const PlayerBulletData& bulletData) override
 	{
 		int playerid = player.getID();
 		bool retVal = true;
@@ -95,7 +95,7 @@ class PlayerEvents : public PlayerEventHandler, public Singleton<PlayerEvents>
 
 class ActorEvents : public ActorEventHandler, public Singleton<ActorEvents> 
 {
-	void onPlayerGiveDamageActor(IPlayer& player, IActor& actor, float amount, unsigned weapon, BodyPart part) override
+    void onPlayerGiveDamageActor(IPlayer& player, IActor& actor, float amount, unsigned weapon, BodyPart part) override
 	{
 		int playerid = player.getID();
 		int actorid = actor.getID();
