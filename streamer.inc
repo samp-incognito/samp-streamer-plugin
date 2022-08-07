@@ -22,30 +22,47 @@
 #include <a_samp>
 
 // Definitions
+#if defined NO_TAGS
+	#define __TAG(%0) _
+#elseif defined STRONG_TAGS
+	#define __TAG(%0) T_%0
+#else // if defined WEAK_TAGS
+	#define __TAG(%0) t_%0
+	#define WEAK_TAGS
+#endif
 
-#define STREAMER_TYPE_OBJECT (0)
-#define STREAMER_TYPE_PICKUP (1)
-#define STREAMER_TYPE_CP (2)
-#define STREAMER_TYPE_RACE_CP (3)
-#define STREAMER_TYPE_MAP_ICON (4)
-#define STREAMER_TYPE_3D_TEXT_LABEL (5)
-#define STREAMER_TYPE_AREA (6)
-#define STREAMER_TYPE_ACTOR (7)
+#define STREAMER_TYPE: __TAG(STREAMER_TYPE):
+enum STREAMER_TYPE:STREAMER_MAX_TYPES
+{
+	STREAMER_TYPE_ANY = -1,
+	STREAMER_TYPE_OBJECT,
+	STREAMER_TYPE_PICKUP,
+	STREAMER_TYPE_CP,
+	STREAMER_TYPE_RACE_CP,
+	STREAMER_TYPE_MAP_ICON,
+	STREAMER_TYPE_3D_TEXT_LABEL,
+	STREAMER_TYPE_AREA,
+	STREAMER_TYPE_ACTOR
+}
 
-#define STREAMER_AREA_TYPE_CIRCLE (0)
-#define STREAMER_AREA_TYPE_CYLINDER (1)
-#define STREAMER_AREA_TYPE_SPHERE (2)
-#define STREAMER_AREA_TYPE_RECTANGLE (3)
-#define STREAMER_AREA_TYPE_CUBOID (4)
-#define STREAMER_AREA_TYPE_POLYGON (5)
+#define STREAMER_AREA_TYPE: __TAG(STREAMER_AREA_TYPE):
+enum STREAMER_AREA_TYPE:STREAMER_MAX_AREA_TYPES
+{
+	STREAMER_AREA_TYPE_CIRCLE,
+	STREAMER_AREA_TYPE_CYLINDER,
+	STREAMER_AREA_TYPE_SPHERE,
+	STREAMER_AREA_TYPE_RECTANGLE,
+	STREAMER_AREA_TYPE_CUBOID,
+	STREAMER_AREA_TYPE_POLYGON
+}
 
-#define STREAMER_OBJECT_TYPE_GLOBAL (0)
-#define STREAMER_OBJECT_TYPE_PLAYER (1)
-#define STREAMER_OBJECT_TYPE_DYNAMIC (2)
-
-#define STREAMER_MAX_TYPES (8)
-#define STREAMER_MAX_AREA_TYPES (6)
-#define STREAMER_MAX_OBJECT_TYPES (3)
+#define STREAMER_OBJECT_TYPE: __TAG(STREAMER_OBJECT_TYPE):
+enum STREAMER_OBJECT_TYPE:STREAMER_MAX_OBJECT_TYPES
+{
+	STREAMER_OBJECT_TYPE_GLOBAL,
+	STREAMER_OBJECT_TYPE_PLAYER,
+	STREAMER_OBJECT_TYPE_DYNAMIC
+}
 
 #define INVALID_STREAMER_ID (0)
 
@@ -180,95 +197,113 @@ enum
 
 #define E_STREAMER_CUSTOM(%0) ((%0) | 0x40000000 & ~0x80000000)
 
+// Tag support.
+
+#if !defined OBJECT_MATERIAL_SIZE
+	#define OBJECT_MATERIAL_SIZE: _:
+#endif
+
+#if !defined MAPICON
+	#define MAPICON: _:
+#endif
+
+#if !defined OBJECT_MATERIAL_TEXT_ALIGN
+	#define OBJECT_MATERIAL_TEXT_ALIGN: _:
+#endif
+
+#if !defined CP_TYPE
+	#define CP_TYPE: _:
+#endif
+
 // Natives (Settings)
 
 native Streamer_GetTickRate();
 native Streamer_SetTickRate(rate);
 native Streamer_GetPlayerTickRate(playerid);
 native Streamer_SetPlayerTickRate(playerid, rate);
-native Streamer_ToggleChunkStream(toggle);
-native Streamer_IsToggleChunkStream();
-native Streamer_GetChunkTickRate(type, playerid = -1);
-native Streamer_SetChunkTickRate(type, rate, playerid = -1);
-native Streamer_GetChunkSize(type);
-native Streamer_SetChunkSize(type, size);
-native Streamer_GetMaxItems(type);
-native Streamer_SetMaxItems(type, items);
-native Streamer_GetVisibleItems(type, playerid = -1);
-native Streamer_SetVisibleItems(type, items, playerid = -1);
-native Streamer_GetRadiusMultiplier(type, &Float:multiplier, playerid = -1);
-native Streamer_SetRadiusMultiplier(type, Float:multiplier, playerid = -1);
-native Streamer_GetTypePriority(types[], maxtypes = sizeof types);
-native Streamer_SetTypePriority(const types[], maxtypes = sizeof types);
+native Streamer_ToggleChunkStream(bool:toggle);
+native bool:Streamer_IsToggleChunkStream();
+native Streamer_GetChunkTickRate(STREAMER_TYPE:type, playerid = -1);
+native Streamer_SetChunkTickRate(STREAMER_TYPE:type, rate, playerid = -1);
+native Streamer_GetChunkSize(STREAMER_TYPE:type);
+native Streamer_SetChunkSize(STREAMER_TYPE:type, size);
+native Streamer_GetMaxItems(STREAMER_TYPE:type);
+native Streamer_SetMaxItems(STREAMER_TYPE:type, items);
+native Streamer_GetVisibleItems(STREAMER_TYPE:type, playerid = -1);
+native Streamer_SetVisibleItems(STREAMER_TYPE:type, items, playerid = -1);
+native Streamer_GetRadiusMultiplier(STREAMER_TYPE:type, &Float:multiplier, playerid = -1);
+native Streamer_SetRadiusMultiplier(STREAMER_TYPE:type, Float:multiplier, playerid = -1);
+native Streamer_GetTypePriority(STREAMER_TYPE:types[], maxtypes = sizeof types);
+native Streamer_SetTypePriority(const STREAMER_TYPE:types[], maxtypes = sizeof types);
 native Streamer_GetCellDistance(&Float:distance);
 native Streamer_SetCellDistance(Float:distance);
 native Streamer_GetCellSize(&Float:size);
 native Streamer_SetCellSize(Float:size);
-native Streamer_ToggleItemStatic(type, STREAMER_ALL_TAGS:id, toggle);
-native Streamer_IsToggleItemStatic(type, STREAMER_ALL_TAGS:id);
-native Streamer_ToggleItemInvAreas(type, STREAMER_ALL_TAGS:id, toggle);
-native Streamer_IsToggleItemInvAreas(type, STREAMER_ALL_TAGS:id);
-native Streamer_ToggleItemCallbacks(type, STREAMER_ALL_TAGS:id, toggle);
-native Streamer_IsToggleItemCallbacks(type, STREAMER_ALL_TAGS:id);
-native Streamer_ToggleErrorCallback(toggle);
-native Streamer_IsToggleErrorCallback();
-native Streamer_AmxUnloadDestroyItems(toggle);
+native Streamer_ToggleItemStatic(STREAMER_TYPE:type, STREAMER_ALL_TAGS:id, bool:toggle);
+native bool:Streamer_IsToggleItemStatic(STREAMER_TYPE:type, STREAMER_ALL_TAGS:id);
+native Streamer_ToggleItemInvAreas(STREAMER_TYPE:type, STREAMER_ALL_TAGS:id, bool:toggle);
+native bool:Streamer_IsToggleItemInvAreas(STREAMER_TYPE:type, STREAMER_ALL_TAGS:id);
+native Streamer_ToggleItemCallbacks(STREAMER_TYPE:type, STREAMER_ALL_TAGS:id, bool:toggle);
+native bool:Streamer_IsToggleItemCallbacks(STREAMER_TYPE:type, STREAMER_ALL_TAGS:id);
+native Streamer_ToggleErrorCallback(bool:toggle);
+native bool:Streamer_IsToggleErrorCallback();
+native Streamer_AmxUnloadDestroyItems(bool:toggle);
 
 // Natives (Updates)
 
 native Streamer_ProcessActiveItems();
-native Streamer_ToggleIdleUpdate(playerid, toggle);
-native Streamer_IsToggleIdleUpdate(playerid);
-native Streamer_ToggleCameraUpdate(playerid, toggle);
-native Streamer_IsToggleCameraUpdate(playerid);
-native Streamer_ToggleItemUpdate(playerid, type, toggle);
-native Streamer_IsToggleItemUpdate(playerid, type);
+native Streamer_ToggleIdleUpdate(playerid, bool:toggle);
+native bool:Streamer_IsToggleIdleUpdate(playerid);
+native Streamer_ToggleCameraUpdate(playerid, bool:toggle);
+native bool:Streamer_IsToggleCameraUpdate(playerid);
+native Streamer_ToggleItemUpdate(playerid, STREAMER_TYPE:type, bool:toggle);
+native bool:Streamer_IsToggleItemUpdate(playerid, STREAMER_TYPE:type);
 native Streamer_GetLastUpdateTime(&Float:time);
-native Streamer_Update(playerid, type = -1);
-native Streamer_UpdateEx(playerid, Float:x, Float:y, Float:z, worldid = -1, interiorid = -1, type = -1, compensatedtime = -1, freezeplayer = 1);
+native Streamer_Update(playerid, STREAMER_TYPE:type = STREAMER_TYPE_ANY);
+native Streamer_UpdateEx(playerid, Float:x, Float:y, Float:z, worldid = -1, interiorid = -1, STREAMER_TYPE:type = STREAMER_TYPE_ANY, compensatedtime = -1, bool:freezeplayer = true);
 
 // Natives (Data Manipulation)
 
-native Streamer_GetFloatData(type, STREAMER_ALL_TAGS:id, data, &Float:result);
-native Streamer_SetFloatData(type, STREAMER_ALL_TAGS:id, data, Float:value);
-native Streamer_GetIntData(type, STREAMER_ALL_TAGS:id, data);
-native Streamer_SetIntData(type, STREAMER_ALL_TAGS:id, data, value);
-native Streamer_RemoveIntData(type, STREAMER_ALL_TAGS:id, data);
-native Streamer_HasIntData(type, STREAMER_ALL_TAGS:id, data);
-native Streamer_GetArrayData(type, STREAMER_ALL_TAGS:id, data, dest[], maxdest = sizeof dest);
-native Streamer_SetArrayData(type, STREAMER_ALL_TAGS:id, data, const src[], maxsrc = sizeof src);
-native Streamer_IsInArrayData(type, STREAMER_ALL_TAGS:id, data, value);
-native Streamer_AppendArrayData(type, STREAMER_ALL_TAGS:id, data, value);
-native Streamer_RemoveArrayData(type, STREAMER_ALL_TAGS:id, data, value);
-native Streamer_HasArrayData(type, STREAMER_ALL_TAGS:id, data);
-native Streamer_GetArrayDataLength(type, STREAMER_ALL_TAGS:id, data);
-native Streamer_GetUpperBound(type);
+native bool:Streamer_GetFloatData(STREAMER_TYPE:type, STREAMER_ALL_TAGS:id, data, &Float:result);
+native bool:Streamer_SetFloatData(STREAMER_TYPE:type, STREAMER_ALL_TAGS:id, data, Float:value);
+native Streamer_GetIntData(STREAMER_TYPE:type, STREAMER_ALL_TAGS:id, data);
+native bool:Streamer_SetIntData(STREAMER_TYPE:type, STREAMER_ALL_TAGS:id, data, value);
+native bool:Streamer_RemoveIntData(STREAMER_TYPE:type, STREAMER_ALL_TAGS:id, data);
+native bool:Streamer_HasIntData(STREAMER_TYPE:type, STREAMER_ALL_TAGS:id, data);
+native bool:Streamer_GetArrayData(STREAMER_TYPE:type, STREAMER_ALL_TAGS:id, data, dest[], maxdest = sizeof dest);
+native bool:Streamer_SetArrayData(STREAMER_TYPE:type, STREAMER_ALL_TAGS:id, data, const src[], maxsrc = sizeof src);
+native bool:Streamer_IsInArrayData(STREAMER_TYPE:type, STREAMER_ALL_TAGS:id, data, value);
+native bool:Streamer_AppendArrayData(STREAMER_TYPE:type, STREAMER_ALL_TAGS:id, data, value);
+native bool:Streamer_RemoveArrayData(STREAMER_TYPE:type, STREAMER_ALL_TAGS:id, data, value);
+native bool:Streamer_HasArrayData(STREAMER_TYPE:type, STREAMER_ALL_TAGS:id, data);
+native Streamer_GetArrayDataLength(STREAMER_TYPE:type, STREAMER_ALL_TAGS:id, data);
+native Streamer_GetUpperBound(STREAMER_TYPE:type);
 
 // Natives (Miscellaneous)
 
-native Streamer_GetDistanceToItem(Float:x, Float:y, Float:z, type, STREAMER_ALL_TAGS:id, &Float:distance, dimensions = 3);
-native Streamer_ToggleItem(playerid, type, STREAMER_ALL_TAGS:id, toggle);
-native Streamer_IsToggleItem(playerid, type, STREAMER_ALL_TAGS:id);
-native Streamer_ToggleAllItems(playerid, type, toggle, const exceptions[] = { -1 }, maxexceptions = sizeof exceptions);
-native Streamer_GetItemInternalID(playerid, type, STREAMER_ALL_TAGS:streamerid);
-native Streamer_GetItemStreamerID(playerid, type, internalid);
-native Streamer_IsItemVisible(playerid, type, STREAMER_ALL_TAGS:id);
-native Streamer_DestroyAllVisibleItems(playerid, type, serverwide = 1);
-native Streamer_CountVisibleItems(playerid, type, serverwide = 1);
-native Streamer_DestroyAllItems(type, serverwide = 1);
-native Streamer_CountItems(type, serverwide = 1);
-native Streamer_GetNearbyItems(Float:x, Float:y, Float:z, type, STREAMER_ALL_TAGS:items[], maxitems = sizeof items, Float:range = 300.0, worldid = -1);
-native Streamer_GetAllVisibleItems(playerid, type, STREAMER_ALL_TAGS:items[], maxitems = sizeof items);
-native Streamer_GetItemPos(type, STREAMER_ALL_TAGS:id, &Float:x, &Float:y, &Float:z);
-native Streamer_SetItemPos(type, STREAMER_ALL_TAGS:id, Float:x, Float:y, Float:z);
-native Streamer_GetItemOffset(type, STREAMER_ALL_TAGS:id, &Float:x, &Float:y, &Float:z);
-native Streamer_SetItemOffset(type, STREAMER_ALL_TAGS:id, Float:x, Float:y, Float:z);
+native Streamer_GetDistanceToItem(Float:x, Float:y, Float:z, STREAMER_TYPE:type, STREAMER_ALL_TAGS:id, &Float:distance, dimensions = 3);
+native Streamer_ToggleItem(playerid, STREAMER_TYPE:type, STREAMER_ALL_TAGS:id, bool:toggle);
+native bool:Streamer_IsToggleItem(playerid, STREAMER_TYPE:type, STREAMER_ALL_TAGS:id);
+native Streamer_ToggleAllItems(playerid, STREAMER_TYPE:type, bool:toggle, const exceptions[] = { -1 }, maxexceptions = sizeof exceptions);
+native Streamer_GetItemInternalID(playerid, STREAMER_TYPE:type, STREAMER_ALL_TAGS:streamerid);
+native Streamer_GetItemStreamerID(playerid, STREAMER_TYPE:type, internalid);
+native bool:Streamer_IsItemVisible(playerid, STREAMER_TYPE:type, STREAMER_ALL_TAGS:id);
+native Streamer_DestroyAllVisibleItems(playerid, STREAMER_TYPE:type, bool:serverwide = true);
+native Streamer_CountVisibleItems(playerid, STREAMER_TYPE:type, bool:serverwide = true);
+native Streamer_DestroyAllItems(STREAMER_TYPE:type, bool:serverwide = true);
+native Streamer_CountItems(STREAMER_TYPE:type, bool:serverwide = true);
+native Streamer_GetNearbyItems(Float:x, Float:y, Float:z, STREAMER_TYPE:type, STREAMER_ALL_TAGS:items[], maxitems = sizeof items, Float:range = 300.0, worldid = -1);
+native Streamer_GetAllVisibleItems(playerid, STREAMER_TYPE:type, STREAMER_ALL_TAGS:items[], maxitems = sizeof items);
+native Streamer_GetItemPos(STREAMER_TYPE:type, STREAMER_ALL_TAGS:id, &Float:x, &Float:y, &Float:z);
+native Streamer_SetItemPos(STREAMER_TYPE:type, STREAMER_ALL_TAGS:id, Float:x, Float:y, Float:z);
+native Streamer_GetItemOffset(STREAMER_TYPE:type, STREAMER_ALL_TAGS:id, &Float:x, &Float:y, &Float:z);
+native Streamer_SetItemOffset(STREAMER_TYPE:type, STREAMER_ALL_TAGS:id, Float:x, Float:y, Float:z);
 
 // Natives (Objects)
 
 native STREAMER_TAG_OBJECT:CreateDynamicObject(modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Float:rz, worldid = -1, interiorid = -1, playerid = -1, Float:streamdistance = STREAMER_OBJECT_SD, Float:drawdistance = STREAMER_OBJECT_DD, STREAMER_TAG_AREA:areaid = STREAMER_TAG_AREA:-1, priority = 0);
 native DestroyDynamicObject(STREAMER_TAG_OBJECT:objectid);
-native IsValidDynamicObject(STREAMER_TAG_OBJECT:objectid);
+native bool:IsValidDynamicObject(STREAMER_TAG_OBJECT:objectid);
 native GetDynamicObjectPos(STREAMER_TAG_OBJECT:objectid, &Float:x, &Float:y, &Float:z);
 native SetDynamicObjectPos(STREAMER_TAG_OBJECT:objectid, Float:x, Float:y, Float:z);
 native GetDynamicObjectRot(STREAMER_TAG_OBJECT:objectid, &Float:rx, &Float:ry, &Float:rz);
@@ -277,55 +312,55 @@ native GetDynamicObjectNoCameraCol(STREAMER_TAG_OBJECT:objectid);
 native SetDynamicObjectNoCameraCol(STREAMER_TAG_OBJECT:objectid);
 native MoveDynamicObject(STREAMER_TAG_OBJECT:objectid, Float:x, Float:y, Float:z, Float:speed, Float:rx = -1000.0, Float:ry = -1000.0, Float:rz = -1000.0);
 native StopDynamicObject(STREAMER_TAG_OBJECT:objectid);
-native IsDynamicObjectMoving(STREAMER_TAG_OBJECT:objectid);
+native bool:IsDynamicObjectMoving(STREAMER_TAG_OBJECT:objectid);
 native AttachCameraToDynamicObject(playerid, STREAMER_TAG_OBJECT:objectid);
-native AttachDynamicObjectToObject(STREAMER_TAG_OBJECT:objectid, attachtoid, Float:offsetx, Float:offsety, Float:offsetz, Float:rx, Float:ry, Float:rz, syncrotation = 1);
+native AttachDynamicObjectToObject(STREAMER_TAG_OBJECT:objectid, attachtoid, Float:offsetx, Float:offsety, Float:offsetz, Float:rx, Float:ry, Float:rz, bool:syncrotation = true);
 native AttachDynamicObjectToPlayer(STREAMER_TAG_OBJECT:objectid, playerid, Float:offsetx, Float:offsety, Float:offsetz, Float:rx, Float:ry, Float:rz);
 native AttachDynamicObjectToVehicle(STREAMER_TAG_OBJECT:objectid, vehicleid, Float:offsetx, Float:offsety, Float:offsetz, Float:rx, Float:ry, Float:rz);
 native EditDynamicObject(playerid, STREAMER_TAG_OBJECT:objectid);
-native IsDynamicObjectMaterialUsed(STREAMER_TAG_OBJECT:objectid, materialindex);
+native bool:IsDynamicObjectMaterialUsed(STREAMER_TAG_OBJECT:objectid, materialindex);
 native RemoveDynamicObjectMaterial(STREAMER_TAG_OBJECT:objectid, materialindex);
 native GetDynamicObjectMaterial(STREAMER_TAG_OBJECT:objectid, materialindex, &modelid, txdname[], texturename[], &materialcolor, maxtxdname = sizeof txdname, maxtexturename = sizeof texturename);
-native SetDynamicObjectMaterial(STREAMER_TAG_OBJECT:objectid, materialindex, modelid, const txdname[], const texturename[], materialcolor = 0);
-native IsDynamicObjectMaterialTextUsed(STREAMER_TAG_OBJECT:objectid, materialindex);
+native SetDynamicObjectMaterial(STREAMER_TAG_OBJECT:objectid, materialindex, modelid, const txdname[], const texturename[], materialcolor = 0x00000000);
+native bool:IsDynamicObjectMaterialTextUsed(STREAMER_TAG_OBJECT:objectid, materialindex);
 native RemoveDynamicObjectMaterialText(STREAMER_TAG_OBJECT:objectid, materialindex);
-native GetDynamicObjectMaterialText(STREAMER_TAG_OBJECT:objectid, materialindex, text[], &materialsize, fontface[], &fontsize, &bold, &fontcolor, &backcolor, &textalignment, maxtext = sizeof text, maxfontface = sizeof fontface);
-native SetDynamicObjectMaterialText(STREAMER_TAG_OBJECT:objectid, materialindex, const text[], materialsize = OBJECT_MATERIAL_SIZE_256x128, const fontface[] = "Arial", fontsize = 24, bold = 1, fontcolor = 0xFFFFFFFF, backcolor = 0, textalignment = 0);
+native GetDynamicObjectMaterialText(STREAMER_TAG_OBJECT:objectid, materialindex, text[], &OBJECT_MATERIAL_SIZE:materialsize, fontface[], &fontsize, &bold, &fontcolor, &backcolor, &OBJECT_MATERIAL_TEXT_ALIGN:textalignment, maxtext = sizeof text, maxfontface = sizeof fontface);
+native SetDynamicObjectMaterialText(STREAMER_TAG_OBJECT:objectid, materialindex, const text[], OBJECT_MATERIAL_SIZE:materialsize = OBJECT_MATERIAL_SIZE_256x128, const fontface[] = "Arial", fontsize = 24, bool:bold = true, fontcolor = 0xFFFFFFFF, backcolor = 0x00000000, OBJECT_MATERIAL_TEXT_ALIGN:textalignment = OBJECT_MATERIAL_TEXT_ALIGN_LEFT);
 native STREAMER_TAG_OBJECT:GetPlayerCameraTargetDynObject(playerid);
 
 // Natives (Pickups)
 
 native STREAMER_TAG_PICKUP:CreateDynamicPickup(modelid, type, Float:x, Float:y, Float:z, worldid = -1, interiorid = -1, playerid = -1, Float:streamdistance = STREAMER_PICKUP_SD, STREAMER_TAG_AREA:areaid = STREAMER_TAG_AREA:-1, priority = 0);
 native DestroyDynamicPickup(STREAMER_TAG_PICKUP:pickupid);
-native IsValidDynamicPickup(STREAMER_TAG_PICKUP:pickupid);
+native bool:IsValidDynamicPickup(STREAMER_TAG_PICKUP:pickupid);
 
 // Natives (Checkpoints)
 
 native STREAMER_TAG_CP:CreateDynamicCP(Float:x, Float:y, Float:z, Float:size, worldid = -1, interiorid = -1, playerid = -1, Float:streamdistance = STREAMER_CP_SD, STREAMER_TAG_AREA:areaid = STREAMER_TAG_AREA:-1, priority = 0);
 native DestroyDynamicCP(STREAMER_TAG_CP:checkpointid);
-native IsValidDynamicCP(STREAMER_TAG_CP:checkpointid);
-native IsPlayerInDynamicCP(playerid, STREAMER_TAG_CP:checkpointid);
+native bool:IsValidDynamicCP(STREAMER_TAG_CP:checkpointid);
+native bool:IsPlayerInDynamicCP(playerid, STREAMER_TAG_CP:checkpointid);
 native STREAMER_TAG_CP:GetPlayerVisibleDynamicCP(playerid);
 
 // Natives (Race Checkpoints)
 
-native STREAMER_TAG_RACE_CP:CreateDynamicRaceCP(type, Float:x, Float:y, Float:z, Float:nextx, Float:nexty, Float:nextz, Float:size, worldid = -1, interiorid = -1, playerid = -1, Float:streamdistance = STREAMER_RACE_CP_SD, STREAMER_TAG_AREA:areaid = STREAMER_TAG_AREA:-1, priority = 0);
+native STREAMER_TAG_RACE_CP:CreateDynamicRaceCP(CP_TYPE:type, Float:x, Float:y, Float:z, Float:nextx, Float:nexty, Float:nextz, Float:size, worldid = -1, interiorid = -1, playerid = -1, Float:streamdistance = STREAMER_RACE_CP_SD, STREAMER_TAG_AREA:areaid = STREAMER_TAG_AREA:-1, priority = 0);
 native DestroyDynamicRaceCP(STREAMER_TAG_RACE_CP:checkpointid);
-native IsValidDynamicRaceCP(STREAMER_TAG_RACE_CP:checkpointid);
-native IsPlayerInDynamicRaceCP(playerid, STREAMER_TAG_RACE_CP:checkpointid);
+native bool:IsValidDynamicRaceCP(STREAMER_TAG_RACE_CP:checkpointid);
+native bool:IsPlayerInDynamicRaceCP(playerid, STREAMER_TAG_RACE_CP:checkpointid);
 native STREAMER_TAG_RACE_CP:GetPlayerVisibleDynamicRaceCP(playerid);
 
 // Natives (Map Icons)
 
-native STREAMER_TAG_MAP_ICON:CreateDynamicMapIcon(Float:x, Float:y, Float:z, type, color, worldid = -1, interiorid = -1, playerid = -1, Float:streamdistance = STREAMER_MAP_ICON_SD, style = MAPICON_LOCAL, STREAMER_TAG_AREA:areaid = STREAMER_TAG_AREA:-1, priority = 0);
+native STREAMER_TAG_MAP_ICON:CreateDynamicMapIcon(Float:x, Float:y, Float:z, type, color, worldid = -1, interiorid = -1, playerid = -1, Float:streamdistance = STREAMER_MAP_ICON_SD, MAPICON:style = MAPICON_LOCAL, STREAMER_TAG_AREA:areaid = STREAMER_TAG_AREA:-1, priority = 0);
 native DestroyDynamicMapIcon(STREAMER_TAG_MAP_ICON:iconid);
-native IsValidDynamicMapIcon(STREAMER_TAG_MAP_ICON:iconid);
+native bool:IsValidDynamicMapIcon(STREAMER_TAG_MAP_ICON:iconid);
 
 // Natives (3D Text Labels)
 
-native STREAMER_TAG_3D_TEXT_LABEL:CreateDynamic3DTextLabel(const text[], color, Float:x, Float:y, Float:z, Float:drawdistance, attachedplayer = INVALID_PLAYER_ID, attachedvehicle = INVALID_VEHICLE_ID, testlos = 0, worldid = -1, interiorid = -1, playerid = -1, Float:streamdistance = STREAMER_3D_TEXT_LABEL_SD, STREAMER_TAG_AREA:areaid = STREAMER_TAG_AREA:-1, priority = 0);
+native STREAMER_TAG_3D_TEXT_LABEL:CreateDynamic3DTextLabel(const text[], color, Float:x, Float:y, Float:z, Float:drawdistance, attachedplayer = INVALID_PLAYER_ID, attachedvehicle = INVALID_VEHICLE_ID, bool:testlos = false, worldid = -1, interiorid = -1, playerid = -1, Float:streamdistance = STREAMER_3D_TEXT_LABEL_SD, STREAMER_TAG_AREA:areaid = STREAMER_TAG_AREA:-1, priority = 0);
 native DestroyDynamic3DTextLabel(STREAMER_TAG_3D_TEXT_LABEL:id);
-native IsValidDynamic3DTextLabel(STREAMER_TAG_3D_TEXT_LABEL:id);
+native bool:IsValidDynamic3DTextLabel(STREAMER_TAG_3D_TEXT_LABEL:id);
 native GetDynamic3DTextLabelText(STREAMER_TAG_3D_TEXT_LABEL:id, text[], maxtext = sizeof text);
 native UpdateDynamic3DTextLabelText(STREAMER_TAG_3D_TEXT_LABEL:id, color, const text[]);
 
@@ -339,36 +374,36 @@ native STREAMER_TAG_AREA:CreateDynamicCuboid(Float:minx, Float:miny, Float:minz,
 native STREAMER_TAG_AREA:CreateDynamicCube(Float:minx, Float:miny, Float:minz, Float:maxx, Float:maxy, Float:maxz, worldid = -1, interiorid = -1, playerid = -1, priority = 0);
 native STREAMER_TAG_AREA:CreateDynamicPolygon(const Float:points[], Float:minz = -FLOAT_INFINITY, Float:maxz = FLOAT_INFINITY, maxpoints = sizeof points, worldid = -1, interiorid = -1, playerid = -1, priority = 0);
 native DestroyDynamicArea(STREAMER_TAG_AREA:areaid);
-native IsValidDynamicArea(STREAMER_TAG_AREA:areaid);
-native GetDynamicAreaType(STREAMER_TAG_AREA:areaid);
+native bool:IsValidDynamicArea(STREAMER_TAG_AREA:areaid);
+native STREAMER_AREA_TYPE:GetDynamicAreaType(STREAMER_TAG_AREA:areaid);
 native GetDynamicPolygonPoints(STREAMER_TAG_AREA:areaid, Float:points[], maxpoints = sizeof points);
 native GetDynamicPolygonNumberPoints(STREAMER_TAG_AREA:areaid);
-native IsPlayerInDynamicArea(playerid, STREAMER_TAG_AREA:areaid, recheck = 0);
-native IsPlayerInAnyDynamicArea(playerid, recheck = 0);
-native IsAnyPlayerInDynamicArea(STREAMER_TAG_AREA:areaid, recheck = 0);
-native IsAnyPlayerInAnyDynamicArea(recheck = 0);
+native bool:IsPlayerInDynamicArea(playerid, STREAMER_TAG_AREA:areaid, bool:recheck = false);
+native bool:IsPlayerInAnyDynamicArea(playerid, bool:recheck = false);
+native bool:IsAnyPlayerInDynamicArea(STREAMER_TAG_AREA:areaid, bool:recheck = false);
+native bool:IsAnyPlayerInAnyDynamicArea(bool:recheck = false);
 native GetPlayerDynamicAreas(playerid, STREAMER_TAG_AREA:areas[], maxareas = sizeof areas);
 native GetPlayerNumberDynamicAreas(playerid);
-native IsPointInDynamicArea(STREAMER_TAG_AREA:areaid, Float:x, Float:y, Float:z);
-native IsPointInAnyDynamicArea(Float:x, Float:y, Float:z);
-native IsLineInDynamicArea(STREAMER_TAG_AREA:areaid, Float:x1, Float:y1, Float:z1, Float:x2, Float:y2, Float:z2);
-native IsLineInAnyDynamicArea(Float:x1, Float:y1, Float:z1, Float:x2, Float:y2, Float:z2);
+native bool:IsPointInDynamicArea(STREAMER_TAG_AREA:areaid, Float:x, Float:y, Float:z);
+native bool:IsPointInAnyDynamicArea(Float:x, Float:y, Float:z);
+native bool:IsLineInDynamicArea(STREAMER_TAG_AREA:areaid, Float:x1, Float:y1, Float:z1, Float:x2, Float:y2, Float:z2);
+native bool:IsLineInAnyDynamicArea(Float:x1, Float:y1, Float:z1, Float:x2, Float:y2, Float:z2);
 native GetDynamicAreasForPoint(Float:x, Float:y, Float:z, STREAMER_TAG_AREA:areas[], maxareas = sizeof areas);
 native GetNumberDynamicAreasForPoint(Float:x, Float:y, Float:z);
 native GetDynamicAreasForLine(Float:x1, Float:y1, Float:z1, Float:x2, Float:y2, Float:z2, STREAMER_TAG_AREA:areas[], maxareas = sizeof areas);
 native GetNumberDynamicAreasForLine(Float:x1, Float:y1, Float:z1, Float:x2, Float:y2, Float:z2);
-native AttachDynamicAreaToObject(STREAMER_TAG_AREA:areaid, STREAMER_TAG_OBJECT_ALT:objectid, type = STREAMER_OBJECT_TYPE_DYNAMIC, playerid = INVALID_PLAYER_ID, Float:offsetx = 0.0, Float:offsety = 0.0, Float:offsetz = 0.0);
+native AttachDynamicAreaToObject(STREAMER_TAG_AREA:areaid, STREAMER_TAG_OBJECT_ALT:objectid, STREAMER_OBJECT_TYPE:type = STREAMER_OBJECT_TYPE_DYNAMIC, playerid = INVALID_PLAYER_ID, Float:offsetx = 0.0, Float:offsety = 0.0, Float:offsetz = 0.0);
 native AttachDynamicAreaToPlayer(STREAMER_TAG_AREA:areaid, playerid, Float:offsetx = 0.0, Float:offsety = 0.0, Float:offsetz = 0.0);
 native AttachDynamicAreaToVehicle(STREAMER_TAG_AREA:areaid, vehicleid, Float:offsetx = 0.0, Float:offsety = 0.0, Float:offsetz = 0.0);
-native ToggleDynAreaSpectateMode(STREAMER_TAG_AREA:areaid, toggle);
-native IsToggleDynAreaSpectateMode(STREAMER_TAG_AREA:areaid);
+native ToggleDynAreaSpectateMode(STREAMER_TAG_AREA:areaid, bool:toggle);
+native bool:IsToggleDynAreaSpectateMode(STREAMER_TAG_AREA:areaid);
 
 // Natives (Actors)
 
 native STREAMER_TAG_ACTOR:CreateDynamicActor(modelid, Float:x, Float:y, Float:z, Float:r, invulnerable = true, Float:health = 100.0, worldid = -1, interiorid = -1, playerid = -1, Float:streamdistance = STREAMER_ACTOR_SD, STREAMER_TAG_AREA:areaid = STREAMER_TAG_AREA:-1, priority = 0);
 native DestroyDynamicActor(STREAMER_TAG_ACTOR:actorid);
-native IsValidDynamicActor(STREAMER_TAG_ACTOR:actorid);
-native IsDynamicActorStreamedIn(STREAMER_TAG_ACTOR:actorid, forplayerid);
+native bool:IsValidDynamicActor(STREAMER_TAG_ACTOR:actorid);
+native bool:IsDynamicActorStreamedIn(STREAMER_TAG_ACTOR:actorid, forplayerid);
 native GetDynamicActorVirtualWorld(STREAMER_TAG_ACTOR:actorid);
 native SetDynamicActorVirtualWorld(STREAMER_TAG_ACTOR:actorid, vworld);
 native GetDynamicActorAnimation(STREAMER_TAG_ACTOR:actorid, animlib[], animname[], &Float:fdelta, &loop, &lockx, &locky, &freeze, &time, maxanimlib = sizeof animlib, maxanimname = sizeof animname);
@@ -381,7 +416,7 @@ native SetDynamicActorPos(STREAMER_TAG_ACTOR:actorid, Float:x, Float:y, Float:z)
 native GetDynamicActorHealth(STREAMER_TAG_ACTOR:actorid, &Float:health);
 native SetDynamicActorHealth(STREAMER_TAG_ACTOR:actorid, Float:health);
 native SetDynamicActorInvulnerable(STREAMER_TAG_ACTOR:actorid, invulnerable = true);
-native IsDynamicActorInvulnerable(STREAMER_TAG_ACTOR:actorid);
+native bool:IsDynamicActorInvulnerable(STREAMER_TAG_ACTOR:actorid);
 native STREAMER_TAG_ACTOR:GetPlayerTargetDynamicActor(playerid);
 native STREAMER_TAG_ACTOR:GetPlayerCameraTargetDynActor(playerid);
 
@@ -390,9 +425,9 @@ native STREAMER_TAG_ACTOR:GetPlayerCameraTargetDynActor(playerid);
 native STREAMER_TAG_OBJECT:CreateDynamicObjectEx(modelid, Float:x, Float:y, Float:z, Float:rx, Float:ry, Float:rz, Float:streamdistance = STREAMER_OBJECT_SD, Float:drawdistance = STREAMER_OBJECT_DD, const worlds[] = { -1 }, const interiors[] = { -1 }, const players[] = { -1 }, const STREAMER_TAG_AREA:areas[] = { STREAMER_TAG_AREA:-1 }, priority = 0, maxworlds = sizeof worlds, maxinteriors = sizeof interiors, maxplayers = sizeof players, maxareas = sizeof areas);
 native STREAMER_TAG_PICKUP:CreateDynamicPickupEx(modelid, type, Float:x, Float:y, Float:z, Float:streamdistance = STREAMER_PICKUP_SD, const worlds[] = { -1 }, const interiors[] = { -1 }, const players[] = { -1 }, const STREAMER_TAG_AREA:areas[] = { STREAMER_TAG_AREA:-1 }, priority = 0, maxworlds = sizeof worlds, maxinteriors = sizeof interiors, maxplayers = sizeof players, maxareas = sizeof areas);
 native STREAMER_TAG_CP:CreateDynamicCPEx(Float:x, Float:y, Float:z, Float:size, Float:streamdistance = STREAMER_CP_SD, const worlds[] = { -1 }, const interiors[] = { -1 }, const players[] = { -1 }, const STREAMER_TAG_AREA:areas[] = { STREAMER_TAG_AREA:-1 }, priority = 0, maxworlds = sizeof worlds, maxinteriors = sizeof interiors, maxplayers = sizeof players, maxareas = sizeof areas);
-native STREAMER_TAG_RACE_CP:CreateDynamicRaceCPEx(type, Float:x, Float:y, Float:z, Float:nextx, Float:nexty, Float:nextz, Float:size, Float:streamdistance = STREAMER_RACE_CP_SD, const worlds[] = { -1 }, const interiors[] = { -1 }, const players[] = { -1 }, const STREAMER_TAG_AREA:areas[] = { STREAMER_TAG_AREA:-1 }, priority = 0, maxworlds = sizeof worlds, maxinteriors = sizeof interiors, maxplayers = sizeof players, maxareas = sizeof areas);
-native STREAMER_TAG_MAP_ICON:CreateDynamicMapIconEx(Float:x, Float:y, Float:z, type, color, style = MAPICON_LOCAL, Float:streamdistance = STREAMER_MAP_ICON_SD, const worlds[] = { -1 }, const interiors[] = { -1 }, const players[] = { -1 }, const STREAMER_TAG_AREA:areas[] = { STREAMER_TAG_AREA:-1 }, priority = 0, maxworlds = sizeof worlds, maxinteriors = sizeof interiors, maxplayers = sizeof players, maxareas = sizeof areas);
-native STREAMER_TAG_3D_TEXT_LABEL:CreateDynamic3DTextLabelEx(const text[], color, Float:x, Float:y, Float:z, Float:drawdistance, attachedplayer = INVALID_PLAYER_ID, attachedvehicle = INVALID_VEHICLE_ID, testlos = 0, Float:streamdistance = STREAMER_3D_TEXT_LABEL_SD, const worlds[] = { -1 }, const interiors[] = { -1 }, const players[] = { -1 }, const STREAMER_TAG_AREA:areas[] = { STREAMER_TAG_AREA:-1 }, priority = 0,
+native STREAMER_TAG_RACE_CP:CreateDynamicRaceCPEx(CP_TYPE:type, Float:x, Float:y, Float:z, Float:nextx, Float:nexty, Float:nextz, Float:size, Float:streamdistance = STREAMER_RACE_CP_SD, const worlds[] = { -1 }, const interiors[] = { -1 }, const players[] = { -1 }, const STREAMER_TAG_AREA:areas[] = { STREAMER_TAG_AREA:-1 }, priority = 0, maxworlds = sizeof worlds, maxinteriors = sizeof interiors, maxplayers = sizeof players, maxareas = sizeof areas);
+native STREAMER_TAG_MAP_ICON:CreateDynamicMapIconEx(Float:x, Float:y, Float:z, type, color, MAPICON:style = MAPICON_LOCAL, Float:streamdistance = STREAMER_MAP_ICON_SD, const worlds[] = { -1 }, const interiors[] = { -1 }, const players[] = { -1 }, const STREAMER_TAG_AREA:areas[] = { STREAMER_TAG_AREA:-1 }, priority = 0, maxworlds = sizeof worlds, maxinteriors = sizeof interiors, maxplayers = sizeof players, maxareas = sizeof areas);
+native STREAMER_TAG_3D_TEXT_LABEL:CreateDynamic3DTextLabelEx(const text[], color, Float:x, Float:y, Float:z, Float:drawdistance, attachedplayer = INVALID_PLAYER_ID, attachedvehicle = INVALID_VEHICLE_ID, bool:testlos = false, Float:streamdistance = STREAMER_3D_TEXT_LABEL_SD, const worlds[] = { -1 }, const interiors[] = { -1 }, const players[] = { -1 }, const STREAMER_TAG_AREA:areas[] = { STREAMER_TAG_AREA:-1 }, priority = 0,
 	maxworlds = sizeof worlds, maxinteriors = sizeof interiors, maxplayers = sizeof players, maxareas = sizeof areas);
 native STREAMER_TAG_AREA:CreateDynamicCircleEx(Float:x, Float:y, Float:size, const worlds[] = { -1 }, const interiors[] = { -1 }, const players[] = { -1 }, priority = 0, maxworlds = sizeof worlds, maxinteriors = sizeof interiors, maxplayers = sizeof players);
 native STREAMER_TAG_AREA:CreateDynamicCylinderEx(Float:x, Float:y, Float:minz, Float:maxz, Float:size, const worlds[] = { -1 }, const interiors[] = { -1 }, const players[] = { -1 }, priority = 0, maxworlds = sizeof worlds, maxinteriors = sizeof interiors, maxplayers = sizeof players);
@@ -401,15 +436,15 @@ native STREAMER_TAG_AREA:CreateDynamicRectangleEx(Float:minx, Float:miny, Float:
 native STREAMER_TAG_AREA:CreateDynamicCuboidEx(Float:minx, Float:miny, Float:minz, Float:maxx, Float:maxy, Float:maxz, const worlds[] = { -1 }, const interiors[] = { -1 }, const players[] = { -1 }, priority = 0, maxworlds = sizeof worlds, maxinteriors = sizeof interiors, maxplayers = sizeof players);
 native STREAMER_TAG_AREA:CreateDynamicCubeEx(Float:minx, Float:miny, Float:minz, Float:maxx, Float:maxy, Float:maxz, const worlds[] = { -1 }, const interiors[] = { -1 }, const players[] = { -1 }, priority = 0, maxworlds = sizeof worlds, maxinteriors = sizeof interiors, maxplayers = sizeof players);
 native STREAMER_TAG_AREA:CreateDynamicPolygonEx(const Float:points[], Float:minz = -FLOAT_INFINITY, Float:maxz = FLOAT_INFINITY, maxpoints = sizeof points, const worlds[] = { -1 }, const interiors[] = { -1 }, const players[] = { -1 }, priority = 0, maxworlds = sizeof worlds, maxinteriors = sizeof interiors, maxplayers = sizeof players);
-native STREAMER_TAG_ACTOR:CreateDynamicActorEx(modelid, Float:x, Float:y, Float:z, Float:r, invulnerable = 1, Float:health = 100.0, Float:streamdistance = STREAMER_ACTOR_SD, const worlds[] = { -1 }, const interiors[] = { -1 }, const players[] = { -1 }, const STREAMER_TAG_AREA:areas[] = { STREAMER_TAG_AREA:-1 }, priority = 0, maxworlds = sizeof worlds, maxinteriors = sizeof interiors, maxplayers = sizeof players, maxareas = sizeof areas);
+native STREAMER_TAG_ACTOR:CreateDynamicActorEx(modelid, Float:x, Float:y, Float:z, Float:r, bool:invulnerable = true, Float:health = 100.0, Float:streamdistance = STREAMER_ACTOR_SD, const worlds[] = { -1 }, const interiors[] = { -1 }, const players[] = { -1 }, const STREAMER_TAG_AREA:areas[] = { STREAMER_TAG_AREA:-1 }, priority = 0, maxworlds = sizeof worlds, maxinteriors = sizeof interiors, maxplayers = sizeof players, maxareas = sizeof areas);
 
 // Natives (Deprecated)
 
 native Streamer_CallbackHook(callback, {Float,_}:...);
 
 native Streamer_TickRate(rate);
-native Streamer_MaxItems(type, items);
-native Streamer_VisibleItems(type, items, playerid = -1);
+native Streamer_MaxItems(STREAMER_TYPE:type, items);
+native Streamer_VisibleItems(STREAMER_TYPE:type, items, playerid = -1);
 native Streamer_CellDistance(Float:distance);
 native Streamer_CellSize(Float:size);
 
@@ -428,12 +463,12 @@ native CountDynamic3DTextLabels();
 native DestroyAllDynamicAreas();
 native CountDynamicAreas();
 
-native TogglePlayerDynamicCP(playerid, STREAMER_TAG_CP:checkpointid, toggle);
-native TogglePlayerAllDynamicCPs(playerid, toggle, const exceptions[] = { -1 }, maxexceptions = sizeof exceptions);
-native TogglePlayerDynamicRaceCP(playerid, STREAMER_TAG_RACE_CP:checkpointid, toggle);
-native TogglePlayerAllDynamicRaceCPs(playerid, toggle, const exceptions[] = { -1 }, maxexceptions = sizeof exceptions);
-native TogglePlayerDynamicArea(playerid, STREAMER_TAG_AREA:areaid, toggle);
-native TogglePlayerAllDynamicAreas(playerid, toggle, const exceptions[] = { -1 }, maxexceptions = sizeof exceptions);
+native TogglePlayerDynamicCP(playerid, STREAMER_TAG_CP:checkpointid, bool:toggle);
+native TogglePlayerAllDynamicCPs(playerid, bool:toggle, const exceptions[] = { -1 }, maxexceptions = sizeof exceptions);
+native TogglePlayerDynamicRaceCP(playerid, STREAMER_TAG_RACE_CP:checkpointid, bool:toggle);
+native TogglePlayerAllDynamicRaceCPs(playerid, bool:toggle, const exceptions[] = { -1 }, maxexceptions = sizeof exceptions);
+native TogglePlayerDynamicArea(playerid, STREAMER_TAG_AREA:areaid, bool:toggle);
+native TogglePlayerAllDynamicAreas(playerid, bool:toggle, const exceptions[] = { -1 }, maxexceptions = sizeof exceptions);
 
 // Callbacks
 
@@ -451,6 +486,6 @@ forward OnPlayerLeaveDynamicArea(playerid, STREAMER_TAG_AREA:areaid);
 forward OnPlayerGiveDamageDynamicActor(playerid, STREAMER_TAG_ACTOR:actorid, Float:amount, weaponid, bodypart);
 forward OnDynamicActorStreamIn(STREAMER_TAG_ACTOR:actorid, forplayerid);
 forward OnDynamicActorStreamOut(STREAMER_TAG_ACTOR:actorid, forplayerid);
-forward Streamer_OnItemStreamIn(type, STREAMER_ALL_TAGS:id, forplayerid);
-forward Streamer_OnItemStreamOut(type, STREAMER_ALL_TAGS:id, forplayerid);
+forward Streamer_OnItemStreamIn(STREAMER_TYPE:type, STREAMER_ALL_TAGS:id, forplayerid);
+forward Streamer_OnItemStreamOut(STREAMER_TYPE:type, STREAMER_ALL_TAGS:id, forplayerid);
 forward Streamer_OnPluginError(const error[]);
