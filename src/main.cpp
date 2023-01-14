@@ -307,20 +307,20 @@ class OmpStreamerComponent final : public IComponent, public CoreEventHandler, p
 		core->getStreamer()->startAutomaticUpdate();
 	}
 
-	void onAmxLoad(void* amx) override
+	void onAmxLoad(IPawnScript& script) override
 	{
-		core->getData()->interfaces.insert((AMX*)amx);
-		core->getData()->amxUnloadDestroyItems.insert((AMX*)amx);
-		Utility::checkInterfaceAndRegisterNatives((AMX*)amx, natives);
+		core->getData()->interfaces.insert(script.GetAMX());
+		core->getData()->amxUnloadDestroyItems.insert(script.GetAMX());
+		Utility::checkInterfaceAndRegisterNatives(script.GetAMX(), natives);
 	};
 
-	void onAmxUnload(void* amx) override
+	void onAmxUnload(IPawnScript& script) override
 	{
-		core->getData()->interfaces.erase((AMX*)amx);
-		if (core->getData()->amxUnloadDestroyItems.find((AMX*)amx) != core->getData()->amxUnloadDestroyItems.end())
+		core->getData()->interfaces.erase(script.GetAMX());
+		if (core->getData()->amxUnloadDestroyItems.find(script.GetAMX()) != core->getData()->amxUnloadDestroyItems.end())
 		{
-			Utility::destroyAllItemsInInterface((AMX*)amx);
-			core->getData()->amxUnloadDestroyItems.erase((AMX*)amx);
+			Utility::destroyAllItemsInInterface(script.GetAMX());
+			core->getData()->amxUnloadDestroyItems.erase(script.GetAMX());
 		}
 	};
 

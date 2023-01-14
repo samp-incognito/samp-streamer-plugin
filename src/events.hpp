@@ -22,7 +22,9 @@
 #include "Server/Components/Pickups/pickups.hpp"
 #include "Server/Components/Objects/objects.hpp"
 
-class PlayerEvents : public PlayerEventHandler, public Singleton<PlayerEvents>
+class PlayerEvents : 
+	public PlayerConnectEventHandler, public PlayerSpawnEventHandler, public PlayerShotEventHandler,
+	public Singleton<PlayerEvents>
 {
 	void onPlayerConnect(IPlayer& player) override
 	{
@@ -93,9 +95,9 @@ class PlayerEvents : public PlayerEventHandler, public Singleton<PlayerEvents>
 	}
 };
 
-class ActorEvents : public ActorEventHandler, public Singleton<ActorEvents> 
+class ActorEvents : public ActorEventHandler, public Singleton<ActorEvents>
 {
-    void onPlayerGiveDamageActor(IPlayer& player, IActor& actor, float amount, unsigned weapon, BodyPart part) override
+	void onPlayerGiveDamageActor(IPlayer& player, IActor& actor, float amount, unsigned weapon, BodyPart part) override
 	{
 		int playerid = player.getID();
 		int actorid = actor.getID();
@@ -189,7 +191,7 @@ class ClassEvents : public ClassEventHandler, public Singleton<ClassEvents>
 	}
 };
 
-class CheckpointEvents : public PlayerCheckpointEventHandler, public Singleton<CheckpointEvents> 
+class CheckpointEvents : public PlayerCheckpointEventHandler, public Singleton<CheckpointEvents>
 {
 	void onPlayerEnterCheckpoint(IPlayer& player) override
 	{
@@ -288,7 +290,7 @@ class CheckpointEvents : public PlayerCheckpointEventHandler, public Singleton<C
 	}
 };
 
-class PickupEvents : public PickupEventHandler, public Singleton<PickupEvents> 
+class PickupEvents : public PickupEventHandler, public Singleton<PickupEvents>
 {
 	void onPlayerPickUpPickup(IPlayer& player, IPickup& pickup) override
 	{
@@ -315,7 +317,7 @@ class PickupEvents : public PickupEventHandler, public Singleton<PickupEvents>
 	}
 };
 
-class ObjectEvents : public ObjectEventHandler, public Singleton<ObjectEvents> 
+class ObjectEvents : public ObjectEventHandler, public Singleton<ObjectEvents>
 {
 	void onPlayerObjectEdited(IPlayer& player, IPlayerObject& object, ObjectEditResponse response, Vector3 offset, Vector3 rotation) override
 	{
@@ -427,7 +429,9 @@ public:
 	{
 		if (players)
 		{
-			players->getEventDispatcher().removeEventHandler(PlayerEvents::Get());
+			players->getPlayerConnectDispatcher().removeEventHandler(PlayerEvents::Get());
+			players->getPlayerSpawnDispatcher().removeEventHandler(PlayerEvents::Get());
+			players->getPlayerShotDispatcher().removeEventHandler(PlayerEvents::Get());
 		}
 
 		if (actors)
@@ -460,7 +464,9 @@ public:
 	{
 		if (players)
 		{
-			players->getEventDispatcher().addEventHandler(PlayerEvents::Get());
+			players->getPlayerConnectDispatcher().addEventHandler(PlayerEvents::Get());
+			players->getPlayerSpawnDispatcher().addEventHandler(PlayerEvents::Get());
+			players->getPlayerShotDispatcher().addEventHandler(PlayerEvents::Get());
 		}
 
 		if (actors)
