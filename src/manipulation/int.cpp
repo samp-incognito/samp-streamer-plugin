@@ -979,28 +979,19 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 					{
 						if (static_cast<int>(params[4]) != INVALID_PLAYER_ID)
 						{
-							// Attaching player object to player is currently not available 
-							return 0;
-
-							// if (o->second->move)
-							// {
-							// 	Utility::logError("Streamer_SetIntData: Object is currently moving and must be stopped first.");
-							// 	return 0;
-							// }
-							// static AMX_NATIVE native = sampgdk::FindNative("SetPlayerGravity");
-							// if (native == NULL)
-							// {
-							// 	Utility::logError("Streamer_SetIntData: YSF plugin must be loaded to attach objects to players.");
-							// 	return 0;
-							// }
-							// o->second->attach = boost::intrusive_ptr<Item::Object::Attach>(new Item::Object::Attach);
-							// o->second->attach->object = INVALID_STREAMER_ID;
-							// o->second->attach->vehicle = INVALID_VEHICLE_ID;
-							// o->second->attach->player = static_cast<int>(params[4]);
-							// o->second->attach->positionOffset.setZero();
-							// o->second->attach->rotation.setZero();
-							// core->getStreamer()->attachedObjects.insert(o->second);
-							// update = true;
+							if (o->second->move)
+							{
+								Utility::logError("Streamer_SetIntData: Object is currently moving and must be stopped first.");
+								return 0;
+							}
+							o->second->attach = std::make_shared<Item::Object::Attach>();
+							o->second->attach->object = INVALID_STREAMER_ID;
+							o->second->attach->vehicle = INVALID_VEHICLE_ID;
+							o->second->attach->player = static_cast<int>(params[4]);
+							o->second->attach->positionOffset.setZero();
+							o->second->attach->rotation.setZero();
+							core->getStreamer()->attachedObjects.insert(o->second);
+							update = true;
 						}
 						else
 						{
