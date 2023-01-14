@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - "master"
+      - "dev"
+      - "open.mp"
   pull_request:
     branches:
       - "*"
@@ -30,7 +32,7 @@ jobs:
         uses: actions/setup-python@v2
 
       - name: Install CMake
-        uses: lukka/get-cmake@v3.19.0
+        uses: lukka/get-cmake@v.3.23.2
 
       - name: Install latest conan
         run: |
@@ -74,7 +76,7 @@ jobs:
         uses: actions/setup-python@v2
 
       - name: Install CMake
-        uses: lukka/get-cmake@v3.19.0
+        uses: lukka/get-cmake@v.3.23.2
 
       - name: Install latest conan
         run: |
@@ -117,8 +119,11 @@ jobs:
       - name: install packages
         run: sudo apt-get install g++-multilib
 
+      - name: Setup Python
+        uses: actions/setup-python@v2
+
       - name: Install CMake
-        uses: lukka/get-cmake@v3.19.0
+        uses: lukka/get-cmake@v.3.23.2
 
       - name: Install latest conan
         run: |
@@ -161,8 +166,11 @@ jobs:
       - name: install packages
         run: sudo apt-get install g++-multilib
 
+      - name: Setup Python
+        uses: actions/setup-python@v2
+
       - name: Install CMake
-        uses: lukka/get-cmake@v3.19.0
+        uses: lukka/get-cmake@v.3.23.2
 
       - name: Install latest conan
         run: |
