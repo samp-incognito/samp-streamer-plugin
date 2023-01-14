@@ -54,10 +54,10 @@ public:
 
 	void processActiveItems();
 
-	boost::unordered_set<Item::SharedArea> attachedAreas;
-	boost::unordered_set<Item::SharedObject> attachedObjects;
-	boost::unordered_set<Item::SharedTextLabel> attachedTextLabels;
-	boost::unordered_set<Item::SharedObject> movingObjects;
+	std::unordered_set<Item::SharedArea> attachedAreas;
+	std::unordered_set<Item::SharedObject> attachedObjects;
+	std::unordered_set<Item::SharedTextLabel> attachedTextLabels;
+	std::unordered_set<Item::SharedObject> movingObjects;
 private:
 	void calculateAverageElapsedTime();
 
@@ -90,24 +90,24 @@ private:
 	float averageElapsedTime;
 	float lastUpdateTime;
 
-	boost::tuple<float, float> velocityBoundaries;
+	std::tuple<float, float> velocityBoundaries;
 
-	std::multimap<int, boost::tuple<int, int> > areaEnterCallbacks;
-	std::multimap<int, boost::tuple<int, int> > areaLeaveCallbacks;
+	std::multimap<int, std::tuple<int, int> > areaEnterCallbacks;
+	std::multimap<int, std::tuple<int, int> > areaLeaveCallbacks;
 
 	std::vector<int> objectMoveCallbacks;
 protected:
-	std::vector<boost::tuple<int, int, int> > streamInCallbacks;
-	std::vector<boost::tuple<int, int, int> > streamOutCallbacks;
+	std::vector<std::tuple<int, int, int> > streamInCallbacks;
+	std::vector<std::tuple<int, int, int> > streamOutCallbacks;
 
 	template<std::size_t N, typename T>
-	inline bool doesPlayerSatisfyConditions(const std::bitset<N> &a, const T &b, const boost::unordered_set<T> &c, const T &d, const boost::unordered_set<T> &e, const T &f)
+	inline bool doesPlayerSatisfyConditions(const std::bitset<N> &a, const T &b, const std::unordered_set<T> &c, const T &d, const std::unordered_set<T> &e, const T &f)
 	{
 		return (a[b] && (c.empty() || c.find(d) != c.end()) && (e.empty() || e.find(f) != e.end()));
 	}
 
 	template<std::size_t N, typename T>
-	inline bool doesPlayerSatisfyConditions(const std::bitset<N> &a, const T &b, const boost::unordered_set<T> &c, const T &d, const boost::unordered_set<T> &e, const T &f, const boost::unordered_set<T> &g, const boost::unordered_set<T> &h, bool i)
+	inline bool doesPlayerSatisfyConditions(const std::bitset<N> &a, const T &b, const std::unordered_set<T> &c, const T &d, const std::unordered_set<T> &e, const T &f, const std::unordered_set<T> &g, const std::unordered_set<T> &h, bool i)
 	{
 		return (a[b] && (c.empty() || c.find(d) != c.end()) && (e.empty() || e.find(f) != e.end()) && (g.empty() || i ? !Utility::isContainerWithinContainer(g, h) : Utility::isContainerWithinContainer(g, h)));
 	}

@@ -75,7 +75,7 @@ private:
 	float comparableCellDistance;
 	SharedCell globalCell;
 
-	boost::unordered_map<CellId, SharedCell> cells;
+	std::unordered_map<CellId, SharedCell, pair_hash> cells;
 	Eigen::Matrix<float, 2, 9> translationMatrix;
 
 	inline void calculateTranslationMatrix()
@@ -93,7 +93,7 @@ private:
 	}
 
 	CellId getCellId(const Eigen::Vector2f &position, bool insert = true);
-	void processDiscoveredCellsForPlayer(Player &player, std::vector<SharedCell> &playerCells, const boost::unordered_set<CellId> &discoveredCells);
+	void processDiscoveredCellsForPlayer(Player &player, std::vector<SharedCell> &playerCells, const std::unordered_set<CellId, pair_hash> &discoveredCells);
 };
 
 #endif

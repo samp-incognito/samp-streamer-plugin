@@ -1,12 +1,12 @@
-[submodule "lib/boost"]
-	path = lib/boost
-	url = git://github.com/boostorg/boost
 [submodule "lib/cmake-modules"]
 	path = lib/cmake-modules
-	url = git://github.com/Zeex/cmake-modules
+	url = git@github.com:Zeex/cmake-modules.git
 [submodule "lib/eigen"]
 	path = lib/eigen
-	url = git://github.com/eigenteam/eigen-git-mirror
+	url = git@github.com:eigenteam/eigen-git-mirror.git
 [submodule "lib/samp-plugin-sdk"]
 	path = lib/samp-plugin-sdk
-	url = git://github.com/Zeex/samp-plugin-sdk
+	url = git@github.com:Zeex/samp-plugin-sdk.git
+[submodule "lib/boost"]
+	path = lib/boost
+	url = git@github.com:scipy/boost-headers-only.git

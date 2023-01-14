@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "../precompiled.h"
+#include "../main.h"
 
 #include "../natives.h"
 #include "../core.h"
@@ -41,7 +41,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabel(AMX *amx, cell *params)
 	textLabel->drawDistance = amx_ctof(params[6]);
 	if (static_cast<int>(params[7]) != INVALID_PLAYER_ID || static_cast<int>(params[8]) != INVALID_VEHICLE_ID)
 	{
-		textLabel->attach = boost::intrusive_ptr<Item::TextLabel::Attach>(new Item::TextLabel::Attach);
+		textLabel->attach = std::make_shared<Item::TextLabel::Attach>();
 		textLabel->attach->player = static_cast<int>(params[7]);
 		textLabel->attach->vehicle = static_cast<int>(params[8]);
 		if (textLabel->position.cwiseAbs().maxCoeff() > 50.0f)
@@ -66,7 +66,7 @@ cell AMX_NATIVE_CALL Natives::CreateDynamic3DTextLabel(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::DestroyDynamic3DTextLabel(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1);
-	boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[1]));
+	std::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[1]));
 	if (t != core->getData()->textLabels.end())
 	{
 		Utility::destroyTextLabel(t);
@@ -78,7 +78,7 @@ cell AMX_NATIVE_CALL Natives::DestroyDynamic3DTextLabel(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::IsValidDynamic3DTextLabel(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(1);
-	boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[1]));
+	std::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[1]));
 	if (t != core->getData()->textLabels.end())
 	{
 		return 1;
@@ -89,7 +89,7 @@ cell AMX_NATIVE_CALL Natives::IsValidDynamic3DTextLabel(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::GetDynamic3DTextLabelText(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(3);
-	boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[1]));
+	std::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[1]));
 	if (t != core->getData()->textLabels.end())
 	{
 		cell *text = NULL;
@@ -103,14 +103,14 @@ cell AMX_NATIVE_CALL Natives::GetDynamic3DTextLabelText(AMX *amx, cell *params)
 cell AMX_NATIVE_CALL Natives::UpdateDynamic3DTextLabelText(AMX *amx, cell *params)
 {
 	CHECK_PARAMS(3);
-	boost::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[1]));
+	std::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(static_cast<int>(params[1]));
 	if (t != core->getData()->textLabels.end())
 	{
 		t->second->color = static_cast<int>(params[2]);
 		t->second->text = Utility::convertNativeStringToString(amx, params[3]);
-		for (boost::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
+		for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 		{
-			boost::unordered_map<int, int>::iterator i = p->second.internalTextLabels.find(t->first);
+			std::unordered_map<int, int>::iterator i = p->second.internalTextLabels.find(t->first);
 			if (i != p->second.internalTextLabels.end())
 			{
 				sampgdk::UpdatePlayer3DTextLabelText(p->first, i->second, t->second->color, t->second->text.c_str());

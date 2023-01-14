@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-#include "precompiled.h"
+#include "main.h"
 
 #include "core.h"
 
-boost::scoped_ptr<Core> core;
+std::unique_ptr<Core> core;
 
 Core::Core()
 {

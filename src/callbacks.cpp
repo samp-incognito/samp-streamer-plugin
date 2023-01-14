@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "precompiled.h"
+#include "main.h"
 
 #include "core.h"
 
@@ -22,7 +22,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerConnect(int playerid)
 {
 	if (playerid >= 0 && playerid < MAX_PLAYERS)
 	{
-		boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+		std::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 		if (p == core->getData()->players.end())
 		{
 			Player player(playerid);
@@ -40,7 +40,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerDisconnect(int playerid, int reason)
 
 PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerSpawn(int playerid)
 {
-	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+	std::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 	if (p != core->getData()->players.end())
 	{
 		p->second.requestingClass = false;
@@ -50,7 +50,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerSpawn(int playerid)
 
 PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerRequestClass(int playerid, int classid)
 {
-	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+	std::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 	if (p != core->getData()->players.end())
 	{
 		p->second.requestingClass = true;
@@ -60,7 +60,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerRequestClass(int playerid, int classid)
 
 PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerEnterCheckpoint(int playerid)
 {
-	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+	std::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 	if (p != core->getData()->players.end())
 	{
 		if (p->second.activeCheckpoint != p->second.visibleCheckpoint)
@@ -84,7 +84,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerEnterCheckpoint(int playerid)
 
 PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerLeaveCheckpoint(int playerid)
 {
-	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+	std::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 	if (p != core->getData()->players.end())
 	{
 		if (p->second.activeCheckpoint == p->second.visibleCheckpoint)
@@ -108,7 +108,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerLeaveCheckpoint(int playerid)
 
 PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerEnterRaceCheckpoint(int playerid)
 {
-	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+	std::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 	if (p != core->getData()->players.end())
 	{
 		if (p->second.activeRaceCheckpoint != p->second.visibleRaceCheckpoint)
@@ -132,7 +132,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerEnterRaceCheckpoint(int playerid)
 
 PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerLeaveRaceCheckpoint(int playerid)
 {
-	boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+	std::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 	if (p != core->getData()->players.end())
 	{
 		if (p->second.activeRaceCheckpoint == p->second.visibleRaceCheckpoint)
@@ -156,7 +156,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerLeaveRaceCheckpoint(int playerid)
 
 PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerPickUpPickup(int playerid, int pickupid)
 {
-	for (boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalPickups.begin(); i != core->getData()->internalPickups.end(); ++i)
+	for (std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalPickups.begin(); i != core->getData()->internalPickups.end(); ++i)
 	{
 		if (i->second == pickupid)
 		{
@@ -181,17 +181,17 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerEditObject(int playerid, bool playerobjec
 {
 	if (playerobject)
 	{
-		boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+		std::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 		if (p != core->getData()->players.end())
 		{
-			for (boost::unordered_map<int, int>::iterator i = p->second.internalObjects.begin(); i != p->second.internalObjects.end(); ++i)
+			for (std::unordered_map<int, int>::iterator i = p->second.internalObjects.begin(); i != p->second.internalObjects.end(); ++i)
 			{
 				if (i->second == objectid)
 				{
 					int dynObjectId = i->first;
 					if (response == EDIT_RESPONSE_CANCEL || response == EDIT_RESPONSE_FINAL)
 					{
-						boost::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(dynObjectId);
+						std::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(dynObjectId);
 						if (o != core->getData()->objects.end())
 						{
 							if (o->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF && o->second->originalComparableStreamDistance > STREAMER_STATIC_DISTANCE_CUTOFF)
@@ -235,10 +235,10 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerSelectObject(int playerid, int type, int 
 {
 	if (type == SELECT_OBJECT_PLAYER_OBJECT)
 	{
-		boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+		std::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 		if (p != core->getData()->players.end())
 		{
-			for (boost::unordered_map<int, int>::iterator i = p->second.internalObjects.begin(); i != p->second.internalObjects.end(); ++i)
+			for (std::unordered_map<int, int>::iterator i = p->second.internalObjects.begin(); i != p->second.internalObjects.end(); ++i)
 			{
 				if (i->second == objectid)
 				{
@@ -275,10 +275,10 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerWeaponShot(int playerid, int weaponid, in
 	bool retVal = true;
 	if (hittype == BULLET_HIT_TYPE_PLAYER_OBJECT)
 	{
-		boost::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
+		std::unordered_map<int, Player>::iterator p = core->getData()->players.find(playerid);
 		if (p != core->getData()->players.end())
 		{
-			for (boost::unordered_map<int, int>::iterator i = p->second.internalObjects.begin(); i != p->second.internalObjects.end(); ++i)
+			for (std::unordered_map<int, int>::iterator i = p->second.internalObjects.begin(); i != p->second.internalObjects.end(); ++i)
 			{
 				if (i->second == hitid)
 				{
@@ -312,7 +312,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerWeaponShot(int playerid, int weaponid, in
 
 PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerGiveDamageActor(int playerid, int actorid, float amount, int weaponid, int bodypart)
 {
-	for (boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
+	for (std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
 	{
 		if (i->second == actorid)
 		{
@@ -343,7 +343,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnPlayerGiveDamageActor(int playerid, int actorid
 
 PLUGIN_EXPORT bool PLUGIN_CALL OnActorStreamIn(int actorid, int forplayerid)
 {
-	for (boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
+	for (std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
 	{
 		if (i->second == actorid)
 		{
@@ -366,7 +366,7 @@ PLUGIN_EXPORT bool PLUGIN_CALL OnActorStreamIn(int actorid, int forplayerid)
 
 PLUGIN_EXPORT bool PLUGIN_CALL OnActorStreamOut(int actorid, int forplayerid)
 {
-	for (boost::unordered_map<std::pair<int, int>, int>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
+	for (std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalActors.begin(); i != core->getData()->internalActors.end(); ++i)
 	{
 		if (i->second == actorid)
 		{

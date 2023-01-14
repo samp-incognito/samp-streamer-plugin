@@ -47,13 +47,13 @@ public:
 		return streamer.get();
 	}
 private:
-	boost::scoped_ptr<Data> data;
-	boost::scoped_ptr<Grid> grid;
+	std::unique_ptr<Data> data;
+	std::unique_ptr<Grid> grid;
 
-	boost::scoped_ptr<ChunkStreamer> chunkStreamer;
-	boost::scoped_ptr<Streamer> streamer;
+	std::unique_ptr<ChunkStreamer> chunkStreamer;
+	std::unique_ptr<Streamer> streamer;
 };
 
-extern boost::scoped_ptr<Core> core;
+extern std::unique_ptr<Core> core;
 
 #endif
