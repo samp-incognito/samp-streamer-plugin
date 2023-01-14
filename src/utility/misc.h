@@ -101,7 +101,7 @@ namespace Utility
 	template<typename T>
 	inline int getFirstValueInContainer(const std::unordered_set<T> &container)
 	{
-		auto i = container.begin();
+		const auto& i = container.begin();
 		if (i != container.end())
 		{
 			return *i;
