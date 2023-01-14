@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 project(streamer)
 
-set(PLUGIN_VERSION "2.9.5")
+set(PLUGIN_VERSION "2.9.6")
 set(CMAKE_CXX_STANDARD 17)
 
 if (MSVC)

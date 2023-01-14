@@ -18,7 +18,7 @@
 #define MAIN_H
 
 #define INCLUDE_FILE_VERSION (0x295)
-#define PLUGIN_VERSION "2.9.5"
+#define PLUGIN_VERSION "2.9.6"
 
 #include <boost/bimap.hpp>
 #include <boost/bimap/multiset_of.hpp>
