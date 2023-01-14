@@ -15,7 +15,7 @@
  */
 
 #include "../main.h"
-
+#include <stdarg.h>
 #include "amx.h"
 #include "../core.h"
 
