@@ -16,3 +16,6 @@
 [submodule "lib/boost"]
 	path = lib/boost
 	url = git@github.com:scipy/boost-headers-only.git
+[submodule "lib/omp-network"]
+	path = lib/omp-network
+	url = git@github.com:openmultiplayer/open.mp-network

@@ -35,6 +35,7 @@ set(CMAKE_SKIP_PACKAGE_ALL_DEPENDENCY True)
 add_subdirectory(lib/omp-sdk)
 add_subdirectory(lib/omp-gdk)
 include_directories(${OMP_GDK_PATH})
+add_subdirectory(lib/omp-network)
 add_subdirectory(src)
 
 set(CPACK_PACKAGE_VERSION ${PLUGIN_VERSION})
