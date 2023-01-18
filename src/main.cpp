@@ -20,6 +20,7 @@
 #include "core.h"
 #include "natives.h"
 #include "utility.h"
+#include "omp-nethack.h"
 #include "./events.hpp"
 
 extern void *pAMXFunctions;
@@ -252,7 +253,7 @@ AMX_NATIVE_INFO natives[] =
 	{ 0, 0 }
 };
 
-class OmpStreamerComponent final : public IComponent, public CoreEventHandler, public PawnEventHandler {
+class OmpStreamerComponent final : public IComponent, public CoreEventHandler, public PawnEventHandler, public SingleNetworkOutEventHandler {
 	PROVIDE_UID(0x11897f0dbabe4f7c);
 
 	StringView componentName() const override
@@ -291,6 +292,9 @@ class OmpStreamerComponent final : public IComponent, public CoreEventHandler, p
 		}
 
 		// add event handlers
+		for (auto network : omp_core->getNetworks()) {
+			network->getPerPacketOutEventDispatcher().addEventHandler(this, 207);
+		}
 		pawnComponent->getEventDispatcher().addEventHandler(this);
 		omp_core->getEventDispatcher().addEventHandler(this);
 		pAMXFunctions = (void*)&pawnComponent->getAmxFunctions();
@@ -347,6 +351,12 @@ class OmpStreamerComponent final : public IComponent, public CoreEventHandler, p
 			omp_core->getEventDispatcher().removeEventHandler(this);
 		}
 		delete this;
+	}
+
+	bool onSend(IPlayer* peer, NetworkBitStream& bs) override
+	{
+		OMPNetHack::Process(players, peer, bs);
+		return true;
 	}
 
 	~OmpStreamerComponent()
