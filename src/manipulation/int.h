@@ -26,7 +26,7 @@ namespace Manipulation
 	int removeIntData(AMX *amx, cell *params);
 	int hasIntData(AMX *amx, cell *params);
 	
-	void getIntExtraDataParams(cell *params, cell *extraParams, int object, int customValue);
+	void getIntExtraDataParams(cell *params, cell *extraParams, int object, int customDataType);
 }
 
 #endif

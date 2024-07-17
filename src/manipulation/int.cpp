@@ -1788,10 +1788,10 @@ int Manipulation::setIntData(AMX *amx, cell *params)
 	return 0;
 }
 
-void Manipulation::getIntExtraDataParams(cell *params, cell *extraParams, int object, int customValue)
+void Manipulation::getIntExtraDataParams(cell *params, cell *extraParams, int object, int customDataType)
 {
 	extraParams[0] = sizeof(*extraParams);
 	extraParams[1] = static_cast<int>(params[4]);
 	extraParams[2] = object;
-	extraParams[3] = customValue;
+	extraParams[3] = customDataType;
 }
