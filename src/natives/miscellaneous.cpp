@@ -18,6 +18,7 @@
 #include "../natives.h"
 #include "../core.h"
 #include "../utility.h"
+#include "../manipulation/int.h"
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetDistanceToItem(AMX *amx, cell *params)
 {
@@ -1502,11 +1503,13 @@ cell AMX_NATIVE_CALL Natives::Streamer_CountItems(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(8);
+	CHECK_PARAMS(9);
 	Eigen::Vector2f position2d = Eigen::Vector2f(amx_ctof(params[1]), amx_ctof(params[2]));
 	Eigen::Vector3f position3d = Eigen::Vector3f(amx_ctof(params[1]), amx_ctof(params[2]), amx_ctof(params[3]));
 	float range = amx_ctof(params[7]) * amx_ctof(params[7]);
 	int worldId = static_cast<int>(params[8]);
+	cell customValue = params[9];
+	cell extraParams[4];
 	std::multimap<float, int> orderedItems;
 	std::vector<SharedCell> pointCells;
 	core->getGrid()->findMinimalCellsForPoint(position2d, pointCells, range);
@@ -1531,6 +1534,16 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 						}
 						if (distance < range)
 						{
+							if (customValue >= STREAMER_ITEM_MIN_CUSTOM_VALUE)
+							{
+								Manipulation::getIntExtraDataParams(params, extraParams, o->first, customValue);
+
+								if (!Manipulation::hasIntData(amx, extraParams))
+								{
+									continue;	
+								}
+							}
+
 							orderedItems.insert(std::pair<float, int>(distance, o->first));
 						}
 					}
@@ -1549,6 +1562,16 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 						float distance = static_cast<float>(boost::geometry::comparable_distance(position3d, q->second->position));
 						if (distance < range)
 						{
+							if (customValue >= STREAMER_ITEM_MIN_CUSTOM_VALUE)
+							{
+								Manipulation::getIntExtraDataParams(params, extraParams, q->first, customValue);
+
+								if (!Manipulation::hasIntData(amx, extraParams))
+								{
+									continue;	
+								}
+							}
+
 							orderedItems.insert(std::pair<float, int>(distance, q->first));
 						}
 					}
@@ -1567,6 +1590,16 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 						float distance = static_cast<float>(boost::geometry::comparable_distance(position3d, c->second->position));
 						if (distance < range)
 						{
+							if (customValue >= STREAMER_ITEM_MIN_CUSTOM_VALUE)
+							{
+								Manipulation::getIntExtraDataParams(params, extraParams, c->first, customValue);
+
+								if (!Manipulation::hasIntData(amx, extraParams))
+								{
+									continue;	
+								}
+							}
+
 							orderedItems.insert(std::pair<float, int>(distance, c->first));
 						}
 					}
@@ -1585,6 +1618,16 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 						float distance = static_cast<float>(boost::geometry::comparable_distance(position3d, r->second->position));
 						if (distance < range)
 						{
+							if (customValue >= STREAMER_ITEM_MIN_CUSTOM_VALUE)
+							{
+								Manipulation::getIntExtraDataParams(params, extraParams, r->first, customValue);
+
+								if (!Manipulation::hasIntData(amx, extraParams))
+								{
+									continue;	
+								}
+							}
+
 							orderedItems.insert(std::pair<float, int>(distance, r->first));
 						}
 					}
@@ -1603,6 +1646,16 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 						float distance = static_cast<float>(boost::geometry::comparable_distance(position3d, m->second->position));
 						if (distance < range)
 						{
+							if (customValue >= STREAMER_ITEM_MIN_CUSTOM_VALUE)
+							{
+								Manipulation::getIntExtraDataParams(params, extraParams, m->first, customValue);
+
+								if (!Manipulation::hasIntData(amx, extraParams))
+								{
+									continue;	
+								}
+							}
+
 							orderedItems.insert(std::pair<float, int>(distance, m->first));
 						}
 					}
@@ -1621,6 +1674,16 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 						float distance = static_cast<float>(boost::geometry::comparable_distance(position3d, t->second->position));
 						if (distance < range)
 						{
+							if (customValue >= STREAMER_ITEM_MIN_CUSTOM_VALUE)
+							{
+								Manipulation::getIntExtraDataParams(params, extraParams, t->first, customValue);
+
+								if (!Manipulation::hasIntData(amx, extraParams))
+								{
+									continue;	
+								}
+							}
+
 							orderedItems.insert(std::pair<float, int>(distance, t->first));
 						}
 					}
@@ -1680,6 +1743,16 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 						}
 						if (distance < range)
 						{
+							if (customValue >= STREAMER_ITEM_MIN_CUSTOM_VALUE)
+							{
+								Manipulation::getIntExtraDataParams(params, extraParams, a->first, customValue);
+
+								if (!Manipulation::hasIntData(amx, extraParams))
+								{
+									continue;	
+								}
+							}
+
 							orderedItems.insert(std::pair<float, int>(distance, a->first));
 						}
 					}
@@ -1698,6 +1771,16 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 						float distance = static_cast<float>(boost::geometry::comparable_distance(position3d, a->second->position));
 						if (distance < range)
 						{
+							if (customValue >= STREAMER_ITEM_MIN_CUSTOM_VALUE)
+							{
+								Manipulation::getIntExtraDataParams(params, extraParams, a->first, customValue);
+
+								if (!Manipulation::hasIntData(amx, extraParams))
+								{
+									continue;	
+								}
+							}
+
 							orderedItems.insert(std::pair<float, int>(distance, a->first));
 						}
 					}
@@ -1722,11 +1805,14 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 
 cell AMX_NATIVE_CALL Natives::Streamer_GetAllVisibleItems(AMX *amx, cell *params)
 {
-	CHECK_PARAMS(4);
+	CHECK_PARAMS(5);
 	std::multimap<float, int> orderedItems;
 	std::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
 	if (p != core->getData()->players.end())
 	{
+		cell customValue = params[9];
+		cell extraParams[4];
+
 		switch (static_cast<int>(params[2]))
 		{
 			case STREAMER_TYPE_OBJECT:
@@ -1736,6 +1822,16 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetAllVisibleItems(AMX *amx, cell *params
 					std::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(i->first);
 					if (o != core->getData()->objects.end())
 					{
+						if (customValue >= STREAMER_ITEM_MIN_CUSTOM_VALUE)
+						{
+							Manipulation::getIntExtraDataParams(params, extraParams, o->first, customValue);
+
+							if (!Manipulation::hasIntData(amx, extraParams))
+							{
+								continue;	
+							}
+						}
+
 						float distance = 0.0f;
 						if (o->second->attach)
 						{
@@ -1757,6 +1853,16 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetAllVisibleItems(AMX *amx, cell *params
 					std::unordered_map<int, Item::SharedPickup>::iterator q = core->getData()->pickups.find(i->first.first);
 					if (q != core->getData()->pickups.end())
 					{
+						if (customValue >= STREAMER_ITEM_MIN_CUSTOM_VALUE)
+						{
+							Manipulation::getIntExtraDataParams(params, extraParams, q->first, customValue);
+
+							if (!Manipulation::hasIntData(amx, extraParams))
+							{
+								continue;	
+							}
+						}
+
 						float distance = static_cast<float>(boost::geometry::comparable_distance(p->second.position, q->second->position));
 						orderedItems.insert(std::pair<float, int>(distance, q->first));
 					}
@@ -1770,6 +1876,16 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetAllVisibleItems(AMX *amx, cell *params
 					std::unordered_map<int, Item::SharedCheckpoint>::iterator c = core->getData()->checkpoints.find(p->second.visibleCheckpoint);
 					if (c != core->getData()->checkpoints.end())
 					{
+						if (customValue >= STREAMER_ITEM_MIN_CUSTOM_VALUE)
+						{
+							Manipulation::getIntExtraDataParams(params, extraParams, c->first, customValue);
+
+							if (!Manipulation::hasIntData(amx, extraParams))
+							{
+								break;
+							}
+						}
+
 						float distance = static_cast<float>(boost::geometry::comparable_distance(p->second.position, c->second->position));
 						orderedItems.insert(std::pair<float, int>(distance, c->first));
 					}
@@ -1783,6 +1899,16 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetAllVisibleItems(AMX *amx, cell *params
 					std::unordered_map<int, Item::SharedRaceCheckpoint>::iterator c = core->getData()->raceCheckpoints.find(p->second.visibleRaceCheckpoint);
 					if (c != core->getData()->raceCheckpoints.end())
 					{
+						if (customValue >= STREAMER_ITEM_MIN_CUSTOM_VALUE)
+						{
+							Manipulation::getIntExtraDataParams(params, extraParams, c->first, customValue);
+
+							if (!Manipulation::hasIntData(amx, extraParams))
+							{
+								break;
+							}
+						}
+
 						float distance = static_cast<float>(boost::geometry::comparable_distance(p->second.position, c->second->position));
 						orderedItems.insert(std::pair<float, int>(distance, c->first));
 					}
@@ -1796,6 +1922,16 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetAllVisibleItems(AMX *amx, cell *params
 					std::unordered_map<int, Item::SharedMapIcon>::iterator m = core->getData()->mapIcons.find(i->first);
 					if (m != core->getData()->mapIcons.end())
 					{
+						if (customValue >= STREAMER_ITEM_MIN_CUSTOM_VALUE)
+						{
+							Manipulation::getIntExtraDataParams(params, extraParams, m->first, customValue);
+
+							if (!Manipulation::hasIntData(amx, extraParams))
+							{
+								break;
+							}
+						}
+
 						float distance = static_cast<float>(boost::geometry::comparable_distance(p->second.position, m->second->position));
 						orderedItems.insert(std::pair<float, int>(distance, m->first));
 					}
@@ -1809,6 +1945,16 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetAllVisibleItems(AMX *amx, cell *params
 					std::unordered_map<int, Item::SharedTextLabel>::iterator t = core->getData()->textLabels.find(i->first);
 					if (t != core->getData()->textLabels.end())
 					{
+						if (customValue >= STREAMER_ITEM_MIN_CUSTOM_VALUE)
+						{
+							Manipulation::getIntExtraDataParams(params, extraParams, t->first, customValue);
+
+							if (!Manipulation::hasIntData(amx, extraParams))
+							{
+								break;
+							}
+						}
+
 						float distance = 0.0f;
 						if (t->second->attach)
 						{
@@ -1830,6 +1976,16 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetAllVisibleItems(AMX *amx, cell *params
 					std::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(i->first.first);
 					if (a != core->getData()->actors.end())
 					{
+						if (customValue >= STREAMER_ITEM_MIN_CUSTOM_VALUE)
+						{
+							Manipulation::getIntExtraDataParams(params, extraParams, a->first, customValue);
+
+							if (!Manipulation::hasIntData(amx, extraParams))
+							{
+								break;
+							}
+						}
+
 						float distance = static_cast<float>(boost::geometry::comparable_distance(p->second.position, a->second->position));
 						orderedItems.insert(std::pair<float, int>(distance, a->first));
 					}

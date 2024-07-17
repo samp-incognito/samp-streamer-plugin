@@ -48,6 +48,8 @@
 
 #define STREAMER_STATIC_DISTANCE_CUTOFF (0.0f)
 
+#define STREAMER_ITEM_MIN_CUSTOM_VALUE (0x40000000 & ~0x80000000)
+
 class Cell;
 class Data;
 class Events;
