@@ -1513,6 +1513,12 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetNearbyItems(AMX *amx, cell *params)
 	std::multimap<float, int> orderedItems;
 	std::vector<SharedCell> pointCells;
 	core->getGrid()->findMinimalCellsForPoint(position2d, pointCells, range);
+
+	if(customDataType != 0 && customDataType < STREAMER_ITEM_MIN_CUSTOM_VALUE)
+	{
+		Utility::logError("Streamer_GetNearbyItems: Invalid custom data type specified.");
+	}
+
 	switch (static_cast<int>(params[4]))
 	{
 		case STREAMER_TYPE_OBJECT:
@@ -1808,10 +1814,16 @@ cell AMX_NATIVE_CALL Natives::Streamer_GetAllVisibleItems(AMX *amx, cell *params
 	CHECK_PARAMS(5);
 	std::multimap<float, int> orderedItems;
 	std::unordered_map<int, Player>::iterator p = core->getData()->players.find(static_cast<int>(params[1]));
+
 	if (p != core->getData()->players.end())
 	{
 		cell customDataType = params[9];
 		cell extraParams[4];
+
+		if(customDataType != 0 && customDataType < STREAMER_ITEM_MIN_CUSTOM_VALUE)
+		{
+			Utility::logError("Streamer_GetAllVisibleItems: Invalid custom data type specified.");
+		}
 
 		switch (static_cast<int>(params[2]))
 		{
