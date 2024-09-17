@@ -634,7 +634,7 @@ void Streamer::discoverActors(Player &player, const std::vector<SharedCell> &cel
 					if (d == core->getData()->discoveredActors.end())
 					{
 						const int playerWorldId = *w == -1 ? -1 : player.worldId;
-						if (doesPlayerSatisfyConditions(a->second->players, player.playerId, a->second->interiors, player.interiorId, a->second->worlds, playerWorldId, a->second->areas, player.internalAreas, a->second->inverseAreaChecking))
+						if (doesPlayerSatisfyConditions(a->second->players, player.playerId, a->second->interiors, player.interiorId, worlds, playerWorldId, a->second->areas, player.internalAreas, a->second->inverseAreaChecking))
 						{
 							if (a->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF || boost::geometry::comparable_distance(player.position, Eigen::Vector3f(a->second->position + a->second->positionOffset)) < (a->second->comparableStreamDistance * player.radiusMultipliers[STREAMER_TYPE_ACTOR]))
 							{
@@ -1088,7 +1088,7 @@ void Streamer::discoverPickups(Player &player, const std::vector<SharedCell> &ce
 				if (d == core->getData()->discoveredPickups.end())
 				{
 					const int playerWorldId = *w == -1 ? -1 : player.worldId;
-					if (doesPlayerSatisfyConditions(p->second->players, player.playerId, p->second->interiors, player.interiorId, p->second->worlds, playerWorldId, p->second->areas, player.internalAreas, p->second->inverseAreaChecking))
+					if (doesPlayerSatisfyConditions(p->second->players, player.playerId, p->second->interiors, player.interiorId, worlds, playerWorldId, p->second->areas, player.internalAreas, p->second->inverseAreaChecking))
 					{
 						if (p->second->comparableStreamDistance < STREAMER_STATIC_DISTANCE_CUTOFF || boost::geometry::comparable_distance(player.position, Eigen::Vector3f(p->second->position + p->second->positionOffset)) < (p->second->comparableStreamDistance * player.radiusMultipliers[STREAMER_TYPE_PICKUP]))
 						{
