@@ -17,7 +17,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-#define INCLUDE_FILE_VERSION (0x295)
+#define INCLUDE_FILE_VERSION (0x296)
 #define PLUGIN_VERSION "2.9.6"
 
 #include <boost/bimap.hpp>
