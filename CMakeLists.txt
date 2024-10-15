@@ -32,6 +32,16 @@ include_directories(${EIGEN3_INCLUDE_DIR})
 set(CMAKE_SKIP_INSTALL_ALL_DEPENDENCY True)
 set(CMAKE_SKIP_PACKAGE_ALL_DEPENDENCY True)
 
+include(CheckTypeSize)
+check_type_size("void*" SIZEOF_VOID_P BUILTIN_TYPES_ONLY)
+
+if(NOT WIN32)
+	if(NOT TARGET_ARCH OR TARGET_ARCH EQUAL x86)
+		set(CMAKE_C_FLAGS "-m32 ${CMAKE_C_FLAGS}")
+		set(CMAKE_CXX_FLAGS "-m32 ${CMAKE_CXX_FLAGS}")
+	endif()
+endif()
+
 add_subdirectory(lib/omp-sdk)
 add_subdirectory(lib/omp-gdk)
 include_directories(${OMP_GDK_PATH})
