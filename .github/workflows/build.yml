@@ -90,6 +90,7 @@ jobs:
       with:
         name: streamer-win-debug-${{ steps.current-time.outputs.formattedTime }}-${{ steps.vars.outputs.sha_short }}
         path: build/bin/Debug
+
   build-linux:
     runs-on: ubuntu-latest
 
