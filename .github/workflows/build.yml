@@ -123,5 +123,5 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: streamer-linux-${{ matrix.config == 'Debug' && '-debug' || '-release' }}-${{ steps.current-time.outputs.formattedTime }}-${{ steps.vars.outputs.sha_short }}
+        name: streamer-linux-${{ matrix.config == 'Debug' && 'debug' || 'release' }}-${{ steps.current-time.outputs.formattedTime }}-${{ steps.vars.outputs.sha_short }}
         path: docker/build/bin
