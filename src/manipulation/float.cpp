@@ -1110,7 +1110,13 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 				}
 				if (update)
 				{
-					for (std::unordered_set<int>::const_iterator w = p->second->worlds.begin(); w != p->second->worlds.end(); ++w)
+					std::unordered_set<int> worlds = p->second->worlds;
+					if (worlds.empty())
+					{
+						worlds.insert(-1);
+					}
+
+					for (std::unordered_set<int>::const_iterator w = worlds.begin(); w != worlds.end(); ++w)
 					{
 						std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalPickups.find(std::make_pair(p->first, *w));
 						if (i != core->getData()->internalPickups.end())
@@ -1775,7 +1781,13 @@ int Manipulation::setFloatData(AMX *amx, cell *params)
 				}
 				if (update)
 				{
-					for (std::unordered_set<int>::const_iterator w = a->second->worlds.begin(); w != a->second->worlds.end(); ++w)
+					std::unordered_set<int> worlds = a->second->worlds;
+					if (worlds.empty())
+					{
+						worlds.insert(-1);
+					}
+
+					for (std::unordered_set<int>::const_iterator w = worlds.begin(); w != worlds.end(); ++w)
 					{
 						std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
 						if (i != core->getData()->internalActors.end())
