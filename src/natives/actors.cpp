@@ -40,6 +40,10 @@ cell AMX_NATIVE_CALL Natives::CreateDynamicActor(AMX *amx, cell *params)
 	actor->invulnerable = static_cast<int>(params[6]) != 0;
 	actor->health = amx_ctof(params[7]);
 	Utility::addToContainer(actor->worlds, static_cast<int>(params[8]));
+	if (actor->worlds.empty())
+	{
+		actor->worlds.insert(-1);
+	}
 	Utility::addToContainer(actor->interiors, static_cast<int>(params[9]));
 	Utility::addToContainer(actor->players, static_cast<int>(params[10]));
 	actor->comparableStreamDistance = amx_ctof(params[11]) < STREAMER_STATIC_DISTANCE_CUTOFF ? amx_ctof(params[11]) : amx_ctof(params[11]) * amx_ctof(params[11]);
@@ -85,13 +89,7 @@ cell AMX_NATIVE_CALL Natives::IsDynamicActorStreamedIn(AMX *amx, cell *params)
 		std::unordered_map<int, Item::SharedActor>::iterator a = core->getData()->actors.find(actorId);
 		if (a != core->getData()->actors.end())
 		{
-			std::unordered_set<int> worlds = a->second->worlds;
-			if (worlds.empty())
-			{
-				worlds.insert(-1);
-			}
-
-			for (std::unordered_set<int>::const_iterator w = worlds.begin(); w != worlds.end(); ++w)
+			for (std::unordered_set<int>::const_iterator w = a->second->worlds.begin(); w != a->second->worlds.end(); ++w)
 			{
 				std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalActors.find(std::make_pair(actorId, *w));
 				if (i != core->getData()->internalActors.end())
@@ -175,13 +173,7 @@ cell AMX_NATIVE_CALL Natives::ApplyDynamicActorAnimation(AMX *amx, cell *params)
 		a->second->anim->freeze = static_cast<int>(params[8]) != 0;
 		a->second->anim->time = static_cast<int>(params[9]);
 
-		std::unordered_set<int> worlds = a->second->worlds;
-		if (worlds.empty())
-		{
-			worlds.insert(-1);
-		}
-
-		for (std::unordered_set<int>::const_iterator w = worlds.begin(); w != worlds.end(); ++w)
+		for (std::unordered_set<int>::const_iterator w = a->second->worlds.begin(); w != a->second->worlds.end(); ++w)
 		{
 			std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
 			if (i != core->getData()->internalActors.end())
@@ -202,13 +194,7 @@ cell AMX_NATIVE_CALL Natives::ClearDynamicActorAnimations(AMX *amx, cell *params
 	{
 		a->second->anim = NULL;
 
-		std::unordered_set<int> worlds = a->second->worlds;
-		if (worlds.empty())
-		{
-			worlds.insert(-1);
-		}
-
-		for (std::unordered_set<int>::const_iterator w = worlds.begin(); w != worlds.end(); ++w)
+		for (std::unordered_set<int>::const_iterator w = a->second->worlds.begin(); w != a->second->worlds.end(); ++w)
 		{
 			std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
 			if (i != core->getData()->internalActors.end())
@@ -241,13 +227,7 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorFacingAngle(AMX *amx, cell *params)
 	{
 		a->second->rotation = amx_ctof(params[2]);
 
-		std::unordered_set<int> worlds = a->second->worlds;
-		if (worlds.empty())
-		{
-			worlds.insert(-1);
-		}
-
-		for (std::unordered_set<int>::const_iterator w = worlds.begin(); w != worlds.end(); ++w)
+		for (std::unordered_set<int>::const_iterator w = a->second->worlds.begin(); w != a->second->worlds.end(); ++w)
 		{
 			std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
 			if (i != core->getData()->internalActors.end())
@@ -292,13 +272,7 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorPos(AMX *amx, cell *params)
 		a->second->position[1] = amx_ctof(params[3]);
 		a->second->position[2] = amx_ctof(params[4]);
 
-		std::unordered_set<int> worlds = a->second->worlds;
-		if (worlds.empty())
-		{
-			worlds.insert(-1);
-		}
-
-		for (std::unordered_set<int>::const_iterator w = worlds.begin(); w != worlds.end(); ++w)
+		for (std::unordered_set<int>::const_iterator w = a->second->worlds.begin(); w != a->second->worlds.end(); ++w)
 		{
 			std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
 			if (i != core->getData()->internalActors.end())
@@ -334,13 +308,7 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorHealth(AMX *amx, cell *params)
 	{
 		a->second->health = amx_ctof(params[2]);
 
-		std::unordered_set<int> worlds = a->second->worlds;
-		if (worlds.empty())
-		{
-			worlds.insert(-1);
-		}
-
-		for (std::unordered_set<int>::const_iterator w = worlds.begin(); w != worlds.end(); ++w)
+		for (std::unordered_set<int>::const_iterator w = a->second->worlds.begin(); w != a->second->worlds.end(); ++w)
 		{
 			std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
 			if (i != core->getData()->internalActors.end())
@@ -362,13 +330,7 @@ cell AMX_NATIVE_CALL Natives::SetDynamicActorInvulnerable(AMX *amx, cell *params
 	{
 		a->second->invulnerable = static_cast<int>(params[2]) != 0;
 
-		std::unordered_set<int> worlds = a->second->worlds;
-		if (worlds.empty())
-		{
-			worlds.insert(-1);
-		}
-
-		for (std::unordered_set<int>::const_iterator w = worlds.begin(); w != worlds.end(); ++w)
+		for (std::unordered_set<int>::const_iterator w = a->second->worlds.begin(); w != a->second->worlds.end(); ++w)
 		{
 			std::unordered_map<std::pair<int, int>, int, pair_hash>::iterator i = core->getData()->internalActors.find(std::make_pair(a->first, *w));
 			if (i != core->getData()->internalActors.end())
