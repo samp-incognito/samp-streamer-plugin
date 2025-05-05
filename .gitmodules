@@ -1,12 +1,12 @@
 [submodule "lib/cmake-modules"]
 	path = lib/cmake-modules
-	url = https://github.com/Zeex/cmake-modules
+	url = https://github.com/wiger3/cmake-modules
 [submodule "lib/eigen"]
 	path = lib/eigen
 	url = https://github.com/eigenteam/eigen-git-mirror
 [submodule "lib/samp-plugin-sdk"]
 	path = lib/samp-plugin-sdk
-	url = https://github.com/Zeex/samp-plugin-sdk
+	url = https://github.com/AmyrAhmady/samp-plugin-sdk
 [submodule "lib/omp-sdk"]
 	path = lib/omp-sdk
 	url = https://github.com/openmultiplayer/open.mp-sdk
