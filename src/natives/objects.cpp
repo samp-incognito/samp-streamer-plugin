@@ -412,7 +412,7 @@ cell AMX_NATIVE_CALL Natives::AttachDynamicObjectToPlayer(AMX *amx, cell *params
 	static AMX_NATIVE native = sampgdk::FindNative("AttachPlayerObjectToPlayer");
 	if (native == NULL)
 	{
-		Utility::logError("AttachDynamicObjectToObject: YSF plugin (a version having the AttachPlayerObjectToPlayer function) must be loaded to attach objects to objects.");
+		Utility::logError("AttachDynamicObjectToPlayer: YSF plugin (a version having the AttachPlayerObjectToPlayer function) must be loaded to attach objects to players.");
 		return 0;
 	}
 	std::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(static_cast<int>(params[1]));
