@@ -13,7 +13,7 @@ on:
 
 jobs:
   build-windows-release:
-    runs-on: windows-2019
+    runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
       with:
@@ -52,7 +52,7 @@ jobs:
         name: streamer-win-release-${{ steps.current-time.outputs.formattedTime }}-${{ steps.vars.outputs.sha_short }}
         path: build/bin/Release
   build-windows-debug:
-    runs-on: windows-2019
+    runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
       with:
