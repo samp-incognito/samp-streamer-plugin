@@ -30,10 +30,10 @@ jobs:
       uses: actions/setup-python@v2
 
     - name: Install CMake
-      uses: lukka/get-cmake@v3.19.0
+      uses: lukka/get-cmake@v3.26.0
 
     - name: Generate build files
-      run: mkdir build && cd build && cmake .. -G "Visual Studio 16 2019" -A Win32
+      run: mkdir build && cd build && cmake .. -G "Visual Studio 17 2022" -A Win32
 
     - name: Build
       run: |
@@ -69,10 +69,10 @@ jobs:
       uses: actions/setup-python@v2
 
     - name: Install CMake
-      uses: lukka/get-cmake@v3.19.0
+      uses: lukka/get-cmake@v3.26.0
 
     - name: Generate build files
-      run: mkdir build && cd build && cmake .. -G "Visual Studio 16 2019" -A Win32
+      run: mkdir build && cd build && cmake .. -G "Visual Studio 17 2022" -A Win32
 
     - name: Build
       run: |
