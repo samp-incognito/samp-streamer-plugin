@@ -13,7 +13,7 @@ on:
 
 jobs:
   build-windows-release:
-    runs-on: windows-2019
+    runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
       with:
@@ -30,10 +30,10 @@ jobs:
       uses: actions/setup-python@v2
 
     - name: Install CMake
-      uses: lukka/get-cmake@v3.19.0
+      uses: lukka/get-cmake@v3.26.0
 
     - name: Generate build files
-      run: mkdir build && cd build && cmake .. -G "Visual Studio 16 2019" -A Win32
+      run: mkdir build && cd build && cmake .. -G "Visual Studio 17 2022" -A Win32
 
     - name: Build
       run: |
@@ -52,7 +52,7 @@ jobs:
         name: streamer-win-release-${{ steps.current-time.outputs.formattedTime }}-${{ steps.vars.outputs.sha_short }}
         path: build/bin/Release
   build-windows-debug:
-    runs-on: windows-2019
+    runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
       with:
@@ -69,10 +69,10 @@ jobs:
       uses: actions/setup-python@v2
 
     - name: Install CMake
-      uses: lukka/get-cmake@v3.19.0
+      uses: lukka/get-cmake@v3.26.0
 
     - name: Generate build files
-      run: mkdir build && cd build && cmake .. -G "Visual Studio 16 2019" -A Win32
+      run: mkdir build && cd build && cmake .. -G "Visual Studio 17 2022" -A Win32
 
     - name: Build
       run: |
