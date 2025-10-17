@@ -617,13 +617,7 @@ void Streamer::discoverActors(Player &player, const std::vector<SharedCell> &cel
 		{
 			for (std::unordered_map<int, Item::SharedActor>::const_iterator a = (*c)->actors.begin(); a != (*c)->actors.end(); ++a)
 			{
-				std::unordered_set<int> worlds = a->second->worlds;
-				if (worlds.empty())
-				{
-					worlds.insert(-1);
-				}
-
-				for (std::unordered_set<int>::const_iterator w = worlds.begin(); w != worlds.end(); ++w)
+				for (std::unordered_set<int>::const_iterator w = a->second->worlds.begin(); w != a->second->worlds.end(); ++w)
 				{
 					if (player.worldId != *w && *w != -1)
 					{
@@ -1071,13 +1065,7 @@ void Streamer::discoverPickups(Player &player, const std::vector<SharedCell> &ce
 	{
 		for (std::unordered_map<int, Item::SharedPickup>::const_iterator p = (*c)->pickups.begin(); p != (*c)->pickups.end(); ++p)
 		{
-			std::unordered_set<int> worlds = p->second->worlds;
-			if (worlds.empty())
-			{
-				worlds.insert(-1);
-			}
-
-			for (std::unordered_set<int>::const_iterator w = worlds.begin(); w != worlds.end(); ++w)
+			for (std::unordered_set<int>::const_iterator w = p->second->worlds.begin(); w != p->second->worlds.end(); ++w)
 			{
 				if (player.worldId != *w && *w != -1)
 				{

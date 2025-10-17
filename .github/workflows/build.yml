@@ -13,9 +13,9 @@ on:
 
 jobs:
   build-windows-release:
-    runs-on: windows-2019
+    runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
 
@@ -30,10 +30,10 @@ jobs:
       uses: actions/setup-python@v2
 
     - name: Install CMake
-      uses: lukka/get-cmake@v3.19.0
+      uses: lukka/get-cmake@v3.26.0
 
     - name: Generate build files
-      run: mkdir build && cd build && cmake .. -G "Visual Studio 16 2019" -A Win32
+      run: mkdir build && cd build && cmake .. -G "Visual Studio 17 2022" -A Win32
 
     - name: Build
       run: |
@@ -47,14 +47,14 @@ jobs:
         format: YYYYMMDD
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: streamer-win-release-${{ steps.current-time.outputs.formattedTime }}-${{ steps.vars.outputs.sha_short }}
         path: build/bin/Release
   build-windows-debug:
-    runs-on: windows-2019
+    runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
 
@@ -69,10 +69,10 @@ jobs:
       uses: actions/setup-python@v2
 
     - name: Install CMake
-      uses: lukka/get-cmake@v3.19.0
+      uses: lukka/get-cmake@v3.26.0
 
     - name: Generate build files
-      run: mkdir build && cd build && cmake .. -G "Visual Studio 16 2019" -A Win32
+      run: mkdir build && cd build && cmake .. -G "Visual Studio 17 2022" -A Win32
 
     - name: Build
       run: |
@@ -86,14 +86,19 @@ jobs:
         format: YYYYMMDD
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: streamer-win-debug-${{ steps.current-time.outputs.formattedTime }}-${{ steps.vars.outputs.sha_short }}
         path: build/bin/Debug
-  build-linux-debug:
-    runs-on: ubuntu-18.04
+  build-linux:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        config: [Debug, Release]
+
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
 
@@ -104,19 +109,10 @@ jobs:
         echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
 
-    - name: install packages
-      run: sudo apt-get install g++-multilib
-
-    - name: Install CMake
-      uses: lukka/get-cmake@v3.19.0
-
-    - name: Generate build files
-      run: mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Debug
-
     - name: Build
       run: |
-        cd build
-        cmake --build . --config Debug
+        cd docker
+        CONFIG=${{ matrix.config == 'Debug' && 'Debug' || 'MinSizeRel' }} ./build.sh
 
     - name: Get current time
       uses: josStorer/get-current-time@v2
@@ -125,46 +121,7 @@ jobs:
         format: YYYYMMDD
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
-        name: streamer-linux-debug-${{ steps.current-time.outputs.formattedTime }}-${{ steps.vars.outputs.sha_short }}
-        path: build/bin
-  build-linux-release:
-    runs-on: ubuntu-18.04
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        submodules: recursive
-
-    - name: Declare github variables
-      id: vars
-      shell: bash
-      run: |
-        echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-
-    - name: install packages
-      run: sudo apt-get install g++-multilib
-
-    - name: Install CMake
-      uses: lukka/get-cmake@v3.19.0
-
-    - name: Generate build files
-      run: mkdir build && cd build && cmake .. -DCMAKE_BUILD_TYPE=Release
-
-    - name: Build
-      run: |
-        cd build
-        cmake --build . --config Release
-
-    - name: Get current time
-      uses: josStorer/get-current-time@v2
-      id: current-time
-      with:
-        format: YYYYMMDD
-
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: streamer-linux-release-${{ steps.current-time.outputs.formattedTime }}-${{ steps.vars.outputs.sha_short }}
-        path: build/bin
+        name: streamer-linux-${{ matrix.config == 'Debug' && 'debug' || 'release' }}-${{ steps.current-time.outputs.formattedTime }}-${{ steps.vars.outputs.sha_short }}
+        path: docker/build/bin
