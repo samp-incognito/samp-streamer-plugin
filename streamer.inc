@@ -116,7 +116,7 @@
 
 // Include File Version
 
-public Streamer_IncludeFileVersion = 0x296;
+public Streamer_IncludeFileVersion = 0x297;
 
 #pragma unused Streamer_IncludeFileVersion
 
@@ -257,8 +257,8 @@ native Streamer_DestroyAllVisibleItems(playerid, type, serverwide = 1);
 native Streamer_CountVisibleItems(playerid, type, serverwide = 1);
 native Streamer_DestroyAllItems(type, serverwide = 1);
 native Streamer_CountItems(type, serverwide = 1);
-native Streamer_GetNearbyItems(Float:x, Float:y, Float:z, type, STREAMER_ALL_TAGS:items[], maxitems = sizeof items, Float:range = 300.0, worldid = -1);
-native Streamer_GetAllVisibleItems(playerid, type, STREAMER_ALL_TAGS:items[], maxitems = sizeof items);
+native Streamer_GetNearbyItems(Float:x, Float:y, Float:z, type, STREAMER_ALL_TAGS:items[], maxitems = sizeof items, Float:range = 300.0, worldid = -1, customdatatype = 0);
+native Streamer_GetAllVisibleItems(playerid, type, STREAMER_ALL_TAGS:items[], maxitems = sizeof items, customdatatype = 0);
 native Streamer_GetItemPos(type, STREAMER_ALL_TAGS:id, &Float:x, &Float:y, &Float:z);
 native Streamer_SetItemPos(type, STREAMER_ALL_TAGS:id, Float:x, Float:y, Float:z);
 native Streamer_GetItemOffset(type, STREAMER_ALL_TAGS:id, &Float:x, &Float:y, &Float:z);
