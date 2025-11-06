@@ -454,3 +454,17 @@ forward OnDynamicActorStreamOut(STREAMER_TAG_ACTOR:actorid, forplayerid);
 forward Streamer_OnItemStreamIn(type, STREAMER_ALL_TAGS:id, forplayerid);
 forward Streamer_OnItemStreamOut(type, STREAMER_ALL_TAGS:id, forplayerid);
 forward Streamer_OnPluginError(const error[]);
+
+// open.mp wrappers
+
+#if defined _INC_omp_npc
+	stock NPC_SetSurfingDynamicObject(npcid, STREAMER_TAG_OBJECT:objectid)
+	{
+		return NPC_SetSurfingPlayerObject(npcid, Streamer_GetItemInternalID(npcid, STREAMER_TYPE_OBJECT, objectid));
+	}
+
+	stock STREAMER_TAG_OBJECT:NPC_GetSurfingDynamicObject(npcid)
+	{
+		return Streamer_GetItemStreamerID(npcid, STREAMER_TYPE_OBJECT, NPC_GetSurfingPlayerObject(npcid));
+	}
+#endif
