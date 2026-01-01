@@ -906,6 +906,8 @@ SAMPGDK_NATIVE(bool, IsValidActor(int actorid));
 
 #ifndef DOXYGEN
 
+#define SAMPGDK_CPP_WRAPPERS
+
 #if defined SAMPGDK_CPP_WRAPPERS && !defined IN_SAMPGDK
 
 namespace sampgdk {
@@ -6931,3 +6933,4 @@ inline bool CreateExplosionForPlayer(int playerid, float X, float Y, float Z, in
 
 #endif /* !SAMPGDK_A_PLAYERS_H */
 
+#undef SAMPGDK_CPP_WRAPPERS
