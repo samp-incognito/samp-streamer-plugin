@@ -19,7 +19,14 @@
 #endif
 #define _streamer_included
 
-#include <a_samp>
+// open.mp compatibility: prefer open.mp includes when available, otherwise fall back to SA-MP
+#if defined OPEN_MP_INCLUDED || defined _INC_open_mp
+	// open.mp already included - no action needed
+#elseif defined __OPEN_MP_DEFINES
+	#include <open.mp>
+#else
+	#include <a_samp>
+#endif
 
 // Definitions
 
@@ -51,6 +58,21 @@
 
 #if !defined FLOAT_INFINITY
     #define FLOAT_INFINITY (Float:0x7F800000)
+#endif
+
+// open.mp compatibility: INVALID_PLAYER_ID and MAX_PLAYERS are guaranteed to
+// be defined by both a_samp.inc and open.mp, so no redefinition needed.
+// open.mp expanded MAX_PLAYERS to 1000; the bitset<MAX_PLAYERS> in the plugin
+// C++ layer uses the compile-time value, so ensure the server and streamer
+// are compiled with consistent MAX_PLAYERS values.
+
+// Detect open.mp at Pawn level for scripts that want conditional behaviour.
+#if !defined STREAMER_HAS_OPEN_MP
+	#if defined OPEN_MP_INCLUDED || defined _INC_open_mp || defined __OPEN_MP_DEFINES
+		#define STREAMER_HAS_OPEN_MP (1)
+	#else
+		#define STREAMER_HAS_OPEN_MP (0)
+	#endif
 #endif
 
 #if defined STREAMER_ENABLE_TAGS

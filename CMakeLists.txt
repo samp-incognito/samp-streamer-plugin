@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 project(streamer)
 
-set(PLUGIN_VERSION "2.9.6")
-set(CMAKE_CXX_STANDARD 17)
+set(PLUGIN_VERSION "2.9.7")
+set(CMAKE_CXX_STANDARD 20)
 
 if (MSVC)
     add_definitions("/MP")

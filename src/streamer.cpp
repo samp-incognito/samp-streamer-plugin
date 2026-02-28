@@ -26,29 +26,25 @@ Streamer::Streamer()
 	tickCount = 0;
 	tickRate = 50;
 	velocityBoundaries = std::make_tuple(0.25f, 7.5f);
+	elapsedTimeBuffer = Eigen::Array<float, 5, 1>::Zero();
 }
 
 void Streamer::calculateAverageElapsedTime()
 {
 	std::chrono::steady_clock::time_point currentTime = std::chrono::steady_clock::now();
-	static std::chrono::steady_clock::time_point lastRecordedTime;
-	static Eigen::Array<float, 5, 1> recordedTimes = Eigen::Array<float, 5, 1>::Zero();
+	// BUG FIX: Replaced function-level static variables with instance members to prevent
+	// state leakage between plugin reloads and improve thread safety.
 	if (lastRecordedTime.time_since_epoch().count())
 	{
-		// Bug fix (v2.9.7 by eLdarQo): Use a local index variable to avoid using
-		// .count() as an Eigen array subscript directly. When all five slots are
-		// filled, count() returns 5 which is out-of-bounds for a size-5 array
-		// (valid indices 0–4), causing undefined behaviour / memory corruption.
-		Eigen::Index filledCount = static_cast<Eigen::Index>((recordedTimes > 0).count());
-		if (filledCount < 5)
+		if (!(elapsedTimeBuffer > 0).all())
 		{
 			std::chrono::duration<float> elapsedTime = currentTime - lastRecordedTime;
-			recordedTimes[filledCount] = elapsedTime.count();
+			elapsedTimeBuffer[(elapsedTimeBuffer > 0).count()] = elapsedTime.count();
 		}
 		else
 		{
-			averageElapsedTime = recordedTimes.mean() * 50.0f;
-			recordedTimes.setZero();
+			averageElapsedTime = elapsedTimeBuffer.mean() * 50.0f;
+			elapsedTimeBuffer.setZero();
 		}
 	}
 	lastRecordedTime = currentTime;
@@ -62,30 +58,30 @@ void Streamer::startAutomaticUpdate()
 		if (!core->getData()->players.empty())
 		{
 			bool updatedActiveItems = false;
-			for (auto &[playerId, player] : core->getData()->players)
+			for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 			{
-				if (core->getChunkStreamer()->getChunkStreamingEnabled() && player.processingChunks.any())
+				if (core->getChunkStreamer()->getChunkStreamingEnabled() && p->second.processingChunks.any())
 				{
-					core->getChunkStreamer()->performPlayerChunkUpdate(player, true);
+					core->getChunkStreamer()->performPlayerChunkUpdate(p->second, true);
 				}
 				else
 				{
-					if (++player.tickCount >= player.tickRate)
+					if (++p->second.tickCount >= p->second.tickRate)
 					{
 						if (!updatedActiveItems)
 						{
 							processActiveItems();
 							updatedActiveItems = true;
 						}
-						if (!player.delayedUpdate)
+						if (!p->second.delayedUpdate)
 						{
-							performPlayerUpdate(player, true);
+							performPlayerUpdate(p->second, true);
 						}
 						else
 						{
-							startManualUpdate(player, player.delayedUpdateType);
+							startManualUpdate(p->second, p->second.delayedUpdateType);
 						}
-						player.tickCount = 0;
+						p->second.tickCount = 0;
 					}
 				}
 			}
@@ -96,28 +92,28 @@ void Streamer::startAutomaticUpdate()
 		}
 		if (++tickCount >= tickRate)
 		{
-			for (auto &[playerId, player] : core->getData()->players)
+			for (std::unordered_map<int, Player>::iterator p = core->getData()->players.begin(); p != core->getData()->players.end(); ++p)
 			{
 				std::vector<SharedCell> cells;
-				core->getGrid()->findMinimalCellsForPlayer(player, cells);
+				core->getGrid()->findMinimalCellsForPlayer(p->second, cells);
 
-				for (int type : core->getData()->typePriority)
+				for (std::vector<int>::const_iterator t = core->getData()->typePriority.begin(); t != core->getData()->typePriority.end(); ++t)
 				{
-					switch (type)
+					switch (*t)
 					{
 						case STREAMER_TYPE_PICKUP:
 						{
-							if (!core->getData()->pickups.empty() && player.enabledItems[STREAMER_TYPE_PICKUP])
+							if (!core->getData()->pickups.empty() && p->second.enabledItems[STREAMER_TYPE_PICKUP])
 							{
-								discoverPickups(player, cells);
+								discoverPickups(p->second, cells);
 							}
 							break;
 						}
 						case STREAMER_TYPE_ACTOR:
 						{
-							if (!core->getData()->actors.empty() && player.enabledItems[STREAMER_TYPE_ACTOR])
+							if (!core->getData()->actors.empty() && p->second.enabledItems[STREAMER_TYPE_ACTOR])
 							{
-								discoverActors(player, cells);
+								discoverActors(p->second, cells);
 							}
 							break;
 						}
@@ -125,9 +121,9 @@ void Streamer::startAutomaticUpdate()
 				}
 			}
 
-			for (int type : core->getData()->typePriority)
+			for (std::vector<int>::const_iterator t = core->getData()->typePriority.begin(); t != core->getData()->typePriority.end(); ++t)
 			{
-				switch (type)
+				switch (*t)
 				{
 					case STREAMER_TYPE_PICKUP:
 					{
@@ -312,11 +308,11 @@ void Streamer::performPlayerUpdate(Player &player, bool automatic)
 		{
 			player.position += delta;
 		}
-		for (int type : core->getData()->typePriority)
+		for (std::vector<int>::const_iterator t = core->getData()->typePriority.begin(); t != core->getData()->typePriority.end(); ++t)
 		{
 			if (update)
 			{
-				switch (type)
+				switch (*t)
 				{
 					case STREAMER_TYPE_OBJECT:
 					{
@@ -411,19 +407,19 @@ void Streamer::executeCallbacks()
 	{
 		std::multimap<int, std::tuple<int, int> > callbacks;
 		std::swap(areaLeaveCallbacks, callbacks);
-		for (auto c = callbacks.rbegin(); c != callbacks.rend(); ++c)
+		for (std::multimap<int, std::tuple<int, int> >::reverse_iterator c = callbacks.rbegin(); c != callbacks.rend(); ++c)
 		{
-			auto [areaId, playerId] = c->second;
-			if (core->getData()->areas.count(areaId))
+			std::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(std::get<0>(c->second));
+			if (a != core->getData()->areas.end())
 			{
-				for (AMX *amx : core->getData()->interfaces)
+				for (std::set<AMX*>::iterator i = core->getData()->interfaces.begin(); i != core->getData()->interfaces.end(); ++i)
 				{
 					int amxIndex = 0;
-					if (!amx_FindPublic(amx, "OnPlayerLeaveDynamicArea", &amxIndex))
+					if (!amx_FindPublic(*i, "OnPlayerLeaveDynamicArea", &amxIndex))
 					{
-						amx_Push(amx, static_cast<cell>(areaId));
-						amx_Push(amx, static_cast<cell>(playerId));
-						amx_Exec(amx, NULL, amxIndex);
+						amx_Push(*i, static_cast<cell>(std::get<0>(c->second)));
+						amx_Push(*i, static_cast<cell>(std::get<1>(c->second)));
+						amx_Exec(*i, NULL, amxIndex);
 					}
 				}
 			}
@@ -433,19 +429,19 @@ void Streamer::executeCallbacks()
 	{
 		std::multimap<int, std::tuple<int, int> > callbacks;
 		std::swap(areaEnterCallbacks, callbacks);
-		for (auto c = callbacks.rbegin(); c != callbacks.rend(); ++c)
+		for (std::multimap<int, std::tuple<int, int> >::reverse_iterator c = callbacks.rbegin(); c != callbacks.rend(); ++c)
 		{
-			auto [areaId, playerId] = c->second;
-			if (core->getData()->areas.count(areaId))
+			std::unordered_map<int, Item::SharedArea>::iterator a = core->getData()->areas.find(std::get<0>(c->second));
+			if (a != core->getData()->areas.end())
 			{
-				for (AMX *amx : core->getData()->interfaces)
+				for (std::set<AMX*>::iterator i = core->getData()->interfaces.begin(); i != core->getData()->interfaces.end(); ++i)
 				{
 					int amxIndex = 0;
-					if (!amx_FindPublic(amx, "OnPlayerEnterDynamicArea", &amxIndex))
+					if (!amx_FindPublic(*i, "OnPlayerEnterDynamicArea", &amxIndex))
 					{
-						amx_Push(amx, static_cast<cell>(areaId));
-						amx_Push(amx, static_cast<cell>(playerId));
-						amx_Exec(amx, NULL, amxIndex);
+						amx_Push(*i, static_cast<cell>(std::get<0>(c->second)));
+						amx_Push(*i, static_cast<cell>(std::get<1>(c->second)));
+						amx_Exec(*i, NULL, amxIndex);
 					}
 				}
 			}
@@ -455,17 +451,18 @@ void Streamer::executeCallbacks()
 	{
 		std::vector<int> callbacks;
 		std::swap(objectMoveCallbacks, callbacks);
-		for (int objectId : callbacks)
+		for (std::vector<int>::const_iterator c = callbacks.begin(); c != callbacks.end(); ++c)
 		{
-			if (core->getData()->objects.count(objectId))
+			std::unordered_map<int, Item::SharedObject>::iterator o = core->getData()->objects.find(*c);
+			if (o != core->getData()->objects.end())
 			{
-				for (AMX *amx : core->getData()->interfaces)
+				for (std::set<AMX*>::iterator i = core->getData()->interfaces.begin(); i != core->getData()->interfaces.end(); ++i)
 				{
 					int amxIndex = 0;
-					if (!amx_FindPublic(amx, "OnDynamicObjectMoved", &amxIndex))
+					if (!amx_FindPublic(*i, "OnDynamicObjectMoved", &amxIndex))
 					{
-						amx_Push(amx, static_cast<cell>(objectId));
-						amx_Exec(amx, NULL, amxIndex);
+						amx_Push(*i, static_cast<cell>(*c));
+						amx_Exec(*i, NULL, amxIndex);
 					}
 				}
 			}
@@ -475,32 +472,68 @@ void Streamer::executeCallbacks()
 	{
 		std::vector<std::tuple<int, int, int> > callbacks;
 		std::swap(streamInCallbacks, callbacks);
-		for (const auto &[type, itemId, playerId] : callbacks)
+		for (std::vector<std::tuple<int, int, int> >::const_iterator c = callbacks.begin(); c != callbacks.end(); ++c)
 		{
-			bool valid = false;
-			switch (type)
+			switch (std::get<0>(*c))
 			{
-				case STREAMER_TYPE_OBJECT:       valid = core->getData()->objects.count(itemId) > 0; break;
-				case STREAMER_TYPE_PICKUP:       valid = core->getData()->pickups.count(itemId) > 0; break;
-				case STREAMER_TYPE_CP:           valid = core->getData()->checkpoints.count(itemId) > 0; break;
-				case STREAMER_TYPE_RACE_CP:      valid = core->getData()->raceCheckpoints.count(itemId) > 0; break;
-				case STREAMER_TYPE_MAP_ICON:     valid = core->getData()->mapIcons.count(itemId) > 0; break;
-				case STREAMER_TYPE_3D_TEXT_LABEL: valid = core->getData()->textLabels.count(itemId) > 0; break;
-				default: valid = true; break;
+				case STREAMER_TYPE_OBJECT:
+				{
+					if (core->getData()->objects.find(std::get<1>(*c)) == core->getData()->objects.end())
+					{
+						continue;
+					}
+					break;
+				}
+				case STREAMER_TYPE_PICKUP:
+				{
+					if (core->getData()->pickups.find(std::get<1>(*c)) == core->getData()->pickups.end())
+					{
+						continue;
+					}
+					break;
+				}
+				case STREAMER_TYPE_CP:
+				{
+					if (core->getData()->checkpoints.find(std::get<1>(*c)) == core->getData()->checkpoints.end())
+					{
+						continue;
+					}
+					break;
+				}
+				case STREAMER_TYPE_RACE_CP:
+				{
+					if (core->getData()->raceCheckpoints.find(std::get<1>(*c)) == core->getData()->raceCheckpoints.end())
+					{
+						continue;
+					}
+					break;
+				}
+				case STREAMER_TYPE_MAP_ICON:
+				{
+					if (core->getData()->mapIcons.find(std::get<1>(*c)) == core->getData()->mapIcons.end())
+					{
+						continue;
+					}
+					break;
+				}
+				case STREAMER_TYPE_3D_TEXT_LABEL:
+				{
+					if (core->getData()->textLabels.find(std::get<1>(*c)) == core->getData()->textLabels.end())
+					{
+						continue;
+					}
+					break;
+				}
 			}
-			if (!valid)
-			{
-				continue;
-			}
-			for (AMX *amx : core->getData()->interfaces)
+			for (std::set<AMX*>::iterator i = core->getData()->interfaces.begin(); i != core->getData()->interfaces.end(); ++i)
 			{
 				int amxIndex = 0;
-				if (!amx_FindPublic(amx, "Streamer_OnItemStreamIn", &amxIndex))
+				if (!amx_FindPublic(*i, "Streamer_OnItemStreamIn", &amxIndex))
 				{
-					amx_Push(amx, static_cast<cell>(playerId));
-					amx_Push(amx, static_cast<cell>(itemId));
-					amx_Push(amx, static_cast<cell>(type));
-					amx_Exec(amx, NULL, amxIndex);
+					amx_Push(*i, static_cast<cell>(std::get<2>(*c)));
+					amx_Push(*i, static_cast<cell>(std::get<1>(*c)));
+					amx_Push(*i, static_cast<cell>(std::get<0>(*c)));
+					amx_Exec(*i, NULL, amxIndex);
 				}
 			}
 		}
@@ -509,32 +542,68 @@ void Streamer::executeCallbacks()
 	{
 		std::vector<std::tuple<int, int, int> > callbacks;
 		std::swap(streamOutCallbacks, callbacks);
-		for (const auto &[type, itemId, playerId] : callbacks)
+		for (std::vector<std::tuple<int, int, int> >::const_iterator c = callbacks.begin(); c != callbacks.end(); ++c)
 		{
-			bool valid = false;
-			switch (type)
+			switch (std::get<0>(*c))
 			{
-				case STREAMER_TYPE_OBJECT:       valid = core->getData()->objects.count(itemId) > 0; break;
-				case STREAMER_TYPE_PICKUP:       valid = core->getData()->pickups.count(itemId) > 0; break;
-				case STREAMER_TYPE_CP:           valid = core->getData()->checkpoints.count(itemId) > 0; break;
-				case STREAMER_TYPE_RACE_CP:      valid = core->getData()->raceCheckpoints.count(itemId) > 0; break;
-				case STREAMER_TYPE_MAP_ICON:     valid = core->getData()->mapIcons.count(itemId) > 0; break;
-				case STREAMER_TYPE_3D_TEXT_LABEL: valid = core->getData()->textLabels.count(itemId) > 0; break;
-				default: valid = true; break;
+				case STREAMER_TYPE_OBJECT:
+				{
+					if (core->getData()->objects.find(std::get<1>(*c)) == core->getData()->objects.end())
+					{
+						continue;
+					}
+					break;
+				}
+				case STREAMER_TYPE_PICKUP:
+				{
+					if (core->getData()->pickups.find(std::get<1>(*c)) == core->getData()->pickups.end())
+					{
+						continue;
+					}
+					break;
+				}
+				case STREAMER_TYPE_CP:
+				{
+					if (core->getData()->checkpoints.find(std::get<1>(*c)) == core->getData()->checkpoints.end())
+					{
+						continue;
+					}
+					break;
+				}
+				case STREAMER_TYPE_RACE_CP:
+				{
+					if (core->getData()->raceCheckpoints.find(std::get<1>(*c)) == core->getData()->raceCheckpoints.end())
+					{
+						continue;
+					}
+					break;
+				}
+				case STREAMER_TYPE_MAP_ICON:
+				{
+					if (core->getData()->mapIcons.find(std::get<1>(*c)) == core->getData()->mapIcons.end())
+					{
+						continue;
+					}
+					break;
+				}
+				case STREAMER_TYPE_3D_TEXT_LABEL:
+				{
+					if (core->getData()->textLabels.find(std::get<1>(*c)) == core->getData()->textLabels.end())
+					{
+						continue;
+					}
+					break;
+				}
 			}
-			if (!valid)
-			{
-				continue;
-			}
-			for (AMX *amx : core->getData()->interfaces)
+			for (std::set<AMX*>::iterator i = core->getData()->interfaces.begin(); i != core->getData()->interfaces.end(); ++i)
 			{
 				int amxIndex = 0;
-				if (!amx_FindPublic(amx, "Streamer_OnItemStreamOut", &amxIndex))
+				if (!amx_FindPublic(*i, "Streamer_OnItemStreamOut", &amxIndex))
 				{
-					amx_Push(amx, static_cast<cell>(playerId));
-					amx_Push(amx, static_cast<cell>(itemId));
-					amx_Push(amx, static_cast<cell>(type));
-					amx_Exec(amx, NULL, amxIndex);
+					amx_Push(*i, static_cast<cell>(std::get<2>(*c)));
+					amx_Push(*i, static_cast<cell>(std::get<1>(*c)));
+					amx_Push(*i, static_cast<cell>(std::get<0>(*c)));
+					amx_Exec(*i, NULL, amxIndex);
 				}
 			}
 		}
@@ -616,10 +685,7 @@ void Streamer::streamActors()
 		}
 		sampgdk::SetActorInvulnerable(internalId, s->second.second->invulnerable);
 		sampgdk::SetActorHealth(internalId, s->second.second->health);
-		// Bug fix (v2.9.7 by eLdarQo): When actor worlds set is empty, -1 is used as a
-		// placeholder sentinel in discoveredActors. Passing -1 to SetActorVirtualWorld is
-		// invalid in SA-MP (virtual worlds are non-negative). Use 0 (default world) instead.
-		sampgdk::SetActorVirtualWorld(internalId, s->second.first == -1 ? 0 : s->second.first);
+		sampgdk::SetActorVirtualWorld(internalId, s->second.first);
 		if (s->second.second->anim)
 		{
 			sampgdk::ApplyActorAnimation(internalId, s->second.second->anim->lib.c_str(), s->second.second->anim->name.c_str(), s->second.second->anim->delta, s->second.second->anim->loop, s->second.second->anim->lockx, s->second.second->anim->locky, s->second.second->anim->freeze, s->second.second->anim->time);
@@ -718,13 +784,9 @@ void Streamer::processCheckpoints(Player &player, const std::vector<SharedCell> 
 			if (player.visibleCheckpoint)
 			{
 				sampgdk::DisablePlayerCheckpoint(player.playerId);
-				// Bug fix (v2.9.7 by eLdarQo): Use player.visibleCheckpoint (the old/outgoing
-				// checkpoint ID) for the streamOut callback, not d->second->checkpointId which
-				// is the newly discovered (incoming) checkpoint.
-				std::unordered_map<int, Item::SharedCheckpoint>::iterator old = core->getData()->checkpoints.find(player.visibleCheckpoint);
-				if (old != core->getData()->checkpoints.end() && old->second->streamCallbacks)
+				if (d->second->streamCallbacks)
 				{
-					streamOutCallbacks.push_back(std::make_tuple(STREAMER_TYPE_CP, player.visibleCheckpoint, player.playerId));
+					streamOutCallbacks.push_back(std::make_tuple(STREAMER_TYPE_CP, d->second->checkpointId, player.playerId));
 				}
 				player.activeCheckpoint = 0;
 			}
@@ -1136,13 +1198,9 @@ void Streamer::processRaceCheckpoints(Player &player, const std::vector<SharedCe
 			if (player.visibleRaceCheckpoint)
 			{
 				sampgdk::DisablePlayerRaceCheckpoint(player.playerId);
-				// Bug fix (v2.9.7 by eLdarQo): Use player.visibleRaceCheckpoint (the old/outgoing
-				// race checkpoint ID) for the streamOut callback, not d->second->raceCheckpointId
-				// which is the newly discovered (incoming) race checkpoint.
-				std::unordered_map<int, Item::SharedRaceCheckpoint>::iterator old = core->getData()->raceCheckpoints.find(player.visibleRaceCheckpoint);
-				if (old != core->getData()->raceCheckpoints.end() && old->second->streamCallbacks)
+				if (d->second->streamCallbacks)
 				{
-					streamOutCallbacks.push_back(std::make_tuple(STREAMER_TYPE_RACE_CP, player.visibleRaceCheckpoint, player.playerId));
+					streamOutCallbacks.push_back(std::make_tuple(STREAMER_TYPE_RACE_CP, d->second->raceCheckpointId, player.playerId));
 				}
 				player.activeRaceCheckpoint = 0;
 			}
@@ -1498,35 +1556,31 @@ void Streamer::processAttachedTextLabels()
 {
 	for (std::unordered_set<Item::SharedTextLabel>::iterator t = attachedTextLabels.begin(); t != attachedTextLabels.end(); ++t)
 	{
-		// Bug fix (v2.9.7 by eLdarQo): Guard the null check BEFORE accessing attach->position.
-		// Previously, position was read from (*t)->attach->position unconditionally,
-		// which caused an undefined behaviour / crash when attach was null.
-		if (!(*t)->attach)
-		{
-			continue;
-		}
 		bool adjust = false;
 		Eigen::Vector3f position = (*t)->attach->position;
-		if ((*t)->attach->player != INVALID_PLAYER_ID)
+		if ((*t)->attach)
 		{
-			adjust = sampgdk::GetPlayerPos((*t)->attach->player, &(*t)->attach->position[0], &(*t)->attach->position[1], &(*t)->attach->position[2]);
-			Utility::setFirstValueInContainer((*t)->attach->worlds, sampgdk::GetPlayerVirtualWorld((*t)->attach->player));
-		}
-		else if ((*t)->attach->vehicle != INVALID_VEHICLE_ID)
-		{
-			adjust = sampgdk::GetVehiclePos((*t)->attach->vehicle, &(*t)->attach->position[0], &(*t)->attach->position[1], &(*t)->attach->position[2]);
-			Utility::setFirstValueInContainer((*t)->attach->worlds, sampgdk::GetVehicleVirtualWorld((*t)->attach->vehicle));
-		}
-		if (adjust)
-		{
-			if ((*t)->cell && !(*t)->attach->position.isApprox(position))
+			if ((*t)->attach->player != INVALID_PLAYER_ID)
 			{
-				core->getGrid()->removeTextLabel(*t, true);
+				adjust = sampgdk::GetPlayerPos((*t)->attach->player, &(*t)->attach->position[0], &(*t)->attach->position[1], &(*t)->attach->position[2]);
+				Utility::setFirstValueInContainer((*t)->attach->worlds, sampgdk::GetPlayerVirtualWorld((*t)->attach->player));
 			}
-		}
-		else
-		{
-			(*t)->attach->position.fill(std::numeric_limits<float>::infinity());
+			else if ((*t)->attach->vehicle != INVALID_VEHICLE_ID)
+			{
+				adjust = sampgdk::GetVehiclePos((*t)->attach->vehicle, &(*t)->attach->position[0], &(*t)->attach->position[1], &(*t)->attach->position[2]);
+				Utility::setFirstValueInContainer((*t)->attach->worlds, sampgdk::GetVehicleVirtualWorld((*t)->attach->vehicle));
+			}
+			if (adjust)
+			{
+				if ((*t)->cell && !(*t)->attach->position.isApprox(position))
+				{
+					core->getGrid()->removeTextLabel(*t, true);
+				}
+			}
+			else
+			{
+				(*t)->attach->position.fill(std::numeric_limits<float>::infinity());
+			}
 		}
 	}
 }

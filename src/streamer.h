@@ -90,6 +90,11 @@ private:
 	float averageElapsedTime;
 	float lastUpdateTime;
 
+	// BUG FIX: These were function-level statics in calculateAverageElapsedTime,
+	// which caused state leakage across plugin reloads. Now proper instance members.
+	Eigen::Array<float, 5, 1> elapsedTimeBuffer;
+	std::chrono::steady_clock::time_point lastRecordedTime;
+
 	std::tuple<float, float> velocityBoundaries;
 
 	std::multimap<int, std::tuple<int, int> > areaEnterCallbacks;
@@ -106,12 +111,11 @@ protected:
 		return (a[b] && (c.empty() || c.find(d) != c.end()) && (e.empty() || e.find(f) != e.end()));
 	}
 
-	// Bug fix (v2.9.7 by eLdarQo): Added parentheses to correctly isolate the ternary
-	// operator. Previously, "g.empty() || i ? ..." was parsed as "(g.empty() || i) ? ..."
-	// due to lower precedence of '?:', causing incorrect area-check inversion logic.
 	template<std::size_t N, typename T>
 	inline bool doesPlayerSatisfyConditions(const std::bitset<N> &a, const T &b, const std::unordered_set<T> &c, const T &d, const std::unordered_set<T> &e, const T &f, const std::unordered_set<T> &g, const std::unordered_set<T> &h, bool i)
 	{
+		// BUG FIX: added explicit parentheses around the ternary expression to prevent
+		// operator precedence issues between && and the ternary operator (?:).
 		return (a[b] && (c.empty() || c.find(d) != c.end()) && (e.empty() || e.find(f) != e.end()) && (g.empty() || (i ? !Utility::isContainerWithinContainer(g, h) : Utility::isContainerWithinContainer(g, h))));
 	}
 };

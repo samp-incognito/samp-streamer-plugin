@@ -32,14 +32,14 @@ PLUGIN_EXPORT bool PLUGIN_CALL Load(void **ppData)
 	core.reset(new Core);
 	pAMXFunctions = ppData[PLUGIN_DATA_AMX_EXPORTS];
 	bool load = sampgdk::Load(ppData);
-	sampgdk::logprintf("\n\n*** Streamer Plugin v%s by Incognito (v2.9.7 improvements by eLdarQo) loaded ***\n", PLUGIN_VERSION);
+	sampgdk::logprintf("\n\n*** Streamer Plugin v%s by Incognito | v2.9.7 improvements by eLdarQo loaded ***\n", PLUGIN_VERSION);
 	return load;
 }
 
 PLUGIN_EXPORT void PLUGIN_CALL Unload()
 {
 	core.reset();
-	sampgdk::logprintf("\n\n*** Streamer Plugin v%s by Incognito (v2.9.7 improvements by eLdarQo) unloaded ***\n", PLUGIN_VERSION);
+	sampgdk::logprintf("\n\n*** Streamer Plugin v%s by Incognito | v2.9.7 improvements by eLdarQo unloaded ***\n", PLUGIN_VERSION);
 	sampgdk::Unload();
 }
 

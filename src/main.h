@@ -46,6 +46,8 @@
 #include <chrono>
 #include <variant>
 #include <tuple>
+#include <span>
+#include <ranges>
 
 #include "common.h"
 #include "sampgdk.h"

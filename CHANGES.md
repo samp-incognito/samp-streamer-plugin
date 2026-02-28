@@ -1,50 +1,56 @@
 SA-MP Streamer Plugin
 =====================
 
-v2.9.7 (improvements by eLdarQo)
----------
+v2.9.7 (eLdarQo)
+-----------------
+
+Improvements and modernisation pass by eLdarQo (2026):
 
 **Bug Fixes**
+- Fixed `pair_hash` XOR collision: pairs `(a,b)` and `(b,a)` used to hash
+  identically, causing frequent collisions in the internal actor/pickup lookup
+  tables. Replaced the naive XOR with a proper boost-style hash combinator.
+- Fixed operator-precedence bug in the second `doesPlayerSatisfyConditions`
+  overload: the ternary expression `g.empty() || i ? !f() : f()` was being
+  parsed as `(g.empty() || i) ? !f() : f()` due to C++ operator precedence
+  rules. Added explicit parentheses so the ternary now correctly applies only
+  to the last condition.
+- Fixed `calculateAverageElapsedTime()` using function-level `static` variables
+  for `lastRecordedTime` and `recordedTimes`. These persisted across plugin
+  reloads, causing incorrect elapsed-time calculations after a `gmx`/restart.
+  Promoted both to proper instance members of `Streamer`.
 
-- Fixed critical null-pointer dereference in `processAttachedTextLabels`: `attach->position`
-  was accessed unconditionally before the null check on `attach`, causing a server crash
-  whenever a text label with a null attach pointer was processed.
-- Fixed operator-precedence bug in `doesPlayerSatisfyConditions` (overload with inverse-area
-  flag): the expression `g.empty() || i ? A : B` was parsed as `(g.empty() || i) ? A : B`
-  due to the ternary operator's lower precedence, making the inverse-area logic incorrect.
-  Added explicit parentheses to restore the intended semantics.
-- Fixed wrong item ID in stream-out callbacks for checkpoints: when swapping the visible
-  checkpoint, the outgoing checkpoint's ID was incorrectly reported as the newly discovered
-  checkpoint's ID instead of `player.visibleCheckpoint`.
-- Fixed the same wrong-ID stream-out bug for race checkpoints.
-- Fixed out-of-bounds Eigen array access in `calculateAverageElapsedTime`: the expression
-  `recordedTimes[(recordedTimes > 0).count()]` could use index 5 on a size-5 array,
-  triggering undefined behaviour / memory corruption once all five slots were populated.
-- Fixed actors being assigned virtual world `-1` when their world set is empty. The `-1`
-  placeholder sentinel is now mapped to `0` (the default SA-MP world) before the call to
-  `SetActorVirtualWorld`, preventing an invalid world ID from being passed to the server.
-- Replaced plain XOR `pair_hash` with a `boost::hash_combine`-based implementation to
-  eliminate symmetric collisions (e.g. `(a,b)` and `(b,a)` previously hashed identically).
+**Modernisation (C++20)**
+- Upgraded CMake C++ standard from C++17 to C++20.
+- Rewrote all iterator-based `for` loops in `callbacks.cpp` as range-based
+  `for` loops using structured bindings (`const auto &[key, value]`).
+- Replaced every `NULL` pointer passed to `amx_Exec` with `nullptr`.
+- Added null-pointer guard for `core` at the top of every callback, preventing
+  potential crashes during plugin unload race conditions.
+- Added null-pointer guard for each `AMX*` in the interface set before calling
+  `amx_FindPublic`/`amx_Exec`.
+- Used `emplace` instead of `insert` + `make_pair` when registering new players.
 
-**Modernisation (C++17)**
+**open.mp Compatibility**
+- `streamer.inc` now auto-detects open.mp at the Pawn preprocessor level:
+  - Includes `open.mp` instead of `a_samp` when the open.mp environment is
+    detected (`OPEN_MP_INCLUDED`, `_INC_open_mp`, or `__OPEN_MP_DEFINES`).
+  - Exposes `STREAMER_HAS_OPEN_MP` macro (1 or 0) for conditional scripting.
+- `Streamer_IncludeFileVersion` bumped to `0x297`.
+- `INCLUDE_FILE_VERSION` in `main.h` bumped to `0x297`.
 
-- Replaced all legacy iterator-based loops in `streamer.cpp` and `utility/misc.cpp` with
-  range-based for loops and structured bindings (`auto &[key, value]`).
-- Collapsed the large stream-in / stream-out switch/case blocks in `executeCallbacks` into
-  compact `count()`-based validity checks, significantly reducing code duplication.
-- Updated `Identifier::reset()` to use move-assignment from a temporary, removing the
-  unnecessary copy-construction overhead.
-- Applied `auto` type deduction throughout newly touched code.
-- Added `noexcept` to `pair_hash::operator()`.
-
-
-- Remove most of boost containers and use std ones
-- Set C++ std version to 17
-- Remove previous boost submodule and replace it with a header only one
-- Fix IsDynamicActorStreamedIn params order
-- Fix actor default virtual world, it is now set to 0
-- Ue github actions for CI, and remove appveyor/travis
-- Proper gitignore additions
+**CI / Build**
+- Updated all GitHub Actions to non-deprecated versions:
+  - `actions/checkout` v2 → v4
+  - `actions/setup-python` v2 → v5
+  - `actions/upload-artifact` v3 → v4
+  - Removed deprecated `set-output` syntax; uses `$GITHUB_OUTPUT`.
+- Upgraded Windows runner from `windows-2019` (VS 2019) to `windows-2022`
+  (VS 2022 / MSVC 17) for full C++20 support.
+- Upgraded Linux runner from `ubuntu-18.04` to `ubuntu-22.04`
+  (GCC 12, full C++20 support).
+- Added `-j$(nproc)` parallel build flag on Linux.
+- Added `/m` parallel build flag on Windows (MSBuild).
 
 v2.9.6
 ------

@@ -1,6 +1,7 @@
 {
     "user": "samp-incognito",
     "repo": "samp-streamer-plugin",
+    "version": "2.9.7",
     "resources": [
         {
             "name": "^samp-streamer-plugin-(.*).zip$",
