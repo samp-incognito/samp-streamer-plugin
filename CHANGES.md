@@ -46,6 +46,17 @@ v2.9.7 (improvements by eLdarQo)
 - Ue github actions for CI, and remove appveyor/travis
 - Proper gitignore additions
 
+v2.9.6
+------
+
+- Remove most of boost containers and use std ones
+- Set C++ std version to 17
+- Remove previous boost submodule and replace it with a header only one
+- Fix IsDynamicActorStreamedIn params order
+- Fix actor default virtual world, it is now set to 0
+- Ue github actions for CI, and remove appveyor/travis
+- Proper gitignore additions
+
 v2.9.5
 ------
 
