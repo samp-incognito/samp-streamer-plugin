@@ -1,8 +1,42 @@
 SA-MP Streamer Plugin
 =====================
 
-v2.9.6
-------
+v2.9.7 (improvements by eLdarQo)
+---------
+
+**Bug Fixes**
+
+- Fixed critical null-pointer dereference in `processAttachedTextLabels`: `attach->position`
+  was accessed unconditionally before the null check on `attach`, causing a server crash
+  whenever a text label with a null attach pointer was processed.
+- Fixed operator-precedence bug in `doesPlayerSatisfyConditions` (overload with inverse-area
+  flag): the expression `g.empty() || i ? A : B` was parsed as `(g.empty() || i) ? A : B`
+  due to the ternary operator's lower precedence, making the inverse-area logic incorrect.
+  Added explicit parentheses to restore the intended semantics.
+- Fixed wrong item ID in stream-out callbacks for checkpoints: when swapping the visible
+  checkpoint, the outgoing checkpoint's ID was incorrectly reported as the newly discovered
+  checkpoint's ID instead of `player.visibleCheckpoint`.
+- Fixed the same wrong-ID stream-out bug for race checkpoints.
+- Fixed out-of-bounds Eigen array access in `calculateAverageElapsedTime`: the expression
+  `recordedTimes[(recordedTimes > 0).count()]` could use index 5 on a size-5 array,
+  triggering undefined behaviour / memory corruption once all five slots were populated.
+- Fixed actors being assigned virtual world `-1` when their world set is empty. The `-1`
+  placeholder sentinel is now mapped to `0` (the default SA-MP world) before the call to
+  `SetActorVirtualWorld`, preventing an invalid world ID from being passed to the server.
+- Replaced plain XOR `pair_hash` with a `boost::hash_combine`-based implementation to
+  eliminate symmetric collisions (e.g. `(a,b)` and `(b,a)` previously hashed identically).
+
+**Modernisation (C++17)**
+
+- Replaced all legacy iterator-based loops in `streamer.cpp` and `utility/misc.cpp` with
+  range-based for loops and structured bindings (`auto &[key, value]`).
+- Collapsed the large stream-in / stream-out switch/case blocks in `executeCallbacks` into
+  compact `count()`-based validity checks, significantly reducing code duplication.
+- Updated `Identifier::reset()` to use move-assignment from a temporary, removing the
+  unnecessary copy-construction overhead.
+- Applied `auto` type deduction throughout newly touched code.
+- Added `noexcept` to `pair_hash::operator()`.
+
 
 - Remove most of boost containers and use std ones
 - Set C++ std version to 17

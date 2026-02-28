@@ -53,5 +53,7 @@ void Identifier::remove(int id, std::size_t remaining)
 void Identifier::reset()
 {
 	highestId = 0;
-	removedIds = std::priority_queue<int, std::vector<int>, std::greater<int> >();
+	// C++17: Use move-assign from a temporary to clear the priority_queue
+	// without requiring a copy-constructor call.
+	removedIds = std::priority_queue<int, std::vector<int>, std::greater<int>>();
 }

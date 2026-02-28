@@ -173,15 +173,17 @@ namespace boost { namespace geometry { namespace traits {
 	};
 }}}
 
+// Improved pair_hash using boost::hash_combine to reduce collisions compared
+// to a plain XOR which maps (a,b) and (b,a) to the same bucket.
+// Modified by eLdarQo (v2.9.7)
 struct pair_hash
 {
 	template <class T1, class T2>
-	std::size_t operator () (std::pair<T1, T2> const& pair) const
+	std::size_t operator () (std::pair<T1, T2> const& pair) const noexcept
 	{
-		std::size_t h1 = std::hash<T1>()(pair.first);
-		std::size_t h2 = std::hash<T2>()(pair.second);
-
-		return h1 ^ h2;
+		std::size_t seed = std::hash<T1>()(pair.first);
+		boost::hash_combine(seed, std::hash<T2>()(pair.second));
+		return seed;
 	}
 };
 
