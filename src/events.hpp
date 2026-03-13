@@ -426,42 +426,15 @@ public:
 	}
 
 	~EventHandler()
+	{}
+
+	void addEvents()
 	{
-		if (players)
+		if (eventsAdded)
 		{
-			players->getPlayerConnectDispatcher().removeEventHandler(PlayerEvents::Get());
-			players->getPlayerSpawnDispatcher().removeEventHandler(PlayerEvents::Get());
-			players->getPlayerShotDispatcher().removeEventHandler(PlayerEvents::Get());
+			return;
 		}
 
-		if (actors)
-		{
-			actors->getEventDispatcher().removeEventHandler(ActorEvents::Get());
-		}
-
-		if (objects)
-		{
-			objects->getEventDispatcher().removeEventHandler(ObjectEvents::Get());
-		}
-
-		if (pickups)
-		{
-			pickups->getEventDispatcher().removeEventHandler(PickupEvents::Get());
-		}
-
-		if (classes)
-		{
-			classes->getEventDispatcher().removeEventHandler(ClassEvents::Get());
-		}
-
-		if (checkpoints)
-		{
-			checkpoints->getEventDispatcher().removeEventHandler(CheckpointEvents::Get());
-		}
-	}
-
-	void addEvents() const
-	{
 		if (players)
 		{
 			players->getPlayerConnectDispatcher().addEventHandler(PlayerEvents::Get());
@@ -493,6 +466,94 @@ public:
 		{
 			checkpoints->getEventDispatcher().addEventHandler(CheckpointEvents::Get());
 		}
+
+		eventsAdded = true;
+	}
+
+	void removeEvents()
+	{
+		if (!eventsAdded)
+		{
+			return;
+		}
+
+		if (players)
+		{
+			players->getPlayerConnectDispatcher().removeEventHandler(PlayerEvents::Get());
+			players->getPlayerSpawnDispatcher().removeEventHandler(PlayerEvents::Get());
+			players->getPlayerShotDispatcher().removeEventHandler(PlayerEvents::Get());
+		}
+
+		if (actors)
+		{
+			actors->getEventDispatcher().removeEventHandler(ActorEvents::Get());
+		}
+
+		if (objects)
+		{
+			objects->getEventDispatcher().removeEventHandler(ObjectEvents::Get());
+		}
+
+		if (pickups)
+		{
+			pickups->getEventDispatcher().removeEventHandler(PickupEvents::Get());
+		}
+
+		if (classes)
+		{
+			classes->getEventDispatcher().removeEventHandler(ClassEvents::Get());
+		}
+
+		if (checkpoints)
+		{
+			checkpoints->getEventDispatcher().removeEventHandler(CheckpointEvents::Get());
+		}
+
+		eventsAdded = false;
+	}
+
+	void onComponentFree(IComponent* component)
+	{
+		if (component == actors)
+		{
+			if (eventsAdded)
+			{
+				actors->getEventDispatcher().removeEventHandler(ActorEvents::Get());
+			}
+			actors = nullptr;
+		}
+		else if (component == objects)
+		{
+			if (eventsAdded)
+			{
+				objects->getEventDispatcher().removeEventHandler(ObjectEvents::Get());
+			}
+			objects = nullptr;
+		}
+		else if (component == pickups)
+		{
+			if (eventsAdded)
+			{
+				pickups->getEventDispatcher().removeEventHandler(PickupEvents::Get());
+			}
+			pickups = nullptr;
+		}
+		else if (component == classes)
+		{
+			if (eventsAdded)
+			{
+				classes->getEventDispatcher().removeEventHandler(ClassEvents::Get());
+			}
+			classes = nullptr;
+		}
+		else if (component == checkpoints)
+		{
+			if (eventsAdded)
+			{
+				checkpoints->getEventDispatcher().removeEventHandler(CheckpointEvents::Get());
+			}
+			checkpoints = nullptr;
+		}
 	}
 
 private:
@@ -502,4 +563,5 @@ private:
 	ICheckpointsComponent* checkpoints = nullptr;
 	IClassesComponent* classes = nullptr;
 	IActorsComponent* actors = nullptr;
+	bool eventsAdded = false;
 };

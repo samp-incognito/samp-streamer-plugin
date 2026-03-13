@@ -299,6 +299,7 @@ class OmpStreamerComponent final : public IComponent, public CoreEventHandler, p
 		omp_core->getEventDispatcher().addEventHandler(this);
 		pAMXFunctions = (void*)&pawnComponent->getAmxFunctions();
 		streamerEventHandler.addEvents();
+		eventHandlersRegistered = true;
 	}
 
 	void onReady() override 
@@ -308,11 +309,18 @@ class OmpStreamerComponent final : public IComponent, public CoreEventHandler, p
 
 	void onTick(Microseconds elapsed, TimePoint now) override
 	{
-		core->getStreamer()->startAutomaticUpdate();
+		if (core)
+		{
+			core->getStreamer()->startAutomaticUpdate();
+		}
 	}
 
 	void onAmxLoad(IPawnScript& script) override
 	{
+		if (!core)
+		{
+			return;
+		}
 		core->getData()->interfaces.insert(script.GetAMX());
 		core->getData()->amxUnloadDestroyItems.insert(script.GetAMX());
 		Utility::checkInterfaceAndRegisterNatives(script.GetAMX(), natives);
@@ -320,6 +328,10 @@ class OmpStreamerComponent final : public IComponent, public CoreEventHandler, p
 
 	void onAmxUnload(IPawnScript& script) override
 	{
+		if (!core)
+		{
+			return;
+		}
 		core->getData()->interfaces.erase(script.GetAMX());
 		if (core->getData()->amxUnloadDestroyItems.find(script.GetAMX()) != core->getData()->amxUnloadDestroyItems.end())
 		{
@@ -330,10 +342,13 @@ class OmpStreamerComponent final : public IComponent, public CoreEventHandler, p
 
 	void onFree(IComponent* component) override
 	{
+		streamerEventHandler.onComponentFree(component);
 		if (component == pawnComponent) 
 		{
+			removeRuntimeEventHandlers();
 			pawnComponent = nullptr;
 			pAMXFunctions = nullptr;
+			players = nullptr;
 			omp_core->printLn("\n\n*** Streamer Plugin v%s by Incognito unloaded ***\n\n", PLUGIN_VERSION);
 			core.reset();
 		}
@@ -345,16 +360,16 @@ class OmpStreamerComponent final : public IComponent, public CoreEventHandler, p
 
 	void free() override
 	{
-		if (pawnComponent != nullptr)
-		{
-			pawnComponent->getEventDispatcher().removeEventHandler(this);
-			omp_core->getEventDispatcher().removeEventHandler(this);
-		}
+		removeEventHandlers();
 		delete this;
 	}
 
 	bool onSend(IPlayer* peer, NetworkBitStream& bs) override
 	{
+		if (!players)
+		{
+			return true;
+		}
 		OMPNetHack::Process(players, peer, bs);
 		return true;
 	}
@@ -365,10 +380,43 @@ class OmpStreamerComponent final : public IComponent, public CoreEventHandler, p
 	}
 
 private:
+	void removeRuntimeEventHandlers()
+	{
+		if (!eventHandlersRegistered || omp_core == nullptr)
+		{
+			return;
+		}
+
+		for (auto network : omp_core->getNetworks())
+		{
+			network->getPerPacketOutEventDispatcher().removeEventHandler(this, 207);
+		}
+
+		streamerEventHandler.removeEvents();
+	}
+
+	void removeEventHandlers()
+	{
+		if (!eventHandlersRegistered || omp_core == nullptr)
+		{
+			return;
+		}
+
+		removeRuntimeEventHandlers();
+		omp_core->getEventDispatcher().removeEventHandler(this);
+		if (pawnComponent != nullptr)
+		{
+			pawnComponent->getEventDispatcher().removeEventHandler(this);
+		}
+
+		eventHandlersRegistered = false;
+	}
+
 	ICore* omp_core = nullptr;
 	IPlayerPool* players = nullptr;
 	IPawnComponent* pawnComponent = nullptr;
 	EventHandler streamerEventHandler;
+	bool eventHandlersRegistered = false;
 };
 
 COMPONENT_ENTRY_POINT() {
